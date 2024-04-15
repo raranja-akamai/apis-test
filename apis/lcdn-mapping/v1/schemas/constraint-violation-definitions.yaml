@@ -1,0 +1,95 @@
+description: |-
+  Constraint Violation HTTP problem.
+  
+x-akamai:
+  file-path: schemas/constraint-violation-definitions.yaml
+definitions:
+  baseViolationType:
+    required:
+    - property
+    - type
+    properties:
+      type:
+        type: string
+        description: |
+          Uniquely identifies this HTTP problem.
+        format: uri
+      value:
+        description: |
+          The value in the request that has caused a violation.
+      detail:
+        type: string
+        description: |
+          Human readable description of the problem.
+      property:
+        type: string
+        description: |
+          The property in the request that has caused a violation.
+  conditionViolationType:
+    required:
+    - property
+    - type
+    - value
+    - requiredValue
+    allOf:
+    - $ref: constraint-violation-definitions.yaml#/definitions/baseViolationType
+    - properties:
+        requiredValue:
+          type: boolean
+          description: |
+            Specifies the allowable condition value for a property.
+  maxViolationType:
+    required:
+    - property
+    - type
+    - value
+    - max
+    allOf:
+    - $ref: constraint-violation-definitions.yaml#/definitions/baseViolationType
+    - properties:
+        min:
+          type: integer
+          description: |
+            Specifies the maximum allowable value for the given property.
+  minViolationType:
+    required:
+    - property
+    - type
+    - value
+    - min
+    allOf:
+    - $ref: constraint-violation-definitions.yaml#/definitions/baseViolationType
+    - properties:
+        min:
+          type: integer
+          description: |
+            Specifies the minimum allowable value for the given property.
+  notNullViolationType:
+    allOf:
+    - $ref: constraint-violation-definitions.yaml#/definitions/baseViolationType
+  patternViolationType:
+    required:
+    - property
+    - type
+    - value
+    - pattern
+    allOf:
+    - $ref: constraint-violation-definitions.yaml#/definitions/baseViolationType
+    - properties:
+        pattern:
+          type: string
+          description: |
+            Specifies the allowable pattern for a property.  This would usually be a regular expression.
+  sizeViolationType:
+    required:
+    - property
+    - type
+    - value
+    - size
+    allOf:
+    - $ref: constraint-violation-definitions.yaml#/definitions/baseViolationType
+    - properties:
+        min:
+          type: integer
+          description: |
+            Specifies the maximum allowable size for the given property.  For strings this is the string length.

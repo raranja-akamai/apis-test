@@ -1,0 +1,49 @@
+type: object
+description: |-
+  Your client credentials are invalid. See [Get started](ref:get-started) for more information.
+  
+x-akamai:
+  file-path: schemas/402.yaml
+additionalProperties: false
+required:
+- request_id
+- code
+- error_description
+- error
+- stat
+- sub_error
+properties:
+  code:
+    type: integer
+    description: |
+      Status code for the error. Note that the Authentication API [doesn’t use standard HTTP status codes](ref:api-errors).
+    minimum: 1
+  error:
+    type: string
+    description: |
+      Error type.
+    minLength: 1
+  error_description:
+    type: string
+    description: |
+      Additional information describing the error and why it took place.
+    minLength: 1
+  request_id:
+    type: string
+    description: |
+      Unique identifier of the request.
+    minLength: 1
+  stat:
+    type: string
+    description: |
+      Status of the operation. Possible values are: `ok`, `error`, and `fail`. The value `ok` indicates that the operation was successful. The value `error` indicates that the operation couldn't complete because of a problem with the request. The value `fail` means that the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if your request returns the `fail` status.
+    enum:
+    - ok
+    - error
+    - fail
+    minLength: 1
+  sub_error:
+    type: string
+    description: |
+      Secondary error type.
+    minLength: 1

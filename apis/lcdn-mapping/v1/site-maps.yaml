@@ -1,0 +1,310 @@
+openapi: 3.0.0
+info:
+  title: Site maps
+  version: v1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}/api/lcdn-mapping/v1
+x-akamai:
+  file-path: site-maps.yaml
+paths:
+  /site-maps:
+    post:
+      operationId: createSiteMap
+      summary: Create a new site map
+      tags:
+      - Site maps
+      description: |
+        This operation creates a new site map instance.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            example:
+              $ref: examples/site-map.create.multipart
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - config
+              - metadata
+              properties:
+                config:
+                  type: string
+                  description: |
+                    The metadata portion is the JSON configuration describing the mapping object.
+                  example:
+                    $ref: examples/site-map.map
+                metadata:
+                  $ref: '#/components/schemas/site-map.create'
+            encoding:
+              config:
+                contentType: text/plain
+              metadata:
+                contentType: application/json
+      responses:
+        201:
+          description: |
+            An HTTP 201 will be returned if the request is successfully processed, and a new site-map object is created.  The location of the new object will be specified in the location header.
+          headers:
+            Location:
+              $ref: headers/Location.yaml
+          content:
+            application/json:
+              example:
+                $ref: examples/site-map.read.json
+              schema:
+                $ref: '#/components/schemas/site-map.read-detailed'
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+    get:
+      operationId: listSiteMaps
+      summary: List site maps
+      tags:
+      - Site maps
+      description: |
+        This operation returns a list of all configured site maps.
+      parameters:
+      - $ref: parameters/collection_filter.yaml
+      - $ref: parameters/collection_view.yaml
+      - $ref: parameters/collection_sortBy.yaml
+      - $ref: parameters/collection_pageNumber.yaml
+      - $ref: parameters/collection_pageSize.yaml
+      responses:
+        200:
+          description: |
+            Successful response.
+          content:
+            application/json:
+              example:
+                $ref: examples/site-map.collection.json
+              schema:
+                $ref: '#/components/schemas/site-map.collection'
+        403:
+          $ref: responses/unauthorized-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - coblitz.obs
+        - lcdn-mapping.admin
+        - lcdn-mapping.read
+  /site-maps/validate:
+    post:
+      operationId: validateSiteMap
+      summary: Validate a site map
+      tags:
+      - Site maps
+      description: |
+        This operation validates a site map, and may be used to ensure correct syntax when preparing to apply a map.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            example:
+              $ref: examples/site-map.create.multipart
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - config
+              - metadata
+              properties:
+                config:
+                  type: string
+                  description: |
+                    A site map in its native format, as described in Aura documentation.
+                  example:
+                    $ref: examples/site-map.map
+                metadata:
+                  $ref: '#/components/schemas/site-map.create'
+            encoding:
+              config:
+                contentType: text/plain
+              metadata:
+                contentType: application/json
+      responses:
+        200:
+          description: |
+            An HTTP 200 will be returned if the map is successfully validated.
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+  /site-maps/{mapId}:
+    parameters:
+    - $ref: parameters/mapId-path.yaml
+    get:
+      operationId: readSiteMap
+      summary: Get a site map
+      tags:
+      - Site maps
+      description: |
+        This operation gets the details of a site map instance.
+      responses:
+        200:
+          description: |
+            Successful response.
+          content:
+            application/json:
+              example:
+                $ref: examples/site-map.read.json
+              schema:
+                $ref: '#/components/schemas/site-map.read-detailed'
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - coblitz.obs
+        - lcdn-mapping.admin
+        - lcdn-mapping.read
+    put:
+      operationId: updateSiteMap
+      summary: Update a site map
+      tags:
+      - Site maps
+      description: |
+        This operation updates the details of a site map instance.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/site-map.read.json
+            schema:
+              $ref: '#/components/schemas/site-map.update'
+      responses:
+        200:
+          description: |
+            An HTTP 200 will signify the successful update of an site-map instance.
+          content:
+            application/json:
+              example:
+                $ref: examples/site-map.read.json
+              schema:
+                $ref: '#/components/schemas/site-map.read-detailed'
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+    delete:
+      operationId: deleteSiteMap
+      summary: Remove a site map
+      tags:
+      - Site maps
+      description: |
+        This operation removes a site map instance.
+      responses:
+        204:
+          description: |
+            The site map instance was successfully removed.
+        400:
+          description: |
+            [Bad request](ref:400). An HTTP 400 will be returned if the request could not be processed.  For example, if another entity is referring to this entity, and the delete could not be processed.
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+  /site-maps/{mapId}/map:
+    parameters:
+    - $ref: parameters/mapId-path.yaml
+    get:
+      operationId: readSiteMapContent
+      summary: Get contents of a site map
+      tags:
+      - Site map contents
+      description: |
+        This operation gets the content of a site map instance.
+      responses:
+        200:
+          description: |
+            An HTTP 200 will signify the successful read of a site map instance.
+          content:
+            text/plain:
+              example:
+                $ref: examples/site-map.map
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - coblitz.obs
+        - lcdn-mapping.admin
+        - lcdn-mapping.read
+    put:
+      operationId: updateSiteMapContent
+      summary: Update contents of a site map
+      tags:
+      - Site map contents
+      description: |
+        This operation updates the content of a site map instance.
+      requestBody:
+        content:
+          text/plain:
+            example:
+              $ref: examples/site-map.map
+            schema:
+              type: string
+      responses:
+        200:
+          description: |
+            An HTTP 200 will signify the successful update of an site map instance.
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+components:
+  schemas:
+    site-map.collection:
+      $ref: schemas/site-map.collection.yaml
+    site-map.create:
+      $ref: schemas/site-map.create.yaml
+    site-map.read-detailed:
+      $ref: schemas/site-map.read-detailed.yaml
+    site-map.read-summary:
+      $ref: schemas/site-map.read-summary.yaml
+    site-map.update:
+      $ref: schemas/site-map.update.yaml
+  securitySchemes:
+    oauth_v2:
+      $ref: securitySchemes/oauth_v2.yaml

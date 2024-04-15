@@ -1,0 +1,69 @@
+type: object
+description: |-
+  Completes traditional login by using an email address and password.
+  
+x-akamai:
+  file-path: schemas/auth_native_traditional-req.yaml
+additionalProperties: false
+required:
+- client_id
+- currentPassword
+- flow
+- flow_version
+- form
+- locale
+- redirect_uri
+- response_type
+- signInEmailAddress
+properties:
+  client_id:
+    type: string
+    description: |
+      Unique identifier of the API client authenticating the operation. This client needs to have the `login_client` feature, which gives it permission to call login and registration operations.
+    minLength: 1
+  currentPassword:
+    type: string
+    description: |
+      Password of the user logging in.
+    minLength: 1
+  flow:
+    type: string
+    description: |
+      Name of the API client's flow.
+    minLength: 1
+  flow_version:
+    type: string
+    description: |
+      Version number of the flow in the `flow` member. Note that you can't set the value of this member to `HEAD`, a shorthand way to refer to the most recent version of the flow. Instead, you need to specify a valid version number.
+    minLength: 1
+  form:
+    type: string
+    description: |
+      Name of the traditional login form.
+    minLength: 1
+  locale:
+    type: string
+    description: |
+      RFC 5646 language code for the profile management process. The locale determines the language for any messages the user sees and for any emails sent to that user. See [Supported languages and locales](https://techdocs.akamai.com/identity-cloud/docs/hosted-login-supported-languages-and-locales-1) for more information.
+    minLength: 1
+  redirect_uri:
+    type: string
+    description: |
+      Required for legacy purposes but has no functionality in this operation. The value needs to begin with the  `http` or `https` scheme and should match the URL and scheme of your website.
+    minLength: 1
+  response_type:
+    type: string
+    description: |
+      Indicates whether the user receives an access token, an authorization code, or both after logging in. If you leave this member out, the user receives an access token.
+    example: token
+    default: token
+    enum:
+    - code
+    - token
+    - code_and_token
+    minLength: 1
+  signInEmailAddress:
+    type: string
+    description: |
+      Email address of the user logging in.
+    minLength: 1

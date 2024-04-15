@@ -1,0 +1,43 @@
+type: object
+description: |-
+  Your access token is invalid. This is typically because the token is invalid. If this error occurs use a refresh token to obtain a new access token.
+  
+x-akamai:
+  file-path: schemas/413.yaml
+additionalProperties: false
+required:
+- request_id
+- code
+- error_description
+- error
+- stat
+properties:
+  code:
+    type: integer
+    description: |
+      Status code for the error. Note that the Authentication API [doesn’t use standard HTTP status codes](ref:api-errors).
+    minimum: 1
+  error:
+    type: string
+    description: |
+      Error type.
+    minLength: 1
+  error_description:
+    type: string
+    description: |
+      Additional information describing the error and why it took place.
+    minLength: 1
+  request_id:
+    type: string
+    description: |
+      Unique identifier of the request.
+    minLength: 1
+  stat:
+    type: string
+    description: |
+      Status of the operation. Possible values are: `ok`, `error`, and `fail`. The value `ok` indicates that the operation was successful. The value `error` indicates that the operation couldn't complete because of a problem with the request. The value `fail` means that the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if your request returns the `fail` status.
+    enum:
+    - ok
+    - error
+    - fail
+    minLength: 1
