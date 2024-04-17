@@ -1,0 +1,264 @@
+openapi: 3.0.0
+info:
+  title: Geo IP Configs
+  version: v1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}/api/lcdn-mapping/v1
+x-akamai:
+  file-path: geoip-configs.yaml
+paths:
+  /geoip-configs:
+    post:
+      operationId: createGeoIpConfig
+      summary: Create a new Geo IP configuration
+      tags:
+      - Geo IP configurations
+      description: |
+        This operation creates a new Geo IP configuration instance.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            example:
+              $ref: examples/geoip-config.create.multipart
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - config
+              - metadata
+              properties:
+                config:
+                  type: string
+                  description: |
+                    The metadata portion is the JSON configuration describing the mapping object.
+                  example:
+                    $ref: examples/geoip-config.config
+                metadata:
+                  $ref: '#/components/schemas/geoip-config.create'
+            encoding:
+              config:
+                contentType: text/csv
+              metadata:
+                contentType: application/json
+      responses:
+        201:
+          description: |
+            An HTTP 201 will be returned if the request is successfully processed, and a new geoip-config object is created.  The location of the new object will be specified in the location header.
+          headers:
+            Location:
+              $ref: headers/Location.yaml
+          content:
+            application/json:
+              example:
+                $ref: examples/geoip-config.read.json
+              schema:
+                $ref: '#/components/schemas/geoip-config.read-detailed'
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+    get:
+      operationId: listGeoIpConfigs
+      summary: List Geo IP configurations
+      tags:
+      - Geo IP configurations
+      description: |
+        This operation returns a list of all Geo IP configurations.
+      parameters:
+      - $ref: parameters/collection_filter.yaml
+      - $ref: parameters/collection_view.yaml
+      - $ref: parameters/collection_sortBy.yaml
+      - $ref: parameters/collection_pageNumber.yaml
+      - $ref: parameters/collection_pageSize.yaml
+      responses:
+        200:
+          description: |
+            Successful response.
+          content:
+            application/json:
+              example:
+                $ref: examples/geoip-config.collection.json
+              schema:
+                $ref: '#/components/schemas/geoip-config.collection'
+        403:
+          $ref: responses/unauthorized-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - coblitz.obs
+        - lcdn-mapping.admin
+        - lcdn-mapping.read
+  /geoip-configs/{geoIpConfigId}:
+    parameters:
+    - $ref: parameters/geoIpConfigId-path.yaml
+    get:
+      operationId: readGeoIpConfig
+      summary: Get a Geo IP configuration
+      tags:
+      - Geo IP configurations
+      description: |
+        This operation retrieves the details of a Geo IP configuration instance.
+      responses:
+        200:
+          description: |
+            Successful response.
+          content:
+            application/json:
+              example:
+                $ref: examples/geoip-config.read.json
+              schema:
+                $ref: '#/components/schemas/geoip-config.read-detailed'
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - coblitz.obs
+        - lcdn-mapping.admin
+        - lcdn-mapping.read
+    put:
+      operationId: updateGeoIpConfig
+      summary: Update a Geo IP configuration
+      tags:
+      - Geo IP configurations
+      description: |
+        This operation updates the details of a Geo IP configuration instance.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/geoip-config.update.json
+            schema:
+              $ref: '#/components/schemas/geoip-config.update'
+      responses:
+        200:
+          description: |
+            An HTTP 200 will signify the successful update of an geoip-config instance.
+          content:
+            application/json:
+              example:
+                $ref: examples/geoip-config.read.json
+              schema:
+                $ref: '#/components/schemas/geoip-config.read-detailed'
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+    delete:
+      operationId: deleteGeoIpConfig
+      summary: Remove a Geo IP configuration
+      tags:
+      - Geo IP configurations
+      description: |
+        This operation removes a Geo IP configuration instance.
+      responses:
+        204:
+          description: |
+            The Geo IP configuration instance was successfully removed.
+        400:
+          description: |
+            [Bad request](ref:400). An HTTP 400 will be returned if the request could not be processed.  For example, if another entity is referring to this entity, and the delete could not be processed.
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+  /geoip-configs/{geoIpConfigId}/geoip-config:
+    parameters:
+    - $ref: parameters/geoIpConfigId-path.yaml
+    get:
+      operationId: readGeoIpConfigContent
+      summary: Get contents of a Geo IP configuration
+      tags:
+      - Geo IP configuration contents
+      description: |
+        This operation gets the content of a GeoIpConfig instance.
+      responses:
+        200:
+          description: |
+            An HTTP 200 will signify the successful read of an access map instance.
+          content:
+            text/csv:
+              example:
+                $ref: examples/geoip-config.config
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - coblitz.obs
+        - lcdn-mapping.admin
+        - lcdn-mapping.read
+    put:
+      operationId: updateGeoIpConfigContent
+      summary: Update Geo IP configuration contents
+      tags:
+      - Geo IP configuration contents
+      description: |
+        This operation updates the content of a GeoIpConfig instance.
+      requestBody:
+        content:
+          text/csv:
+            example:
+              $ref: examples/geoip-config.config
+            schema:
+              type: string
+      responses:
+        200:
+          description: |
+            An HTTP 200 will signify the successful update of a GeoIpConfig instance.
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+components:
+  schemas:
+    geoip-config.collection:
+      $ref: schemas/geoip-config.collection.yaml
+    geoip-config.create:
+      $ref: schemas/geoip-config.create.yaml
+    geoip-config.read-detailed:
+      $ref: schemas/geoip-config.read-detailed.yaml
+    geoip-config.read-summary:
+      $ref: schemas/geoip-config.read-summary.yaml
+    geoip-config.update:
+      $ref: schemas/geoip-config.update.yaml
+  securitySchemes:
+    oauth_v2:
+      $ref: securitySchemes/oauth_v2.yaml

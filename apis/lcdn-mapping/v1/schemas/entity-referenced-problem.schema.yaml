@@ -1,0 +1,19 @@
+description: |-
+  Entity referenced HTTP problem.  Used in cases where an attempt is made to delete an entity that other entities are referring to, and simply removing the reference would not lead to a valid state.
+  
+x-akamai:
+  file-path: schemas/entity-referenced-problem.schema.yaml
+required:
+- type
+- instance
+- referencedEntity
+- referringEntities
+allOf:
+- $ref: core-problem.schema.yaml#/definitions/httpProblemType
+- properties:
+    referencedEntity:
+      $ref: core-problem.schema.yaml#/definitions/problemEntityType
+    referringEntities:
+      type: array
+      items:
+        $ref: core-problem.schema.yaml#/definitions/problemEntityType

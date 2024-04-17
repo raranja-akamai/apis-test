@@ -1,0 +1,58 @@
+type: object
+description: |-
+  Returns an authorization code for a user. The user can then exchange this code for an access token.
+  
+x-akamai:
+  file-path: schemas/get-authorization-code.yaml
+additionalProperties: false
+required:
+- type_name
+- for_client_id
+properties:
+  id:
+    type: integer
+    description: |
+      Locally unique identifier of the user. This member is optional if you're using the `uuid` member or the `key_attribute` member.
+    readOnly: true
+    minimum: 1
+  for_client_id:
+    type: string
+    description: |
+      Unique identifier of the API client authenticating the operation. This client needs to have the `login_client` feature, which gives it permission to call login and registration operations.
+    minLength: 1
+  key_attribute:
+    type: string
+    description: |
+      Name of a unique attribute in the schema. This member is optional if you're using the `id` or `uuid` member. If you use this member your operation needs to include the `key_value` member as well.
+    minLength: 1
+  key_value:
+    type: string
+    description: |
+      Value for the `key_attribute` member.
+    minLength: 1
+  lifetime:
+    type: integer
+    description: |
+      Number of seconds before the authorization code expires.
+    default: 30
+    minimum: 30
+  redirect_uri:
+    type: string
+    description: |
+      Typically the redirect URL from the initial authorization request. If using the JavaScript SDK, this value needs to match the value of the SDK's `redirectUri` setting.
+    minLength: 1
+  transaction_state:
+    type: string
+    description: |
+      Random string in the authorization request that the operation returns when you exchange the code for an access token and a refresh token.
+    minLength: 1
+  type_name:
+    type: string
+    description: |
+      Name of the entity type that stores user profiles.
+    minLength: 1
+  uuid:
+    type: string
+    description: |
+      Universally unique identifier of the user profile. This member is optional if you're using the `id` or `key_attribute` members to identify the user record.
+    minLength: 1

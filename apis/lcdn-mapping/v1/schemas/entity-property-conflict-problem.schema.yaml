@@ -1,0 +1,25 @@
+description: |-
+  Entity property conflict HTTP problem.  Used when an attempt is made to set a property on an entity that would cause conflict with an existent entity.  For example, attempting to set duplicate surrogate identifiers.
+  
+x-akamai:
+  file-path: schemas/entity-property-conflict-problem.schema.yaml
+required:
+- type
+- instance
+- conflictingProperty
+- conflictingValue
+- conflictingEntity
+allOf:
+- $ref: core-problem.schema.yaml#/definitions/httpProblemType
+- properties:
+    conflictingEntity:
+      allOf:
+      - description: |
+          The existing entity which the proposed change is in conflict with.
+      - $ref: core-problem.schema.yaml#/definitions/problemEntityType
+    conflictingProperty:
+      type: string
+    conflictingValue:
+      description: |-
+        The supplied value.
+        

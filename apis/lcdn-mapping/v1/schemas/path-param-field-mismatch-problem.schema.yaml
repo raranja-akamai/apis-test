@@ -1,0 +1,30 @@
+description: |-
+  Path-param/entity-field mismatch HTTP problem.  In many situations, we have entities referenced via a URI that includes their identifier.  That identifier may also be in the body.  If they don't match, it's unclear what the intended operation is, so this error is used.
+  
+x-akamai:
+  file-path: schemas/path-param-field-mismatch-problem.schema.yaml
+required:
+- type
+- instance
+- uriParameterName
+- uriParameterValue
+- property
+- propertyValue
+allOf:
+- $ref: core-problem.schema.yaml#/definitions/httpProblemType
+- properties:
+    property:
+      type: string
+      description: |
+        The name of the field in the entity that must match the URI param.
+    propertyValue:
+      description: |
+        The supplied value of the field.
+    uriParameterName:
+      type: string
+      description: |
+        The name of the URI parameter.
+    uriParameterValue:
+      description: |-
+        The supplied value of the URI parameter.
+        

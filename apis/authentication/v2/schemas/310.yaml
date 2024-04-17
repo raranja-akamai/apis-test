@@ -1,0 +1,55 @@
+type: object
+description: |-
+  Occurs if the user trying to log in doesn't have a valid user account.
+  
+x-akamai:
+  file-path: schemas/310.yaml
+additionalProperties: false
+required:
+- request_id
+- code
+- error_description
+- error
+- stat
+- prereg_fields
+properties:
+  code:
+    type: integer
+    description: |
+      Status code for the error. Note that the Authentication API [doesn’t use standard HTTP status codes](ref:api-errors).
+    minimum: 1
+  error:
+    type: string
+    description: |
+      Error type.
+    minLength: 1
+  error_description:
+    type: string
+    description: |
+      Additional information describing the error and why it took place.
+    minLength: 1
+  prereg_fields:
+    type: object
+    description: |
+      Fields and field values in the request. For example, if the user's first name and last name are in the request then the value might look like this:\n\n        {\"firstName\": \"Karim\", \"lastName\": \"Nafir\"}\n        \nThis documentation includes only one sample field. The actual fields you'll see depend on how you configure your request.
+    additionalProperties: true
+    properties:
+      firstName:
+        type: string
+        description: |
+          First name of the user.
+        minLength: 0
+  request_id:
+    type: string
+    description: |
+      Unique identifier of the request.
+    minLength: 1
+  stat:
+    type: string
+    description: |
+      Status of the operation. Possible values are: `ok`, `error`, and `fail`. The value `ok` indicates that the operation was successful. The value `error` indicates that the operation couldn't complete because of a problem with the request. The value `fail` means that the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if your request returns the `fail` status.
+    enum:
+    - ok
+    - error
+    - fail
+    minLength: 1

@@ -1,0 +1,41 @@
+type: object
+description: |-
+  Returns an access token for a user.
+  
+x-akamai:
+  file-path: schemas/get-an-access-token-request.yaml
+additionalProperties: false
+required:
+- type_name
+properties:
+  id:
+    type: integer
+    description: |
+      Locally unique identifier of the user. This is optional if you're using the `uuid` member or the `key_attribute` member.
+    readOnly: true
+    minimum: 1
+  for_client_id:
+    type: string
+    description: |
+      Unique identifier of the API client authenticating the operation. This client needs to have the `login_client` feature, which gives it permission to call login and registration operations.
+    minLength: 1
+  key_attribute:
+    type: string
+    description: |
+      Name of a unique attribute in the schema. This is optional if you specify `id` or `uuid`. If you specify this, your request needs to include a `key_value` as well.
+    minLength: 1
+  key_value:
+    type: string
+    description: |
+      Value for the `key_attribute` member.
+    minLength: 1
+  type_name:
+    type: string
+    description: |
+      Name of the entity type that stores user profiles.
+    minLength: 1
+  uuid:
+    type: string
+    description: |
+      Universally unique identifier of the user profile. This is optional if you're using `id` or `key_attribute` to identify the user record.
+    minLength: 1

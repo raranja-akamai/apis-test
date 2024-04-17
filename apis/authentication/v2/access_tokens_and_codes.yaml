@@ -1,0 +1,124 @@
+openapi: 3.0.0
+info:
+  title: Access tokens and codes
+  version: v2
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}
+x-akamai:
+  auth-type: OAUTH
+  file-path: access_tokens_and_codes.yaml
+paths:
+  /access/getAccessToken:
+    post:
+      operationId: post-access-getaccesstoken
+      summary: Get an access token
+      tags:
+      - Tokens and codes
+      description: |
+        Returns an Identity Cloud access token.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/get-an-access-token-request.txt
+            schema:
+              $ref: schemas/get-an-access-token-request.yaml
+      responses:
+        200:
+          description: |
+            The response provides the Identity Cloud access token, or indicates a failure.
+          content:
+            application/json:
+              example:
+                $ref: examples/getAccessToken.json
+              schema:
+                $ref: schemas/getAccessToken.yaml
+      security:
+      - basicAuth: []
+  /access/getAuthorizationCode:
+    post:
+      operationId: post-authorization-code
+      summary: Get an authorization code
+      tags:
+      - Tokens and codes
+      description: |
+        Returns an authorization code you can exchange for an access token and a refresh token.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/get-authorization-code.txt
+            schema:
+              $ref: schemas/get-authorization-code.yaml
+      responses:
+        200:
+          description: |
+            Identity Cloud authorization code.
+          content:
+            application/json:
+              example:
+                $ref: examples/getAuthorizationCode.json
+              schema:
+                $ref: schemas/getAuthorizationCode.yaml
+      security:
+      - basicAuth: []
+  /access/getVerificationCode:
+    post:
+      operationId: post-access-getverificationcode
+      summary: Get a verification code
+      tags:
+      - Tokens and codes
+      description: |
+        Returns a verification code for setting a user profile attribute to the current date and time. This code typically verifies an email address.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/get-verification-code.txt
+            schema:
+              $ref: schemas/get-verification-code.yaml
+      responses:
+        200:
+          description: |
+            Verification code.
+          content:
+            application/json:
+              example:
+                $ref: examples/getVerificationCode.json
+              schema:
+                $ref: schemas/getVerificationCode.yaml
+      security:
+      - basicAuth: []
+  /access/use_verification_code:
+    post:
+      operationId: post-access-use-verification-code
+      summary: Set a timestamp
+      tags:
+      - Tokens and codes
+      description: |
+        Uses a one-time verification code to set an attribute value to the current time. Note that you don't need to specify which attribute you're updating. That's because the you specify the attribute name when you request the verification code. Use the [Get a verification code](ref:post-access-getverificationcode) operation to return a verification code. You don't need any authorization to run this operation.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/use-verification-code-request.txt
+            schema:
+              $ref: schemas/use-verification-code-request.yaml
+      responses:
+        200:
+          description: |
+            Attribute update successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/useVerificationCode.json
+              schema:
+                $ref: schemas/useVerificationCode.yaml
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic

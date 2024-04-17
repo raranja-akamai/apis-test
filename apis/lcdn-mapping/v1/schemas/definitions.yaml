@@ -1,0 +1,150 @@
+description: |-
+  Common definitions.
+  
+x-akamai:
+  file-path: schemas/definitions.yaml
+definitions:
+  collectionBaseType:
+    description: |
+      Base type for collections.
+    properties:
+      page:
+        allOf:
+        - description: |
+            Paging properties for the collection results.
+        - $ref: definitions.yaml#/definitions/pageType
+  descriptionType:
+    type: string
+    maxLength: 1024
+  idType:
+    type: string
+    description: |
+      A UUID.
+    pattern: ^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$
+  nameType:
+    type: string
+    minLength: 1
+    maxLength: 128
+  pageType:
+    type: object
+    description: |
+      Common page properties for search results.
+    additionalProperties: false
+    required:
+    - pageNumber
+    - pageSize
+    properties:
+      pageNumber:
+        type: integer
+        description: |
+          Indicates the page number of the current results, given the page size.
+      pageSize:
+        type: integer
+        description: |
+          Indicates the page size for the current results.
+      totalPages:
+        type: integer
+        description: |
+          Indicates the total number of pages, taking the pages size into consideration.
+      totalResults:
+        type: integer
+        description: |
+          Indicates the total number of results from the search.
+  percentageType:
+    type: integer
+    minimum: 0
+    maximum: 100
+  positiveInteger:
+    type: integer
+    minimum: 1
+  x509CertificateSummaryArrayType:
+    type: array
+    description: |
+      An array of X.509 summaries.
+    items:
+      $ref: definitions.yaml#/definitions/x509CertificateSummaryArrayType
+  x509CertificateSummaryType:
+    type: object
+    description: |
+      Summary information of a digital X.509 Certificate.
+    additionalProperties: false
+    properties:
+      fingerprints:
+        type: object
+        description: |
+          An abbreviated form of the certificate's public key.
+        additionalProperties: false
+        properties:
+          sha1Fingerprint:
+            type: string
+            description: |
+              The fingerprint of the certificate using the SHA1 algorithm.
+          sha256Fingerprint:
+            type: string
+            description: |
+              The fingerprint of the certificate using the SHA256 algorithm.
+      issuedBy:
+        type: object
+        description: |
+          A distinguished name (DN) that identifies the certificate authorizer.
+        additionalProperties: false
+        required:
+        - commonName
+        - organization
+        - organizationalUnit
+        properties:
+          commonName:
+            type: string
+            description: |
+              The entity (user/web server/domain/hostname) associated with the certificate authorizer.
+          organization:
+            type: string
+            description: |
+              The organization of the certificate authorizer.
+          organizationalUnit:
+            type: string
+            description: |
+              The organizational unit of the certificate issuer.
+      issuedTo:
+        type: object
+        description: |
+          A distinguished name (DN) that identifies the certificate owner.
+        additionalProperties: false
+        required:
+        - commonName
+        - organization
+        - organizationalUnit
+        - serial
+        properties:
+          commonName:
+            type: string
+            description: |
+              A common name (CN) that identifies the host and domain name associated with the certificate.
+          organization:
+            type: string
+            description: |
+              The organization of the certificate owner.
+          organizationalUnit:
+            type: string
+            description: |
+              The organizational unit of the certificate owner.
+          serial:
+            type: string
+            description: |
+              A serial number that uniquely identifies the certificate.
+      validity:
+        type: object
+        description: |
+          The validity time period of the certificate.
+        additionalProperties: false
+        properties:
+          notAfter:
+            type: string
+            description: |
+              The time and date on which the certificate is no longer valid.
+            format: date-time
+          notBefore:
+            type: string
+            description: |
+              The time and date on which the certificate is valid.
+            format: date-time
