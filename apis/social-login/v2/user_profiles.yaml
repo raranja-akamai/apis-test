@@ -1,0 +1,83 @@
+openapi: 3.0.0
+info:
+  title: User profiles
+  version: v2
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}
+x-akamai:
+  auth-type: OAUTH
+  file-path: user_profiles.yaml
+paths:
+  /api/v2/map:
+    post:
+      operationId: post-map
+      summary: Assign a social login identity provider to a user account
+      tags:
+      - User profiles
+      description: |
+        Assigns a social login identity provider to a user account. Akamai recommends using the [Link a social identity to a user account](https://techdocs.akamai.com/identity-cloud-auth/reference/post-oauth-link-account-native) operation to add a social login identity to a user account.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/add-social-login-identity.txt
+            schema:
+              $ref: schemas/add-social-login-identity.yaml
+      responses:
+        200:
+          description: |
+            Social login identity provider additions.
+          content:
+            application/json:
+              example:
+                $ref: examples/ok-response.json
+              schema:
+                $ref: schemas/map.yaml
+        400:
+          description: |
+            [Missing parameter.](ref:400.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/400_error.json
+              schema:
+                $ref: schemas/400_error.yaml
+  /api/v2/unmap:
+    post:
+      operationId: post-unmap
+      summary: Remove an identity provider from a user account
+      tags:
+      - User profiles
+      description: |
+        Removes a social login identity provider from a user account. Akamai recommends you run the [Unlink a social identity](https://techdocs.akamai.com/identity-cloud/docs/unlink-a-social-identity) operation to remove a social login identity from a user account.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/remove-identity-provider.txt
+            schema:
+              $ref: schemas/remove-identity-provider.yaml
+      responses:
+        200:
+          description: |
+            Removed the social login identity provider.
+          content:
+            application/json:
+              example:
+                $ref: examples/ok-response.json
+              schema:
+                $ref: schemas/unmap.yaml
+        400:
+          description: |
+            [Missing parameter.](ref:400.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/400_error.json
+              schema:
+                $ref: schemas/400_error.yaml

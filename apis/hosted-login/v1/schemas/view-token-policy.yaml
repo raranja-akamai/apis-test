@@ -1,0 +1,76 @@
+type: object
+description: |-
+  Returns a token policy. Token policies specify token lifetimes and define the scopes for OpenID Connect clients.
+  
+x-akamai:
+  file-path: schemas/view-token-policy.yaml
+additionalProperties: false
+required:
+- id
+- accessTokenLifetime
+- allowedScopes
+- refreshTokenLifetime
+- title
+- useAccessJWT
+properties:
+  id:
+    type: string
+    description: |
+      Unique identifier of a token policy.
+    minLength: 1
+  title:
+    type: string
+    description: |
+      Name of a token policy.
+    minLength: 1
+  _links:
+    type: object
+    description: |
+      Navigable hypermedia links for a token policy.
+    additionalProperties: false
+    required:
+    - self
+    properties:
+      self:
+        type: object
+        description: |
+          Navigable hypermedia links for a token policy.
+        additionalProperties: false
+        required:
+        - href
+        properties:
+          href:
+            type: string
+            description: |
+              Navigable hypermedia link to the token policy.
+            minLength: 1
+  accessTokenLifetime:
+    type: integer
+    description: |
+      Number of seconds that access tokens remain valid.
+    minimum: 60
+    maximum: 3600
+  allowedScopes:
+    type: array
+    description: |
+      Scopes you can access when using this token policy. A token policy can return fewer scopes than the ones in the discovery document, but can't return any scopes not in that document. If you leave this out, the token policy uses the scopes specified in the discovery document. See [Scopes and claims](https://techdocs.akamai.com/identity-cloud/docs/scopes-and-claims) for more information.
+    minItems: 1
+    items:
+      type: string
+      enum:
+      - openid
+      - profile
+      - email
+      - address
+      - phone
+      minLength: 1
+  refreshTokenLifetime:
+    type: integer
+    description: |
+      Number of seconds that refresh tokens remain valid.
+    minimum: 60
+    maximum: 31557600
+  useAccessJWT:
+    type: boolean
+    description: |
+      If `true`, Hosted Login issues identity tokens as JSON Web Tokens (JWTs). If `false` or if left out, Hosted Login issues access tokens as standard opaque tokens. Unlike JWTs, only the introspection endpoint can decode standard tokens. See [Token reference](https://techdocs.akamai.com/identity-cloud/docs/token-reference) for more information.

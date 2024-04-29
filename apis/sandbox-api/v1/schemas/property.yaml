@@ -1,0 +1,63 @@
+type: object
+description: |
+  Each sandbox contains at least one property. The property configuration describes the origin location and content-handling specifications.
+additionalProperties: false
+required:
+- requestHostnames
+properties:
+  _links:
+    description: |
+      HAL-formatted hypermedia links relating to the property. See [Hypermedia](ref:hypermedia) for more information.
+    $ref: links.yaml
+  additionalRequestHostnamesInProperty:
+    type: array
+    description: |
+      Hostnames found in the [property configuration](https://techdocs.akamai.com/property-mgr/docs/key-concepts-terms) not specified in the [Create a sandbox](ref:post-sandbox) request.
+    minItems: 1
+    items:
+      type: string
+  cpcode:
+    type: number
+    description: |
+      Unique identifier used for reporting traffic served. The Sandbox API tries to use the same CP code for all traffic within a particular Control Center access group.
+  editedRuleBehaviors:
+    type: array
+    description: |
+      Behaviors in the rule tree that were modified for use in the Sandbox.
+    items:
+      type: string
+  filteredRuleBehaviors:
+    type: array
+    description: |
+      Behaviors in the rule tree that were removed because they aren't supported by Sandbox.
+    items:
+      type: string
+  productId:
+    type: string
+    description: |
+      The Akamai product assigned to the property, as defined in Property Manager.
+  propertyId:
+    type: string
+    description: |
+      The identifier for the property from which the sandbox was created.
+  requestHostnames:
+    type: array
+    description: |
+      Customer-specific hostnames included in the property configuration. You can use them to make requests and test changes in the sandbox. The Sandbox API defaults to the hostnames configured in the property unless you specify alternates.
+    minItems: 1
+    items:
+      type: string
+  ruleFormat:
+    type: string
+    description: |
+      The Property Manager rule format used within the property.
+  sandboxPropertyId:
+    type: string
+    description: |
+      Unique identifier for a property within the sandbox.
+  validationStatus:
+    type: string
+    description: |
+      The validation status for the property. If the status is `OK` the sandbox can serve traffic. If the status is `ERROR` you can find the `statusReason` in the sandbox response object.
+  validationWarnings:
+    $ref: ValidationWarnings.yaml

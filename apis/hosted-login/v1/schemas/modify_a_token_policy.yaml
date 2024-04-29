@@ -1,0 +1,59 @@
+type: object
+description: |-
+  Modifies a token policy. Token policies specify token lifetimes and define the scopes for OpenID Connect clients.
+  
+x-akamai:
+  file-path: schemas/modify_a_token_policy.yaml
+additionalProperties: false
+required:
+- id
+- accessTokenLifetime
+- allowedScopes
+- refreshTokenLifetime
+- title
+- useAccessJWT
+- href
+properties:
+  id:
+    type: string
+    description: |
+      Unique identifier of a token policy.
+    minLength: 1
+  title:
+    type: string
+    description: |
+      Name of the token policy.
+    minLength: 1
+  accessTokenLifetime:
+    type: integer
+    description: |
+      Number of seconds that access tokens remain valid. The `accessTokenLifetime` needs to be an integer value between `60` and `3600`.
+  allowedScopes:
+    type: array
+    description: |
+      Scopes you can access when using this token policy. A token policy can return fewer scopes than the ones in the discovery document, but can't return any scopes not in that document. If you leave this parameter out, the token policy uses the scopes specified in the discovery document. See [Scopes and claims](https://techdocs.akamai.com/identity-cloud/docs/scopes-and-claims) for more information.
+    minItems: 1
+    items:
+      type: string
+      description: |
+        OpenID Connect scope available to the token policy.
+      enum:
+      - openid
+      - profile
+      - email
+      - address
+      - phone
+      minLength: 1
+  href:
+    type: string
+    description: |
+      Navigable hypermedia link to the token policy.
+    minLength: 1
+  refreshTokenLifetime:
+    type: integer
+    description: |
+      Number of seconds that refresh tokens remain valid. The `refreshTokenLifetime` member needs to be an integer value between `60` and `31557600`.
+  useAccessJWT:
+    type: boolean
+    description: |
+      If `true`, Hosted Login issues identity tokens as JSON Web Tokens (JWTs). If `false` or if left out, Hosted Login issues access tokens as standard opaque tokens. Unlike JWTs, only the introspection endpoint can decode standard tokens. See [Token reference](https://techdocs.akamai.com/identity-cloud/docs/token-reference) for more information.

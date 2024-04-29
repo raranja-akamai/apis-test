@@ -1,0 +1,118 @@
+type: object
+description: |-
+  Returns your custom providers. Custom providers are social login identity providers (IdPs) that weren't predefined by Akamai. You can configure most IdPs that support OAuth 2.0, OpenID Connect, or SAML 2.0 as custom providers.
+  
+x-akamai:
+  file-path: schemas/list-custom-providers.yaml
+additionalProperties: false
+required:
+- _embedded
+- _links
+- total
+properties:
+  _embedded:
+    type: object
+    description: |
+      Navigable hypermedia links for your custom providers.
+    additionalProperties: false
+    required:
+    - item
+    properties:
+      item:
+        type: array
+        description: |
+          Navigable hypermedia links for the custom providers.
+        minItems: 1
+        items:
+          type: object
+          additionalProperties: false
+          required:
+          - _links
+          - id
+          - protocol
+          - title
+          properties:
+            id:
+              type: string
+              description: |
+                Unique identifier of the custom provider.
+              minLength: 1
+            title:
+              type: string
+              description: |
+                Name of the custom provider.
+              minLength: 1
+            _links:
+              type: object
+              description: |
+                Navigable hypermedia links for a custom provider.
+              additionalProperties: false
+              required:
+              - self
+              properties:
+                self:
+                  type: object
+                  description: |
+                    Navigable hypermedia link for a custom provider.
+                  additionalProperties: false
+                  required:
+                  - href
+                  properties:
+                    href:
+                      type: string
+                      description: |
+                        URL for the custom provider.
+                      minLength: 1
+            protocol:
+              type: string
+              description: |
+                **For use with OAuth, OpenID Connect, and SAML 2.0 providers.** Authentication protocol of the identity provider. Valid values: `oauth2`, for OAuth 2.0, `openidconnect` for OpenID Connect, and `saml2` for Security Assertion Markup Language 2.0. After you create a custom provider, you can't change the protocol.
+              enum:
+              - oauth2
+              - openidconnect
+              - saml2
+              minLength: 1
+  _links:
+    type: object
+    description: |
+      Navigable hypermedia links for a custom provider.
+    additionalProperties: false
+    required:
+    - item
+    properties:
+      item:
+        type: object
+        description: |
+          Navigable hypermedia links for a custom provider.
+        additionalProperties: false
+        required:
+        - href
+        - templated
+        properties:
+          href:
+            type: string
+            description: |
+              URL for the custom provider.
+            minLength: 1
+          templated:
+            type: boolean
+            description: |
+              Internal designator for the custom provider.
+      self:
+        type: object
+        description: |
+          Navigable hypermedia link for a custom provider.
+        additionalProperties: false
+        required:
+        - href
+        properties:
+          href:
+            type: string
+            description: |
+              URL to all the custom providers in the application.
+            minLength: 1
+  total:
+    type: integer
+    description: |
+      Total number of custom providers available to you.
+    minimum: 0

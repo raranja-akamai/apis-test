@@ -1,0 +1,107 @@
+type: object
+description: |-
+  Returns your social login applications. You use a social login application to create custom providers.
+  
+x-akamai:
+  file-path: schemas/list-social-login-applications.yaml
+additionalProperties: false
+required:
+- total
+properties:
+  _embedded:
+    type: object
+    description: |
+      Navigable hypermedia links for your social login applications.
+    additionalProperties: false
+    required:
+    - item
+    properties:
+      item:
+        type: array
+        description: |
+          Navigable hypermedia links for your social login applications.
+        minItems: 1
+        items:
+          type: object
+          additionalProperties: false
+          required:
+          - _links
+          - appid
+          - realm
+          properties:
+            _links:
+              type: object
+              description: |
+                Navigable hypermedia links for the social login application.
+              additionalProperties: false
+              required:
+              - self
+              properties:
+                self:
+                  type: object
+                  description: |
+                    Navigable hypermedia link for a social login application.
+                  additionalProperties: false
+                  required:
+                  - href
+                  properties:
+                    href:
+                      type: string
+                      description: |
+                        Navigable hypermedia link for a social login application.
+                      minLength: 1
+            appid:
+              type: string
+              description: |
+                Unique identifier of a social login application.
+              minLength: 1
+            realm:
+              type: string
+              description: |
+                Authentication domain for a social login application. Unless you use a custom domain, your social login applications are typically on the `rpxnow.com` domain. In that case, and if your domain is `my-domain.rpxnow.com`, your realm is `my-domain`.
+              minLength: 1
+  _links:
+    type: object
+    description: |
+      Navigable hypermedia links for a social login application.
+    additionalProperties: false
+    required:
+    - item
+    - self
+    properties:
+      item:
+        type: object
+        description: |
+          Navigable hypermedia link for a social login application.
+        additionalProperties: false
+        required:
+        - href
+        - templated
+        properties:
+          href:
+            type: string
+            description: |
+              Navigable hypermedia for a social login application.
+            minLength: 1
+          templated:
+            type: boolean
+            description: |
+              Internal identifier for the social login application. For Identity Cloud use only.
+      self:
+        type: object
+        description: |
+          Navigable hypermedia links for your social login applications.
+        additionalProperties: false
+        required:
+        - href
+        properties:
+          href:
+            type: string
+            description: |
+              Navigable hypermedia link for your social login applications.
+            minLength: 1
+  total:
+    type: integer
+    description: |
+      Total number of social login applications available to you.
+    minimum: 0

@@ -1,0 +1,415 @@
+openapi: 3.0.0
+info:
+  title: Token policies
+  version: v1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}/{customerId}
+x-akamai:
+  auth-type: OAUTH
+  file-path: token_policies.yaml
+paths:
+  /config/tokenPolicies:
+    post:
+      operationId: post-token-policy
+      summary: Create a token policy
+      tags:
+      - Token policies
+      description: |
+        Creates a token policy.
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/create-token-policy-post.json
+            schema:
+              $ref: schemas/create-token-policy-post.yaml
+      responses:
+        201:
+          description: |
+            Unique identifier of the new token policy.
+          content:
+            text/plain:
+              example:
+                $ref: examples/create-token-policy-response.json
+              schema:
+                $ref: schemas/create-token-policy-response.yaml
+        400:
+          description: |
+            [Bad request.](ref:400.yaml())
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    get:
+      operationId: get-token-policies
+      summary: List token policies
+      tags:
+      - Token policies
+      description: |
+        Returns your token policies. Token policies specify token lifetimes and define the scopes for OpenID Connect clients.
+      responses:
+        200:
+          description: |
+            Information about your token policies.
+          content:
+            application/json:
+              example:
+                $ref: examples/list-token-policies.json
+              schema:
+                $ref: schemas/list-token-policies.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /config/tokenPolicies/{tokenPolicyId}:
+    parameters:
+    - $ref: parameters/tokenPolicyId-path.yaml
+    get:
+      operationId: get-token-policy
+      summary: Get a token policy
+      tags:
+      - Token policies
+      description: |
+        Returns a token policy.
+      responses:
+        200:
+          description: |
+            Information about the token policy.
+          content:
+            application/json:
+              example:
+                $ref: examples/view-token-policy.json
+              schema:
+                $ref: schemas/view-token-policy.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    put:
+      operationId: put-token-policy
+      summary: Modify a token policy
+      tags:
+      - Token policies
+      description: |
+        Modifies a token policy.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/modify-token-policy-put.json
+            schema:
+              $ref: schemas/modify-token-policy-put.yaml
+      responses:
+        200:
+          description: |
+            Token policy modifications successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/modify-token-policy.json
+              schema:
+                $ref: schemas/modify-token-policy.yaml
+        400:
+          description: |
+            [Bad request.](ref:400.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [Forbidden.](ref:4043.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    delete:
+      operationId: delete-token-policy
+      summary: Delete a token policy
+      tags:
+      - Token policies
+      description: |
+        Deletes a token policy. Note that you can't delete a token policy currently in use by an OIDC client. That’s because OIDC clients always need to have a token policy. If you want to remove that token policy, start by modifying the OIDC client and assigning it a different token policy. After that you can delete the token policy.
+      responses:
+        204:
+          description: |
+            Token policy deletion successful.
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+        409:
+          description: |
+            [Dependency error.](ref:409.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/409.json
+              schema:
+                $ref: schemas/409.yaml
+  /config/tokenPolicies/{tokenPolicyId}/allowedGrantTypes:
+    parameters:
+    - $ref: parameters/tokenPolicyId-path.yaml
+    get:
+      operationId: get-allowed-grant-types
+      summary: List a token policy's allowed grant types
+      tags:
+      - Grant types
+      description: |
+        Returns the grant types available to a token policy. A grant is a standard methodology for obtaining tokens and, in turn, obtaining access to protected resources. See [Supported authorization grant types](https://techdocs.akamai.com/identity-cloud/docs/supported-authorization-grant-types-1#manage-allowed-grant-types) for more information.
+      responses:
+        200:
+          description: |
+            Grant types available to the token policy.
+          content:
+            text/plain:
+              example:
+                $ref: examples/allowed-grant-types-response.json
+              schema:
+                $ref: schemas/allowed-grant-types-response.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    put:
+      operationId: put-allowed-grant-types
+      summary: Modify a token policy's allowed grant types
+      tags:
+      - Grant types
+      description: |
+        Modifies the grant types available to a token policy. See [Supported authorization grant types](https://techdocs.akamai.com/identity-cloud/docs/supported-authorization-grant-types-1#manage-allowed-grant-types) for more information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/allowed-grant-types-response.json
+            schema:
+              $ref: schemas/allowed-grant-types-response.yaml
+      responses:
+        200:
+          description: |
+            Grant type modifications successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/allowed-grant-types-response.json
+              schema:
+                $ref: schemas/allowed-grant-types-response.yaml
+        400:
+          description: |
+            [Bad request.](ref:400.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /config/tokenPolicies/{tokenPolicyId}/allowedResourceIndicators:
+    parameters:
+    - $ref: parameters/tokenPolicyId-path.yaml
+    get:
+      operationId: get-allowed-resource-indicators
+      summary: List a token policy's allowed resource indicators
+      tags:
+      - Resource indicators
+      description: |
+        Returns the resource indicators for a token policy. Resource indicators are identifiers representing items you can reference when using the `resource` parameter. See [Secure audience injection and the resource parameter](https://techdocs.akamai.com/identity-cloud/docs/secure-audience-injection-and-the-resource-parameter) for more information.
+      responses:
+        200:
+          description: |
+            Returns resource indicators for the token policy.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-resource-indicators-response.json
+              schema:
+                $ref: schemas/get-resource-indicators-response.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    put:
+      operationId: put-allowed-resource-indicators
+      summary: Modify allowed resource indicators
+      tags:
+      - Resource indicators
+      description: |
+        Modifies the resource indicators for a token policy. See [Secure audience injection and the resource parameter](https://techdocs.akamai.com/identity-cloud/docs/secure-audience-injection-and-the-resource-parameter) for more information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/modify-resource-indicators.json
+            schema:
+              $ref: schemas/modify-resource-indicators.yaml
+      responses:
+        200:
+          description: |
+            Updates to the resource indicators successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/modify-resource-indicators.json
+              schema:
+                $ref: schemas/modify-resource-indicators.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+        422:
+          description: |
+            [Unprocessable entity.](ref:422.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/422.json
+              schema:
+                $ref: schemas/422.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+- bearerAuth: []

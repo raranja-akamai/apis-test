@@ -1,0 +1,36 @@
+type: object
+description: |-
+  Returns an administrative access token. You use an administrative access token to call the other Hosted Login operations.
+  
+x-akamai:
+  file-path: schemas/request-administrative-access-token.yaml
+additionalProperties: false
+required:
+- access_token
+- expires_in
+- token_type
+- scope
+properties:
+  access_token:
+    type: string
+    description: |
+      Access token for calling the other Hosted Login API operations.
+    minLength: 1
+  expires_in:
+    type: integer
+    description: |
+      Number of seconds the access token remains valid. Note that there's no administrative access refresh token. Instead, when an access token expires, you need to retrieve a new token. By default access tokens expire after one hour.
+    minimum: 60
+    maximum: 3600
+  scope:
+    type: string
+    description: |
+      Space-delimited set of permissions for the user in possession of the token. For example, the scope `*:**` provides full permissions to Hosted Login. See [Get Started](https://techdocs.akamai.com/identity-cloud-hosted-login/reference/get-started) for information on setting different administrative access scopes.
+    minLength: 1
+  token_type:
+    type: string
+    description: |
+      Always set to `Bearer`. This means that the token permissions go to the user who possesses the token.
+    enum:
+    - Bearer
+    minLength: 1

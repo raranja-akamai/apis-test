@@ -1,0 +1,86 @@
+type: object
+description: |-
+  Occurs if a user tries to register with an email address already in use. Email addresses need to be unique within an entity type.
+  
+x-akamai:
+  file-path: schemas/380.yaml
+additionalProperties: false
+required:
+- stat
+- request_id
+- code
+- error_description
+- error
+- existing_provider
+- existing_display_name
+- existing_date_created
+properties:
+  code:
+    type: integer
+    description: |
+      Status code for the error. Note that the Authentication API [doesn’t use standard HTTP status codes](ref:api-errors).
+    minimum: 1
+  error:
+    type: string
+    description: |
+      Error type.
+    minLength: 1
+  error_description:
+    type: string
+    description: |
+      Additional information describing the error and why it took place.
+    minLength: 1
+  existing_date_created:
+    type: string
+    description: |
+      Timestamp indicating the creation date of the account of the user currently using the email address.
+    format: date-time
+  existing_display_name:
+    type: string
+    description: |
+      Value of the `displayName` attribute for the user currently using the email address.
+    minLength: 1
+  existing_photo:
+    type: object
+    description: |
+      Link to the user profile photo of the user currently using the email address.
+    additionalProperties: false
+    required:
+    - id
+    - value
+    - type
+    properties:
+      id:
+        type: integer
+        description: |
+          Unique identifier of the photo.
+        minimum: 1
+      type:
+        type: string
+        description: |
+          Type of photo. This is typically set to `other`.
+        minLength: 1
+      value:
+        type: string
+        description: |
+          URL of the photo.
+        minLength: 1
+  existing_provider:
+    type: string
+    description: |
+      Social login identity provider of the account currently using the email address.
+    minLength: 1
+  request_id:
+    type: string
+    description: |
+      Unique identifier of the request.
+    minLength: 1
+  stat:
+    type: string
+    description: |
+      Status of the operation. Possible values are: `ok`, `error`, and `fail`. The value `ok` indicates that the operation was successful. The value `error` indicates that the operation couldn't complete because of a problem with the request. The value `fail` means that the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if your request returns the `fail` status.
+    enum:
+    - ok
+    - error
+    - fail
+    minLength: 1

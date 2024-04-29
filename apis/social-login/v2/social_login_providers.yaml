@@ -1,0 +1,84 @@
+openapi: 3.0.0
+info:
+  title: Social login providers
+  version: v2
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}
+x-akamai:
+  auth-type: OAUTH
+  file-path: social_login_providers.yaml
+paths:
+  /api/v2/get_available_providers:
+    post:
+      operationId: post-get-available-providers
+      summary: Get all social login providers
+      tags:
+      - Social login providers
+      description: |
+        Returns the social login identity providers available to a social login application. The response includes providers ready for immediate use, as well as providers that are available but require additional configuration. See [Social login configuration guides](https://techdocs.akamai.com/identity-cloud/docs/social-login-identity-provider-configuration-guides) for information on configuring the standard Identity Cloud social login identity providers.
+      responses:
+        200:
+          description: |
+            Social login providers available to an application.
+          content:
+            application/json:
+              example:
+                $ref: examples/get_available_providers.json
+              schema:
+                $ref: schemas/get_available_providers.yaml
+  /api/v2/providers:
+    post:
+      operationId: post-providers
+      summary: Get all configured social login providers
+      tags:
+      - Social login providers
+      description: |
+        Returns the social login identity providers available for immediate use by a social login application. These providers require no additional configuration.
+      responses:
+        200:
+          description: |
+            Social login providers available for immediate use.
+          content:
+            application/json:
+              example:
+                $ref: examples/providers.json
+              schema:
+                $ref: schemas/providers.yaml
+  /api/v2/set_auth_providers:
+    post:
+      operationId: post-set-auth-providers
+      summary: Assign social login authentication providers
+      tags:
+      - Social login providers
+      description: |
+        Defines the social login identity providers that appear on your sign-in and registration screens. These are the only identity providers users can employ for social logins and registrations.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/assign-social-login-providers.txt
+            schema:
+              $ref: schemas/assign-social-login-providers.yaml
+      responses:
+        200:
+          description: |
+            Social login providers available for logins and registrations.
+          content:
+            application/json:
+              example:
+                $ref: examples/ok-response.json
+              schema:
+                $ref: schemas/set_authentication_providers.yaml
+        400:
+          description: |
+            [Missing parameter.](ref:400.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/400_error.json
+              schema:
+                $ref: schemas/400_error.yaml

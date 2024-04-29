@@ -1,0 +1,62 @@
+type: object
+description: |-
+  Returns your JSON web keys. These are public cryptographic keys that verify the signatures on Hosted Login identity tokens.
+  
+x-akamai:
+  file-path: schemas/get_json_webkeys.yaml
+additionalProperties: false
+required:
+- keys
+properties:
+  keys:
+    type: array
+    description: |
+      JSON web keys available to you.
+    minItems: 0
+    items:
+      type: object
+      additionalProperties: false
+      required:
+      - use
+      - kty
+      - kid
+      - alg
+      - n
+      - e
+      properties:
+        alg:
+          type: string
+          description: |
+            Cryptographic algorithm for signing identity tokens. Hosted Login only supports `RS256`, the RSA Digital Signature Algorithm with SHA-256 encryption algorithm.
+          enum:
+          - RS256
+          minLength: 1
+        e:
+          type: string
+          description: |
+            Along with the modulus (`m`), generates public key values. The exponent is typically set to `65537` or `AQAB` when Base64urlUInt-encoded.
+          minLength: 1
+        kid:
+          type: string
+          description: |
+            Identifier for a JSON web key. Note that these values don’t need to be unique. Instead, two keys can have the same ID as long as they differ in other ways, such as key use or key type.
+          minLength: 1
+        kty:
+          type: string
+          description: |
+            Cryptographic algorithm family for the key. Hosted Login only supports the `RSA` (Rivest–Shamir–Adleman) algorithm.
+          enum:
+          - RSA
+          minLength: 1
+        n:
+          type: string
+          description: |
+            Along with the exponent (`e`), generates public key values.
+          minLength: 1
+        use:
+          type: string
+          description: |
+            Indicates whether a public key encrypts data or verifies the signature on data. For Hosted Login, this value is always `sig`. Hosted Login only uses JSON web keys to verify identity token signatures.
+          enum:
+          - sig
+          minLength: 1

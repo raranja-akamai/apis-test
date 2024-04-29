@@ -1,0 +1,205 @@
+type: object
+description: |-
+  OpenID Connect (OIDC) values available to OIDC clients. The discovery document, also known as the _well-known endpoint_, provides a way for OIDC clients to self-configure.
+  
+x-akamai:
+  file-path: schemas/view-your-discovery-document.yaml
+additionalProperties: false
+required:
+- issuer
+- authorization_endpoint
+- token_endpoint
+- introspection_endpoint
+- revocation_endpoint
+- userinfo_endpoint
+- jwks_uri
+- request_parameter_supported
+- response_modes_supported
+- subject_types_supported
+- id_token_signing_alg_values_supported
+- grant_types_supported
+- acr_values_supported
+- token_endpoint_auth_methods_supported
+- scopes_supported
+- claims_parameter_supported
+- claims_supported
+- code_challenge_methods_supported
+properties:
+  acr_values_supported:
+    type: array
+    description: |
+      Authentication Context Class References (ACR). These references, which represent different methods of authentication, come from the National Institute of Standards and Technology’s Authenticator Assurance Levels. See [Risk-based authentication](https://techdocs.akamai.com/identity-cloud/docs/risk-based-authentication-and-client-reputation#the-acr_values-parameter) for more information.
+    minItems: 1
+    items:
+      type: string
+      enum:
+      - '0'
+      - urn:akamai-ic:nist:800-63-3:aal:1
+      - urn:akamai-ic:nist:800-63-3:aal:2
+      minLength: 1
+  authorization_endpoint:
+    type: string
+    description: |
+      URL of the authorization server.
+    minLength: 1
+  claims_parameter_supported:
+    type: boolean
+    description: |
+      Indicates whether you can use the `claims` parameter in authorization requests.
+  claims_supported:
+    type: array
+    description: |
+      OpenID Connect claims. Each claim represents a single piece of user information, such as the user’s first name or cell phone number. See [Scopes and claims](https://techdocs.akamai.com/identity-cloud/docs/scopes-and-claims) for more information.
+    minItems: 1
+    items:
+      type: string
+      enum:
+      - sub
+      - iss
+      - auth_time
+      - given_name
+      - address
+      - family_name
+      - middle_name
+      - preferred_username
+      - gender
+      - birthdate
+      - updated_at
+      - phone_number
+      - phone_number_verified
+      - email
+      - email_verified
+      minLength: 1
+  code_challenge_methods_supported:
+    type: array
+    description: |
+      Proof Key for Code Exchange (PKCE) code challenge methods. Hosted Login only supports the `S256` code challenge method. This method is also known as `SHA-256` or `Secure Hash Algorithm`. See [Authorization code + PKCE grant type](https://techdocs.akamai.com/identity-cloud/docs/the-authorization-code-pkce-grant-type) for more information.
+    minItems: 1
+    items:
+      type: string
+      enum:
+      - S256
+      minLength: 1
+  grant_types_supported:
+    type: array
+    description: |
+      Methods for obtaining an access token. See [Supported authorization grant types](https://techdocs.akamai.com/identity-cloud/docs/supported-authorization-grant-types) for more information.
+    minItems: 1
+    items:
+      type: string
+      enum:
+      - authorization_code
+      - client_credentials
+      - implicit
+      - password
+      - refresh_token
+      - urn:ietf:params:oauth:grant-type:token-exchange
+      minLength: 1
+  id_token_signing_alg_values_supported:
+    type: array
+    description: |
+      Algorithms for signing JSON web tokens. Hosted Login only supports the `RS256` signing algorithm.
+    minItems: 1
+    items:
+      type: string
+      enum:
+      - RS256
+      minLength: 1
+  introspection_endpoint:
+    type: string
+    description: |
+      URL of the introspection endpoint. This endpoint validates access and refresh tokens.
+    minLength: 1
+  issuer:
+    type: string
+    description: |
+      Base URL for your implementation of Hosted Login.
+    minLength: 1
+  jwks_uri:
+    type: string
+    description: |
+      URL of your JSON Web Key Set (JWKS). JSON web keys are public cryptographic keys for verifying the signatures of identity tokens.
+    minLength: 1
+  request_parameter_supported:
+    type: boolean
+    description: |
+      If `true`, you can use the `request` parameter in authorization requests. The `request` parameter combines all your query parameters into a single JSON web token.
+  response_modes_supported:
+    type: array
+    description: |
+      Specifies the different ways an authorization server can respond after a user logs in. See [Supported response modes](https://techdocs.akamai.com/identity-cloud/docs/supported-response-modes) for more information.
+    minItems: 1
+    items:
+      type: string
+      enum:
+      - query
+      - fragment
+      - form_post
+      minLength: 1
+  response_types_supported:
+    type: array
+    description: |
+      Specifies the items you receive following a successful authentication. See [Supported response types](https://techdocs.akamai.com/identity-cloud/docs/supported-response-types) for more information.
+    minItems: 1
+    items:
+      type: string
+      enum:
+      - code
+      - id_token
+      - token
+      - none
+      - code id_token
+      - code token
+      - id_token token
+      - code id_token token
+      minLength: 1
+  revocation_endpoint:
+    type: string
+    description: |
+      URL of the revocation endpoint. This endpoint revokes access and refresh tokens.
+    minLength: 1
+  scopes_supported:
+    type: array
+    description: |
+      OpenID Connect scopes. Scopes are a collection of claims, with each claim typically representing a single piece of user information, such as a user’s first name or cell phone number. See [Scopes and claims](https://techdocs.akamai.com/identity-cloud/docs/scopes-and-claims) for more information.
+    minItems: 1
+    items:
+      type: string
+      enum:
+      - openid
+      - profile
+      - email
+      - address
+      - phone
+      minLength: 1
+  subject_types_supported:
+    type: array
+    description: |
+      Subject Identifier types. Currently Hosted Login only supports the `public` type, in which the server issues a user a single unique identifier. The user then employs this identity on all of their clients.
+    minItems: 1
+    items:
+      type: string
+      enum:
+      - public
+      minLength: 1
+  token_endpoint:
+    type: string
+    description: |
+      URL of the token endpoint.
+    minLength: 1
+  token_endpoint_auth_methods_supported:
+    type: array
+    description: |
+      Client authentication methods for the token endpoint. Hosted Login currently supports the `client_secret_post` method, in which the client sends authentication information as part of the request body in an HTTP POST, and the `client_secret_basic` method. In the latter method, the client passes a user ID and password to the server as part of the `Authorization` header. Akamai recommends using `client_secret_basic` only on a secure connection.
+    minItems: 1
+    items:
+      type: string
+      enum:
+      - client_secret_post
+      - client_secret_basic
+      minLength: 1
+  userinfo_endpoint:
+    type: string
+    description: |
+      URL of the userinfo endpoint. This endpoint makes user profile information available to OpenID Connect clients.
+    minLength: 1

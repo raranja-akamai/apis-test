@@ -1,0 +1,159 @@
+type: object
+additionalProperties: false
+required:
+- firstName
+- lastName
+- email
+- country
+- authGrants
+- additionalAuthentication
+properties:
+  firstName:
+    type: string
+    description: |
+      The user's first name.
+    minLength: 1
+  lastName:
+    type: string
+    description: |
+      The user's surname.
+    minLength: 1
+  email:
+    type: string
+    description: |
+      The user's email address.
+    format: email
+  phone:
+    type: string
+    description: |
+      The user's main phone number, represented as a ten-digit integer within a string.
+    minLength: 1
+  additionalAuthentication:
+    type: string
+    description: |
+      Specifies the user's multi-factor authentication method, confirming their identity. Either `TFA`, `MFA`, or `NONE`, which offers no additional authentication.
+    enum:
+    - TFA
+    - MFA
+    - NONE
+  country:
+    type: string
+    description: |
+      User's country. To get the available values, run the [View supported countries](ref:get-common-countries) operation.
+    minLength: 1
+  contactType:
+    type: string
+    description: |
+      User's contact type. To get the available values, run the [View contact types](ref:get-common-contact-types) operation.
+    minLength: 1
+  timeZone:
+    type: string
+    description: |
+      The user's time zone. To get the available values, run the [View time zones](ref:get-common-timezones) operation.
+    minLength: 1
+  preferredLanguage:
+    type: string
+    description: |
+      The user's language. To get the available values, run the [View languages](ref:get-common-languages) operation.
+    minLength: 1
+  sessionTimeOut:
+    type: integer
+    description: |
+      The number of seconds it takes for the user's Control Center session to time out after no activity. To get the available values, run the [View timeout policies](ref:get-common-timeout-policies) operation.
+    minimum: 0
+  secondaryEmail:
+    type: string
+    description: |
+      The user's alternate email address.
+    format: email
+  mobilePhone:
+    type: string
+    description: |
+      The user's mobile phone number, represented as a ten-digit integer within a string.
+    minLength: 1
+  address:
+    type: string
+    description: |
+      The user's street address.
+    minLength: 1
+  city:
+    type: string
+    description: |
+      The user's city.
+    minLength: 1
+  state:
+    type: string
+    description: |
+      The user's state or province if user's country is USA or Canada. To get the available values, run the [View states for a user profile](ref:get-user-states) operation.
+    minLength: 1
+  zipCode:
+    type: string
+    description: |
+      The user's five-digit postal code, represented as a string.
+    minLength: 1
+  jobTitle:
+    type: string
+    description: |
+      The user's position at the company.
+    minLength: 1
+  cloneFrom:
+    type: string
+    description: |
+      The username to clone a user's `authGrants` from. Provide either this or the `authGrants`.
+    minLength: 1
+  authGrants:
+    type: array
+    description: |
+      The user's role assignments, per group. Provide either this or the `cloneFrom`.
+    minItems: 0
+    items:
+      $ref: auth-grant-request.yaml
+  notifications:
+    type: object
+    description: |
+      Specifies email notifications the user receives for products.
+    additionalProperties: false
+    required:
+    - enableEmailNotifications
+    properties:
+      options:
+        type: object
+        description: |
+          Specifies email notifications settings.
+        additionalProperties: false
+        required:
+        - passwordExpiry
+        - newUserNotification
+        properties:
+          upgrade:
+            type: array
+            description: |
+              Products for which the user receives notifications for upgrades.
+            minItems: 0
+            items:
+              type: string
+              minLength: 1
+          proactive:
+            type: array
+            description: |
+              Products for which the user gets notifications for service issues.
+            minItems: 0
+            items:
+              type: string
+              minLength: 1
+          passwordExpiry:
+            type: boolean
+            description: |
+              Enables notifications for expiring passwords.
+          newUserNotification:
+            type: boolean
+            description: |
+              Enables notifications for group administrators when the user creates other new users.
+          apiClientCredentialExpiryNotification:
+            type: boolean
+            description: |
+              Enables notifications for expiring API client credentials.
+      enableEmailNotifications:
+        type: boolean
+        description: |
+          Enables email notifications.

@@ -1,0 +1,3059 @@
+{
+  "components": {
+    "securitySchemes": {
+      "basicAuth": {
+        "scheme": "basic",
+        "type": "http"
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "See documentation for Akamai's Identity Cloud Webhooks API",
+    "url": "https://techdocs.akamai.com/identity-cloud-webhooks/reference"
+  },
+  "info": {
+    "description": "Receives near real-time notifications of events taking place on your site.\n",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Akamai: Identity Cloud Webhooks API\n",
+    "version": "v1"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/{customerId}/login/token": {
+      "post": {
+        "description": "Returns an administrative access token for calling other Webhooks v3 operations.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Webhooks API",
+          "url": "https://techdocs.akamai.com/identity-cloud-webhooks/reference/post-admin-access-token"
+        },
+        "operationId": "post-admin-access-token",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "example": "--boundary\nContent-Disposition: form-data; name=\"grant_type\",\n\nclient_credentials\n\n--boundary\nContent-Disposition: form-data; name=\"scope\",\n\n*:webhooks/**",
+              "schema": {
+                "additionalProperties": false,
+                "description": "Returns an administrative access tokens. You need to use an administrative access token to call the other Webhooks v3 operations.",
+                "properties": {
+                  "grant_type": {
+                    "description": "Use this to specify the grant type. This needs to be `client_credentials`.",
+                    "enum": [
+                      "client_credentials"
+                    ],
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "scope": {
+                    "description": "Defines the permissions of the administrative access token. A scope of `*:webhooks/**` gives the bearer of the token full access to Webhooks v3. This is the only scope available in Webhooks v3.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "grant_type",
+                  "scope"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/get-admin-token.yaml"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "access_token": "WhdwM3NfAEs8dItdUJHZV-nHEvfFGjNvYEiHH8s1rOKS6vHbRxrfsyntpxt1dB_G",
+                  "expires_in": 3600,
+                  "scope": "*:webhooks/**",
+                  "token_type": "Bearer"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Returns an administrative access token for calling the other Webhooks v3 operations.",
+                  "properties": {
+                    "access_token": {
+                      "description": "Administrative access token for calling Webhooks v3 operations. To call those operations, use `Bearer` token authentication and the value of this token.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "expires_in": {
+                      "description": "Number of seconds the administrative access token remains valid. After an access token expires, you need to get a new one. Webhooks v3 doesn't use administrative refresh tokens. By default, access tokens expire after one hour: 3600 seconds.",
+                      "maximum": 3600,
+                      "minimum": 60,
+                      "type": "integer"
+                    },
+                    "scope": {
+                      "description": "Defines the permissions of the administrative access token. A scope of `*:webhooks/**` gives the bearer of the token full access to Webhooks v3. This is the only scope available in Webhooks v3.",
+                      "enum": [
+                        "*:webhooks/**"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "token_type": {
+                      "description": "Type of token. This is always set to `Bearer`.",
+                      "enum": [
+                        "Bearer"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "access_token",
+                    "expires_in",
+                    "token_type",
+                    "scope"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/get-a-webhooks-token.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Administrative access token."
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Not found"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "One or more items in your path, such as your customer ID, are invalid.",
+                  "properties": {
+                    "error": {
+                      "description": "[Not found](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/404.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[A path component couldn't be found.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404)"
+          }
+        },
+        "summary": "Get a Webhooks v3 administrative access token",
+        "tags": [
+          "Tokens"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Unique identifier of an Akamai customer. To verify your customer ID, log in to Console and then, on the **Manage Application** page, check the value of the `customer_id` setting.",
+          "example": "{{customerId}}",
+          "in": "path",
+          "name": "customerId",
+          "required": true,
+          "schema": {
+            "example": "e0a70b4f-1eef-4856-bcdb-f050fee66aae",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/customerId-path.yaml"
+          }
+        }
+      ]
+    },
+    "/{customerId}/webhooks/subscriptions": {
+      "post": {
+        "description": "Creates a Webhooks v3 subscription.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Webhooks API",
+          "url": "https://techdocs.akamai.com/identity-cloud-webhooks/reference/post-webhooks-subscription"
+        },
+        "operationId": "post-webhooks-subscription",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "enabled": true,
+                "endpoint": "https://webhook.site/46ff3c5e-ae95-43df-b32d-d07bb84746b4",
+                "events": [
+                  "entityDeleted"
+                ],
+                "title": "Documentation Subscription"
+              },
+              "schema": {
+                "additionalProperties": true,
+                "description": "Creates a webhooks subscription. Webhook subscriptions determine the event types that trigger near real-time notifications.",
+                "properties": {
+                  "enabled": {
+                    "default": true,
+                    "description": "Indicates the status of a webhooks subscription. If you disable a subscription, Webhooks v3 continues to monitor events, and adds any relevant event notifications to the Webhooks event store. However, these notifications aren\u2019t sent to your listener endpoint. Webhooks v3 marks these as `failure` events.",
+                    "example": "{{enabled}}",
+                    "type": "boolean"
+                  },
+                  "endpoint": {
+                    "description": "URL of the Webhooks listener endpoint. You set up and maintain listener endpoints on your network to receive and process the event notifications sent by Webhooks v3. See [Configure a webhook listener endpoint](https://techdocs.akamai.com/identity-cloud/docs/configure-a-webhooks-v3-listener-endpoint) for information on configuring your listener endpoint URL.",
+                    "example": "{{endpoint}}",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "events": {
+                    "description": "Identity Cloud events that trigger webhook event notifications. Possible values are: `entityCreated`, `entityDeleted`, and `entityUpdated`. An `entityCreated` event occurs when a user creates an account. An `entityDeleted` event occurs when a user deletes an account. An `entityUpdated` event occurs when a user modifies an account. You can also add a filter to your subscription to allow for more fine-grain notifications. See [Create a webhook event filter](https://techdocs.akamai.com/identity-cloud/docs/create-a-webhooks-v3-event-filter) for more information.",
+                    "items": {
+                      "enum": [
+                        "entityCreated",
+                        "entityDeleted",
+                        "entityUpdated"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "minItems": 0,
+                    "type": "array"
+                  },
+                  "title": {
+                    "description": "Name of the Webhooks v3 subscription. Subscription titles need to be unique for a given customer ID, and contain from 2 to 200 characters.",
+                    "example": "{{title}}",
+                    "maxLength": 200,
+                    "minLength": 2,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "endpoint",
+                  "events",
+                  "title"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/create-webhooks-subscription-post.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "_links": {
+                    "self": {
+                      "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/01f7b16a-8570-4540-8443-dae6337fe775"
+                    }
+                  },
+                  "createdAt": "2021-04-06T19:06:22.176321Z",
+                  "customerId": "e0a70b4f-1eef-4856-bcdb-f050fee66aae",
+                  "enabled": true,
+                  "endpoint": "https://webhook.site/46ff3c5e-ae95-43df-b32d-d07bb84746b4",
+                  "events": [
+                    "entityDeleted"
+                  ],
+                  "subscriptionId": "01f7b16a-8570-4540-8443-dae6337fe775",
+                  "title": "Documentation Subscription",
+                  "updatedAt": "2021-04-06T19:06:22.176321Z"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Creates a webhooks subscription. Webhook subscriptions specify the event types that trigger near real-time event  notifications.",
+                  "properties": {
+                    "_links": {
+                      "additionalProperties": false,
+                      "description": "Navigable hypermedia links.",
+                      "properties": {
+                        "self": {
+                          "additionalProperties": false,
+                          "description": "Navigable hypermedia links for the new subscription.",
+                          "properties": {
+                            "href": {
+                              "description": "Configuration URL for the Webhooks v3 subscription.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "href"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "self"
+                      ],
+                      "type": "object"
+                    },
+                    "createdAt": {
+                      "description": "Timestamp indicating the subscription's creation date.",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "customerId": {
+                      "description": "Unique identifier Akamai issues to you when you subscribe to Identity Cloud. To verify your Akamai customer ID, log in to Console and, on the **Manage Application** page, check the value of the `customer_id` application setting.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "enabled": {
+                      "description": "Indicates the status of a webhooks subscription. If you disable a subscription, Webhooks v3 continues to monitor events and adds any relevant event notifications to the Webhooks event store. However, these notifications aren\u2019t sent to your listener endpoint. In addition, Webhooks v3 marks these events as `failure` events.",
+                      "type": "boolean"
+                    },
+                    "endpoint": {
+                      "description": "URL of the Webhooks listener endpoint. You set up and maintain listener endpoints on your network to receive and process the event notifications sent by Webhooks v3. See [Configure a webhook listener endpoint](https://techdocs.akamai.com/identity-cloud/docs/configure-a-webhooks-v3-listener-endpoint) for information on configuring your listener endpoint URL.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "events": {
+                      "description": "Identity Cloud events that trigger webhook event notifications. Possible values are: `entityCreated`, `entityDeleted`, and `entityUpdated`. An `entityCreated` event occurs when a user creates an account. An `entityDeleted` event occurs when a user deletes an account.An  `entityUpdated` event occurs when a user modifies an account. You can also add a filter to your subscription to allow for more fine-grain notifications. See [Create a webhook event filter](https://techdocs.akamai.com/identity-cloud/docs/create-a-webhooks-v3-event-filter) for more information.",
+                      "items": {
+                        "enum": [
+                          "entityCreated",
+                          "entityDeleted",
+                          "entityUpdated"
+                        ],
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "subscriptionId": {
+                      "description": "Unique identifier of a Webhooks v3 subscription.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "title": {
+                      "description": "Name of the Webhooks v3 subscription. Subscription titles need to be unique for a given customer ID, and contain from 2 to 200 characters.",
+                      "maxLength": 200,
+                      "minLength": 2,
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "description": "Timestamp indicating the subscription's last update time.",
+                      "format": "date-time",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "subscriptionId",
+                    "customerId",
+                    "createdAt",
+                    "updatedAt",
+                    "title",
+                    "enabled"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/create-webhooks-subscription.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Subscription creation successful.",
+            "headers": {
+              "Location": {
+                "description": "Relative link to the new webhook subscription. Note the last item in the path is the subscription ID.",
+                "example": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/01f7b16a-8570-4540-8443-dae6337fe775",
+                "schema": {
+                  "description": "Relative link to the new webhook subscription. Note the last item in the path is the subscription ID.",
+                  "example": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/01f7b16a-8570-4540-8443-dae6337fe775",
+                  "type": "string",
+                  "x-akamai": {
+                    "file-path": "parameters/location-header.yaml"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Bad request"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Typically means that your API request didn\u2019t pass JSON schema validation. Verify that you\u2019re using correctly formatted JSON in the request and then try again.",
+                  "properties": {
+                    "error": {
+                      "description": "[Bad request](https://techdocs.akamai.com/identity-cloud-webhooks/reference/400).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/400.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Your request didn\u2019t pass JSON schema validation.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/400)"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Forbidden"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "You don\u2019t have permission to access the requested resource. You often see this error if you\u2019re using an expired access token. By default, access tokens expire after one hour.",
+                  "properties": {
+                    "error": {
+                      "description": "[Forbidden](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/403.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[You don't have permission to access the resource.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Not found"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "One or more items in your path, such as your customer ID, are invalid.",
+                  "properties": {
+                    "error": {
+                      "description": "[Not found](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/404.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[A path component couldn\u2019t be found.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404)"
+          }
+        },
+        "summary": "Create a subscription",
+        "tags": [
+          "Create subscriptions"
+        ]
+      },
+      "get": {
+        "description": "Returns your Webhooks v3 subscriptions. Subscriptions define the events that result in webhook notifications being sent to your listener endpoint.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Webhooks API",
+          "url": "https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhooks-subscriptions"
+        },
+        "operationId": "get-webhooks-subscriptions",
+        "parameters": [
+          {
+            "description": "Page number of the response the operation returns. Webhooks v3 paginates responses to minimize bandwidth and speed up response time. When viewing a larger response, the `links` shows the next page number. Call the operation again, setting this parameter's value to the one in the `links`. If you set an invalid page number, the operation returns the last page of your results set. If you leave out this parameter, the operation returns all the pages in the results set.",
+            "example": "{{page}}",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "example": 3,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/page-query.yaml"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "_embedded": {
+                    "subscriptions": [
+                      {
+                        "_links": {
+                          "self": {
+                            "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/a6de662c-e93b-4041-96f0-283214de75b6"
+                          }
+                        },
+                        "createdAt": "2020-05-12T05:30:13.460788Z",
+                        "customerId": "e0a70b4f-1eef-4856-bcdb-f050fee66aae",
+                        "enabled": true,
+                        "endpoint": "https://webhook.site/46ff3c5e-ae95-43df-b32d-d07bb84746b4",
+                        "events": [
+                          "entityCreated",
+                          "entityDeleted"
+                        ],
+                        "subscriptionId": "a6de662c-e93b-4041-96f0-283214de75b6",
+                        "title": "Documentation subscription",
+                        "updatedAt": "2021-02-03T04:30:27.956607Z"
+                      }
+                    ]
+                  },
+                  "_links": {
+                    "self": {
+                      "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions"
+                    }
+                  },
+                  "total": 1
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Returns your webhook subscriptions.",
+                  "properties": {
+                    "_embedded": {
+                      "additionalProperties": false,
+                      "description": "Properties and property values for your webhook subscriptions.",
+                      "properties": {
+                        "subscriptions": {
+                          "description": "Information about your webhook subscriptions. This value is empty if you don't have any subscriptions.",
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "_links": {
+                                "additionalProperties": false,
+                                "description": "Navigable hypermedia links for the webhooks subscription.",
+                                "properties": {
+                                  "self": {
+                                    "additionalProperties": false,
+                                    "description": "Navigable hypermedia link for configuring the webhooks subscription.",
+                                    "properties": {
+                                      "href": {
+                                        "description": "Configuration URL for the Webhooks v3 subscriptions.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "href"
+                                    ],
+                                    "type": "object"
+                                  }
+                                },
+                                "required": [
+                                  "self"
+                                ],
+                                "type": "object"
+                              },
+                              "createdAt": {
+                                "description": "Timestamp indicating the subscription's creation date.",
+                                "format": "date-time",
+                                "type": "string"
+                              },
+                              "customerId": {
+                                "description": "Unique identifier Akamai issues to you when you subscribe to Identity Cloud. To verify your Akamai customer ID, log into Console and, on the **Manage Application** page, check the value of the `customer_id` application setting.",
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "enabled": {
+                                "description": "Indicates the status of a webhooks subscription. If you disable a subscription, Webhooks v3 continues to monitor events and adds any relevant event notifications to the Webhooks event store. However, these notifications aren\u2019t sent to your listener endpoint. In addition, Webhooks v3 marks these events as `failure` events.",
+                                "type": "boolean"
+                              },
+                              "endpoint": {
+                                "description": "URL of the Webhooks listener endpoint. You set up and maintain listener endpoints on your network to receive and process the event notifications sent by Webhooks v3. See [Configure a webhook listener endpoint](https://techdocs.akamai.com/identity-cloud/docs/configure-a-webhooks-v3-listener-endpoint) for information on configuring your listener endpoint URL.",
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "events": {
+                                "description": "Identity Cloud events that trigger webhook event notifications. Possible values are: `entityCreated`, `entityDeleted`, and `entityUpdated`. An `entityCreated` event occurs when a user creates an account. An `entityDeleted` event occurs when a user deletes an account. An  `entityUpdated` event occurs when a user modifies an account. You can also add a filter to your subscription to allow for more fine-grain notifications. See [Create a webhook event filter](https://techdocs.akamai.com/identity-cloud/docs/create-a-webhooks-v3-event-filter) for more information.",
+                                "items": {
+                                  "enum": [
+                                    "entityCreated",
+                                    "entityDeleted",
+                                    "entityUpdated"
+                                  ],
+                                  "minLength": 1,
+                                  "type": "string"
+                                },
+                                "minItems": 0,
+                                "type": "array"
+                              },
+                              "subscriptionId": {
+                                "description": "Unique identifier of a Webhooks v3 subscription.",
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "title": {
+                                "description": "Name of the Webhooks v3 subscription. Subscription titles need to be unique for a given customer ID, and contain from 2 to 200 characters.",
+                                "maxLength": 200,
+                                "minLength": 2,
+                                "type": "string"
+                              },
+                              "updatedAt": {
+                                "description": "Timestamp indicating the subscription's last update time.",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "subscriptionId",
+                              "customerId",
+                              "createdAt",
+                              "updatedAt",
+                              "title",
+                              "endpoint",
+                              "events",
+                              "enabled",
+                              "_links"
+                            ],
+                            "type": "object"
+                          },
+                          "minItems": 0,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "subscriptions"
+                      ],
+                      "type": "object"
+                    },
+                    "_links": {
+                      "additionalProperties": false,
+                      "description": "Navigable hypermedia links for your Webhook subscriptions.",
+                      "properties": {
+                        "self": {
+                          "additionalProperties": false,
+                          "description": "Navigable hypermedia link for your Webhook subscriptions.",
+                          "properties": {
+                            "href": {
+                              "description": "Navigable hypermedia link for your Webhook subscriptions.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "href"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "self"
+                      ],
+                      "type": "object"
+                    },
+                    "total": {
+                      "description": "Total number of Webhooks v3 subscriptions available to you.",
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "total"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/list-webhooks-subscriptions.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Information about your webhook subscriptions."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Forbidden"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "You don\u2019t have permission to access the requested resource. You often see this error if you\u2019re using an expired access token. By default, access tokens expire after one hour.",
+                  "properties": {
+                    "error": {
+                      "description": "[Forbidden](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/403.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[You don't have permission to access the resource.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Not found"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "One or more items in your path, such as your customer ID, are invalid.",
+                  "properties": {
+                    "error": {
+                      "description": "[Not found](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/404.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[A path component couldn\u2019t be found.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404)"
+          }
+        },
+        "summary": "List Webhooks v3 subscriptions",
+        "tags": [
+          "Subscriptions information"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Unique identifier of an Akamai customer. To verify your customer ID, log in to Console and then, on the **Manage Application** page, check the value of the `customer_id` setting.",
+          "example": "{{customerId}}",
+          "in": "path",
+          "name": "customerId",
+          "required": true,
+          "schema": {
+            "example": "e0a70b4f-1eef-4856-bcdb-f050fee66aae",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/customerId-path.yaml"
+          }
+        }
+      ]
+    },
+    "/{customerId}/webhooks/subscriptions/{subscriptionId}": {
+      "get": {
+        "description": "Returns a Webhooks v3 subscription.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Webhooks API",
+          "url": "https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhooks-subscription"
+        },
+        "operationId": "get-webhooks-subscription",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "_links": {
+                    "self": {
+                      "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/a6de662c-e93b-4041-96f0-283214de75b6"
+                    }
+                  },
+                  "createdAt": "2020-05-12T05:30:13.460788Z",
+                  "customerId": "e0a70b4f-1eef-4856-bcdb-f050fee66aae",
+                  "enabled": true,
+                  "endpoint": "https://webhook.site/46ff3c5e-ae95-43df-b32d-d07bb84746b4",
+                  "events": [
+                    "entityCreated",
+                    "entityDeleted"
+                  ],
+                  "subscriptionId": "a6de662c-e93b-4041-96f0-283214de75b6",
+                  "title": "Documentation subscription",
+                  "updatedAt": "2021-02-03T04:30:27.956607Z"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Returns a webhooks subscription. Webhook subscriptions determine the event types that trigger near real-time event notifications.",
+                  "properties": {
+                    "_links": {
+                      "additionalProperties": false,
+                      "description": "Navigable hypermedia links.",
+                      "properties": {
+                        "self": {
+                          "additionalProperties": false,
+                          "description": "Navigable hypermedia link to the subscription.",
+                          "properties": {
+                            "href": {
+                              "description": "Configuration URL for the Webhooks v3 subscription.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "href"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "self"
+                      ],
+                      "type": "object"
+                    },
+                    "createdAt": {
+                      "description": "Timestamp indicating the subscription's creation date.",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "customerId": {
+                      "description": "Unique identifier Akamai issues to you when you subscribe to Identity Cloud. To verify your Akamai customer ID, log into Console and, on the **Manage Application** page, check the value of the `customer_id` application setting.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "enabled": {
+                      "description": "Indicates the status of a webhooks subscription. If you disable a subscription, Webhooks v3 continues to monitor events and adds any relevant event notifications to the Webhooks event store. However, these notifications aren\u2019t sent to your listener endpoint. In addition, Webhooks v3 marks these events as `failure` events.",
+                      "type": "boolean"
+                    },
+                    "endpoint": {
+                      "description": "URL of the Webhooks listener endpoint. You set up and maintain listener endpoints on your network to receive and process the event notifications sent by Webhooks v3. See [Configure a webhook listener endpoint](https://techdocs.akamai.com/identity-cloud/docs/configure-a-webhooks-v3-listener-endpoint) for information on configuring your listener endpoint URL.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "events": {
+                      "description": "Identity Cloud events that trigger webhook event notifications. Possible values are `entityCreated`, `entityDeleted`, and `entityUpdated`, for when a user creates, deletes, or modifies an account. You can also add a filter to your subscription to allow for more fine-grain notifications. See [Create a webhook event filter](https://techdocs.akamai.com/identity-cloud/docs/create-a-webhooks-v3-event-filter) for more information.",
+                      "items": {
+                        "enum": [
+                          "entityCreated",
+                          "entityDeleted",
+                          "entityUpdated"
+                        ],
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "subscriptionId": {
+                      "description": "Unique identifier of a Webhooks v3 subscription.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "title": {
+                      "description": "Name of the Webhooks v3 subscription. Subscription titles need to be unique for a given customer ID, and contain from 2 to 200 characters.",
+                      "maxLength": 200,
+                      "minLength": 2,
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "description": "Timestamp indicating the subscription's last update time.",
+                      "format": "date-time",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "subscriptionId",
+                    "customerId",
+                    "createdAt",
+                    "updatedAt",
+                    "title",
+                    "enabled"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/view-webhooks-subscription.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Information about the webhook subscription."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Forbidden"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "You don\u2019t have permission to access the requested resource. You often see this error if you\u2019re using an expired access token. By default, access tokens expire after one hour.",
+                  "properties": {
+                    "error": {
+                      "description": "[Forbidden](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/403.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[You don't have permission to access the resource.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Not found"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "One or more items in your path, such as your customer ID, are invalid.",
+                  "properties": {
+                    "error": {
+                      "description": "[Not found](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/404.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[A path component couldn\u2019t be found.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404)"
+          }
+        },
+        "summary": "Get a Webhooks v3 subscription",
+        "tags": [
+          "Subscription information"
+        ]
+      },
+      "patch": {
+        "description": "Modifies a Webhooks v3 subscription. Use this method to modify selected properties of a subscription. Updates are made only to the items in the request body. Any items not in the request are left as they are. Note that Webhooks v3 doesn't support the PUT method. You need to use PATCH when modifying a subscription. When using the PATCH method, set your `Content-Type` header to `application/merge-patch+json`.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Webhooks API",
+          "url": "https://techdocs.akamai.com/identity-cloud-webhooks/reference/patch-webhooks-subscription"
+        },
+        "operationId": "patch-webhooks-subscription",
+        "parameters": [
+          {
+            "description": "__Enum__ Method to use when updating a webhooks subscription. Set the value to `application/merge-patch+json` to modify individual properties and property values in the subscription. For example, if you're only updating the `enabled` property that means that `enabled` is the only property you need in your request body.\n\nSet this to `application/json-patch+json` to replace the subscription's data with what's in your request. In this case, _all_ the subscription data needs to be in the request body. If you don't include all required members, the operation fails. Any optional data member you leave out gets set to `null`. Note that, regardless of which method you use, the content type in the response is always `application/json`.",
+            "example": "{{Content-Type}}",
+            "in": "header",
+            "name": "Content-Type",
+            "required": true,
+            "schema": {
+              "enum": [
+                "application/merge-patch+json",
+                "application/json-patch+json"
+              ],
+              "example": "application/merge-patch+json",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/Content-Type-header.yaml"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "enabled": true,
+                "endpoint": "https://webhook.site/46ff3c5e-ae95-43df-b32d-d07bb84746b4",
+                "events": [
+                  "entityCreated",
+                  "entityDeleted"
+                ],
+                "title": "Documentation Subscription"
+              },
+              "schema": {
+                "additionalProperties": false,
+                "description": "Modifies a webhooks subscription. Webhook subscriptions specify the event types that trigger near real-time event notifications.",
+                "properties": {
+                  "enabled": {
+                    "default": true,
+                    "description": "Indicates the status of a webhooks subscription. If you disable a subscription, Webhooks v3 continues to monitor events and adds any relevant event notifications to the Webhooks event store. However, these notifications aren\u2019t sent to your listener endpoint. In addition, Webhooks v3 marks these events as `failure` events.",
+                    "example": "{{enabled}}",
+                    "type": "boolean"
+                  },
+                  "endpoint": {
+                    "description": "URL of the Webhooks listener endpoint. You set up and maintain listener endpoints on your network to receive and process the event notifications sent by Webhooks v3. See [Configure a webhook listener endpoint](https://techdocs.akamai.com/identity-cloud/docs/configure-a-webhooks-v3-listener-endpoint) for information on configuring your listener endpoint URL.",
+                    "example": "{{endpoint}}",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "events": {
+                    "description": "Identity Cloud events that trigger webhook event notifications. Possible values are: `entityCreated`, `entityDeleted`, and `entityUpdated`. An `entityCreated` event occurs when a user creates an account. An `entityDeleted` event occurs when a user deletes an account. An `entityUpdated` event occurs when a user modifies an account. You can also add a filter to your subscription to allow for more fine-grain notifications. See [Create a webhook event filter](https://techdocs.akamai.com/identity-cloud/docs/create-a-webhooks-v3-event-filter) for more information.",
+                    "items": {
+                      "enum": [
+                        "entityCreated",
+                        "entityDeleted",
+                        "entityUpdated"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "minItems": 0,
+                    "type": "array"
+                  },
+                  "title": {
+                    "description": "Name of the Webhooks v3 subscription. Subscription titles need to be unique for a given customer ID, and contain from 2 to 200 characters.",
+                    "example": "{{title}}",
+                    "maxLength": 200,
+                    "minLength": 2,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "title"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/modify-webhooks-subscription-patch.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "_links": {
+                    "self": {
+                      "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/01f7b16a-8570-4540-8443-dae6337fe775"
+                    }
+                  },
+                  "createdAt": "2021-04-06T19:06:22.176321Z",
+                  "customerId": "e0a70b4f-1eef-4856-bcdb-f050fee66aae",
+                  "enabled": true,
+                  "endpoint": "https://webhook.site/46ff3c5e-ae95-43df-b32d-d07bb84746b4",
+                  "events": [
+                    "entityCreated",
+                    "entityDeleted"
+                  ],
+                  "subscriptionId": "01f7b16a-8570-4540-8443-dae6337fe775",
+                  "title": "Documentation Subscription",
+                  "updatedAt": "2021-04-06T19:07:19.265849Z"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Modifies a webhooks subscription. Webhook subscriptions specify the event types that trigger near real-time event  notifications.",
+                  "properties": {
+                    "_links": {
+                      "additionalProperties": false,
+                      "description": "Navigable hypermedia links.",
+                      "properties": {
+                        "self": {
+                          "additionalProperties": false,
+                          "description": "Navigable hypermedia links for the subscription.",
+                          "properties": {
+                            "href": {
+                              "description": "Configuration URL for the Webhooks v3 subscription.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "href"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "self"
+                      ],
+                      "type": "object"
+                    },
+                    "createdAt": {
+                      "description": "Timestamp indicating the subscription's creation date.",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "customerId": {
+                      "description": "Unique identifier Akamai issues to you when you subscribe to Identity Cloud. To verify your Akamai customer ID, log into Console and, on the **Manage Application** page, check the value of the `customer_id` application setting.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "enabled": {
+                      "description": "Indicates the status of a webhooks subscription. If you disable a subscription, Webhooks v3 continues to monitor events and adds any relevant event notifications to the Webhooks event store. However, these notifications aren\u2019t sent to your listener endpoint. In addition, Webhooks v3 marks these events as `failure` events.",
+                      "type": "boolean"
+                    },
+                    "endpoint": {
+                      "description": "URL of the Webhooks listener endpoint. You set up and maintain listener endpoints on your network to receive and process the event notifications sent by Webhooks v3. See [Configure a webhook listener endpoint](https://techdocs.akamai.com/identity-cloud/docs/configure-a-webhooks-v3-listener-endpoint) for information on configuring your listener endpoint URL.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "events": {
+                      "description": "Identity Cloud events that trigger webhook event notifications. Possible values are: `entityCreated`, `entityDeleted`, and `entityUpdated`. An `entityCreated` event occurs when a user creates an account. An `entityDeleted` event occurs when a user deletes an account.An  `entityUpdated` event occurs when a user modifies an account. You can also add a filter to your subscription to allow for more fine-grain notifications. See [Create a webhook event filter](https://techdocs.akamai.com/identity-cloud/docs/create-a-webhooks-v3-event-filter) for more information.",
+                      "items": {
+                        "enum": [
+                          "entityCreated",
+                          "entityDeleted",
+                          "entityUpdated"
+                        ],
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "subscriptionId": {
+                      "description": "Unique identifier of a Webhooks v3 subscription.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "title": {
+                      "description": "Name of the Webhooks v3 subscription. Subscription titles need to be unique for a given customer ID, and contain from 2 to 200 characters.",
+                      "maxLength": 200,
+                      "minLength": 2,
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "description": "Timestamp indicating the subscription's last update time.",
+                      "format": "date-time",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "createdAt",
+                    "updatedAt",
+                    "title",
+                    "endpoint",
+                    "events",
+                    "enabled"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/modify-webhooks-subscription.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Webhook subscription modifications successful."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Forbidden"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "You don\u2019t have permission to access the requested resource. You often see this error if you\u2019re using an expired access token. By default, access tokens expire after one hour.",
+                  "properties": {
+                    "error": {
+                      "description": "[Forbidden](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/403.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[You don't have permission to access the resource.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Not found"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "One or more items in your path, such as your customer ID, are invalid.",
+                  "properties": {
+                    "error": {
+                      "description": "[Not found](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/404.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[A path component couldn\u2019t be found.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404)"
+          }
+        },
+        "summary": "Modify a subscription",
+        "tags": [
+          "Modify subscription"
+        ]
+      },
+      "delete": {
+        "description": "Deletes a Webhooks v3 subscription. When you delete a Webhooks v3 subscription, Identity Cloud also deletes all the events in the event store for that subscription. After deletion, you can't retrieve those events.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Webhooks API",
+          "url": "https://techdocs.akamai.com/identity-cloud-webhooks/reference/delete-webhooks-subscription"
+        },
+        "operationId": "delete-webhooks-subscription",
+        "responses": {
+          "204": {
+            "content": {},
+            "description": "Subscription deletion successful."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Forbidden"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "You don\u2019t have permission to access the requested resource. You often see this error if you\u2019re using an expired access token. By default, access tokens expire after one hour.",
+                  "properties": {
+                    "error": {
+                      "description": "[Forbidden](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/403.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[You don't have permission to access the resource.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Not found"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "One or more items in your path, such as your customer ID, are invalid.",
+                  "properties": {
+                    "error": {
+                      "description": "[Not found](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/404.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[A path component couldn\u2019t be found.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404)"
+          }
+        },
+        "summary": "Delete a Webhooks v3 subscription",
+        "tags": [
+          "Delete subscription"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Unique identifier of an Akamai customer. To verify your customer ID, log in to Console and then, on the **Manage Application** page, check the value of the `customer_id` setting.",
+          "example": "{{customerId}}",
+          "in": "path",
+          "name": "customerId",
+          "required": true,
+          "schema": {
+            "example": "e0a70b4f-1eef-4856-bcdb-f050fee66aae",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/customerId-path.yaml"
+          }
+        },
+        {
+          "description": "Unique identifier of a Webhooks v3 subscription. Use the [List subscriptions](https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhooks-subscriptions) operation to return the IDs of your subscriptions.",
+          "example": "{{subscriptionId}}",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "example": "e26925c7-ca17-4b82-8530-e43158c2d63a",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/subscriptionId-path.yaml"
+          }
+        }
+      ]
+    },
+    "/{customerId}/webhooks/subscriptions/{subscriptionId}/events": {
+      "get": {
+        "description": "Returns events for a Webhooks v3 subscription. This operation only returns events currently in the Webhooks v3 event store. Events remain in the event store for seven days before Webhooks v3 automatically deletes them.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Webhooks API",
+          "url": "https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhook-events"
+        },
+        "operationId": "get-webhook-events",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "_embedded": {
+                    "events": [
+                      {
+                        "_links": {
+                          "history": {
+                            "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/a6de662c-e93b-4041-96f0-283214de75b6/events/a2635854-4b1a-4eb7-a9ad-7e554946d439/history"
+                          },
+                          "redeliver": {
+                            "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/a6de662c-e93b-4041-96f0-283214de75b6/events/a2635854-4b1a-4eb7-a9ad-7e554946d439/redeliver"
+                          },
+                          "self": {
+                            "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/a6de662c-e93b-4041-96f0-283214de75b6/events/a2635854-4b1a-4eb7-a9ad-7e554946d439"
+                          }
+                        },
+                        "attempts": 1,
+                        "createdAt": "2021-05-04T23:29:23.339533Z",
+                        "id": "a2635854-4b1a-4eb7-a9ad-7e554946d439",
+                        "request": {
+                          "endpoint": "https://webhook.site/6bff6d9e-a341-438a-9b36-40f0eb7c6036",
+                          "headers": {
+                            "Accept": "*/*",
+                            "Content-Length": "966",
+                            "Content-Type": "application/secevent+jwt",
+                            "Host": "webhook.site",
+                            "User-Agent": "Akamai Identity Cloud Webhooks/v3.0.0"
+                          },
+                          "payload": "eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdjEuYXBpLnVzLmphbnJhaW4uY29tL2UwYTcwYjRmLTFlZWYtNDg1Ni1iY2RiLWYwNTBmZWU2NmFhZS9sb2dpbi9qd2siLCJraWQiOiIzYWY0N2UzZjZhNGJkMDU2OTc4MmZlZTVjMWY4NjIzYTNmZjBkNzhmIiwidHlwIjoic2VjZXZlbnQrand0In0.eyJhdWQiOlsiaHR0cHM6Ly93ZWJob29rLnNpdGUvNmJmZjZkOWUtYTM0MS00MzhhLTliMzYtNDBmMGViN2M2MDM2Il0sImV2ZW50cyI6eyJ0ZXN0Ijp7ImlkIjoiNTVkYzI1M2UtMzFhYi00NjEyLWFhYTMtNTA1NDY0MjdiNTQyIn19LCJpYXQiOjE2MjAxNzA5NjMsImlzcyI6Imh0dHBzOi8vdjEuYXBpLnVzLmphbnJhaW4uY29tL2UwYTcwYjRmLTFlZWYtNDg1Ni1iY2RiLWYwNTBmZWU2NmFhZS93ZWJob29rcyIsImp0aSI6ImEyNjM1ODU0LTRiMWEtNGViNy1hOWFkLTdlNTU0OTQ2ZDQzOSIsInRvZSI6MTYyMDE3MDk2M30.LPpsnqTk3gwWOe0g9juEZLU0gsLKDINh4CAZrfAVxXJVgcATa-oWo59LI7lQ2WgEq0fqADvLh4dMNkI7nhQFfz_w46oFLGctF-KYktJkOWd4n7A8_ST3OngX7kRXW9ARj1xS-lcNFHhEDXVYOiUU1ZmgDtIZB8E2i4svx7Fe0TWe4BO4DLG-_uyWSfeWmef2rFE921zUbOR5YLIGY7f209ZQBIm6lB8ADuBPSeM_1Shib2SRns87ua2Hh-uxp4V7PscGfIbb1yfZ98zzDDKJ6dQST7Ddnwkhu1IiLZJSuqHJLsRM4DDm40CZtawrNHdKaVu0yiJqi82oygyA_2YsuQ"
+                        },
+                        "response": {
+                          "headers": {
+                            "Cache-Control": "no-cache, private",
+                            "Content-Type": "text/plain; charset=UTF-8",
+                            "Date": "Tue, 04 May 2021 23:29:23 GMT",
+                            "Server": "nginx/1.14.2",
+                            "Set-Cookie": "laravel_session=W4fMI4rzwNnO5OJKA4vR85PdOxeopq5GxjlIYFxY; expires=Wed, 05-May-2021 01:29:23 GMT; Max-Age=7200; path=/; httponly",
+                            "Vary": "Accept-Encoding",
+                            "X-Request-Id": "c7b2fa1f-6202-4bce-b31e-33e0fa97b391",
+                            "X-Token-Id": "6bff6d9e-a341-438a-9b36-40f0eb7c6036"
+                          },
+                          "statusCode": 200
+                        },
+                        "state": "success",
+                        "updatedAt": "2021-05-04T23:29:24.011887Z"
+                      }
+                    ]
+                  },
+                  "_links": {
+                    "redeliver": {
+                      "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/a6de662c-e93b-4041-96f0-283214de75b6/events/redeliver"
+                    },
+                    "self": {
+                      "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/a6de662c-e93b-4041-96f0-283214de75b6/events"
+                    }
+                  },
+                  "count": 1,
+                  "total": 1
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Returns event notifications for a webhooks subscription. This operation works against the Identity Cloud event store and not against your organization\u2019s internal webhooks database. By default, events remain in the event store for seven days, then Webhooks v3 automatically deletes them.",
+                  "properties": {
+                    "_embedded": {
+                      "additionalProperties": false,
+                      "description": "Properties and property values for webhooks events.",
+                      "properties": {
+                        "events": {
+                          "description": "Webhooks v3 events.",
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "_links": {
+                                "additionalProperties": false,
+                                "description": "Navigable hypermedia links for the event.",
+                                "properties": {
+                                  "history": {
+                                    "additionalProperties": false,
+                                    "description": "Navigable hypermedia links.",
+                                    "properties": {
+                                      "href": {
+                                        "description": "Navigable hypermedia link for the event history.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "href"
+                                    ],
+                                    "type": "object"
+                                  },
+                                  "redeliver": {
+                                    "additionalProperties": false,
+                                    "description": "Navigable hypermedia links.",
+                                    "properties": {
+                                      "href": {
+                                        "description": "Navigable hypermedia link to redeliver the event.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "href"
+                                    ],
+                                    "type": "object"
+                                  },
+                                  "self": {
+                                    "additionalProperties": false,
+                                    "description": "Navigable hypermedia links.",
+                                    "properties": {
+                                      "href": {
+                                        "description": "Navigable hypermedia link for the event.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "href"
+                                    ],
+                                    "type": "object"
+                                  }
+                                },
+                                "required": [
+                                  "self"
+                                ],
+                                "type": "object"
+                              },
+                              "attempts": {
+                                "description": "Number of times that Webhooks v3 has sent the event notification.  After six unsuccessful delivery tries the service marks the event as `failure` and makes no further delivery attempts. To retrieve this event, schedule it for redelivery by using the [Redeliver an event](https://techdocs.akamai.com/identity-cloud-webhooks/reference/post-webhooks-redelivery) operation.",
+                                "minimum": 1,
+                                "type": "integer"
+                              },
+                              "createdAt": {
+                                "description": "Timestamp indicating the subscription's creation date.",
+                                "format": "date-time",
+                                "type": "string"
+                              },
+                              "eventType": {
+                                "description": "Identity Cloud events that trigger webhook event notifications. Possible values are: `entityCreated`, `entityDeleted`, and `entityUpdated`. An `entityCreated` event occurs when a user creates an account. An `entityDeleted` event occurs when a user deletes an account. An `entityUpdated` event occurs when a user modifies an account. You can also add a filter to your subscription to allow for more fine-grain notifications. See [Create a webhook event filter](https://techdocs.akamai.com/identity-cloud/docs/create-a-webhooks-v3-event-filter) for more information.",
+                                "enum": [
+                                  "entityCreated",
+                                  "entityDeleted",
+                                  "entityUpdated"
+                                ],
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "id": {
+                                "description": "Unique identifier of a Webhooks v3 event.",
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "request": {
+                                "additionalProperties": false,
+                                "description": "Information about the request after the successful delivery of an event. A `null` value means the event is awaiting delivery.",
+                                "nullable": true,
+                                "properties": {
+                                  "endpoint": {
+                                    "description": "URL of the Webhooks listener endpoint. You set up and maintain listener endpoints on your network to receive and process the event notifications sent by Webhooks v3. See [Configure a webhook listener endpoint](https://techdocs.akamai.com/identity-cloud/docs/configure-a-webhooks-v3-listener-endpoint) for information on configuring your listener endpoint URL.",
+                                    "minLength": 1,
+                                    "type": "string"
+                                  },
+                                  "headers": {
+                                    "additionalProperties": false,
+                                    "description": "HTTP headers and header values.",
+                                    "properties": {
+                                      "Accept": {
+                                        "description": "Valid data types for the request. A value of `*/*` means the request can use any data type.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Content-Length": {
+                                        "description": "Number of bytes in the request. This header helps the listener endpoint determine when the message transmission is complete.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Content-Type": {
+                                        "description": "Type of content in the request. A value of `secevent+jwt` defines the transmission as a security event token.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Host": {
+                                        "description": "Domain name of the listener endpoint. Listener endpoints receive and process event notifications.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "User-Agent": {
+                                        "description": "Entity responsible for sending the event notification. This is typically `Akamai Identity Cloud Webhooks/v3.0.0`.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "Accept",
+                                      "Content-Type",
+                                      "Host",
+                                      "User-Agent"
+                                    ],
+                                    "type": "object"
+                                  },
+                                  "payload": {
+                                    "description": "Security event token containing the event details.",
+                                    "minLength": 1,
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "endpoint",
+                                  "headers"
+                                ],
+                                "type": "object"
+                              },
+                              "response": {
+                                "additionalProperties": false,
+                                "description": "Information about the response following the successful delivery of an event. A `null` value means the event is awaiting delivery.",
+                                "nullable": true,
+                                "properties": {
+                                  "headers": {
+                                    "additionalProperties": false,
+                                    "description": "HTTP headers for the response.",
+                                    "properties": {
+                                      "Cache-Control": {
+                                        "description": "Indicates whether browsers can cache the response. Because Webhooks v3 doesn't use caching, this needs to be set to `no-cache, private`.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Content-Length": {
+                                        "description": "Number of bytes in the response. This header helps the listener endpoint determine when the message transmission is complete.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Content-Type": {
+                                        "description": "Type of content in the response. A value of `secevent+jwt` defines the transmission as a security event token.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Date": {
+                                        "description": "Timestamp indicating when the response was sent. Note that the time of day is Greenwich Mean Time and not your local time.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Server": {
+                                        "description": "Helps identity the operating system and other software characteristics of the listener endpoint.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Set-Cookie": {
+                                        "description": "Cookie that identifies the webhooks session.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Vary": {
+                                        "description": "Indicates whether new requests for the same resource come from the cache. For webhook requests, the value of this header needs to be `Accept-Encoding`.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "X-Request-Id": {
+                                        "description": "Unique identifier of the request.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "X-Token-Id": {
+                                        "description": "Unique identifier of the session.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "Cache-Control",
+                                      "Content-Type",
+                                      "Date",
+                                      "Server",
+                                      "Set-Cookie",
+                                      "Vary",
+                                      "X-Request-Id",
+                                      "X-Token-Id"
+                                    ],
+                                    "type": "object"
+                                  },
+                                  "statusCode": {
+                                    "description": "HTTP status code for the response.",
+                                    "minimum": 1,
+                                    "type": "integer"
+                                  }
+                                },
+                                "required": [
+                                  "statusCode",
+                                  "headers"
+                                ],
+                                "type": "object"
+                              },
+                              "state": {
+                                "description": "Current state of the event. Valid values are:\n\n- `awaiting-executing`. The event notification hasn\u2019t been sent.\n- `executing`. The delivery is in process.\n- `success`. Event delivery was successful. \n- `awaiting-retry`. At least one delivery attempt didn't succeed and the event is awaiting the next delivery try. \n- `failure`. Webhooks v3 couldn't deliver the event. To retrieve this event, schedule it for redelivery by using the [Redeliver an event](https://techdocs.akamai.com/identity-cloud-webhooks/reference/post-webhooks-redelivery) operation.",
+                                "enum": [
+                                  "awaiting-executing",
+                                  "executing",
+                                  "success",
+                                  "awaiting-retry",
+                                  "failure",
+                                  "awaiting-scheduling"
+                                ],
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "updatedAt": {
+                                "description": "Timestamp indicating the subscription's last update time.",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "createdAt",
+                              "updatedAt",
+                              "state",
+                              "attempts",
+                              "request"
+                            ],
+                            "type": "object"
+                          },
+                          "minItems": 0,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "events"
+                      ],
+                      "type": "object"
+                    },
+                    "_links": {
+                      "additionalProperties": false,
+                      "description": "Navigable hypermedia links for the webhook events.",
+                      "properties": {
+                        "redeliver": {
+                          "additionalProperties": false,
+                          "description": "Navigable hypermedia link for scheduling redelivery of a `failure` event.",
+                          "properties": {
+                            "href": {
+                              "description": "URL for scheduling a `failure` event for redelivery.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "href"
+                          ],
+                          "type": "object"
+                        },
+                        "self": {
+                          "additionalProperties": false,
+                          "description": "Navigable hypermedia link for event properties.",
+                          "properties": {
+                            "href": {
+                              "description": "URL for accessing the events.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "href"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "self"
+                      ],
+                      "type": "object"
+                    },
+                    "count": {
+                      "description": "Number of events in the response.",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "total": {
+                      "description": "Total number of events in the event store.",
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "count",
+                    "total"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/list-webhook-events.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Webhook events in the events store."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Forbidden"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "You don\u2019t have permission to access the requested resource. You often see this error if you\u2019re using an expired access token. By default, access tokens expire after one hour.",
+                  "properties": {
+                    "error": {
+                      "description": "[Forbidden](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/403.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[You don't have permission to access the resource.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Not found"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "One or more items in your path, such as your customer ID, are invalid.",
+                  "properties": {
+                    "error": {
+                      "description": "[Not found](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/404.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[A path component couldn\u2019t be found.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404)"
+          }
+        },
+        "summary": "List Webhooks v3 events",
+        "tags": [
+          "Events information"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Unique identifier of an Akamai customer. To verify your customer ID, log in to Console and then, on the **Manage Application** page, check the value of the `customer_id` setting.",
+          "example": "{{customerId}}",
+          "in": "path",
+          "name": "customerId",
+          "required": true,
+          "schema": {
+            "example": "e0a70b4f-1eef-4856-bcdb-f050fee66aae",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/customerId-path.yaml"
+          }
+        },
+        {
+          "description": "Unique identifier of a Webhooks v3 subscription. Use the [List subscriptions](https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhooks-subscriptions) operation to return the IDs of your subscriptions.",
+          "example": "{{subscriptionId}}",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "example": "e26925c7-ca17-4b82-8530-e43158c2d63a",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/subscriptionId-path.yaml"
+          }
+        },
+        {
+          "description": "Page number of the response the operation returns. Webhooks v3 paginates responses to minimize bandwidth and speed up response time. When viewing a larger response, the `links` shows the next page number. Call the operation again, setting this parameter's value to the one in the `links`. If you set an invalid page number, the operation returns the last page of your results set. If you leave out this parameter, the operation returns all the pages in the results set.",
+          "example": "{{page}}",
+          "in": "query",
+          "name": "page",
+          "required": false,
+          "schema": {
+            "example": 3,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/page-query.yaml"
+          }
+        },
+        {
+          "description": "Specifies the maximum number of pages the operation returns. If you leave this parameter out, the operation returns all the pages in the results set.",
+          "example": "{{limit}}",
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "example": 5,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/limit-query.yaml"
+          }
+        },
+        {
+          "description": "__Enum__ Filters the response data by event state. For example, you can return just the events in the `failure` state, or just the events in the `awaiting_retry` state. Note that you can only specify a single event state in your operation. If you specify more than one state, the operation fails.",
+          "example": "{{state}}",
+          "in": "query",
+          "name": "state",
+          "required": false,
+          "schema": {
+            "enum": [
+              "awaiting_retry",
+              "awaiting_scheduling",
+              "executing",
+              "failure",
+              "success"
+            ],
+            "example": "failure",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/state-query.yaml"
+          }
+        }
+      ]
+    },
+    "/{customerId}/webhooks/subscriptions/{subscriptionId}/events/{eventId}": {
+      "get": {
+        "description": "Returns a Webhooks v3 event.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Webhooks API",
+          "url": "https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhooks-event"
+        },
+        "operationId": "get-webhooks-event",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "_links": {
+                    "history": {
+                      "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/a6de662c-e93b-4041-96f0-283214de75b6/events/a2635854-4b1a-4eb7-a9ad-7e554946d439/history"
+                    },
+                    "redeliver": {
+                      "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/a6de662c-e93b-4041-96f0-283214de75b6/events/a2635854-4b1a-4eb7-a9ad-7e554946d439/redeliver"
+                    },
+                    "self": {
+                      "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/a6de662c-e93b-4041-96f0-283214de75b6/events/a2635854-4b1a-4eb7-a9ad-7e554946d439"
+                    }
+                  },
+                  "attempts": 1,
+                  "createdAt": "2021-05-04T23:29:23.339533Z",
+                  "eventType": "entityDeleted",
+                  "id": "a2635854-4b1a-4eb7-a9ad-7e554946d439",
+                  "request": {
+                    "endpoint": "https://webhook.site/6bff6d9e-a341-438a-9b36-40f0eb7c6036",
+                    "headers": {
+                      "Accept": "*/*",
+                      "Content-Length": "966",
+                      "Content-Type": "application/secevent+jwt",
+                      "Host": "webhook.site",
+                      "User-Agent": "Akamai Identity Cloud Webhooks/v3.0.0"
+                    },
+                    "payload": "eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHBzOi8vdjEuYXBpLnVzLmphbnJhaW4uY29tL2UwYTcwYjRmLTFlZWYtNDg1Ni1iY2RiLWYwNTBmZWU2NmFhZS9sb2dpbi9qd2siLCJraWQiOiIzYWY0N2UzZjZhNGJkMDU2OTc4MmZlZTVjMWY4NjIzYTNmZjBkNzhmIiwidHlwIjoic2VjZXZlbnQrand0In0.eyJhdWQiOlsiaHR0cHM6Ly93ZWJob29rLnNpdGUvNmJmZjZkOWUtYTM0MS00MzhhLTliMzYtNDBmMGViN2M2MDM2Il0sImV2ZW50cyI6eyJ0ZXN0Ijp7ImlkIjoiNTVkYzI1M2UtMzFhYi00NjEyLWFhYTMtNTA1NDY0MjdiNTQyIn19LCJpYXQiOjE2MjAxNzA5NjMsImlzcyI6Imh0dHBzOi8vdjEuYXBpLnVzLmphbnJhaW4uY29tL2UwYTcwYjRmLTFlZWYtNDg1Ni1iY2RiLWYwNTBmZWU2NmFhZS93ZWJob29rcyIsImp0aSI6ImEyNjM1ODU0LTRiMWEtNGViNy1hOWFkLTdlNTU0OTQ2ZDQzOSIsInRvZSI6MTYyMDE3MDk2M30.LPpsnqTk3gwWOe0g9juEZLU0gsLKDINh4CAZrfAVxXJVgcATa-oWo59LI7lQ2WgEq0fqADvLh4dMNkI7nhQFfz_w46oFLGctF-KYktJkOWd4n7A8_ST3OngX7kRXW9ARj1xS-lcNFHhEDXVYOiUU1ZmgDtIZB8E2i4svx7Fe0TWe4BO4DLG-_uyWSfeWmef2rFE921zUbOR5YLIGY7f209ZQBIm6lB8ADuBPSeM_1Shib2SRns87ua2Hh-uxp4V7PscGfIbb1yfZ98zzDDKJ6dQST7Ddnwkhu1IiLZJSuqHJLsRM4DDm40CZtawrNHdKaVu0yiJqi82oygyA_2YsuQ"
+                  },
+                  "response": {
+                    "headers": {
+                      "Cache-Control": "no-cache, private",
+                      "Content-Type": "text/plain; charset=UTF-8",
+                      "Date": "Tue, 04 May 2021 23:29:23 GMT",
+                      "Server": "nginx/1.14.2",
+                      "Set-Cookie": "laravel_session=W4fMI4rzwNnO5OJKA4vR85PdOxeopq5GxjlIYFxY; expires=Wed, 05-May-2021 01:29:23 GMT; Max-Age=7200; path=/; httponly",
+                      "Vary": "Accept-Encoding",
+                      "X-Request-Id": "c7b2fa1f-6202-4bce-b31e-33e0fa97b391",
+                      "X-Token-Id": "6bff6d9e-a341-438a-9b36-40f0eb7c6036"
+                    },
+                    "statusCode": 200
+                  },
+                  "state": "success",
+                  "updatedAt": "2021-05-04T23:29:24.011887Z"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Returns a Webhooks v3 event. This operation only works against events in the event store. By default, events remain in the event store for a week before Webhooks v3 automatically removes them.",
+                  "properties": {
+                    "_links": {
+                      "additionalProperties": false,
+                      "description": "Navigable hypermedia links.",
+                      "properties": {
+                        "history": {
+                          "additionalProperties": false,
+                          "description": "Navigable hypermedia to the event history.",
+                          "properties": {
+                            "href": {
+                              "description": "Navigable hypermedia to the event history.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "href"
+                          ],
+                          "type": "object"
+                        },
+                        "redeliver": {
+                          "additionalProperties": false,
+                          "description": "Navigable hypermedia for redelivering the event.",
+                          "properties": {
+                            "href": {
+                              "description": "Navigable hypermedia for redelivering the event.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "href"
+                          ],
+                          "type": "object"
+                        },
+                        "self": {
+                          "additionalProperties": false,
+                          "description": "Navigable hypermedia link to the event.",
+                          "properties": {
+                            "href": {
+                              "description": "Navigable hypermedia link to the event.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "href"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "self",
+                        "redeliver"
+                      ],
+                      "type": "object"
+                    },
+                    "attempts": {
+                      "description": "Number of times that Webhooks v3 has sent the event notification.  After six unsuccessful delivery tries the service marks the event as `failure` and makes no further delivery attempts. To retrieve this event, schedule it for redelivery by using the [Redeliver an event](https://techdocs.akamai.com/identity-cloud-webhooks/reference/post-webhooks-redelivery) operation.",
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    "createdAt": {
+                      "description": "Timestamp indicating the event's creation date.",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "eventType": {
+                      "description": "Identity Cloud events that trigger webhook event notificationsPossible values are: `entityCreated`, `entityDeleted`, and `entityUpdated`. An `entityCreated` event occurs when a user creates an account. An `entityDeleted` event occurs when a user deletes an account. An `entityUpdated` event occurs when a user modifies an account. You can also add a filter to your subscription to allow for more fine-grain notifications. See [Create a webhook event filter](https://techdocs.akamai.com/identity-cloud/docs/create-a-webhooks-v3-event-filter) for more information.",
+                      "enum": [
+                        "entityCreated",
+                        "entityDeleted",
+                        "entityUpdated"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "id": {
+                      "description": "Unique identifier of a Webhooks v3 event.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "request": {
+                      "additionalProperties": false,
+                      "description": "Information about the request after the successful delivery of an event. A `null` value means the event is awaiting delivery.",
+                      "nullable": true,
+                      "properties": {
+                        "endpoint": {
+                          "description": "URL of the Webhooks listener endpoint. You set up and maintain listener endpoints on your network to receive and process the event notifications sent by Webhooks v3. See [Configure a webhook listener endpoint](https://techdocs.akamai.com/identity-cloud/docs/configure-a-webhooks-v3-listener-endpoint) for information on configuring your listener endpoint URL.",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "headers": {
+                          "additionalProperties": false,
+                          "description": "HHTP headers in the request.",
+                          "properties": {
+                            "Accept": {
+                              "description": "Valid data types for the response. A value of `*/*` means that the response can use any data type.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "Content-Length": {
+                              "description": "Number of bytes in the response. This header helps the listener endpoint determine when the message transmission is complete.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "Content-Type": {
+                              "description": "Type of content in the request. A value of `secevent+jwt` identifies the transmission as a security event token.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "Host": {
+                              "description": "Domain name of the listener endpoint. Listener endpoints receive and process event notifications.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "User-Agent": {
+                              "description": "Entity responsible for sending event notification. This is typically `Akamai Identity Cloud Webhooks/v3.0.0`.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "Accept",
+                            "Content-Type",
+                            "Host",
+                            "User-Agent"
+                          ],
+                          "type": "object"
+                        },
+                        "payload": {
+                          "description": "Security event token containing the event details.",
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "endpoint",
+                        "headers"
+                      ],
+                      "type": "object"
+                    },
+                    "response": {
+                      "additionalProperties": false,
+                      "description": "Information about the response following the successful delivery of an event. A `null` value means the event is awaiting delivery.",
+                      "nullable": true,
+                      "properties": {
+                        "headers": {
+                          "additionalProperties": false,
+                          "description": "HTTP headers in the response.",
+                          "properties": {
+                            "Cache-Control": {
+                              "description": "Indicates whether browsers can cache the response. Because Webhooks v3 doesn't use caching, this needs to be set to `no-cache, private`.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "Content-Type": {
+                              "description": "Type of content in the response. A value of `secevent+jwt` identifies the transmission data as a security event token.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "Date": {
+                              "description": "Timestamp indicating when the response was sent. Note that the time of day is Greenwich Mean Time and not your local time.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "Server": {
+                              "description": "Helps identity the operating system and other software characteristics of the listener endpoint.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "Set-Cookie": {
+                              "description": "Cookie that identifies the webhooks session.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "Vary": {
+                              "description": "Indicates whether new requests for the same resource come from the cache. For webhook requests the value of this header needs to be `Accept-Encoding`.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "X-Request-Id": {
+                              "description": "Unique identifier of the request.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "X-Token-Id": {
+                              "description": "Unique identifier of the session.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "Cache-Control",
+                            "Content-Type",
+                            "Date",
+                            "Server",
+                            "Set-Cookie",
+                            "Vary",
+                            "X-Request-Id",
+                            "X-Token-Id"
+                          ],
+                          "type": "object"
+                        },
+                        "statusCode": {
+                          "description": "HTTP status code for the response.",
+                          "minimum": 100,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "statusCode",
+                        "headers"
+                      ],
+                      "type": "object"
+                    },
+                    "state": {
+                      "description": "Current state of the event. Valid values are: ||- `awaiting-executing`. The event notification hasn\u2019t been sent. |- `executing`. The delivery is in process. |- `success`. Event delivery was successful. |- `awaiting-retry`. At least one delivery attempt didn't succeed and the event is awaiting the next delivery try. |- `failure`. Webhooks v3 couldn't deliver the event. To retrieve this event, schedule it for redelivery by using the [Redeliver an event](https://techdocs.akamai.com/identity-cloud-webhooks/reference/post-webhooks-redelivery) operation.",
+                      "enum": [
+                        "awaiting-executing",
+                        "executing",
+                        "success",
+                        "awaiting-retry",
+                        "failure",
+                        "awaiting-scheduling"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "description": "Timestamp indicating the event's last update time.",
+                      "format": "date-time",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "attempts",
+                    "createdAt",
+                    "eventType",
+                    "id",
+                    "state",
+                    "updatedAt"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/view-webhooks-event.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Webhooks event details."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Forbidden"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "You don\u2019t have permission to access the requested resource. You often see this error if you\u2019re using an expired access token. By default, access tokens expire after one hour.",
+                  "properties": {
+                    "error": {
+                      "description": "[Forbidden](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/403.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[You don't have permission to access the resource.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Not found"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "One or more items in your path, such as your customer ID, are invalid.",
+                  "properties": {
+                    "error": {
+                      "description": "[Not found](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/404.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[A path component couldn\u2019t be found.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404)"
+          }
+        },
+        "summary": "Get a Webhooks v3 event",
+        "tags": [
+          "Event information"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Unique identifier of an Akamai customer. To verify your customer ID, log in to Console and then, on the **Manage Application** page, check the value of the `customer_id` setting.",
+          "example": "{{customerId}}",
+          "in": "path",
+          "name": "customerId",
+          "required": true,
+          "schema": {
+            "example": "e0a70b4f-1eef-4856-bcdb-f050fee66aae",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/customerId-path.yaml"
+          }
+        },
+        {
+          "description": "Unique identifier of a Webhooks v3 subscription. Use the [List subscriptions](https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhooks-subscriptions) operation to return the IDs of your subscriptions.",
+          "example": "{{subscriptionId}}",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "example": "e26925c7-ca17-4b82-8530-e43158c2d63a",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/subscriptionId-path.yaml"
+          }
+        },
+        {
+          "description": "Unique identifier of a Webhooks v3 event. Note that you can only return events currently in the event store. Webhooks v3 automatically removes events from the event store after seven days. Use the [List events](https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhook-events) operation to return the IDs of all the events in the event store.",
+          "example": "{{eventId}}",
+          "in": "path",
+          "name": "eventId",
+          "required": true,
+          "schema": {
+            "example": "2e0ce98a-cd80-433e-8dfd-048a62ad6661",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/eventId-path.yaml"
+          }
+        }
+      ]
+    },
+    "/{customerId}/webhooks/subscriptions/{subscriptionId}/events/{eventId}/history": {
+      "get": {
+        "description": "Returns the event history for a Webhooks v3 event. The event history tracks each time an event changes state. For example, Webhooks v3 adds a new entry to the history when an event moves from the `awaiting_scheduling` state to the `executing` state.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Webhooks API",
+          "url": "https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhooks-event-history"
+        },
+        "operationId": "get-webhooks-event-history",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "_embedded": {
+                    "events": [
+                      {
+                        "attempts": 0,
+                        "createdAt": "2021-05-04T23:29:23.339533Z",
+                        "eventType": "entityDeleted",
+                        "id": "a2635854-4b1a-4eb7-a9ad-7e554946d439",
+                        "request": null,
+                        "response": null,
+                        "state": "awaiting-scheduling",
+                        "updatedAt": "2021-05-04T23:29:23.339533Z"
+                      },
+                      {
+                        "attempts": 1,
+                        "createdAt": "2021-05-04T23:29:23.339533Z",
+                        "eventType": "entityDeleted",
+                        "id": "a2635854-4b1a-4eb7-a9ad-7e554946d439",
+                        "request": {
+                          "endpoint": "https://webhook.site/6bff6d9e-a341-438a-9b36-40f0eb7c6036",
+                          "headers": {
+                            "Accept": "*/*",
+                            "Content-Length": "966",
+                            "Content-Type": "application/secevent+jwt",
+                            "Host": "webhook.site",
+                            "User-Agent": "Akamai Identity Cloud Webhooks/v3.0.0"
+                          },
+                          "payload": "eyJhbGciOiJSUz...NHdKaVu0yiJqi82oygyA_2YsuQ"
+                        },
+                        "response": {
+                          "headers": {
+                            "Cache-Control": "no-cache, private",
+                            "Content-Type": "text/plain; charset=UTF-8",
+                            "Date": "Tue, 04 May 2021 23:29:23 GMT",
+                            "Server": "nginx/1.14.2",
+                            "Set-Cookie": "laravel_session=W4fMI4rzwNnO5OJKA4vR85PdOxeopq5GxjlIYFxY; expires=Wed, 05-May-2021 01:29:23 GMT; Max-Age=7200; path=/; httponly",
+                            "Vary": "Accept-Encoding",
+                            "X-Request-Id": "c7b2fa1f-6202-4bce-b31e-33e0fa97b391",
+                            "X-Token-Id": "6bff6d9e-a341-438a-9b36-40f0eb7c6036"
+                          },
+                          "statusCode": 200
+                        },
+                        "state": "success",
+                        "updatedAt": "2021-05-04T23:29:24.011887Z"
+                      }
+                    ]
+                  },
+                  "_links": {
+                    "redeliver": {
+                      "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/a6de662c-e93b-4041-96f0-283214de75b6/events/a2635854-4b1a-4eb7-a9ad-7e554946d439/redeliver"
+                    },
+                    "self": {
+                      "href": "/e0a70b4f-1eef-4856-bcdb-f050fee66aae/webhooks/subscriptions/a6de662c-e93b-4041-96f0-283214de75b6/events/a2635854-4b1a-4eb7-a9ad-7e554946d439/history"
+                    }
+                  },
+                  "total": 3
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Returns the event history for a webhooks event. This operation works against the Identity Cloud event store and not against your organization\u2019s webhooks database. Events remain in the event store for seven days before Webhooks v3 automatically deletes the events.",
+                  "properties": {
+                    "_embedded": {
+                      "additionalProperties": false,
+                      "description": "Properties and property values for the event history.",
+                      "properties": {
+                        "events": {
+                          "description": "Event history for an event.",
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "attempts": {
+                                "description": "Number of times that Webhooks v3 has sent the event notification.  After six unsuccessful delivery tries the service marks the event as `failure` and makes no further delivery attempts. To retrieve this event, schedule it for redelivery by using the [Redeliver an event](https://techdocs.akamai.com/identity-cloud-webhooks/reference/post-webhooks-redelivery) operation.",
+                                "minimum": 0,
+                                "type": "integer"
+                              },
+                              "createdAt": {
+                                "description": "Timestamp indicating the event's creation date.",
+                                "format": "date-time",
+                                "type": "string"
+                              },
+                              "eventType": {
+                                "description": "Identity Cloud events that trigger webhook event notifications. Possible values are: `entityCreated`, `entityDeleted`, and `entityUpdated`. An `entityCreated` event occurs when a user creates an account. An `entityDeleted` event occurs when a user deletes an account.An  `entityUpdated` event occurs when a user modifies an account. You can also add a filter to your subscription to allow for more fine-grain notifications. See [Create a webhook event filter](https://techdocs.akamai.com/identity-cloud/docs/create-a-webhooks-v3-event-filter) for more information.",
+                                "enum": [
+                                  "entityCreated",
+                                  "entityDeleted",
+                                  "entityUpdated"
+                                ],
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "id": {
+                                "description": "Unique identifier of a Webhooks v3 event.",
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "request": {
+                                "additionalProperties": false,
+                                "description": "Information about the request after the successful delivery of an event. A `null` value means the event is awaiting delivery.",
+                                "nullable": true,
+                                "properties": {
+                                  "endpoint": {
+                                    "description": "URL of the Webhooks listener endpoint. You set up and maintain listener endpoints on your network to receive and process the event notifications sent by Webhooks v3. See [Configure a webhook listener endpoint](https://techdocs.akamai.com/identity-cloud/docs/configure-a-webhooks-v3-listener-endpoint) for information on configuring your listener endpoint URL.",
+                                    "minLength": 1,
+                                    "type": "string"
+                                  },
+                                  "headers": {
+                                    "additionalProperties": false,
+                                    "description": "HTTP headers and header values.",
+                                    "properties": {
+                                      "Accept": {
+                                        "description": "Valid data types for the request. A value of `*/*` means that the response can use any data type.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Content-Length": {
+                                        "description": "Number of bytes in the request. This header helps the listener endpoint determine when the message transmission is complete.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Content-Type": {
+                                        "description": "Type of content in the request. A value of `*/*` means that the request can use any data type.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Host": {
+                                        "description": "Domain name of the listener endpoint. Listener endpoints receive and process event notifications.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "User-Agent": {
+                                        "description": "Entity responsible for sending event notification. This is typically `Akamai Identity Cloud Webhooks/v3.0.0`.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "Accept",
+                                      "Content-Type",
+                                      "Host",
+                                      "User-Agent"
+                                    ],
+                                    "type": "object"
+                                  },
+                                  "payload": {
+                                    "description": "Security event token containing the event details.",
+                                    "minLength": 1,
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "endpoint",
+                                  "headers"
+                                ],
+                                "type": "object"
+                              },
+                              "response": {
+                                "additionalProperties": false,
+                                "description": "Information about the response following the successful delivery of an event. A `null` value means the event is awaiting delivery.",
+                                "nullable": true,
+                                "properties": {
+                                  "headers": {
+                                    "additionalProperties": false,
+                                    "description": "HTTP headers in the response.",
+                                    "properties": {
+                                      "Cache-Control": {
+                                        "description": "Indicates whether browsers can cache the response. Because Webhooks v3 doesn't use caching, this needs to be set to `no-cache, private`.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Content-Length": {
+                                        "description": "Number of bytes in the response. This header helps the listener endpoint determine when the message transmission is complete.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Content-Type": {
+                                        "description": "Type of content in the response. A value of `secevent+jwt` defines the transmission as a security event token.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Date": {
+                                        "description": "Timestamp indicating when the response was sent. Note that the time of day is Greenwich Mean Time and not your local time.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Server": {
+                                        "description": "Helps identity the operating system and other software characteristics of the listener endpoint.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Set-Cookie": {
+                                        "description": "Cookie that identifies the webhooks session.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "Vary": {
+                                        "description": "Indicates whether new requests for the same resource come from the cache. For webhook requests the value of this header needs to be `Accept-Encoding`.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "X-Request-Id": {
+                                        "description": "Unique identifier of the request.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      },
+                                      "X-Token-Id": {
+                                        "description": "Unique identifier of the session.",
+                                        "minLength": 1,
+                                        "type": "string"
+                                      }
+                                    },
+                                    "required": [
+                                      "Cache-Control",
+                                      "Content-Type",
+                                      "Date",
+                                      "Server",
+                                      "Set-Cookie",
+                                      "Vary",
+                                      "X-Request-Id",
+                                      "X-Token-Id"
+                                    ],
+                                    "type": "object"
+                                  },
+                                  "statusCode": {
+                                    "description": "HTTP status code for the response.",
+                                    "minimum": 100,
+                                    "type": "integer"
+                                  }
+                                },
+                                "required": [
+                                  "statusCode",
+                                  "headers"
+                                ],
+                                "type": "object"
+                              },
+                              "state": {
+                                "description": "Current state of the event. Valid values are: ||- `awaiting-executing`. The event notification hasn\u2019t been sent. |- `executing`. The delivery is in process. |- `success`. Event delivery was successful. |- `awaiting-retry`. At least one delivery attempt didn't succeed and the event is awaiting the next delivery try. |- `failure`. Webhooks v3 couldn't deliver the event. To retrieve this event, schedule it for redelivery by using the [Redeliver an event](https://techdocs.akamai.com/identity-cloud-webhooks/reference/post-webhooks-redelivery) operation.",
+                                "enum": [
+                                  "awaiting-scheduling",
+                                  "awaiting-executing",
+                                  "executing",
+                                  "success",
+                                  "awaiting-retry",
+                                  "failure"
+                                ],
+                                "minLength": 1,
+                                "type": "string"
+                              },
+                              "updatedAt": {
+                                "description": "Timestamp indicating the event's last update time..",
+                                "format": "date-time",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "createdAt",
+                              "updatedAt",
+                              "state",
+                              "attempts",
+                              "request"
+                            ],
+                            "type": "object"
+                          },
+                          "minItems": 1,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "events"
+                      ],
+                      "type": "object"
+                    },
+                    "_links": {
+                      "additionalProperties": false,
+                      "description": "Navigable hypermedia links for the event history.",
+                      "properties": {
+                        "redeliver": {
+                          "additionalProperties": false,
+                          "description": "Navigable hypermedia links for rescheduling delivery of a `failure` event.",
+                          "properties": {
+                            "href": {
+                              "description": "Navigable hypermedia link for scheduling a `failure` event for redelivery.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "href"
+                          ],
+                          "type": "object"
+                        },
+                        "self": {
+                          "additionalProperties": false,
+                          "description": "Navigable hypermedia links for the event.",
+                          "properties": {
+                            "href": {
+                              "description": "Navigable hypermedia link for accessing the event.",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "href"
+                          ],
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "self"
+                      ],
+                      "type": "object"
+                    },
+                    "total": {
+                      "description": "Total number of entries for the event. Each entry represents a different event state the event has passed through.",
+                      "minimum": 1,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "total"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/view-event-history.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Webhook event history."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Forbidden"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "You don\u2019t have permission to access the requested resource. You often see this error if you\u2019re using an expired access token. By default, access tokens expire after one hour.",
+                  "properties": {
+                    "error": {
+                      "description": "[Forbidden](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/403.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[You don't have permission to access the resource.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Not found"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "One or more items in your path, such as your customer ID, are invalid.",
+                  "properties": {
+                    "error": {
+                      "description": "[Not found](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/404.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[A path component couldn\u2019t be found.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404)"
+          }
+        },
+        "summary": "Get a Webhooks v3 event's event history",
+        "tags": [
+          "Event history"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Unique identifier of an Akamai customer. To verify your customer ID, log in to Console and then, on the **Manage Application** page, check the value of the `customer_id` setting.",
+          "example": "{{customerId}}",
+          "in": "path",
+          "name": "customerId",
+          "required": true,
+          "schema": {
+            "example": "e0a70b4f-1eef-4856-bcdb-f050fee66aae",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/customerId-path.yaml"
+          }
+        },
+        {
+          "description": "Unique identifier of a Webhooks v3 subscription. Use the [List subscriptions](https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhooks-subscriptions) operation to return the IDs of your subscriptions.",
+          "example": "{{subscriptionId}}",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "example": "e26925c7-ca17-4b82-8530-e43158c2d63a",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/subscriptionId-path.yaml"
+          }
+        },
+        {
+          "description": "Unique identifier of a Webhooks v3 event. Note that you can only return events currently in the event store. Webhooks v3 automatically removes events from the event store after seven days. Use the [List events](https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhook-events) operation to return the IDs of all the events in the event store.",
+          "example": "{{eventId}}",
+          "in": "path",
+          "name": "eventId",
+          "required": true,
+          "schema": {
+            "example": "2e0ce98a-cd80-433e-8dfd-048a62ad6661",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/eventId-path.yaml"
+          }
+        }
+      ]
+    },
+    "/{customerId}/webhooks/subscriptions/{subscriptionId}/events/{eventId}/redeliver": {
+      "post": {
+        "description": "Schedules a Webhooks v3 event for redelivery to your listener endpoint. You can only schedule events in the event store and in the `failure` state for redelivery. See [Schedule redelivery for a failed webhooks event](https://techdocs.akamai.com/identity-cloud/docs/schedule-redelivery-for-a-failed-event) for more information.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Webhooks API",
+          "url": "https://techdocs.akamai.com/identity-cloud-webhooks/reference/post-webhooks-redelivery"
+        },
+        "operationId": "post-webhooks-redelivery",
+        "responses": {
+          "202": {
+            "content": {},
+            "description": "Event rescheduling successful."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Bad request"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Typically means that your API request didn\u2019t pass JSON schema validation. Verify that you\u2019re using correctly formatted JSON in the request and then try again.",
+                  "properties": {
+                    "error": {
+                      "description": "[Bad request](https://techdocs.akamai.com/identity-cloud-webhooks/reference/400).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/400.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Your request didn\u2019t pass JSON schema validation.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/400)"
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Forbidden"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "You don\u2019t have permission to access the requested resource. You often see this error if you\u2019re using an expired access token. By default, access tokens expire after one hour.",
+                  "properties": {
+                    "error": {
+                      "description": "[Forbidden](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/403.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[You don\u2019t have permission to access the resource.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Not found"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "One or more items in your path, such as your customer ID, are invalid.",
+                  "properties": {
+                    "error": {
+                      "description": "[Not found](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/404.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[A path component couldn\u2019t be found.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404)"
+          },
+          "409": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Conflict"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "You\u2019re trying to reschedule an event Webhooks v3 can't redeliver. This is typically because the event isn\u2019t in the `failure` state.",
+                  "properties": {
+                    "error": {
+                      "description": "[Conflict](https://techdocs.akamai.com/identity-cloud-webhooks/reference/409).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/409.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[You can't reschedule the event.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/409)"
+          },
+          "429": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Too many requests"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Your request exceeded the Webhooks v3 rate limits. This typically occurs when the service is simultaneously handling a very large number of requests. Wait a few minutes and then try again.",
+                  "properties": {
+                    "error": {
+                      "description": "[Too many requests](https://techdocs.akamai.com/identity-cloud-webhooks/reference/429).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/429.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[You exceeded the Webhooks v3 rate limit.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/429)"
+          }
+        },
+        "summary": "Redeliver a Webhooks v3 event",
+        "tags": [
+          "Event redelivery"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Unique identifier of an Akamai customer. To verify your customer ID, log in to Console and then, on the **Manage Application** page, check the value of the `customer_id` setting.",
+          "example": "{{customerId}}",
+          "in": "path",
+          "name": "customerId",
+          "required": true,
+          "schema": {
+            "example": "e0a70b4f-1eef-4856-bcdb-f050fee66aae",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/customerId-path.yaml"
+          }
+        },
+        {
+          "description": "Unique identifier of a Webhooks v3 subscription. Use the [List subscriptions](https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhooks-subscriptions) operation to return the IDs of your subscriptions.",
+          "example": "{{subscriptionId}}",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "example": "e26925c7-ca17-4b82-8530-e43158c2d63a",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/subscriptionId-path.yaml"
+          }
+        },
+        {
+          "description": "Unique identifier of a Webhooks v3 event. Note that you can only return events currently in the event store. Webhooks v3 automatically removes events from the event store after seven days. Use the [List events](https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhook-events) operation to return the IDs of all the events in the event store.",
+          "example": "{{eventId}}",
+          "in": "path",
+          "name": "eventId",
+          "required": true,
+          "schema": {
+            "example": "2e0ce98a-cd80-433e-8dfd-048a62ad6661",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/eventId-path.yaml"
+          }
+        }
+      ]
+    },
+    "/{customerId}/webhooks/subscriptions/{subscriptionId}/test": {
+      "post": {
+        "description": "Sends a Webhooks v3 test notification to your listener endpoint. Sending a test notification helps ensure the configuration settings of your subscription and your listener endpoint.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Webhooks API",
+          "url": "https://techdocs.akamai.com/identity-cloud-webhooks/reference/post-event"
+        },
+        "operationId": "post-event",
+        "responses": {
+          "202": {
+            "content": {},
+            "description": "Test event sent."
+          },
+          "403": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Forbidden"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "You don\u2019t have permission to access the requested resource. You often see this error if you\u2019re using an expired access token. By default, access tokens expire after one hour.",
+                  "properties": {
+                    "error": {
+                      "description": "[Forbidden](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/403.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[You don\u2019t have permission to access the resource.](https://techdocs.akamai.com/identity-cloud-webhooks/reference/403)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Not found"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "One or more items in your path, such as your customer ID, are invalid.",
+                  "properties": {
+                    "error": {
+                      "description": "[Not found](https://techdocs.akamai.com/identity-cloud-webhooks/reference/404).",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "error"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/404.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[A path component couldn\u2019t be found.](404)"
+          }
+        },
+        "summary": "Send a Webhooks v3 test notification",
+        "tags": [
+          "Notification testing"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Unique identifier of an Akamai customer. To verify your customer ID, log in to Console and then, on the **Manage Application** page, check the value of the `customer_id` setting.",
+          "example": "{{customerId}}",
+          "in": "path",
+          "name": "customerId",
+          "required": true,
+          "schema": {
+            "example": "e0a70b4f-1eef-4856-bcdb-f050fee66aae",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/customerId-path.yaml"
+          }
+        },
+        {
+          "description": "Unique identifier of a Webhooks v3 subscription. Use the [List subscriptions](https://techdocs.akamai.com/identity-cloud-webhooks/reference/get-webhooks-subscriptions) operation to return the IDs of your subscriptions.",
+          "example": "{{subscriptionId}}",
+          "in": "path",
+          "name": "subscriptionId",
+          "required": true,
+          "schema": {
+            "example": "e26925c7-ca17-4b82-8530-e43158c2d63a",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/subscriptionId-path.yaml"
+          }
+        }
+      ]
+    }
+  },
+  "security": [
+    {
+      "basicAuth": []
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://{hostname}"
+    }
+  ],
+  "tags": [],
+  "x-readme": {
+    "samples-languages": [
+      "curl",
+      "python",
+      "node"
+    ]
+  }
+}

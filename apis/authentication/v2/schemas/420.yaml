@@ -1,0 +1,60 @@
+type: object
+description: |
+  Occurs when the redirect URL from the authorization request code doesn’t match the redirect URL in the code exchange operation.
+x-akamai:
+  file-path: schemas/420.yaml
+additionalProperties: false
+required:
+- received_value
+- request_id
+- code
+- expected_value
+- error_description
+- sub_error
+- error
+- stat
+properties:
+  code:
+    type: integer
+    description: |
+      Status code for the error. Note that the Authentication API [doesn’t use standard HTTP status codes](ref:api-errors).
+    minimum: 1
+  error:
+    type: string
+    description: |
+      Error type.
+    minLength: 1
+  error_description:
+    type: string
+    description: |
+      Additional information describing the error and why it took place.
+    minLength: 1
+  expected_value:
+    type: string
+    description: |
+      Value of the authorization code the server expects to receive. This value needs to match the `received_value` value.
+    minLength: 1
+  received_value:
+    type: string
+    description: |
+      Value of the authorization code sent to the server. This value needs to match the `expected_value` value.
+    minLength: 1
+  request_id:
+    type: string
+    description: |
+      Unique identifier of the request.
+    minLength: 1
+  stat:
+    type: string
+    description: |
+      Status of the operation. Possible values are: `ok`, `error`, and `fail`. The value `ok` indicates that the operation was successful. The value `error` indicates that the operation couldn't complete because of a problem with the request. The value `fail` means that the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if your request returns the `fail` status.
+    enum:
+    - ok
+    - error
+    - fail
+    minLength: 1
+  sub_error:
+    type: string
+    description: |
+      Secondary error type.
+    minLength: 1

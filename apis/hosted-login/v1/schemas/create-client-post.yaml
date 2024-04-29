@@ -1,0 +1,44 @@
+type: object
+description: |-
+  Creates an OpenID Connect (OIDC) client.
+  
+x-akamai:
+  file-path: schemas/create-client-post.yaml
+additionalProperties: false
+required:
+- name
+- redirectURIs
+- tokenPolicy
+- type
+properties:
+  name:
+    type: string
+    description: |
+      Name of the OIDC client. Names need to be unique for a given customer ID.
+    minLength: 1
+  type:
+    type: string
+    description: |
+      OIDC client type. Possible values are `confidential` and `public`. With a confidential client you need to pass the client secret in the authorization request. Public clients don’t have a client secret, meaning there's no secret to pass in the authorization request. You should use public clients for registering and logging in users.
+    enum:
+    - public
+    - confidential
+    minLength: 1
+  loginPolicy:
+    type: string
+    description: |
+      Unique identifier of the OIDC client's login policy. OpenID Connect clients that handle user registrations and logins need to have a login policy.
+    minLength: 1
+  redirectURIs:
+    type: array
+    description: |
+      URLs you can redirect users to after they log in. When requesting authorization, your request needs to include one of these URLs. If it doesn’t, the request fails. A redirect URL can be either an `HTTPS` link or a mobile deep link. The only valid `HTTP` link is `localhost`.
+    minItems: 1
+    items:
+      type: string
+      minLength: 1
+  tokenPolicy:
+    type: string
+    description: |
+      Unique identifier of the token policy for the client. All OIDC clients need to have a token policy.
+    minLength: 1

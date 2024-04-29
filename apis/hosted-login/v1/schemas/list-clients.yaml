@@ -1,0 +1,67 @@
+type: object
+description: |-
+  Returns your OpenID Connect (OIDC) clients.
+  
+x-akamai:
+  file-path: schemas/list-clients.yaml
+additionalProperties: false
+required:
+- total
+properties:
+  _embedded:
+    type: object
+    description: |
+      Information about your OIDC clients.
+    additionalProperties: false
+    required:
+    - clients
+    properties:
+      clients:
+        type: array
+        description: |
+          Information about your login policies.
+        minItems: 0
+        items:
+          type: object
+          additionalProperties: false
+          required:
+          - id
+          - name
+          - _links
+          properties:
+            id:
+              type: string
+              description: |
+                Unique identifier of an OIDC client.
+              minLength: 1
+            name:
+              type: string
+              description: |
+                Name of the OIDC client. Names need to be unique for a given customer ID.
+              minLength: 1
+            _links:
+              type: object
+              description: |
+                Navigable hypermedia links for an OIDC client.
+              additionalProperties: false
+              required:
+              - self
+              properties:
+                self:
+                  type: object
+                  description: |
+                    Navigable hyermedia links for an OIDC client.
+                  additionalProperties: false
+                  required:
+                  - href
+                  properties:
+                    href:
+                      type: string
+                      description: |
+                        Navigable hypermedia link to the OIDC client.
+                      minLength: 1
+  total:
+    type: integer
+    description: |
+      Number of OIDC clients available to you.
+    minimum: 0

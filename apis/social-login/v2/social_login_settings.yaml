@@ -1,0 +1,186 @@
+openapi: 3.0.0
+info:
+  title: Social login settings
+  version: v2
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}
+x-akamai:
+  auth-type: OAUTH
+  file-path: social_login_settings.yaml
+paths:
+  /api/v2/add_domain_patterns:
+    post:
+      operationId: post-add-domain-patterns
+      summary: Add domains to the domains allowlist
+      tags:
+      - Social login allowlist
+      description: |
+        Adds domains to the domains allowlist. If the list isn't `null`, then only the domains on that list can communicate with your social login application. By default, any domain can communicate with your social login application. This operation adds the domains in the request to the allowlist. It doesn't replace domains already on the list.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/add-domain-patterns.txt
+            schema:
+              $ref: schemas/add-to-allowlist.yaml
+      responses:
+        200:
+          description: |
+            Additions to the domains allowlist.
+          content:
+            application/json:
+              example:
+                $ref: examples/ok-response.json
+              schema:
+                $ref: schemas/add_domain_patterns.yaml
+        400:
+          description: |
+            [Missing parameter.](ref:400.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/400_error.json
+              schema:
+                $ref: schemas/400_error.yaml
+  /api/v2/get_application_settings:
+    post:
+      operationId: post-get-application-settings
+      summary: Get social login application settings
+      tags:
+      - Social login settings
+      description: |
+        Returns the settings for a social login application. These settings also appear on the **Settings** page in the Social Login dashboard.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/get-social-login-apps.txt
+            schema:
+              $ref: schemas/get-social-login-apps.yaml
+      responses:
+        200:
+          description: |
+            Social login settings for the application.
+          content:
+            application/json:
+              example:
+                $ref: examples/get_application_settings.json
+              schema:
+                $ref: schemas/get_application_settings.yaml
+        400:
+          description: |
+            [Missing parameter.](ref:400.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/400_error.json
+              schema:
+                $ref: schemas/400_error.yaml
+  /api/v2/get_domain_patterns:
+    post:
+      operationId: post-get-domain-patterns
+      summary: Get the domains allowlist
+      tags:
+      - Social login allowlist
+      description: |
+        Returns the domains on the domains allowlist. If the list isn't `null`, then only the domains on that list can communicate with your social login application. By default, any domain can communicate with your social login application.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/get-domains-allowlist.txt
+            schema:
+              $ref: schemas/get-domains-allowlist.yaml
+      responses:
+        200:
+          description: |
+            Domains on the social login domains allowlist.
+          content:
+            application/json:
+              example:
+                $ref: examples/get_domain_patterns.json
+              schema:
+                $ref: schemas/get_domain_patterns.yaml
+        400:
+          description: |
+            [Missing parameter](ref:400.yaml).
+          content:
+            application/json:
+              example:
+                $ref: examples/400_error.json
+              schema:
+                $ref: schemas/400_error.yaml
+  /api/v2/set_app_settings:
+    post:
+      operationId: post-set-app-settings
+      summary: Modify application settings
+      tags:
+      - Social login settings
+      description: |
+        Modifies setting values for a social login application. You can also use the **Settings** page in the Social Login dashboard to configure these values.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/set-social-login-settings.txt
+            schema:
+              $ref: schemas/set-social-login-settings.yaml
+      responses:
+        200:
+          description: |
+            Configuration changes for your social login settings.
+          content:
+            application/json:
+              example:
+                $ref: examples/ok-response.json
+              schema:
+                $ref: schemas/set_application_settings.yaml
+        400:
+          description: |
+            [Missing parameter.](ref:400.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/400_error.json
+              schema:
+                $ref: schemas/400_error.yaml
+  /api/v2/set_domain_patterns:
+    post:
+      operationId: post-set-domain-patterns
+      summary: Replace the domains allowlist
+      tags:
+      - Social login allowlist
+      description: |
+        Replaces the domains allowlist for an application. This operation clears the existing allowlist and replaces it with the domains in the request. If the allowlist isn't `null`, then only the domains on that list can communicate with your social login application. By default any domain can communicate with your social login application.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/replace-domains-allowlist.txt
+            schema:
+              $ref: schemas/replace-domains-allowlist.yaml
+      responses:
+        200:
+          description: |
+            New domains allowlist.
+          content:
+            application/json:
+              example:
+                $ref: examples/ok-response.json
+              schema:
+                $ref: schemas/set_domain_patterns.yaml
+        400:
+          description: |
+            [Missing parameter.](ref:400.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/400_error.json
+              schema:
+                $ref: schemas/400_error.yaml

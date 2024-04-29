@@ -1,0 +1,625 @@
+openapi: 3.0.0
+info:
+  title: User profiles
+  version: v2
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}
+x-akamai:
+  auth-type: OAUTH
+  file-path: user_profiles.yaml
+paths:
+  /oauth/auth_native:
+    post:
+      operationId: post-oauth-auth-native
+      summary: Complete social login
+      tags:
+      - Social login and registration
+      description: |
+        Completes social login. See [JavaScript SDK registration overview](https://techdocs.akamai.com/identity-cloud/docs/javascript-sdk-registration-overview) for a comparison of social logins and registrations and traditional logins and registrations. You don't need any authorization to call this operation.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/complete-social-login.txt
+            schema:
+              $ref: schemas/complete-social-login.yaml
+      responses:
+        100:
+          description: |
+            [The request is missing one or more required parameters.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#100)
+          content:
+            application/json:
+              example:
+                $ref: examples/100.json
+              schema:
+                $ref: schemas/100.yaml
+        200:
+          description: |
+            Social login successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/register_native.json
+              schema:
+                $ref: schemas/auth_native.yaml
+        310:
+          description: |
+            [The user account doesn't exist.](ref:310.yaml) Note that this isn't the standard response for a 310 error.
+          content:
+            application/json:
+              example:
+                $ref: examples/310.json
+              schema:
+                $ref: schemas/310.yaml
+        380:
+          description: |
+            [The email address is already in use.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#380) Email addresses need to be unique in an entity type. Note that this isn't the standard response for a 380 error.
+          content:
+            application/json:
+              example:
+                $ref: examples/380.json
+              schema:
+                $ref: schemas/380.yaml
+        403:
+          description: |
+            [Your API client permissions are invalid.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#403) See [Get started](ref:get-started) for information on configuring authentication for the Authentication API.
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        500:
+          description: |
+            [The flow can't be found.](500.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/500.json
+              schema:
+                $ref: schemas/500.yaml
+  /oauth/auth_native_traditional:
+    post:
+      operationId: post-oauth-auth-native-traditional
+      summary: Complete traditional login
+      tags:
+      - Traditional login and registration
+      description: |
+        Completes traditional login by using an email address and password. See [JavaScript SDK registration overview](https://techdocs.akamai.com/identity-cloud/docs/javascript-sdk-registration-overview) for a comparison of social logins and registrations and traditional logins and registrations.
+
+        Note that your request can use fields not shown in this documentation. In fact, you can use any fields that appear on the sign-in form. For example, suppose your form includes a custom field `membershipLevel` that you’d like to submit as part of the login process. In that case, create a key-value pair for `membershipLevel`, specifying the field name and the field value: `"membershipLevel=gold"`.
+
+         You don't need any authorization to call this operation.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/complete-traditional-login.txt
+            schema:
+              $ref: schemas/complete-traditional-login.yaml
+      responses:
+        100:
+          description: |
+            [The request is missing one or more required parameters.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#100)
+          content:
+            application/json:
+              example:
+                $ref: examples/100.json
+              schema:
+                $ref: schemas/100.yaml
+        200:
+          description: |
+            Traditional login successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/register_native_traditional_2.json
+              schema:
+                $ref: schemas/post-oauth-auth-native-traditional-response.yaml
+        403:
+          description: |
+            [Your API client permissions are invalid.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#403) See [Get started](ref:get-started) for information on configuring authentication for the Authentication API.
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        500:
+          description: |
+            [The flow can't be found.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#500)  Note that this isn't the standard response for a 500 error.
+          content:
+            application/json:
+              example:
+                $ref: examples/500.json
+              schema:
+                $ref: schemas/500.yaml
+  /oauth/forgot_password_native:
+    post:
+      operationId: post-oauth-forgot-password-native
+      summary: Send a reset password link
+      tags:
+      - User profiles
+      description: |
+        Sends an email that includes a link to reset a user password. You don't need any authorization to call this operation.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/send-password-link.txt
+            schema:
+              $ref: schemas/send-password-link.yaml
+      responses:
+        100:
+          description: |
+            [Your request is missing one or more required parameters.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#100)
+          content:
+            application/json:
+              example:
+                $ref: examples/100.json
+              schema:
+                $ref: schemas/100.yaml
+        200:
+          description: |
+            Password reset email sent.
+          content:
+            application/json:
+              example:
+                $ref: examples/ok-response.json
+              schema:
+                $ref: schemas/post-oauth-forgot-password-native-response.yaml
+        403:
+          description: |
+            [Your API client permissions are invalid.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#403) See [Get started](ref:get-started) for information on configuring authentication for the Authentication API.
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        500:
+          description: |
+            [The specified flow can't be found.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#500) Make sure you're referencing a valid flow name and a valid flow version.
+          content:
+            application/json:
+              example:
+                $ref: examples/500.json
+              schema:
+                $ref: schemas/500.yaml
+  /oauth/link_account_native:
+    post:
+      operationId: post-oauth-link-account-native
+      summary: Assign a social identity to a user account
+      tags:
+      - Social login and registration
+      description: |
+        Assigns a social login identity provider to a user account. When the operation completes the user can use credentials from that provider to log into Identity Cloud. You don't need any authorization to call this operation.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/assign-social-identity.txt
+            schema:
+              $ref: schemas/assign-social-identity.yaml
+      responses:
+        200:
+          description: |
+            Social login identity provider assignment successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/ok-response.json
+              schema:
+                $ref: schemas/post-oauth-link-account-native-response.yaml
+        400:
+          description: |
+            [Your social login token is invalid](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#400).
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [Your API client permissions are invalid.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#403) See [Get started](ref:get-started) for information on configuring authentication for the Authentication API. You don't need any authorization to call this operation.
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        413:
+          description: |
+            [Invalid registration access token.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#413)
+          content:
+            application/json:
+              example:
+                $ref: examples/413.json
+              schema:
+                $ref: schemas/413.yaml
+        500:
+          description: |
+            [The specified flow can't be found.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#500) Make sure you specify a valid flow name and a valid flow version.
+          content:
+            application/json:
+              example:
+                $ref: examples/500.json
+              schema:
+                $ref: schemas/500.yaml
+  /oauth/register_native:
+    post:
+      operationId: post-oauth-register-native
+      summary: Complete social registration
+      tags:
+      - Social login and registration
+      description: |
+        Creates an account by using social registration. To use this operation, first make a call to the [Complete social login](ref:post-oauth-auth-native) operation which logs a user in to a social login identity provider. You can then use the social login token from that operation as the value of the `token` member in this operation.
+
+        Note that your request can use fields that aren't in this documentation. In fact, you can use any fields on the registration form. For example, suppose you've a custom field `membershipLevel` that you’d like to submit as part of the registration process. In that case, create a key-value pair for `membershipLevel`, specifying the field name and the field value: `"membershipLevel=gold"`.
+
+         You don't need any authorization to call this operation.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/complete-social-registration.txt
+            schema:
+              $ref: schemas/complete-social-registration.yaml
+      responses:
+        200:
+          description: |
+            Social registration successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/register_native.json
+              schema:
+                $ref: schemas/register_native.yaml
+        403:
+          description: |
+            [Your API client permissions are invalid.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#403) See [Get started](ref:get-started) for information on configuring authentication for the Authentication API.
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        500:
+          description: |
+            [The flow can't be found.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#500)
+          content:
+            application/json:
+              example:
+                $ref: examples/500.json
+              schema:
+                $ref: schemas/500.yaml
+  /oauth/register_native_traditional:
+    post:
+      operationId: post-oauth-register-native-traditional
+      summary: Complete traditional registration
+      tags:
+      - Traditional login and registration
+      description: |
+        Creates an account using traditional registration. After this operation completes, users can authenticate by using an email address and password. See [JavaScript SDK registration overview](https://techdocs.akamai.com/identity-cloud/docs/javascript-sdk-registration-overview) for a comparison of social logins and registrations and traditional logins and registrations.
+
+        Note that your request can use fields that aren't shown in this documentation. In fact, you can use any fields on the registration form. For example, suppose you've a custom field `membershipLevel` that you’d like to submit as part of your request. In that case, create a key-value pair for `membershipLevel`, specifying the field name and the field value: `"membershipLevel=gold"`.
+
+         You don't need any authorization to call this operation.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/complete-traditional-registration.txt
+            schema:
+              $ref: schemas/complete-traditional-registration.yaml
+      responses:
+        100:
+          description: |
+            [Your request is missing one or more required parameters.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#100)
+          content:
+            application/json:
+              example:
+                $ref: examples/100.json
+              schema:
+                $ref: schemas/100.yaml
+        200:
+          description: |
+            Traditional registration successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/register_native_traditional_2.json
+              schema:
+                $ref: schemas/register_native_traditional.yaml
+        403:
+          description: |
+            [Your API client permissions are invalid.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#403) See [Get started](ref:get-started) for information on configuring authentication for the Authentication API.
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        500:
+          description: |
+            [The flow can't be found.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#500)
+          content:
+            application/json:
+              example:
+                $ref: examples/500.json
+              schema:
+                $ref: schemas/500.yaml
+  /oauth/token:
+    post:
+      operationId: post-exchange-authorization-code
+      summary: Exchange an authorization code
+      tags:
+      - Tokens and codes
+      description: |
+        Exchanges an authorization code or a refresh token for an access token. Use the [Get an authorization code](ref:post-authorization-code) operation to return an authorization code.  You don't need any authorization to call this operation.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/exchange-authorization-code.txt
+            schema:
+              $ref: schemas/exchange-authorization-code.yaml
+      responses:
+        200:
+          description: |
+            Exchange successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/token.json
+              schema:
+                $ref: schemas/token.yaml
+        402:
+          description: |
+            [Your credentials are invalid.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#402)
+          content:
+            application/json:
+              example:
+                $ref: examples/402.json
+              schema:
+                $ref: schemas/402.yaml
+        413:
+          description: |
+            [Exchange failure.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#413)
+          content:
+            application/json:
+              example:
+                $ref: examples/413.json
+              schema:
+                $ref: schemas/413.yaml
+        420:
+          description: |
+            [The redirect URI doesn't match the expected value.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#420)
+          content:
+            application/json:
+              example:
+                $ref: examples/420.json
+              schema:
+                $ref: schemas/420.yaml
+  /oauth/unlink_account_native:
+    post:
+      operationId: post-oauth-unlink-account-native
+      summary: Remove a social login identity provider from a user account
+      tags:
+      - Social login and registration
+      description: |
+        Removes a social login identity provider from a user account. When this operation completes, the user can no longer use that provider to log into Identity Cloud. To make this call you need to have a valid access token for the user record you're updating. You don't need any authorization to call this operation.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/remove-social-identity.txt
+            schema:
+              $ref: schemas/remove-social-identity.yaml
+      responses:
+        100:
+          description: |
+            [Your request is missing at least one required parameter.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#100)
+          content:
+            application/json:
+              example:
+                $ref: examples/100.json
+              schema:
+                $ref: schemas/100.yaml
+        200:
+          description: |
+            Social login identity provider removal successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/ok-response.json
+              schema:
+                $ref: schemas/post-oauth-unlink-account-native-response.yaml
+        403:
+          description: |
+            [Your API client permissions are invalid.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#403) See [Get started](ref:get-started) for information on configuring authentication for the Authentication API.
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        413:
+          description: |
+            [Your access token is invalid.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#413)
+          content:
+            application/json:
+              example:
+                $ref: examples/413.json
+              schema:
+                $ref: schemas/413.yaml
+        500:
+          description: |
+            [The flow can't be found.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#500)
+          content:
+            application/json:
+              example:
+                $ref: examples/500.json
+              schema:
+                $ref: schemas/500.yaml
+  /oauth/update_profile_native:
+    post:
+      operationId: post-update-profile
+      summary: Update a user profile
+      tags:
+      - User profiles
+      description: |
+        Updates a user profile. This operation only updates the user profile attributes in the request. User profile attributes not in the request are left as they are.
+
+        To update a profile you can use any of the fields on the form. For example, if your form includes the `firstName` field you can update that field by including a line like this in your request: `"firstName": "Matthew"`.
+
+        If you need to set the value of a boolean field to `false`, don't include that field in your operation, and don't set the value to `false`. In other words, the following syntax _doesn't_ set the boolean field `newsletterSubscriber` to `false`: `newsletterSubscriber=false`.
+
+        Instead, the preceding code actually sets `newsletterSubscriber` to `true`. That's due to the way that the Authentication API handles boolean values. If a boolean attribute is in your request, its value is automatically set to `true` regardless of the value in the request. If the attribute isn't in the request, the value is set to `false`.
+
+        You don't need any authorization to call this operation.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/update-user-profile.txt
+            schema:
+              $ref: schemas/update-user-profile.yaml
+      responses:
+        100:
+          description: |
+            [Your request is missing one or more required members.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#100)
+          content:
+            application/json:
+              example:
+                $ref: examples/100.json
+              schema:
+                $ref: schemas/100.yaml
+        200:
+          description: |
+            User profile update successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/ok-response.json
+              schema:
+                $ref: schemas/update_profile.yaml
+        210:
+          description: |
+            [Your password is incorrect.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#210) Occurs if you include the user’s current password but that password is invalid.
+          content:
+            application/json:
+              example:
+                $ref: examples/210.json
+              schema:
+                $ref: schemas/210.yaml
+        390:
+          description: |
+            [Some of your inputs are invalid.](ref:390.yaml) Indicates that one or more fields didn't pass validation. For example, if you attempt to update the `email` attribute to an email address already in use, that update fails the `unique` validation. Email addresses need to be unique throughout an entity type.
+          content:
+            application/json:
+              example:
+                $ref: examples/390.json
+              schema:
+                $ref: schemas/390.yaml
+        403:
+          description: |
+            [Your API client permissions are invalid.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#403) Indicates that the API client in the `client_id` member doesn't have the `login_client` feature. See [API clients and permissions](https://techdocs.akamai.com/identity-cloud/docs/api-clients-and-permissions-1) for more information. You don't need any authorization to call this operation.
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        413:
+          description: |
+            [Your access token is invalid.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#413) Occurs if the access token is invalid.
+          content:
+            application/json:
+              example:
+                $ref: examples/413.json
+              schema:
+                $ref: schemas/413.yaml
+        500:
+          description: |
+            [The flow can't be found.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#500) The value for the `flow`, `flow_version`, or `locale` member is invalid.
+          content:
+            application/json:
+              example:
+                $ref: examples/500.json
+              schema:
+                $ref: schemas/500.yaml
+  /oauth/verify_email_native:
+    post:
+      operationId: post-verify-email
+      summary: Send a link to verify an email address
+      tags:
+      - User profiles
+      description: |
+        Sends an email that includes a link to verify an email address. You don't need any authorization to call this operation.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/verify-email.txt
+            schema:
+              $ref: schemas/verify-email.yaml
+      responses:
+        100:
+          description: |
+            [Your request is missing one or more required parameters.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#100)
+          content:
+            application/json:
+              example:
+                $ref: examples/100.json
+              schema:
+                $ref: schemas/100.yaml
+        200:
+          description: |
+            Email verification message sent.
+          content:
+            application/json:
+              example:
+                $ref: examples/ok-response.json
+              schema:
+                $ref: schemas/verify_email.yaml
+        210:
+          description: |
+            [The email address can't be found.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#210) Occurs if the email address can't be found. You can only verify email addresses currently in the entity type.
+          content:
+            application/json:
+              example:
+                $ref: examples/210.json
+              schema:
+                $ref: schemas/210.yaml
+        403:
+          description: |
+            [Your API client permissions are invalid.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#403) Indicates the API client in the `client_id` member doesn't have the `login_client` feature. See [API clients and permissions](https://techdocs.akamai.com/identity-cloud/docs/api-clients-and-permissions-1) for more information.
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        500:
+          description: |
+            [The flow can't be found.](https://techdocs.akamai.com/identity-cloud-auth/reference/registration-error-codes#500) The value for the `flow`, `flow_version`, or `locale` member is invalid.
+          content:
+            application/json:
+              example:
+                $ref: examples/500.json
+              schema:
+                $ref: schemas/500.yaml
+        540:
+          description: |
+            [The email address is already verified.](ref:540.yaml) Verification is complete if the `emailVerified` attribute is set to a valid timestamp. If this error occurs, no verification email is sent to the user.
+          content:
+            application/json:
+              example:
+                $ref: examples/540.json
+              schema:
+                $ref: schemas/540.yaml

@@ -1,0 +1,83 @@
+type: object
+description: |-
+  Creates a webhooks subscription. Webhook subscriptions specify the event types that trigger near real-time event  notifications.
+  
+x-akamai:
+  file-path: schemas/create-webhooks-subscription.yaml
+additionalProperties: false
+required:
+- subscriptionId
+- customerId
+- createdAt
+- updatedAt
+- title
+- enabled
+properties:
+  title:
+    type: string
+    description: |
+      Name of the Webhooks v3 subscription. Subscription titles need to be unique for a given customer ID, and contain from 2 to 200 characters.
+    minLength: 2
+    maxLength: 200
+  _links:
+    type: object
+    description: |
+      Navigable hypermedia links.
+    additionalProperties: false
+    required:
+    - self
+    properties:
+      self:
+        type: object
+        description: |
+          Navigable hypermedia links for the new subscription.
+        additionalProperties: false
+        required:
+        - href
+        properties:
+          href:
+            type: string
+            description: |
+              Configuration URL for the Webhooks v3 subscription.
+            minLength: 1
+  createdAt:
+    type: string
+    description: |
+      Timestamp indicating the subscription's creation date.
+    format: date-time
+  customerId:
+    type: string
+    description: |
+      Unique identifier Akamai issues to you when you subscribe to Identity Cloud. To verify your Akamai customer ID, log in to Console and, on the **Manage Application** page, check the value of the `customer_id` application setting.
+    minLength: 1
+  enabled:
+    type: boolean
+    description: |
+      Indicates the status of a webhooks subscription. If you disable a subscription, Webhooks v3 continues to monitor events and adds any relevant event notifications to the Webhooks event store. However, these notifications aren’t sent to your listener endpoint. In addition, Webhooks v3 marks these events as `failure` events.
+  endpoint:
+    type: string
+    description: |
+      URL of the Webhooks listener endpoint. You set up and maintain listener endpoints on your network to receive and process the event notifications sent by Webhooks v3. See [Configure a webhook listener endpoint](https://techdocs.akamai.com/identity-cloud/docs/configure-a-webhooks-v3-listener-endpoint) for information on configuring your listener endpoint URL.
+    minLength: 1
+  events:
+    type: array
+    description: |
+      Identity Cloud events that trigger webhook event notifications. Possible values are: `entityCreated`, `entityDeleted`, and `entityUpdated`. An `entityCreated` event occurs when a user creates an account. An `entityDeleted` event occurs when a user deletes an account.An  `entityUpdated` event occurs when a user modifies an account. You can also add a filter to your subscription to allow for more fine-grain notifications. See [Create a webhook event filter](https://techdocs.akamai.com/identity-cloud/docs/create-a-webhooks-v3-event-filter) for more information.
+    minItems: 0
+    items:
+      type: string
+      enum:
+      - entityCreated
+      - entityDeleted
+      - entityUpdated
+      minLength: 1
+  subscriptionId:
+    type: string
+    description: |
+      Unique identifier of a Webhooks v3 subscription.
+    minLength: 1
+  updatedAt:
+    type: string
+    description: |
+      Timestamp indicating the subscription's last update time.
+    format: date-time

@@ -1,0 +1,1692 @@
+{
+  "externalDocs": {
+    "description": "See documentation for Akamai's Identity Cloud Social API",
+    "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference"
+  },
+  "info": {
+    "description": "Configure and maintain social logins and the social login process.\n",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Akamai: Identity Cloud Social API\n",
+    "version": "v2"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/v2/add_domain_patterns": {
+      "post": {
+        "description": "Adds domains to the domains allowlist. If the list isn't `null`, then only the domains on that list can communicate with your social login application. By default, any domain can communicate with your social login application. This operation adds the domains in the request to the allowlist. It doesn't replace domains already on the list.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Social API",
+          "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference/post-add-domain-patterns"
+        },
+        "operationId": "post-add-domain-patterns",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "example": "--boundary\nContent-Disposition: form-data; name=\"apiKey\",\n\na999b571f...79a416002b7\n\n--boundary\nContent-Disposition: form-data; name=\"domains\",\n\n*.rpxnow.com,*.akamai.com",
+              "schema": {
+                "additionalProperties": false,
+                "description": "Adds domains to the domains allowlist. If the list isn't `null`, only the domains on that list can communicate with your social login application.",
+                "properties": {
+                  "apiKey": {
+                    "description": "Social login secret for authenticating the operation. To verify your API key, log in to Console and, on the **Manage Application** page, check the value of the **rpx_key**  setting. This value also appears on the **Settings** page in the Social Login dashboard. See [Get started](https://techdocs.akamai.com/identity-cloud-social-login/reference/get-started) for more information.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "domains": {
+                    "description": "Comma-separated list of domains that can communicate with your social login application. If `null`, any domain can communicate with your social login application.",
+                    "minLength": 0,
+                    "nullable": true,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "apiKey",
+                  "domains"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/add-to-allowlist.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "stat": "ok"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Adds domains to the domains allowlist.",
+                  "properties": {
+                    "stat": {
+                      "description": "Status of the operation. Valid values are: `ok`, which indicates the operation succeeded, `error` which indicates the operation couldn't complete because of problem with the request, and `fail`, which means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/add_domain_patterns.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Additions to the domains allowlist."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "err": {
+                    "code": 0,
+                    "msg": "Missing parameter: apiKey"
+                  },
+                  "stat": "fail"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Indicates that an error occurred when calling a Social Login API operation.",
+                  "properties": {
+                    "code": {
+                      "description": "Social login error code. See [Social API error codes](https://techdocs.akamai.com/identity-cloud-social-login/reference/social-api-error-codes) for more information.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "msg": {
+                      "description": "Information about the error and why it took place.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. A value of `ok` means the operation succeeded. A value of `error` means the operation couldn't complete because of problem with the request. A value of `fail` means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "code",
+                    "msg"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/400_error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Missing parameter.](https://techdocs.akamai.com/identity-cloud-social-login/reference/400.yaml)"
+          }
+        },
+        "summary": "Add domains to the domains allowlist",
+        "tags": [
+          "Social login allowlist"
+        ]
+      }
+    },
+    "/api/v2/auth_info": {
+      "post": {
+        "description": "Authenticates a social login user. Social login occurs when user logs in to Identity Cloud by using authentication credentials from a third-party social login identity provider such as Facebook or Twitter.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Social API",
+          "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference/post-auth-info"
+        },
+        "operationId": "post-auth-info",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "example": "--boundary\nContent-Disposition: form-data; name=\"apiKey\",\n\na999b571f...79a416002b7\n\n--boundary\nContent-Disposition: form-data; name=\"token\",\n\nc07b9a45172154436a33bf1bbe708bd7adadcfd6",
+              "schema": {
+                "additionalProperties": true,
+                "description": "Authenticates a social login user. Social login occurs when user logs in to Identity Cloud by using authentication credentials from a third-party social login identity provider such as Facebook or Twitter.",
+                "properties": {
+                  "apiKey": {
+                    "description": "Social login secret for authenticating the operation. To verify your API key, log in to Console and, on the **Manage Application** page, check the value of the **rpx_key**  setting. This value also appears on the **Settings** page in the Social Login dashboard. See [Get started](https://techdocs.akamai.com/identity-cloud-social-login/reference/get-started) for more information.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "extended": {
+                    "default": false,
+                    "description": "If `true`, the operation returns user data in the Simple Registration and hCard formats in addition to the default format. These formats provide ways to exchange user profile data with other websites.",
+                    "type": "boolean"
+                  },
+                  "token": {
+                    "description": "Access token from the social login identity provider.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "apiKey",
+                  "token"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/authenticate-a-social-login.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "accessCredentials": {
+                    "accessToken": "Atza|IwE...H9iwmw",
+                    "clientId": "amzn1.application-oa2-client.686b44721c63438d9090703d0c1e386f",
+                    "refreshToken": "Atzr|IwEBIE11M_YhEPW_...sHw4kRQqnk",
+                    "scopes": "postal_code",
+                    "type": "oauth2"
+                  },
+                  "profile": {
+                    "displayName": "Karim Nafir",
+                    "email": "jsmith@example.com",
+                    "providerName": "Amazon",
+                    "providerSpecifier": "amazon",
+                    "provider_id": "amzn1.account.AH27NO22NH6E4F4GFM",
+                    "verifiedEmail": "karim.nafir@example.com"
+                  },
+                  "stat": "ok"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Returns user profile information from a social login identity provider following a successful social login.",
+                  "properties": {
+                    "accessCredentials": {
+                      "additionalProperties": true,
+                      "description": "User's authorization credentials. The properties of this object vary depending on the social login identity provider.",
+                      "properties": {
+                        "accessToken": {
+                          "description": "OAuth access token issued by the social identity provider.",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "oauthTokenSecret": {
+                          "description": "OAuth token password.",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "scopes": {
+                          "description": "Scopes available for the user. Scopes, which also vary among identity providers, contain information such as a user's address, a user's phone number, or a user's likes or dislikes.",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "type": {
+                          "description": "Type of token issued by the social login identity provider.",
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "merged_poco": {
+                      "additionalProperties": true,
+                      "description": "User's Portable Contacts object.",
+                      "properties": {
+                        "preferredUsername": {
+                          "description": "User's preferred name, nickname, or the name that the user wants to be known by.",
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "profile": {
+                      "additionalProperties": true,
+                      "description": "Fields that make up the user's profile. This data uses the standard Portable Contacts schema.",
+                      "properties": {
+                        "displayName": {
+                          "description": "User's display name.",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "email": {
+                          "description": "Email address of the user.",
+                          "format": "email",
+                          "type": "string"
+                        },
+                        "verifiedEmail": {
+                          "description": "User's verified email address.",
+                          "format": "email",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. Valid values are: `ok`, which indicates the operation succeeded, `error` which indicates the operation couldn't complete because of problem with the request, and `fail`, which means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "profile",
+                    "accessCredentials"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/authentication_information.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Authentication successful."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "err": {
+                    "code": 0,
+                    "msg": "Missing parameter: apiKey"
+                  },
+                  "stat": "fail"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Indicates that an error occurred when calling a Social Login API operation.",
+                  "properties": {
+                    "code": {
+                      "description": "Social login error code. See [Social API error codes](https://techdocs.akamai.com/identity-cloud-social-login/reference/social-api-error-codes) for more information.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "msg": {
+                      "description": "Information about the error and why it took place.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. A value of `ok` means the operation succeeded. A value of `error` means the operation couldn't complete because of problem with the request. A value of `fail` means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "code",
+                    "msg"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/400_error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Missing parameter.](https://techdocs.akamai.com/identity-cloud-social-login/reference/400.yaml)"
+          }
+        },
+        "summary": "Authenticate a social login",
+        "tags": [
+          "Tokens and authentication"
+        ]
+      }
+    },
+    "/api/v2/get_application_settings": {
+      "post": {
+        "description": "Returns the settings for a social login application. These settings also appear on the **Settings** page in the Social Login dashboard.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Social API",
+          "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference/post-get-application-settings"
+        },
+        "operationId": "post-get-application-settings",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "example": "--boundary\nContent-Disposition: form-data; name=\"apiKey\",\n\na999b571f...79a416002b7",
+              "schema": {
+                "additionalProperties": false,
+                "description": "Returns your social login applications.",
+                "properties": {
+                  "apiKey": {
+                    "description": "Social login secret for authenticating the operation. To verify your API key, log in to Console and, on the **Manage Application** page, check the value of the **rpx_key**  setting. This value also appears on the **Settings** page in the Social Login dashboard. See [Get started](https://techdocs.akamai.com/identity-cloud-social-login/reference/get-started) for more information.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "apiKey"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/get-social-login-apps.yaml"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "domainRedirect": null,
+                  "favicon": null,
+                  "googleProfileUrl": true,
+                  "oneTimeUseTokens": true,
+                  "postToTokenUrl": true,
+                  "privacyPolicy": null,
+                  "stat": "ok"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Returns social login application settings and setting values.",
+                  "properties": {
+                    "domainRedirect": {
+                      "description": "URL redirect destination for users visiting your sign-in URL.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "favicon": {
+                      "description": "Publicly accessible URL of your favicon. Favicons are icons that appear on web browser tabs, in a browser's address bar, and next to browser bookmarks. A `null` value means you haven't set a favicon.",
+                      "minLength": 0,
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "googleProfileUrl": {
+                      "description": "Deprecated.",
+                      "type": "boolean"
+                    },
+                    "oneTimeUseTokens": {
+                      "description": "If `true`, you can use a token just once before that token expires. If `false`, you can use the same token in more than one operation.",
+                      "type": "boolean"
+                    },
+                    "postToTokenUrl": {
+                      "description": "Deprecated.",
+                      "type": "boolean"
+                    },
+                    "privacyPolicy": {
+                      "description": "URL of your privacy policy. A `null` value means that you haven't set a privacy policy.",
+                      "minLength": 0,
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. A value of `ok` means that the operation succeeded. A value of `error` means the operation couldn't complete because of problem with the request. A value of `fail` means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "privacyPolicy",
+                    "favicon",
+                    "domainRedirect",
+                    "postToTokenUrl",
+                    "oneTimeUseTokens",
+                    "googleProfileUrl"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/get_application_settings.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Social login settings for the application."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "err": {
+                    "code": 0,
+                    "msg": "Missing parameter: apiKey"
+                  },
+                  "stat": "fail"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Indicates that an error occurred when calling a Social Login API operation.",
+                  "properties": {
+                    "code": {
+                      "description": "Social login error code. See [Social API error codes](https://techdocs.akamai.com/identity-cloud-social-login/reference/social-api-error-codes) for more information.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "msg": {
+                      "description": "Information about the error and why it took place.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. A value of `ok` means the operation succeeded. A value of `error` means the operation couldn't complete because of problem with the request. A value of `fail` means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "code",
+                    "msg"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/400_error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Missing parameter.](https://techdocs.akamai.com/identity-cloud-social-login/reference/400.yaml)"
+          }
+        },
+        "summary": "Get social login application settings",
+        "tags": [
+          "Social login settings"
+        ]
+      }
+    },
+    "/api/v2/get_available_providers": {
+      "post": {
+        "description": "Returns the social login identity providers available to a social login application. The response includes providers ready for immediate use, as well as providers that are available but require additional configuration. See [Social login configuration guides](https://techdocs.akamai.com/identity-cloud/docs/social-login-identity-provider-configuration-guides) for information on configuring the standard Identity Cloud social login identity providers.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Social API",
+          "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference/post-get-available-providers"
+        },
+        "operationId": "post-get-available-providers",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "share": [
+                    "facebook",
+                    "yahoo"
+                  ],
+                  "signin": [
+                    "aol",
+                    "blogger",
+                    "facebook",
+                    "yahoo"
+                  ],
+                  "social": [
+                    "facebook",
+                    "yahoo"
+                  ],
+                  "stat": "ok"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Returns the identity providers available for traditional login and registration, social login and registration, and social sharing.",
+                  "properties": {
+                    "share": {
+                      "description": "Identity providers available for social sharing. Social sharing is only available to legacy Identity Cloud customers. If not in the response, you don't have any share providers.",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "signin": {
+                      "description": "Traditional login and registration providers available to you. With traditional login and registration, users register for or log in to an account by using an email address and password. If not in the response, you don't have any sign-in providers.",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "social": {
+                      "description": "Social login and registration providers available to you. With social login and registration, users register for or log in to an account by using credentials from a third-party social login identity provider such as Facebook or Twitter. If not in the response, you don't have any social providers.",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. Valid values are: `ok`, which indicates that the operation succeeded, `error` which indicates the operation couldn't complete because of problem with the request, and `fail`, which means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "signin",
+                    "social",
+                    "share"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/get_available_providers.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Social login providers available to an application."
+          }
+        },
+        "summary": "Get all social login providers",
+        "tags": [
+          "Social login providers"
+        ]
+      }
+    },
+    "/api/v2/get_domain_patterns": {
+      "post": {
+        "description": "Returns the domains on the domains allowlist. If the list isn't `null`, then only the domains on that list can communicate with your social login application. By default, any domain can communicate with your social login application.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Social API",
+          "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference/post-get-domain-patterns"
+        },
+        "operationId": "post-get-domain-patterns",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "example": "--boundary\nContent-Disposition: form-data; name=\"apiKey\",\n\na999b571f...79a416002b7",
+              "schema": {
+                "additionalProperties": false,
+                "description": "Returns the domains on the domains allowlist. If the list isn't `null`, then only the domains on that list can communicate with your social login application.",
+                "properties": {
+                  "apiKey": {
+                    "description": "Social login secret for authenticating the operation. To verify your API key, log in to Console and, on the **Manage Application** page, check the value of the **rpx_key**  setting. This value also appears on the **Settings** page in the Social Login dashboard. See [Get started](https://techdocs.akamai.com/identity-cloud-social-login/reference/get-started) for more information.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "apiKey"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/get-domains-allowlist.yaml"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "domains": [
+                    "localhost",
+                    "somewhere.com",
+                    "*.example.com"
+                  ],
+                  "stat": "ok"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Returns the domains on an application's domains allowlist. If the list isn't `null`, only the domains on that list can communicate with your social login application. By default, any domain can communicate with your application.",
+                  "properties": {
+                    "domains": {
+                      "description": "Domains that can communicate with your social login application. If `null`, any domain can communicate with your social login application.",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "minItems": 0,
+                      "nullable": true,
+                      "type": "array"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. Valid values are: `ok`, which indicates that the operation succeeded, `error` which indicates that the operation couldn't complete because of problem with the request, and `fail`, which means that operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "domains"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/get_domain_patterns.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Domains on the social login domains allowlist."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "err": {
+                    "code": 0,
+                    "msg": "Missing parameter: apiKey"
+                  },
+                  "stat": "fail"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Indicates that an error occurred when calling a Social Login API operation.",
+                  "properties": {
+                    "code": {
+                      "description": "Social login error code. See [Social API error codes](https://techdocs.akamai.com/identity-cloud-social-login/reference/social-api-error-codes) for more information.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "msg": {
+                      "description": "Information about the error and why it took place.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. A value of `ok` means the operation succeeded. A value of `error` means the operation couldn't complete because of problem with the request. A value of `fail` means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "code",
+                    "msg"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/400_error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Missing parameter](https://techdocs.akamai.com/identity-cloud-social-login/reference/400.yaml)."
+          }
+        },
+        "summary": "Get the domains allowlist",
+        "tags": [
+          "Social login allowlist"
+        ]
+      }
+    },
+    "/api/v2/map": {
+      "post": {
+        "description": "Assigns a social login identity provider to a user account. Akamai recommends using the [Link a social identity to a user account](https://techdocs.akamai.com/identity-cloud-auth/reference/post-oauth-link-account-native) operation to add a social login identity to a user account.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Social API",
+          "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference/post-map"
+        },
+        "operationId": "post-map",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "example": "--boundary\nContent-Disposition: form-data; name=\"apiKey\",\n\na999b571f...79a416002b7\n\n--boundary\nContent-Disposition: form-data; name=\"identifier\",\n\nhttp://www.facebook.com/profile.php?id=10158391536229336\n\n--boundary\nContent-Disposition: form-data; name=\"primaryKey\",\n\n12",
+              "schema": {
+                "additionalProperties": false,
+                "description": "Assigns a social login identity provider to a user account.",
+                "properties": {
+                  "apiKey": {
+                    "description": "Social login secret for authenticating the operation. To verify your API key, log in to Console and, on the **Manage Application** page, check the value of the **rpx_key**  setting. This value also appears on the **Settings** page in the Social Login dashboard. See [Get started](https://techdocs.akamai.com/identity-cloud-social-login/reference/get-started) for more information.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "identifier": {
+                    "description": "Unique identifier of the social login identity provider.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "overwrite": {
+                    "default": true,
+                    "description": "If `false`, the operation creates a new mapping if the identifier doesn't already have a mapping. If the  identifier has a mapping, it's left alone and the operation doesn't overwrite it. If `true`, it either creates new mappings or overwrites existing mappings with new values.",
+                    "type": "boolean"
+                  },
+                  "primaryKey": {
+                    "description": "Index number of the attribute, starting from zero.",
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "apiKey",
+                  "identifier"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/add-social-login-identity.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "stat": "ok"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Assigns a social login identity provider to a user account.",
+                  "properties": {
+                    "stat": {
+                      "description": "Status of the operation. Valid values are: `ok`, which indicates the operation succeeded, `error` which indicates the operation couldn't complete because of problem with the request, and `fail`, which means that operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/map.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Social login identity provider additions."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "err": {
+                    "code": 0,
+                    "msg": "Missing parameter: apiKey"
+                  },
+                  "stat": "fail"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Indicates that an error occurred when calling a Social Login API operation.",
+                  "properties": {
+                    "code": {
+                      "description": "Social login error code. See [Social API error codes](https://techdocs.akamai.com/identity-cloud-social-login/reference/social-api-error-codes) for more information.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "msg": {
+                      "description": "Information about the error and why it took place.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. A value of `ok` means the operation succeeded. A value of `error` means the operation couldn't complete because of problem with the request. A value of `fail` means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "code",
+                    "msg"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/400_error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Missing parameter.](https://techdocs.akamai.com/identity-cloud-social-login/reference/400.yaml)"
+          }
+        },
+        "summary": "Assign a social login identity provider to a user account",
+        "tags": [
+          "User profiles"
+        ]
+      }
+    },
+    "/api/v2/providers": {
+      "post": {
+        "description": "Returns the social login identity providers available for immediate use by a social login application. These providers require no additional configuration.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Social API",
+          "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference/post-providers"
+        },
+        "operationId": "post-providers",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "shareWidget": {
+                    "email": [
+                      "google",
+                      "yahoo"
+                    ],
+                    "share": [
+                      "email",
+                      "facebook",
+                      "yahoo"
+                    ]
+                  },
+                  "signin": [
+                    "aol",
+                    "facebook",
+                    "yahoo"
+                  ],
+                  "social": [
+                    "facebook",
+                    "linkedin",
+                    "myspace",
+                    "twitter"
+                  ],
+                  "stat": "ok"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Returns the social login identity providers available for immediate use by an application.",
+                  "properties": {
+                    "shareWidget": {
+                      "additionalProperties": false,
+                      "description": "Sharing and email providers available for immediate use. Social and email sharing is only available to legacy Identity Cloud customers.",
+                      "properties": {
+                        "email": {
+                          "description": "Email providers available to an application. If not in the response, you don't have any email providers.",
+                          "items": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "minItems": 0,
+                          "type": "array"
+                        },
+                        "share": {
+                          "description": "Identity providers available for social sharing. Social sharing is only available to legacy Identity Cloud customers. If not in the response, you don't have any share providers.",
+                          "items": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "minItems": 0,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "share",
+                        "email"
+                      ],
+                      "type": "object"
+                    },
+                    "signin": {
+                      "description": "Traditional login and registration providers available to you. With traditional login and registration, users register for or log in to an account by using an email address and password. If not in the response that means that you don't have any sign-in providers.",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "social": {
+                      "description": "Social login and registration providers available to you. With social login and registration, users register for or log in to an account by using credentials from a third-party social login identity provider such as Facebook or Twitter. If not in the response, it means you don't have any social providers.",
+                      "items": {
+                        "enum": [
+                          "FACEBOOK",
+                          "LINKEDIN",
+                          "MYSPACE",
+                          "TWITTER"
+                        ],
+                        "type": "string"
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. Valid values are: `ok`, which indicates that the operation was successful, `error` which indicates that the operation couldn't complete successfully because of problem with the request, and `fail`, which means that operation couldn't complete successfully because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/providers.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Social login providers available for immediate use."
+          }
+        },
+        "summary": "Get all configured social login providers",
+        "tags": [
+          "Social login providers"
+        ]
+      }
+    },
+    "/api/v2/set_app_settings": {
+      "post": {
+        "description": "Modifies setting values for a social login application. You can also use the **Settings** page in the Social Login dashboard to configure these values.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Social API",
+          "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference/post-set-app-settings"
+        },
+        "operationId": "post-set-app-settings",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "example": "--boundary\r\nContent-Disposition: form-data; name=\"apiKey\",\r\n\r\na999b571f...79a416002b7\r\n\r\n--boundary\r\nContent-Disposition: form-data; name=\"oneTimeUseTokens\",\r\n\r\ntrue\r\n\r\n--boundary\r\nContent-Disposition: form-data; name=\"privacyPolicy\",\r\n\r\nhttps://documentation.akamai.com/privacy\r",
+              "schema": {
+                "additionalProperties": false,
+                "description": "Modifies setting values for a social login application.",
+                "properties": {
+                  "apiKey": {
+                    "description": "Social login secret for authenticating the operation. To verify your API key, log in to Console and, on the **Manage Application** page, check the value of the **rpx_key**  setting. This value also appears on the **Settings** page in the Social Login dashboard. See [Get started](https://techdocs.akamai.com/identity-cloud-social-login/reference/get-started) for more information.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "domainRedirect": {
+                    "description": "URL redirect destination for users visiting your sign-in URL. ",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "favicon": {
+                    "description": "Publicly accessible URL of your favicon. Favicons are icons that appear on web browser tabs, in a browser's address bar, and next to browser bookmarks. A `null` value means that you haven't set a favicon.",
+                    "minLength": 0,
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "googleProfileUrl": {
+                    "description": "Deprecated.",
+                    "type": "boolean"
+                  },
+                  "oneTimeUseTokens": {
+                    "description": "If `true`, you can use a token just once before that token expires. If `false`, you can use the same token in more than one operation.",
+                    "type": "boolean"
+                  },
+                  "postToTokenUrl": {
+                    "description": "Deprecated.",
+                    "type": "boolean"
+                  },
+                  "privacyPolicy": {
+                    "description": "URL of your privacy policy. A `null` value means that you haven't set a privacy policy.",
+                    "minLength": 0,
+                    "nullable": true,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "apiKey"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/set-social-login-settings.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "stat": "ok"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Modifies social login application settings.",
+                  "properties": {
+                    "stat": {
+                      "description": "Status of the operation. Possible values are: `ok`, `error`, or `fail`. A value of `ok` means that the operation was successful. A value of `error` means that the operation couldn't complete successfully because of problem with the request. A value of `fail` means that operation couldn't complete successfully because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/set_application_settings.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Configuration changes for your social login settings."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "err": {
+                    "code": 0,
+                    "msg": "Missing parameter: apiKey"
+                  },
+                  "stat": "fail"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Indicates that an error occurred when calling a Social Login API operation.",
+                  "properties": {
+                    "code": {
+                      "description": "Social login error code. See [Social API error codes](https://techdocs.akamai.com/identity-cloud-social-login/reference/social-api-error-codes) for more information.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "msg": {
+                      "description": "Information about the error and why it took place.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. A value of `ok` means the operation succeeded. A value of `error` means the operation couldn't complete because of problem with the request. A value of `fail` means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "code",
+                    "msg"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/400_error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Missing parameter.](https://techdocs.akamai.com/identity-cloud-social-login/reference/400.yaml)"
+          }
+        },
+        "summary": "Modify application settings",
+        "tags": [
+          "Social login settings"
+        ]
+      }
+    },
+    "/api/v2/set_auth_providers": {
+      "post": {
+        "description": "Defines the social login identity providers that appear on your sign-in and registration screens. These are the only identity providers users can employ for social logins and registrations.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Social API",
+          "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference/post-set-auth-providers"
+        },
+        "operationId": "post-set-auth-providers",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "example": "--boundary\nContent-Disposition: form-data; name=\"apiKey \",\n\na999b571f...79a416002b7\n\n--boundary\nContent-Disposition: form-data; name=\"providers\",\n\namazon,facebook,twitter",
+              "schema": {
+                "additionalProperties": false,
+                "description": "Defines the social login identity providers that appear on your sign-in and registration screens.",
+                "properties": {
+                  "apiKey": {
+                    "description": "Social login secret for authenticating the operation. To verify your API key, log in to Console and, on the **Manage Application** page, check the value of the **rpx_key**  setting. This value also appears on the **Settings** page in the Social Login dashboard. See [Get started](https://techdocs.akamai.com/identity-cloud-social-login/reference/get-started) for more information.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "deviceType": {
+                    "description": "Specifies the device types that can use social login. Possible values are: `web`, `iphone`, and `android`. A `web` value makes social login available to regular web traffic. An `iphone` value makes social login available to web traffic originating from an iPhone. An `android` value means social login is available to web traffic originating from an Android device. To make the provider available to more than one device type, make additional requests with different values. For example, make a request with the value set to `web`, then a second request set to `iphone`.",
+                    "enum": [
+                      "web",
+                      "iphone",
+                      "android"
+                    ],
+                    "type": "string"
+                  },
+                  "providers": {
+                    "description": "Comma-separated string of provider specifiers. These specifiers indicate the providers available for social logins and registrations.",
+                    "minLength": 0,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "apiKey",
+                  "providers"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/assign-social-login-providers.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "stat": "ok"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Specifies the social login identity providers that appear on your sign-in and registration screens.",
+                  "properties": {
+                    "stat": {
+                      "description": "Status of the operation. Valid values are: `ok`, which indicates that the operation was successful, `error` which indicates that the operation couldn't complete successfully because of problem with the request, and `fail`, which means that operation couldn't complete successfully because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/set_authentication_providers.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Social login providers available for logins and registrations."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "err": {
+                    "code": 0,
+                    "msg": "Missing parameter: apiKey"
+                  },
+                  "stat": "fail"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Indicates that an error occurred when calling a Social Login API operation.",
+                  "properties": {
+                    "code": {
+                      "description": "Social login error code. See [Social API error codes](https://techdocs.akamai.com/identity-cloud-social-login/reference/social-api-error-codes) for more information.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "msg": {
+                      "description": "Information about the error and why it took place.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. A value of `ok` means the operation succeeded. A value of `error` means the operation couldn't complete because of problem with the request. A value of `fail` means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "code",
+                    "msg"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/400_error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Missing parameter.](https://techdocs.akamai.com/identity-cloud-social-login/reference/400.yaml)"
+          }
+        },
+        "summary": "Assign social login authentication providers",
+        "tags": [
+          "Social login providers"
+        ]
+      }
+    },
+    "/api/v2/set_domain_patterns": {
+      "post": {
+        "description": "Replaces the domains allowlist for an application. This operation clears the existing allowlist and replaces it with the domains in the request. If the allowlist isn't `null`, then only the domains on that list can communicate with your social login application. By default any domain can communicate with your social login application.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Social API",
+          "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference/post-set-domain-patterns"
+        },
+        "operationId": "post-set-domain-patterns",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "example": "--boundary\nContent-Disposition: form-data; name=\"apiKey\",\n\na999b571f...79a416002b7\n\n--boundary\nContent-Disposition: form-data; name=\"domains\",\n\ndocumentation.akamai.com",
+              "schema": {
+                "additionalProperties": false,
+                "description": "Replaces the domains allowlist for an application. Use this operation to clear the existing allowlist and replace it with the domains in the request.",
+                "properties": {
+                  "apiKey": {
+                    "description": "Social login secret for authenticating the operation. To verify your API key, log in to Console and, on the **Manage Application** page, check the value of the **rpx_key**  setting. This value also appears on the **Settings** page in the Social Login dashboard. See [Get started](https://techdocs.akamai.com/identity-cloud-social-login/reference/get-started) for more information.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "domains": {
+                    "description": "Comma-separated list of domains that can communicate with your social login application. If `null`, any domain can communicate with your social login application.",
+                    "minLength": 0,
+                    "nullable": true,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "apiKey",
+                  "domains"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/replace-domains-allowlist.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "stat": "ok"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Updates the domains allowlist for an application. This operation replaces all the domains currently on the list with the domains in the request. You can use wildcards when adding a domain. For example, `*.akamai.com` adds any subdomains of `akamai.com` to the allowlist. Run the [Add domains to the domains allowlist](https://techdocs.akamai.com/identity-cloud-social-login/reference/post-add-domain-patterns) operation to append additional domains to the allowlist without affecting any domains currently on the list.",
+                  "properties": {
+                    "stat": {
+                      "description": "Status of the operation. Valid values are: `ok`, which indicates the operation succeeded, `error` which indicates the operation couldn't complete because of problem with the request, and `fail`, which means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/set_domain_patterns.yaml"
+                  }
+                }
+              }
+            },
+            "description": "New domains allowlist."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "err": {
+                    "code": 0,
+                    "msg": "Missing parameter: apiKey"
+                  },
+                  "stat": "fail"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Indicates that an error occurred when calling a Social Login API operation.",
+                  "properties": {
+                    "code": {
+                      "description": "Social login error code. See [Social API error codes](https://techdocs.akamai.com/identity-cloud-social-login/reference/social-api-error-codes) for more information.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "msg": {
+                      "description": "Information about the error and why it took place.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. A value of `ok` means the operation succeeded. A value of `error` means the operation couldn't complete because of problem with the request. A value of `fail` means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "code",
+                    "msg"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/400_error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Missing parameter.](https://techdocs.akamai.com/identity-cloud-social-login/reference/400.yaml)"
+          }
+        },
+        "summary": "Replace the domains allowlist",
+        "tags": [
+          "Social login allowlist"
+        ]
+      }
+    },
+    "/api/v2/signin/oauth_token": {
+      "post": {
+        "description": "Exchanges a social login identity provider's access token for an Identity Cloud social login token. To complete social login, you then need to run the [Complete social login](https://techdocs.akamai.com/identity-cloud-auth/reference/post-oauth-auth-native) operation to exchange the social login token for an Identity Cloud access token.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Social API",
+          "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference/post-signin-oauth-token"
+        },
+        "operationId": "post-signin-oauth-token",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "example": "--boundary\nContent-Disposition: form-data; name=\"token\",\n\nEAADZAcGPOrLBvmhHk\u202600ZBy5AzBtcgPAm0Ta9vs\n\n--boundary\nContent-Disposition: form-data; name=\"provider\",\n\nfacebook",
+              "schema": {
+                "additionalProperties": false,
+                "description": "Exchanges a social login identity provider's access token for an Identity Cloud social login token.",
+                "properties": {
+                  "id_token": {
+                    "description": "Only valid if using [Sign in with Apple](https://techdocs.akamai.com/identity-cloud/docs/the-sign-in-with-apple-social-login-configuration-guide). Set this to the value of the token your **Sign In with Apple** app issues.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "provider": {
+                    "description": "Name of the social login identity provider.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "token": {
+                    "description": "Access token from the social login identity provider.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "tokenSecret": {
+                    "description": "Only valid if using Twitter. The token secret is an additional authentication value Twitter returns following authentication.",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "token",
+                  "provider"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/exchange-social-login-token.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "stat": "ok",
+                  "token": "e96213b7bfddd1884b91544a11b5d5be52316590"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Exchanges a social login identity provider's access token for an Identity Cloud social login token.",
+                  "properties": {
+                    "stat": {
+                      "description": "Status of the operation. Valid values are: `ok`, which indicates that the operation was successful, `error` which indicates that the operation couldn't complete successfully because of problem with the request, and `fail`, which means that operation couldn't complete successfully because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "token": {
+                      "description": "Identity Cloud social login token. Use the [Complete social login](https://techdocs.akamai.com/identity-cloud-auth/reference/post-oauth-auth-native) operation to exchange this token for an Identity Cloud access token and complete social login.",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "token"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/signin_oauth_token.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Identity Cloud social login token."
+          }
+        },
+        "summary": "Exchange a social login token",
+        "tags": [
+          "Tokens and authentication"
+        ]
+      }
+    },
+    "/api/v2/unmap": {
+      "post": {
+        "description": "Removes a social login identity provider from a user account. Akamai recommends you run the [Unlink a social identity](https://techdocs.akamai.com/identity-cloud/docs/unlink-a-social-identity) operation to remove a social login identity from a user account.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Identity Cloud Social API",
+          "url": "https://techdocs.akamai.com/identity-cloud-social-login/reference/post-unmap"
+        },
+        "operationId": "post-unmap",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "example": "--boundary\nContent-Disposition: form-data; name=\"apiKey\",\n\na999b571f...79a416002b7\n\n--boundary\nContent-Disposition: form-data; name=\"identifier\",\n\nhttp://www.facebook.com/profile.php?id=10158391536229336\n\n--boundary\nContent-Disposition: form-data; name=\"primaryKey\",\n\n12",
+              "schema": {
+                "additionalProperties": false,
+                "description": "Removes a social login identity provider from a user account.",
+                "properties": {
+                  "all_identifiers": {
+                    "default": false,
+                    "description": "If `true`, the operation removes all the social login identifiers for the `primaryKey`. If `false`, the operation only removes the identifier in the request. Removing all the identifiers means removing all the social login identity providers for the user. You need to include either the this member` or the `identifier` member in your operation.",
+                    "type": "boolean"
+                  },
+                  "apiKey": {
+                    "description": "Social login secret for authenticating the operation. To verify your API key, log in to Console and, on the **Manage Application** page, check the value of the **rpx_key**  setting. This value also appears on the **Settings** page in the Social Login dashboard. See [Get started](https://techdocs.akamai.com/identity-cloud-social-login/reference/get-started) for more information.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "identifier": {
+                    "description": "Unique identifier of the social login provider you're removing from the user account. Use this to remove a single social login identity provider from an account. You need to include either this or `all_identifiers` in your operation.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "primaryKey": {
+                    "description": "Index number of the attribute.",
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "apiKey",
+                  "primaryKey"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/remove-identity-provider.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "stat": "ok"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Removes a social login identity provider from a user account.",
+                  "properties": {
+                    "stat": {
+                      "description": "Status of the operation. An `ok` value indicates the operation succeeded. An `error` means the operation couldn't complete because of a problem with the request. A `fail` value means it couldn't complete due to an error with the Identity Cloud back end. In that case, contact your Identity Cloud representative.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/unmap.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Removed the social login identity provider."
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "err": {
+                    "code": 0,
+                    "msg": "Missing parameter: apiKey"
+                  },
+                  "stat": "fail"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Indicates that an error occurred when calling a Social Login API operation.",
+                  "properties": {
+                    "code": {
+                      "description": "Social login error code. See [Social API error codes](https://techdocs.akamai.com/identity-cloud-social-login/reference/social-api-error-codes) for more information.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "msg": {
+                      "description": "Information about the error and why it took place.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "stat": {
+                      "description": "Status of the operation. A value of `ok` means the operation succeeded. A value of `error` means the operation couldn't complete because of problem with the request. A value of `fail` means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.",
+                      "enum": [
+                        "ok",
+                        "error",
+                        "fail"
+                      ],
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "stat",
+                    "code",
+                    "msg"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/400_error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Missing parameter.](https://techdocs.akamai.com/identity-cloud-social-login/reference/400.yaml)"
+          }
+        },
+        "summary": "Remove an identity provider from a user account",
+        "tags": [
+          "User profiles"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}"
+    }
+  ],
+  "tags": [],
+  "x-readme": {
+    "samples-languages": [
+      "curl",
+      "python",
+      "node"
+    ]
+  }
+}

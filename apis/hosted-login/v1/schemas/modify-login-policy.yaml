@@ -1,0 +1,128 @@
+type: object
+description: |-
+  Modifies a login policy. Login policies help manage the user login and registration experience.
+  
+x-akamai:
+  file-path: schemas/modify-login-policy.yaml
+additionalProperties: false
+required:
+- id
+- identityStoreDetails
+properties:
+  id:
+    type: string
+    description: |
+      Unique identifier of a login policy.
+    minLength: 1
+  title:
+    type: string
+    description: |
+      Name of a login policy.
+    minLength: 1
+  _links:
+    type: object
+    description: |
+      Navigable hypermedia links for a login policy.
+    additionalProperties: false
+    required:
+    - self
+    properties:
+      self:
+        type: object
+        description: |
+          Navigable hypermedia links for a login policy.
+        additionalProperties: false
+        required:
+        - href
+        properties:
+          href:
+            type: string
+            description: |
+              Navigable hypermedia link to the login policy.
+            minLength: 1
+  customClaims:
+    type: object
+    description: |
+      User profile attributes the standard scopes and claims don't return. See [Custom claims](https://techdocs.akamai.com/identity-cloud/docs/scopes-and-claims#create-custom-claims) for more information. This documentation shows only two sample claims. However, you can configure most of the attributes in a user profile as custom claims.
+    additionalProperties: false
+    properties:
+      id_token:
+        type: object
+        description: |
+          Custom claims in the user's identity token.
+        additionalProperties: false
+        properties:
+          organization:
+            type: string
+            description: |
+              Name of the user's organization.
+            minLength: 1
+      userinfo:
+        type: object
+        description: |
+          Custom claims available from the userinfo endpoint.
+        additionalProperties: true
+        properties:
+          organization:
+            type: string
+            description: |
+              Name of the user's organization.
+            minLength: 1
+  identityStoreDetails:
+    type: object
+    description: |
+      Links the login policy to the Identity Cloud infrastructure. You need these values when you create a login policy. After that, the values are read-only.
+    additionalProperties: false
+    required:
+    - type
+    - connectionDetails
+    properties:
+      type:
+        type: string
+        description: |
+          Login policy type. This value needs to be set to `janrainCapture`.
+        enum:
+        - janrainCapture
+        minLength: 1
+      connectionDetails:
+        type: object
+        description: |
+          Specifies a connection to the Identity Cloud back-end infrastructure.
+        additionalProperties: false
+        required:
+        - domain
+        - applicationId
+        - entityType
+        - clientId
+        - clientSecret
+        properties:
+          applicationId:
+            type: string
+            description: |
+              Unique identifier of your Identity Cloud application. You can find your application ID on the Console's **Manage Application** page.
+            minLength: 1
+          clientId:
+            type: string
+            description: |
+              Unique identifier of the login policy's `owner` client.
+            minLength: 1
+          clientSecret:
+            type: string
+            description: |
+              Client secret of the login policy's `owner` client.
+            minLength: 1
+          domain:
+            type: string
+            description: |
+              URL of your Identity Cloud Capture domain. Akamai provides you with this URL when you subscribe to Identity Cloud.
+            minLength: 1
+          entityType:
+            type: string
+            description: |
+              Name of the entity type that stores user profiles. The entity type of the login policy needs to match the entity type in your application client. See [Configure application client settings](https://techdocs.akamai.com/identity-cloud/docs/configure-the-required-application-client-settings) for more information.
+            minLength: 1
+  loginURL:
+    type: string
+    description: |
+      URL of your Hosted Login sign-in page.
+    minLength: 1

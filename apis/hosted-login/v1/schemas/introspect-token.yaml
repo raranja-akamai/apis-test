@@ -1,0 +1,82 @@
+type: object
+description: |-
+  Returns the current status of a Hosted Login access token or refresh token. If the token is active the operation returns additional claims belonging to the token.
+  
+x-akamai:
+  file-path: schemas/introspect-token.yaml
+additionalProperties: false
+required:
+- active
+properties:
+  acr:
+    type: string
+    description: |
+      Level of authentication the user underwent during login. The acronym is short for Authentication Context Class Reference. See [Risk-based authentication](https://techdocs.akamai.com/identity-cloud/docs/risk-based-authentication-and-client-reputation) for more information.
+    enum:
+    - '0'
+    - urn:akamai-ic:nist:800-63-3:aal:1
+    - urn:akamai-ic:nist:800-63-3:aal:2
+    minLength: 1
+  active:
+    type: boolean
+    description: |
+      If `true`, the token is valid. If `false` this is the only value the operation returns. For security reasons, Hosted Login provides no information explaining why a token is invalid.
+  amr:
+    type: array
+    description: |
+      Specifies the authentication methods responsible for the `acr` authentication level. See [The amr claim](https://techdocs.akamai.com/identity-cloud/docs/risk-based-authentication-and-client-reputation#the-amr-claim) for more information.
+    minItems: 1
+    items:
+      type: string
+      enum:
+      - pwd
+      - sms
+      - email
+      - mfa
+      - rba
+      minLength: 1
+  aud:
+    type: array
+    description: |
+      Audiences for the token. These are typically OpenID Connect clients.
+    minItems: 1
+    items:
+      type: string
+      minLength: 1
+  auth_time:
+    type: integer
+    description: |
+      Epoch timestamp indicating the user's last authentication.
+    minimum: 0
+  client_id:
+    type: string
+    description: |
+      Unique identifier of the OIDC client from the original authorization request.
+    minLength: 1
+  exp:
+    type: integer
+    description: |
+      Epoch timestamp indicating when the token expires.
+    minimum: 0
+  iat:
+    type: integer
+    description: |
+      Epoch timestamp indicating the issue date for the token.
+    minimum: 0
+  scope:
+    type: string
+    description: |
+      OpenID Connect scopes the token can access.
+    minLength: 1
+  sub:
+    type: string
+    description: |
+      Unique identifier of the end user. This is typically the user’s Identity Cloud UUID.
+    minLength: 1
+  token_type:
+    type: string
+    description: |
+      Always set to `Bearer`. This means that the token permissions go to the user who possesses the token.
+    enum:
+    - Bearer
+    minLength: 1

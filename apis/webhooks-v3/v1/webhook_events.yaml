@@ -1,0 +1,236 @@
+openapi: 3.0.0
+info:
+  title: Events
+  version: v1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}
+x-akamai:
+  auth-type: OAUTH
+  file-path: webhook_events.yaml
+paths:
+  /{customerId}/webhooks/subscriptions/{subscriptionId}/events:
+    parameters:
+    - $ref: parameters/customerId-path.yaml
+    - $ref: parameters/subscriptionId-path.yaml
+    - $ref: parameters/page-query.yaml
+    - $ref: parameters/limit-query.yaml
+    - $ref: parameters/state-query.yaml
+    get:
+      operationId: get-webhook-events
+      summary: List Webhooks v3 events
+      tags:
+      - Events information
+      description: |
+        Returns events for a Webhooks v3 subscription. This operation only returns events currently in the Webhooks v3 event store. Events remain in the event store for seven days before Webhooks v3 automatically deletes them.
+      responses:
+        200:
+          description: |
+            Webhook events in the events store.
+          content:
+            application/json:
+              example:
+                $ref: examples/list-webhook-events.json
+              schema:
+                $ref: schemas/list-webhook-events.yaml
+        403:
+          description: |
+            [You don't have permission to access the resource.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [A path component couldn’t be found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /{customerId}/webhooks/subscriptions/{subscriptionId}/events/{eventId}:
+    parameters:
+    - $ref: parameters/customerId-path.yaml
+    - $ref: parameters/subscriptionId-path.yaml
+    - $ref: parameters/eventId-path.yaml
+    get:
+      operationId: get-webhooks-event
+      summary: Get a Webhooks v3 event
+      tags:
+      - Event information
+      description: |
+        Returns a Webhooks v3 event.
+      responses:
+        200:
+          description: |
+            Webhooks event details.
+          content:
+            application/json:
+              example:
+                $ref: examples/view-webhooks-event.json
+              schema:
+                $ref: schemas/view-webhooks-event.yaml
+        403:
+          description: |
+            [You don't have permission to access the resource.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [A path component couldn’t be found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /{customerId}/webhooks/subscriptions/{subscriptionId}/events/{eventId}/history:
+    parameters:
+    - $ref: parameters/customerId-path.yaml
+    - $ref: parameters/subscriptionId-path.yaml
+    - $ref: parameters/eventId-path.yaml
+    get:
+      operationId: get-webhooks-event-history
+      summary: Get a Webhooks v3 event's event history
+      tags:
+      - Event history
+      description: |
+        Returns the event history for a Webhooks v3 event. The event history tracks each time an event changes state. For example, Webhooks v3 adds a new entry to the history when an event moves from the `awaiting_scheduling` state to the `executing` state.
+      responses:
+        200:
+          description: |
+            Webhook event history.
+          content:
+            application/json:
+              example:
+                $ref: examples/view-event-history.json
+              schema:
+                $ref: schemas/view-event-history.yaml
+        403:
+          description: |
+            [You don't have permission to access the resource.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [A path component couldn’t be found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /{customerId}/webhooks/subscriptions/{subscriptionId}/events/{eventId}/redeliver:
+    parameters:
+    - $ref: parameters/customerId-path.yaml
+    - $ref: parameters/subscriptionId-path.yaml
+    - $ref: parameters/eventId-path.yaml
+    post:
+      operationId: post-webhooks-redelivery
+      summary: Redeliver a Webhooks v3 event
+      tags:
+      - Event redelivery
+      description: |
+        Schedules a Webhooks v3 event for redelivery to your listener endpoint. You can only schedule events in the event store and in the `failure` state for redelivery. See [Schedule redelivery for a failed webhooks event](https://techdocs.akamai.com/identity-cloud/docs/schedule-redelivery-for-a-failed-event) for more information.
+      responses:
+        202:
+          description: |
+            Event rescheduling successful.
+        400:
+          description: |
+            [Your request didn’t pass JSON schema validation.](ref:400)
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [You don’t have permission to access the resource.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [A path component couldn’t be found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+        409:
+          description: |
+            [You can't reschedule the event.](ref:409)
+          content:
+            application/json:
+              example:
+                $ref: examples/409.json
+              schema:
+                $ref: schemas/409.yaml
+        429:
+          description: |
+            [You exceeded the Webhooks v3 rate limit.](ref:429)
+          content:
+            application/json:
+              example:
+                $ref: examples/429.json
+              schema:
+                $ref: schemas/429.yaml
+  /{customerId}/webhooks/subscriptions/{subscriptionId}/test:
+    parameters:
+    - $ref: parameters/customerId-path.yaml
+    - $ref: parameters/subscriptionId-path.yaml
+    post:
+      operationId: post-event
+      summary: Send a Webhooks v3 test notification
+      tags:
+      - Notification testing
+      description: |
+        Sends a Webhooks v3 test notification to your listener endpoint. Sending a test notification helps ensure the configuration settings of your subscription and your listener endpoint.
+      responses:
+        202:
+          description: |
+            Test event sent.
+        403:
+          description: |
+            [You don’t have permission to access the resource.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [A path component couldn’t be found.](404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+- bearerAuth: []

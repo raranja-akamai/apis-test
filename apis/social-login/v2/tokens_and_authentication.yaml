@@ -1,0 +1,74 @@
+openapi: 3.0.0
+info:
+  title: Tokens and authentication
+  version: v2
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}
+x-akamai:
+  auth-type: OAUTH
+  file-path: tokens_and_authentication.yaml
+paths:
+  /api/v2/auth_info:
+    post:
+      operationId: post-auth-info
+      summary: Authenticate a social login
+      tags:
+      - Tokens and authentication
+      description: |
+        Authenticates a social login user. Social login occurs when user logs in to Identity Cloud by using authentication credentials from a third-party social login identity provider such as Facebook or Twitter.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/authenticate-a-social-login.txt
+            schema:
+              $ref: schemas/authenticate-a-social-login.yaml
+      responses:
+        200:
+          description: |
+            Authentication successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/authentication_information.json
+              schema:
+                $ref: schemas/authentication_information.yaml
+        400:
+          description: |
+            [Missing parameter.](ref:400.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/400_error.json
+              schema:
+                $ref: schemas/400_error.yaml
+  /api/v2/signin/oauth_token:
+    post:
+      operationId: post-signin-oauth-token
+      summary: Exchange a social login token
+      tags:
+      - Tokens and authentication
+      description: |
+        Exchanges a social login identity provider's access token for an Identity Cloud social login token. To complete social login, you then need to run the [Complete social login](https://techdocs.akamai.com/identity-cloud-auth/reference/post-oauth-auth-native) operation to exchange the social login token for an Identity Cloud access token.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/exchange-social-login-token.txt
+            schema:
+              $ref: schemas/exchange-social-login-token.yaml
+      responses:
+        200:
+          description: |
+            Identity Cloud social login token.
+          content:
+            application/json:
+              example:
+                $ref: examples/signin_oauth_token.json
+              schema:
+                $ref: schemas/signin_oauth_token.yaml

@@ -1,0 +1,64 @@
+type: object
+description: |-
+  Returns the social login identity providers available for immediate use by an application.
+  
+x-akamai:
+  file-path: schemas/providers.yaml
+additionalProperties: false
+required:
+- stat
+properties:
+  shareWidget:
+    type: object
+    description: |
+      Sharing and email providers available for immediate use. Social and email sharing is only available to legacy Identity Cloud customers.
+    additionalProperties: false
+    required:
+    - share
+    - email
+    properties:
+      email:
+        type: array
+        description: |
+          Email providers available to an application. If not in the response, you don't have any email providers.
+        minItems: 0
+        items:
+          type: string
+          minLength: 1
+      share:
+        type: array
+        description: |
+          Identity providers available for social sharing. Social sharing is only available to legacy Identity Cloud customers. If not in the response, you don't have any share providers.
+        minItems: 0
+        items:
+          type: string
+          minLength: 1
+  signin:
+    type: array
+    description: |
+      Traditional login and registration providers available to you. With traditional login and registration, users register for or log in to an account by using an email address and password. If not in the response that means that you don't have any sign-in providers.
+    minItems: 0
+    items:
+      type: string
+      minLength: 1
+  social:
+    type: array
+    description: |
+      Social login and registration providers available to you. With social login and registration, users register for or log in to an account by using credentials from a third-party social login identity provider such as Facebook or Twitter. If not in the response, it means you don't have any social providers.
+    minItems: 0
+    items:
+      type: string
+      enum:
+      - FACEBOOK
+      - LINKEDIN
+      - MYSPACE
+      - TWITTER
+  stat:
+    type: string
+    description: |
+      Status of the operation. Valid values are: `ok`, which indicates that the operation was successful, `error` which indicates that the operation couldn't complete successfully because of problem with the request, and `fail`, which means that operation couldn't complete successfully because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.
+    enum:
+    - ok
+    - error
+    - fail
+    minLength: 1

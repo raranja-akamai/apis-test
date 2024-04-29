@@ -1,0 +1,79 @@
+type: object
+description: |-
+  Returns user profile information from a social login identity provider following a successful social login.
+  
+x-akamai:
+  file-path: schemas/authentication_information.yaml
+additionalProperties: false
+required:
+- stat
+- profile
+- accessCredentials
+properties:
+  accessCredentials:
+    type: object
+    description: |
+      User's authorization credentials. The properties of this object vary depending on the social login identity provider.
+    additionalProperties: true
+    properties:
+      type:
+        type: string
+        description: |
+          Type of token issued by the social login identity provider.
+        minLength: 1
+      accessToken:
+        type: string
+        description: |
+          OAuth access token issued by the social identity provider.
+        minLength: 1
+      oauthTokenSecret:
+        type: string
+        description: |
+          OAuth token password.
+        minLength: 1
+      scopes:
+        type: string
+        description: |
+          Scopes available for the user. Scopes, which also vary among identity providers, contain information such as a user's address, a user's phone number, or a user's likes or dislikes.
+        minLength: 1
+  merged_poco:
+    type: object
+    description: |
+      User's Portable Contacts object.
+    additionalProperties: true
+    properties:
+      preferredUsername:
+        type: string
+        description: |
+          User's preferred name, nickname, or the name that the user wants to be known by.
+        minLength: 1
+  profile:
+    type: object
+    description: |
+      Fields that make up the user's profile. This data uses the standard Portable Contacts schema.
+    additionalProperties: true
+    properties:
+      displayName:
+        type: string
+        description: |
+          User's display name.
+        minLength: 1
+      email:
+        type: string
+        description: |
+          Email address of the user.
+        format: email
+      verifiedEmail:
+        type: string
+        description: |
+          User's verified email address.
+        format: email
+  stat:
+    type: string
+    description: |
+      Status of the operation. Valid values are: `ok`, which indicates the operation succeeded, `error` which indicates the operation couldn't complete because of problem with the request, and `fail`, which means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.
+    enum:
+    - ok
+    - error
+    - fail
+    minLength: 1

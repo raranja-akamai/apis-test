@@ -1,0 +1,194 @@
+type: object
+description: |-
+  Returns a custom provider. Use custom providers to allow the use of social login identity providers that Akamai didn't predefine.
+  
+x-akamai:
+  file-path: schemas/view-custom-provider.yaml
+additionalProperties: false
+required:
+- auth_url
+- client_id
+- client_secret
+- id
+- protocol
+- title
+- createdAt
+- updatedAt
+properties:
+  id:
+    type: string
+    description: |
+      Unique identifier of the custom provider.
+    minLength: 1
+  title:
+    type: string
+    description: |
+      **For use with OAuth, OpenID Connect, and SAML 2.0 providers.** Name of the custom provider. Names need to be unique across a given social login application.
+    minLength: 1
+  _links:
+    type: object
+    description: |
+      Navigable hypermedia link to the application's custom providers.
+    additionalProperties: false
+    required:
+    - collection
+    - self
+    properties:
+      collection:
+        type: object
+        description: |
+          Navigable hypermedia link to the application's custom providers.
+        additionalProperties: false
+        required:
+        - href
+        properties:
+          href:
+            type: string
+            description: |
+              Custom providers navigable hypermedia link.
+            minLength: 1
+      self:
+        type: object
+        description: |
+          Navigable hypermedia link for returning the custom provider.
+        additionalProperties: false
+        required:
+        - href
+        properties:
+          href:
+            type: string
+            description: |
+              Custom provider navigable hypermedia link.
+            minLength: 1
+  attribute_map:
+    type: object
+    description: |
+      **For use with OAuth, OpenID Connect, and SAML 2.0 providers.** Maps the user profile claims from a social login identity provider (IdP) to their corresponding Identity Cloud user profile attributes. For example, an IdP claim  `username` might map to the Identity Cloud’s `displayName` attribute. Without this mapping you can’t copy information from users' social login accounts to their Identity Cloud accounts. \nWhen creating a map, list the Identity Cloud attribute first and the IdP attribute second. For example, the mapping `\"/displayName\": \"/username\"` maps Identity Cloud’s `displayName` attribute to the social login provider’s `username` claim. You need to prepend each attribute name with the slash (`/`) character. See [Map custom provider attributes](https://techdocs.akamai.com/identity-cloud/docs/map-custom-provider-attributes) for more information. \nThis documentation shows only one sample attribute. The attributes available to you depend on the identity provider and on how you configure Identity Cloud.
+    additionalProperties: true
+    properties:
+      /displayName:
+        type: string
+        description: |
+          The user's preferred name.
+        minLength: 1
+  auth_url:
+    type: string
+    description: |
+      **For use with OAuth, OpenID Connect, and SAML 2.0 providers.** URL of the identity provider’s authorization server. For OpenID Connect and OAuth 2.0, find this value in the provider’s documentation or, for OpenID Connect only, by looking for the `authorization_endpoint` entry in the website’s discovery document. For SAML 2.0 providers you can determine the URL by retrieving the provider’s SAML metadata and looking for the `SingleSignOnService` element and the `Location` attribute. Regardless of the protocol, the value needs to use the `https` scheme.
+    minLength: 1
+  authn_context:
+    type: object
+    description: |
+      **For use with SAML 2.0 providers.** Enables or disables the `RequestedAuthnContext` element in SAML requests. If not `null` this element instructs the SAML IdP to authenticate users by using a username and password. Typically this value makes no difference, because most SAML IdPs ignore the `RequestedAuthnContext` element. However, for some identity providers enabling this element prevents a user from authenticating. In those cases, use this member to disable the element. \nBy default, Identity Cloud enables this member on all SAML providers prior to August 12, 2021 and disables it for providers after that date. If necessary, you can disable this member by setting the value to `null`.
+    additionalProperties: false
+    required:
+    - comparison
+    - class_ref
+    nullable: true
+    properties:
+      class_ref:
+        type: string
+        description: |
+          SAML authentication class. The only valid value is `PasswordProtectedTransport`, for use when a user authenticates with a password.
+        enum:
+        - PasswordProtectedTransport
+        minLength: 1
+      comparison:
+        type: string
+        description: |
+          Specifies how the SAML provider determines the authentication flow. The supported `exact` value indicates the authentication context needs to match the `class_ref` exactly.
+        enum:
+        - exact
+        minLength: 1
+  client_id:
+    type: string
+    description: |
+      **For use with OpenID Connect providers.** Unique identifier of the authentication client users employ when logging in. The authentication client is the client you create on an identity provider’s developers site. Note that not all providers refer to this value as the _client ID_. Different providers might use such terms as _application ID_, _app ID_, or _API client ID_.  Use the `token_auth_method` member to specify to use how this member with an OAuth provider.
+    minLength: 1
+  client_secret:
+    type: string
+    description: |
+      **For use with OpenID Connect providers.** Password for the authentication client. Not all providers call this a _client secret_. Some providers might refer to an _application secret_ or _app secret_, while others might use the term _API secret_ or _API key_. Use the `token_auth_method` member to specify how to use this member with an OAuth provider.
+    minLength: 1
+  createdAt:
+    type: string
+    description: |
+      Timestamp indicating the creation date for the custom provider.
+    format: date-time
+  identifier_attribute:
+    type: string
+    description: |
+      **For use with OAuth providers.** Attribute that uniquely identifies the user. For example, if the response from an OAuth provider includes a unique identifier `userid`, you might set the this member to `/userid`. Preface attribute names with `/`.
+    minLength: 1
+  idp_certificate:
+    type: string
+    description: |
+      **For use with SAML 2.0 providers.** X.509 certificate the identity provider uses to sign a SAML assertion. In a SAML assertion, the certificate is in the `<ds:X509Certificate>` section. In the `<ds:SignatureValue>` section you’ll find the public key, which authenticates the assertion.
+    minLength: 1
+  idp_certificate_chain:
+    type: array
+    description: |
+      **For use with SAML 2.0 providers.**  Certificates that complete the certificate chain. You only need this if you use a third-party Certificate Authority. If you use a self-signed SAML certificate, there’s no certificate chain to specify.
+    minItems: 0
+    items:
+      type: string
+      minLength: 1
+  profile_url:
+    type: string
+    description: |
+      **For use with OAuth and OpenID Connect  providers.** URL of the identity provider’s `userinfo` endpoint. This setting is in the provider’s documentation or, for OpenID Connect, by looking for the `userinfo_endpoint` entry in a website’s discovery document. The value needs to use the `https` scheme.
+    minLength: 1
+  protocol:
+    type: string
+    description: |
+      **For use with OAuth, OpenID Connect, and SAML 2.0 providers.** Authentication protocol of the identity provider. Valid values: `oauth2`, for OAuth 2.0, `openidconnect` for OpenID Connect, and `saml2` for Security Assertion Markup Language 2.0. After you create a custom provider, you can't change the protocol.
+    enum:
+    - oauth2
+    - openidconnect
+    - saml2
+    minLength: 1
+  scopes:
+    type: array
+    description: |
+      **For use with OAuth and OpenID Connect providers.** Specifies the user profile information the identity provider returns following authentication. Standard OpenID Connect scopes include `openid`, `email`, `phone`, `address`, and `profile`. However, many IdPs use custom scopes instead of, or in addition to, these standard scopes.
+    minItems: 0
+    items:
+      type: string
+      minLength: 1
+  token_auth_method:
+    type: string
+    description: |
+      **For use with OAuth providers.** Authentication method for calling the provider's token endpoint. Possible values are: `client_secret_post` or `client_secret_basic`. With`client_secret_post`, the client sends authentication information as part of the HTTP POST request body. With `client_secret_basic`, the client passes a user ID and password to the server as part of an `Authorization` header. For security reasons, only use the `client_secret_basic` method on a secure connection.
+    enum:
+    - client_secret_post
+    - client_secret_basic
+    minLength: 1
+  token_url:
+    type: string
+    description: |
+      **For use with OAuth and OpenID Connect providers.** URL of the identity provider’s token endpoint. This setting is in the provider’s documentation or, for OpenID Connect only, by looking for the `token_endpoint` entry in the website’s discovery document. The value needs to use the `https` scheme.
+    minLength: 1
+  ui:
+    type: object
+    description: |
+      **For use with OAuth, OpenID Connect, and SAML 2.0 providers.** Specifies the custom provider name and icon that displays in the Hosted Login sign-in screen. This member consists of two key-value pairs: `title` and `icon_url`.
+    additionalProperties: false
+    required:
+    - title
+    properties:
+      title:
+        type: string
+        description: |
+          Name of the custom provider as it appears in the sign-in screen. Titles need to contain at least two, but no more than 200, characters. You need to include this value if you use this member.
+        minLength: 2
+        maxLength: 200
+      icon_url:
+        type: string
+        description: |
+          URL to the publicly accessible image as shown on the sign-in screen. Icons can use either .PNG or .SVG files. If omitted, no icon displays on the sign-in screen.
+        minLength: 0
+  updatedAt:
+    type: string
+    description: |
+      Timestamp indicating the last update time for the custom provider.
+    format: date-time

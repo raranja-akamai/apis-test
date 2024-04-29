@@ -1,0 +1,246 @@
+{
+  "externalDocs": {
+    "description": "See documentation for Akamai's IoT OTA Updates API",
+    "url": "https://techdocs.akamai.com/iot-ota-updates/reference"
+  },
+  "info": {
+    "description": "Securely update vehicle-specific software over cellular networks.\n",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Akamai: IoT OTA Updates API",
+    "version": "v1"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/cpcodes": {
+      "get": {
+        "description": "Lists all content provider codes assigned to the Internet of Things product. Use one of the identifiers as input to the [List download notifications](https://techdocs.akamai.com/iot-ota-updates/reference/get-download-notifications) operation.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's IoT OTA Updates API",
+          "url": "https://techdocs.akamai.com/iot-ota-updates/reference/get-cpcodes"
+        },
+        "operationId": "get-cpcodes",
+        "parameters": [
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": 100001,
+                    "name": "cp code 100001"
+                  },
+                  {
+                    "id": 100002,
+                    "name": "cp code 100002"
+                  }
+                ],
+                "schema": {
+                  "description": "Specifies a collection of content provider codes.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Specifies a content provider code.",
+                    "properties": {
+                      "id": {
+                        "description": "The identifier of the content provider code.",
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "The name of the content provider code.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/cpcode.yaml"
+                    }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/cpcodes-200.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "List content provider codes",
+        "tags": [
+          "CP codes"
+        ]
+      }
+    },
+    "/download-notifications/{cpcode}": {
+      "get": {
+        "description": "Returns a single page of notifications about completed downloads to specific vehicles. The operation limits the downloads from the past 12 hours that exist under one CP code. All requests subsequent to the first request require storing `nextPageStart` from the last response's `notifications` array and using it as `start` of a new request.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's IoT OTA Updates API",
+          "url": "https://techdocs.akamai.com/iot-ota-updates/reference/get-download-notifications"
+        },
+        "operationId": "get-download-notifications",
+        "parameters": [
+          {
+            "description": "The Unix timestamp in milliseconds that starts a range of notifications. It can't be older than the notification retention period of the past 12 hours. If not specified, the API returns notifications from the past 12 hours.",
+            "example": "{{start}}",
+            "in": "query",
+            "name": "start",
+            "schema": {
+              "example": 1497947550000,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/start-query.yaml"
+            }
+          },
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "nextPageStart": 1497627402001,
+                  "notifications": [
+                    {
+                      "cpcode": 7563521,
+                      "downloadTime": "2021-05-16T17:30:01+00:00",
+                      "host": "downloads.automotive-company.com",
+                      "path": "/files/0001",
+                      "uid": "0000-0000-0001"
+                    },
+                    {
+                      "cpcode": 7563521,
+                      "downloadTime": "2021-05-16T17:33:02+00:00",
+                      "host": "downloads.automotive-company.com",
+                      "path": "/files/0002",
+                      "uid": "0000-0000-0002"
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Encapsulates a collection of download notifications, with additional pagination context.",
+                  "properties": {
+                    "nextPageStart": {
+                      "description": "The timestamp in milliseconds that indicates the `start` of the next page of notifications.",
+                      "type": "integer"
+                    },
+                    "notifications": {
+                      "description": "The set of download notifications.",
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Encapsulates each download notification.",
+                        "properties": {
+                          "cpcode": {
+                            "description": "The content provider code used to bill the user-originated traffic.",
+                            "type": "integer"
+                          },
+                          "downloadTime": {
+                            "description": "The date and time of a download event on a Ghost server.",
+                            "format": "date-time",
+                            "type": "string"
+                          },
+                          "host": {
+                            "description": "The host of a downloaded file.",
+                            "type": "string"
+                          },
+                          "path": {
+                            "description": "The path of a downloaded file.",
+                            "type": "string"
+                          },
+                          "uid": {
+                            "description": "The unique identifier of a vehicle.",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "cpcode",
+                          "downloadTime",
+                          "host",
+                          "path",
+                          "uid"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "notifications"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/notifications-200.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "List download notifications",
+        "tags": [
+          "Download notifications"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "The content provider code assigned to the Internet of Things product. Run the [List content provider codes](https://techdocs.akamai.com/iot-ota-updates/reference/get-cpcodes) operation to get an identifier.",
+          "example": "{{cpcode}}",
+          "in": "path",
+          "name": "cpcode",
+          "required": true,
+          "schema": {
+            "example": 7651234,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/cpcode-path.yaml"
+          }
+        }
+      ]
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/ota/v1"
+    }
+  ],
+  "tags": [],
+  "x-readme": {
+    "samples-languages": [
+      "curl",
+      "python",
+      "node"
+    ]
+  }
+}

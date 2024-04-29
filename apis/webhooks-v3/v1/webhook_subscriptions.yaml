@@ -1,0 +1,233 @@
+openapi: 3.0.0
+info:
+  title: Subscriptions
+  version: v1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}
+x-akamai:
+  auth-type: OAUTH
+  file-path: webhook_subscriptions.yaml
+paths:
+  /{customerId}/webhooks/subscriptions:
+    parameters:
+    - $ref: parameters/customerId-path.yaml
+    post:
+      operationId: post-webhooks-subscription
+      summary: Create a subscription
+      tags:
+      - Create subscriptions
+      description: |
+        Creates a Webhooks v3 subscription.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/create-webhooks-subscription-post.json
+            schema:
+              $ref: schemas/create-webhooks-subscription-post.yaml
+      responses:
+        201:
+          description: |
+            Subscription creation successful.
+          headers:
+            Location:
+              description: |
+                Relative link to the new webhook subscription. Note the last item in the path is the subscription ID.
+              example:
+                $ref: examples/location-header.txt
+              schema:
+                $ref: parameters/location-header.yaml
+          content:
+            application/json:
+              example:
+                $ref: examples/create-webhooks-subscription.json
+              schema:
+                $ref: schemas/create-webhooks-subscription.yaml
+        400:
+          description: |
+            [Your request didn’t pass JSON schema validation.](ref:400)
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [You don't have permission to access the resource.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [A path component couldn’t be found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    get:
+      operationId: get-webhooks-subscriptions
+      summary: List Webhooks v3 subscriptions
+      tags:
+      - Subscriptions information
+      description: |
+        Returns your Webhooks v3 subscriptions. Subscriptions define the events that result in webhook notifications being sent to your listener endpoint.
+      parameters:
+      - $ref: parameters/page-query.yaml
+      responses:
+        200:
+          description: |
+            Information about your webhook subscriptions.
+          content:
+            application/json:
+              example:
+                $ref: examples/list-webhooks-subscriptions.json
+              schema:
+                $ref: schemas/list-webhooks-subscriptions.yaml
+        403:
+          description: |
+            [You don't have permission to access the resource.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [A path component couldn’t be found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /{customerId}/webhooks/subscriptions/{subscriptionId}:
+    parameters:
+    - $ref: parameters/customerId-path.yaml
+    - $ref: parameters/subscriptionId-path.yaml
+    get:
+      operationId: get-webhooks-subscription
+      summary: Get a Webhooks v3 subscription
+      tags:
+      - Subscription information
+      description: |
+        Returns a Webhooks v3 subscription.
+      responses:
+        200:
+          description: |
+            Information about the webhook subscription.
+          content:
+            application/json:
+              example:
+                $ref: examples/view-webhooks-subscription.json
+              schema:
+                $ref: schemas/view-webhooks-subscription.yaml
+        403:
+          description: |
+            [You don't have permission to access the resource.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [A path component couldn’t be found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    patch:
+      operationId: patch-webhooks-subscription
+      summary: Modify a subscription
+      tags:
+      - Modify subscription
+      description: |
+        Modifies a Webhooks v3 subscription. Use this method to modify selected properties of a subscription. Updates are made only to the items in the request body. Any items not in the request are left as they are. Note that Webhooks v3 doesn't support the PUT method. You need to use PATCH when modifying a subscription. When using the PATCH method, set your `Content-Type` header to `application/merge-patch+json`.
+      parameters:
+      - $ref: parameters/Content-Type-header.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/modify-webhooks-subscription-patch.json
+            schema:
+              $ref: schemas/modify-webhooks-subscription-patch.yaml
+      responses:
+        200:
+          description: |
+            Webhook subscription modifications successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/modify-webhooks-subscription.json
+              schema:
+                $ref: schemas/modify-webhooks-subscription.yaml
+        403:
+          description: |
+            [You don't have permission to access the resource.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [A path component couldn’t be found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    delete:
+      operationId: delete-webhooks-subscription
+      summary: Delete a Webhooks v3 subscription
+      tags:
+      - Delete subscription
+      description: |
+        Deletes a Webhooks v3 subscription. When you delete a Webhooks v3 subscription, Identity Cloud also deletes all the events in the event store for that subscription. After deletion, you can't retrieve those events.
+      responses:
+        204:
+          description: |
+            Subscription deletion successful.
+        403:
+          description: |
+            [You don't have permission to access the resource.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [A path component couldn’t be found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+- bearerAuth: []

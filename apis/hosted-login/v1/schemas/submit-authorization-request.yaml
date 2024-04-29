@@ -1,0 +1,48 @@
+type: object
+description: |-
+  Requests Hosted Login authorization for an end user.
+  
+x-akamai:
+  file-path: schemas/submit-authorization-request.yaml
+additionalProperties: false
+required:
+- scope
+properties:
+  access_token:
+    type: string
+    description: |
+      Bearer token that defines Hosted Login permissions.
+    minLength: 1
+  expires_in_token:
+    type: string
+    description: |
+      Number of seconds before the access token expires.
+    minLength: 1
+  identity_token:
+    type: string
+    description: |
+      JSON Web Token (JWT) containing user information.
+    minLength: 1
+  refresh_token:
+    type: string
+    description: |
+      Token you can use to obtain a new access token after the current access token expires. By default, access tokens are valid for 60 minutes.
+    minLength: 1
+  scope:
+    type: string
+    description: |
+      Space-delimited set of OpenID Connect scopes the token can access. Scopes represent different sets of user profile attributes. For example, the `profile` scope returns data such as the user’s name, gender, and date of birth. See [Scopes and claims](https://techdocs.akamai.com/identity-cloud/docs/scopes-and-claims) for more information.
+    enum:
+    - openid
+    - phone
+    - address
+    - email
+    - profile
+    minLength: 1
+  token_type:
+    type: string
+    description: |
+      Always set to `Bearer`. This means that the token permissions go to the user who possesses the token.
+    enum:
+    - Bearer
+    minLength: 1

@@ -1,0 +1,47 @@
+type: object
+description: |-
+  Returns a verification code for a user. Verification sets a timestamp on attributes such as `emailVerified`.
+  
+x-akamai:
+  file-path: schemas/get-verification-code.yaml
+additionalProperties: false
+required:
+- attribute_name
+- type_name
+properties:
+  id:
+    type: integer
+    description: |
+      __Read-only__ Locally unique identifier of the user. This member is optional if you're using the `uuid` member or the `key_attribute` member.
+    readOnly: true
+    minimum: 1
+  attribute_name:
+    type: string
+    description: |
+      Name of the attribute the verification code updates.
+    minLength: 1
+  key_attribute:
+    type: string
+    description: |
+      Name of a unique attribute in the schema. This member is optional if you're using the `id` or `uuid` member. If you use this member your operation needs to include the `key_value` member as well.
+    minLength: 1
+  key_value:
+    type: string
+    description: |
+      Value for the `key_attribute` member.
+    minLength: 1
+  lifetime:
+    type: integer
+    description: |
+      Number of seconds before the authorization code expires.
+    minimum: 60
+  type_name:
+    type: string
+    description: |
+      Name of the entity type that stores user profiles.
+    minLength: 1
+  uuid:
+    type: string
+    description: |
+      Universally unique identifier of the user profile. This member is optional if you're using the `id` or `key_attribute` members to identify the user record.
+    minLength: 1

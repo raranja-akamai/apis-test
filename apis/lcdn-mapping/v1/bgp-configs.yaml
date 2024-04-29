@@ -1,0 +1,264 @@
+openapi: 3.0.0
+info:
+  title: BGP Configs
+  version: v1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}/api/lcdn-mapping/v1
+x-akamai:
+  file-path: bgp-configs.yaml
+paths:
+  /bgp-configs:
+    post:
+      operationId: createBgpConfig
+      summary: Create a new BGP configuration
+      tags:
+      - BGP configurations
+      description: |
+        This operation creates a new BGP configuration instance.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            example:
+              $ref: examples/bgp-config.create.multipart
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - config
+              - metadata
+              properties:
+                config:
+                  type: string
+                  description: |
+                    A BGP configuration, as described in FRR documentation.
+                  example:
+                    $ref: examples/bgp-config.config
+                metadata:
+                  $ref: '#/components/schemas/bgp-config.create'
+            encoding:
+              config:
+                contentType: text/plain
+              metadata:
+                contentType: application/json
+      responses:
+        201:
+          description: |
+            An HTTP 201 will be returned if the request is successfully processed, and a new bgp-config object is created.  The location of the new object will be specified in the location header.
+          headers:
+            Location:
+              $ref: headers/Location.yaml
+          content:
+            application/json:
+              example:
+                $ref: examples/bgp-config.read.json
+              schema:
+                $ref: '#/components/schemas/bgp-config.read-detailed'
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+    get:
+      operationId: listBgpConfigs
+      summary: List BGP configurations
+      tags:
+      - BGP configurations
+      description: |
+        This operation returns a list of all BGP configurations.
+      parameters:
+      - $ref: parameters/collection_filter.yaml
+      - $ref: parameters/collection_view.yaml
+      - $ref: parameters/collection_sortBy.yaml
+      - $ref: parameters/collection_pageNumber.yaml
+      - $ref: parameters/collection_pageSize.yaml
+      responses:
+        200:
+          description: |
+            Successful response.
+          content:
+            application/json:
+              example:
+                $ref: examples/bgp-config.collection.json
+              schema:
+                $ref: '#/components/schemas/bgp-config.collection'
+        403:
+          $ref: responses/unauthorized-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - coblitz.obs
+        - lcdn-mapping.admin
+        - lcdn-mapping.read
+  /bgp-configs/{bgpConfigId}:
+    parameters:
+    - $ref: parameters/bgpConfigId-path.yaml
+    get:
+      operationId: readBgpConfig
+      summary: Get a BGP configuration
+      tags:
+      - BGP configurations
+      description: |
+        This operation gets the details of a BGP configuration instance.
+      responses:
+        200:
+          description: |
+            Successful response.
+          content:
+            application/json:
+              example:
+                $ref: examples/bgp-config.read.json
+              schema:
+                $ref: '#/components/schemas/bgp-config.read-detailed'
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - coblitz.obs
+        - lcdn-mapping.admin
+        - lcdn-mapping.read
+    put:
+      operationId: updateBgpConfig
+      summary: Update a BGP configuration
+      tags:
+      - BGP configurations
+      description: |
+        This operation updates the details of a BGP configuration instance.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/bgp-config.update.json
+            schema:
+              $ref: '#/components/schemas/bgp-config.update'
+      responses:
+        200:
+          description: |
+            An HTTP 200 will signify the successful update of an bgp-config instance.
+          content:
+            application/json:
+              example:
+                $ref: examples/bgp-config.read.json
+              schema:
+                $ref: '#/components/schemas/bgp-config.read-detailed'
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+    delete:
+      operationId: deleteBgpConfig
+      summary: Remove a BGP configuration
+      tags:
+      - BGP configurations
+      description: |
+        This operation removes a BGP configuration instance.
+      responses:
+        204:
+          description: |
+            The BGP configuration instance was successfully removed.
+        400:
+          description: |
+            [Bad request](ref:400). An HTTP 400 will be returned if the request could not be processed.  For example, if another entity is referring to this entity, and the delete could not be processed.
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+  /bgp-configs/{bgpConfigId}/bgp-config:
+    parameters:
+    - $ref: parameters/bgpConfigId-path.yaml
+    get:
+      operationId: readBgpConfigContent
+      summary: Get contents of a BGP configuration
+      tags:
+      - BGP configuration contents
+      description: |
+        This operation gets the content of a BgpConfig instance.
+      responses:
+        200:
+          description: |
+            An HTTP 200 will signify the successful read of an access map instance.
+          content:
+            text/plain:
+              example:
+                $ref: examples/bgp-config.config
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - coblitz.obs
+        - lcdn-mapping.admin
+        - lcdn-mapping.read
+    put:
+      operationId: updateBgpConfigContent
+      summary: Update BGP configuration contents
+      tags:
+      - BGP configuration contents
+      description: |
+        This operation updates the content of a BgpConfig instance.
+      requestBody:
+        content:
+          text/plain:
+            example:
+              $ref: examples/bgp-config.config
+            schema:
+              type: string
+      responses:
+        200:
+          description: |
+            An HTTP 200 will signify the successful update of a BgpConfig instance.
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+components:
+  schemas:
+    bgp-config.collection:
+      $ref: schemas/bgp-config.collection.yaml
+    bgp-config.create:
+      $ref: schemas/bgp-config.create.yaml
+    bgp-config.read-detailed:
+      $ref: schemas/bgp-config.read-detailed.yaml
+    bgp-config.read-summary:
+      $ref: schemas/bgp-config.read-summary.yaml
+    bgp-config.update:
+      $ref: schemas/bgp-config.update.yaml
+  securitySchemes:
+    oauth_v2:
+      $ref: securitySchemes/oauth_v2.yaml

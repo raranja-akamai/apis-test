@@ -1,0 +1,43 @@
+type: object
+description: |-
+  Completes social registration. After registering, the user can authenticate by supplying credentials from a social login identity provider.
+  
+x-akamai:
+  file-path: schemas/post-oauth-register-native-response.yaml
+additionalProperties: false
+required:
+- created
+- uuid
+- is_new
+- stat
+- access_token
+properties:
+  access_token:
+    type: string
+    description: |
+      Valid access token for the user.
+    minLength: 1
+  created:
+    type: string
+    description: |
+      Timestamp indicating when the user account was created.
+    minLength: 1
+  is_new:
+    type: boolean
+    description: |
+      Returns `true` if the operation creates a new account. Returns `false` if the operation adds the social login account to an existing user account.
+    minLength: 1
+  stat:
+    type: string
+    description: |
+      Status of the operation. Possible values are: `ok`, `error`, and `fail`. The value `ok` indicates that the operation was successful. The value `error` indicates that the operation couldn't complete because of a problem with the request. The value `fail` means that the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if your request returns the `fail` status..
+    enum:
+    - ok
+    - error
+    - fail
+    minLength: 1
+  uuid:
+    type: string
+    description: |
+      Universally unique identifier of the user profile.
+    minLength: 1

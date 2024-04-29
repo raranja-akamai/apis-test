@@ -1,0 +1,38 @@
+type: object
+description: |-
+  Returns an administrative access token for calling the other Webhooks v3 operations.
+  
+x-akamai:
+  file-path: schemas/get-a-webhooks-token.yaml
+additionalProperties: false
+required:
+- access_token
+- expires_in
+- token_type
+- scope
+properties:
+  access_token:
+    type: string
+    description: |
+      Administrative access token for calling Webhooks v3 operations. To call those operations, use `Bearer` token authentication and the value of this token.
+    minLength: 1
+  expires_in:
+    type: integer
+    description: |
+      Number of seconds the administrative access token remains valid. After an access token expires, you need to get a new one. Webhooks v3 doesn't use administrative refresh tokens. By default, access tokens expire after one hour: 3600 seconds.
+    minimum: 60
+    maximum: 3600
+  scope:
+    type: string
+    description: |
+      Defines the permissions of the administrative access token. A scope of `*:webhooks/**` gives the bearer of the token full access to Webhooks v3. This is the only scope available in Webhooks v3.
+    enum:
+    - '*:webhooks/**'
+    minLength: 1
+  token_type:
+    type: string
+    description: |
+      Type of token. This is always set to `Bearer`.
+    enum:
+    - Bearer
+    minLength: 1

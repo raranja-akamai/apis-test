@@ -1,0 +1,56 @@
+openapi: 3.0.0
+info:
+  title: Tokens
+  version: v1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}
+x-akamai:
+  auth-type: OAUTH
+  file-path: tokens.yaml
+paths:
+  /{customerId}/login/token:
+    parameters:
+    - $ref: parameters/customerId-path.yaml
+    post:
+      operationId: post-admin-access-token
+      summary: Get a Webhooks v3 administrative access token
+      tags:
+      - Tokens
+      description: |
+        Returns an administrative access token for calling other Webhooks v3 operations.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/get-admin-token.txt
+            schema:
+              $ref: schemas/get-admin-token.yaml
+      responses:
+        200:
+          description: |
+            Administrative access token.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-a-webhooks-token.json
+              schema:
+                $ref: schemas/get-a-webhooks-token.yaml
+        404:
+          description: |
+            [A path component couldn't be found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+security:
+- basicAuth: []

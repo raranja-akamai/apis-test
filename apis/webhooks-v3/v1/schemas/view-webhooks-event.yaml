@@ -1,0 +1,230 @@
+type: object
+description: |-
+  Returns a Webhooks v3 event. This operation only works against events in the event store. By default, events remain in the event store for a week before Webhooks v3 automatically removes them.
+  
+x-akamai:
+  file-path: schemas/view-webhooks-event.yaml
+additionalProperties: true
+required:
+- attempts
+- createdAt
+- eventType
+- id
+- state
+- updatedAt
+properties:
+  id:
+    type: string
+    description: |
+      Unique identifier of a Webhooks v3 event.
+    minLength: 1
+  _links:
+    type: object
+    description: |
+      Navigable hypermedia links.
+    additionalProperties: false
+    required:
+    - self
+    - redeliver
+    properties:
+      history:
+        type: object
+        description: |
+          Navigable hypermedia to the event history.
+        additionalProperties: false
+        required:
+        - href
+        properties:
+          href:
+            type: string
+            description: |
+              Navigable hypermedia to the event history.
+            minLength: 1
+      redeliver:
+        type: object
+        description: |
+          Navigable hypermedia for redelivering the event.
+        additionalProperties: false
+        required:
+        - href
+        properties:
+          href:
+            type: string
+            description: |
+              Navigable hypermedia for redelivering the event.
+            minLength: 1
+      self:
+        type: object
+        description: |
+          Navigable hypermedia link to the event.
+        additionalProperties: false
+        required:
+        - href
+        properties:
+          href:
+            type: string
+            description: |
+              Navigable hypermedia link to the event.
+            minLength: 1
+  attempts:
+    type: integer
+    description: |
+      Number of times that Webhooks v3 has sent the event notification.  After six unsuccessful delivery tries the service marks the event as `failure` and makes no further delivery attempts. To retrieve this event, schedule it for redelivery by using the [Redeliver an event](https://techdocs.akamai.com/identity-cloud-webhooks/reference/post-webhooks-redelivery) operation.
+    minimum: 1
+  createdAt:
+    type: string
+    description: |
+      Timestamp indicating the event's creation date.
+    format: date-time
+  eventType:
+    type: string
+    description: |
+      Identity Cloud events that trigger webhook event notificationsPossible values are: `entityCreated`, `entityDeleted`, and `entityUpdated`. An `entityCreated` event occurs when a user creates an account. An `entityDeleted` event occurs when a user deletes an account. An `entityUpdated` event occurs when a user modifies an account. You can also add a filter to your subscription to allow for more fine-grain notifications. See [Create a webhook event filter](https://techdocs.akamai.com/identity-cloud/docs/create-a-webhooks-v3-event-filter) for more information.
+    enum:
+    - entityCreated
+    - entityDeleted
+    - entityUpdated
+    minLength: 1
+  request:
+    type: object
+    description: |
+      Information about the request after the successful delivery of an event. A `null` value means the event is awaiting delivery.
+    additionalProperties: false
+    required:
+    - endpoint
+    - headers
+    nullable: true
+    properties:
+      headers:
+        type: object
+        description: |
+          HHTP headers in the request.
+        additionalProperties: false
+        required:
+        - Accept
+        - Content-Type
+        - Host
+        - User-Agent
+        properties:
+          Accept:
+            type: string
+            description: |
+              Valid data types for the response. A value of `*/*` means that the response can use any data type.
+            minLength: 1
+          Content-Length:
+            type: string
+            description: |
+              Number of bytes in the response. This header helps the listener endpoint determine when the message transmission is complete.
+            minLength: 1
+          Content-Type:
+            type: string
+            description: |
+              Type of content in the request. A value of `secevent+jwt` identifies the transmission as a security event token.
+            minLength: 1
+          Host:
+            type: string
+            description: |
+              Domain name of the listener endpoint. Listener endpoints receive and process event notifications.
+            minLength: 1
+          User-Agent:
+            type: string
+            description: |
+              Entity responsible for sending event notification. This is typically `Akamai Identity Cloud Webhooks/v3.0.0`.
+            minLength: 1
+      endpoint:
+        type: string
+        description: |
+          URL of the Webhooks listener endpoint. You set up and maintain listener endpoints on your network to receive and process the event notifications sent by Webhooks v3. See [Configure a webhook listener endpoint](https://techdocs.akamai.com/identity-cloud/docs/configure-a-webhooks-v3-listener-endpoint) for information on configuring your listener endpoint URL.
+        minLength: 1
+      payload:
+        type: string
+        description: |
+          Security event token containing the event details.
+        minLength: 1
+  response:
+    type: object
+    description: |
+      Information about the response following the successful delivery of an event. A `null` value means the event is awaiting delivery.
+    additionalProperties: false
+    required:
+    - statusCode
+    - headers
+    nullable: true
+    properties:
+      headers:
+        type: object
+        description: |
+          HTTP headers in the response.
+        additionalProperties: false
+        required:
+        - Cache-Control
+        - Content-Type
+        - Date
+        - Server
+        - Set-Cookie
+        - Vary
+        - X-Request-Id
+        - X-Token-Id
+        properties:
+          Cache-Control:
+            type: string
+            description: |
+              Indicates whether browsers can cache the response. Because Webhooks v3 doesn't use caching, this needs to be set to `no-cache, private`.
+            minLength: 1
+          Content-Type:
+            type: string
+            description: |
+              Type of content in the response. A value of `secevent+jwt` identifies the transmission data as a security event token.
+            minLength: 1
+          Date:
+            type: string
+            description: |
+              Timestamp indicating when the response was sent. Note that the time of day is Greenwich Mean Time and not your local time.
+            minLength: 1
+          Server:
+            type: string
+            description: |
+              Helps identity the operating system and other software characteristics of the listener endpoint.
+            minLength: 1
+          Set-Cookie:
+            type: string
+            description: |
+              Cookie that identifies the webhooks session.
+            minLength: 1
+          Vary:
+            type: string
+            description: |
+              Indicates whether new requests for the same resource come from the cache. For webhook requests the value of this header needs to be `Accept-Encoding`.
+            minLength: 1
+          X-Request-Id:
+            type: string
+            description: |
+              Unique identifier of the request.
+            minLength: 1
+          X-Token-Id:
+            type: string
+            description: |
+              Unique identifier of the session.
+            minLength: 1
+      statusCode:
+        type: integer
+        description: |
+          HTTP status code for the response.
+        minimum: 100
+  state:
+    type: string
+    description: |
+      Current state of the event. Valid values are: ||- `awaiting-executing`. The event notification hasn’t been sent. |- `executing`. The delivery is in process. |- `success`. Event delivery was successful. |- `awaiting-retry`. At least one delivery attempt didn't succeed and the event is awaiting the next delivery try. |- `failure`. Webhooks v3 couldn't deliver the event. To retrieve this event, schedule it for redelivery by using the [Redeliver an event](https://techdocs.akamai.com/identity-cloud-webhooks/reference/post-webhooks-redelivery) operation.
+    enum:
+    - awaiting-executing
+    - executing
+    - success
+    - awaiting-retry
+    - failure
+    - awaiting-scheduling
+    minLength: 1
+  updatedAt:
+    type: string
+    description: |
+      Timestamp indicating the event's last update time.
+    format: date-time

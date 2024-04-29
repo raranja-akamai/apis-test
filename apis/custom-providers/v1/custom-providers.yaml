@@ -1,0 +1,324 @@
+openapi: 3.0.0
+info:
+  title: Custom Providers
+  version: v1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}
+x-akamai:
+  auth-type: OAUTH
+  file-path: custom-providers.yaml
+paths:
+  /{customerId}/v2/config/low/services/engage-v2/apps:
+    parameters:
+    - $ref: parameters/customerId-path.yaml
+    get:
+      operationId: get-social-login-apps
+      summary: List social login applications
+      tags:
+      - Social login applications
+      description: |
+        Returns your social login applications. You use social login applications to create custom providers.
+      responses:
+        200:
+          description: |
+            Information about your social login applications.
+          content:
+            application/json:
+              example:
+                $ref: examples/list-social-login-applications.json
+              schema:
+                $ref: schemas/list-social-login-applications.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /{customerId}/v2/config/low/services/engage-v2/apps/{appId}:
+    parameters:
+    - $ref: parameters/customerId-path.yaml
+    - $ref: parameters/appId-path.yaml
+    - $ref: parameters/If-None-Match-header.yaml
+    get:
+      operationId: get-social-login-app
+      summary: Get a social login application
+      tags:
+      - Social login applications
+      description: |
+        Returns a social login application.
+      responses:
+        200:
+          description: |
+            Information about a social login application.
+          content:
+            application/json:
+              example:
+                $ref: examples/view-social-login-application.json
+              schema:
+                $ref: schemas/view-social-login-application.yaml
+        400:
+          description: |
+            [Invalid request.](ref:400))
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /{customerId}/v2/config/low/services/engage-v2/apps/{appId}/custom-providers:
+    parameters:
+    - $ref: parameters/customerId-path.yaml
+    - $ref: parameters/appId-path.yaml
+    post:
+      operationId: post-custom-provider
+      summary: Create a custom provider
+      tags:
+      - Custom providers
+      description: |
+        Creates a custom provider.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/create-custom-provider-post.json
+            schema:
+              $ref: schemas/create-custom-provider-post.yaml
+      responses:
+        201:
+          description: |
+            Custom provider creation successful.
+          headers:
+            Location:
+              schema:
+                $ref: parameters/location.yaml
+          content:
+            text/plain:
+              example: |
+                $ref: examples/location-header.txt
+              schema:
+                $ref: schemas/create-provider-response.yaml
+        400:
+          description: |
+            [Invalid request.](ref:400)
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    get:
+      operationId: get-custom-providers
+      summary: List custom providers for an application
+      tags:
+      - Custom providers
+      description: |
+        Returns your custom providers. Custom providers are social login identity providers (IdPs) that Akamai didn't predefine. You can configure most IdPs that support OAuth 2.0, OpenID Connect, or SAML 2.0 as custom providers.
+      responses:
+        200:
+          description: |
+            Information about your custom providers.
+          content:
+            application/json:
+              example:
+                $ref: examples/list-custom-providers.json
+              schema:
+                $ref: schemas/list-custom-providers.yaml
+        400:
+          description: |
+            [Invalid request.](ref:400)
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /{customerId}/v2/config/low/services/engage-v2/apps/{appId}/custom-providers/{providerId}:
+    parameters:
+    - $ref: parameters/customerId-path.yaml
+    - $ref: parameters/appId-path.yaml
+    - $ref: parameters/providerId-path.yaml
+    get:
+      operationId: get-custom-provider
+      summary: Get a custom provider
+      tags:
+      - Custom providers
+      description: |
+        Returns a provider.
+      responses:
+        200:
+          description: |
+            Information about a custom provider.
+          content:
+            application/json:
+              example:
+                $ref: examples/view-custom-provider.json
+              schema:
+                $ref: schemas/view-custom-provider.yaml
+        400:
+          description: |
+            [Invalid request.](ref:400)
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/403.yaml
+    put:
+      operationId: put-custom-provider
+      summary: Modify a custom provider
+      tags:
+      - Custom providers
+      description: |
+        Modifies a custom provider.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/modify-a-custom-provider-patch.json
+            schema:
+              $ref: schemas/modify-a-custom-provider-patch.yaml
+      responses:
+        204:
+          description: |
+            Custom provider modifications successful.
+        400:
+          description: |
+            [Invalid request.](ref:400)
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+        415:
+          description: |
+            [Invalid media type.](ref:415)
+          content:
+            application/json:
+              example:
+                $ref: examples/415.json
+              schema:
+                $ref: schemas/415.yaml
+        422:
+          description: |
+            [Invalid JSON.](ref:422)
+          content:
+            application/json:
+              example:
+                $ref: examples/422.json
+              schema:
+                $ref: schemas/422.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+- bearerAuth: []

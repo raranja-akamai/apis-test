@@ -1,0 +1,388 @@
+openapi: 3.0.0
+info:
+  title: Login policies
+  version: v1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}/{customerId}
+x-akamai:
+  auth-type: OAUTH
+  file-path: login_policies.yaml
+paths:
+  /config/loginPolicies:
+    post:
+      operationId: post-login-policy
+      summary: Create a login policy
+      tags:
+      - Login policies
+      description: |
+        Creates a login policy.
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/create-login-policy-post.json
+            schema:
+              $ref: schemas/create-login-policy-post.yaml
+      responses:
+        201:
+          description: |
+            Unique identifier of the new login policy.
+          content:
+            application/json:
+              example:
+                $ref: examples/create-login-policy-response.json
+              schema:
+                $ref: schemas/create-login-policy-response.yaml
+        400:
+          description: |
+            [Bad request.](ref:400.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yam)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    get:
+      operationId: get-login-policies
+      summary: List login policies
+      tags:
+      - Login policies
+      description: |
+        Returns your login policies. Login policies help manage the user login experience.
+      responses:
+        200:
+          description: |
+            Information about your login policies.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-login-policies.json
+              schema:
+                $ref: schemas/get-login-policies.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/403.yaml
+    delete:
+      operationId: delete-login-policy
+      summary: Delete a login policy
+      tags:
+      - Login policies
+      description: |
+        Deletes a login policy. Note that you can't delete a login policy in use by an OpenID Connect client. Instead, assign a different login policy to the client and then delete the login policy.
+      responses:
+        204:
+          description: |
+            Login policy deletion successful.
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /config/loginPolicies/{loginPolicyId}:
+    parameters:
+    - $ref: parameters/loginPolicyId-path.yaml
+    get:
+      operationId: get-login-policy
+      summary: Get a login policy
+      tags:
+      - Login policies
+      description: |
+        Returns a login policy.
+      responses:
+        200:
+          description: |
+            Information about the login policy.
+          content:
+            application/json:
+              example:
+                $ref: examples/view-login-policy.json
+              schema:
+                $ref: schemas/view-login-policy.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    put:
+      operationId: put-login-policy
+      summary: Modify a login policy
+      tags:
+      - Login policies
+      description: |
+        Modifies a login policy.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/modify-login-policy-put.json
+            schema:
+              $ref: schemas/modify-login-policy-put.yaml
+      responses:
+        200:
+          description: |
+            Login policy modifications successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/modify-login-policy.json
+              schema:
+                $ref: schemas/modify-login-policy.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /config/loginPolicies/{loginPolicyId}/allowedResponseTypes:
+    parameters:
+    - $ref: parameters/loginPolicyId-path.yaml
+    get:
+      operationId: get-allowed-response-types
+      summary: List a login policy's allowed response types
+      tags:
+      - Response types
+      description: |
+        Returns the response types for a login policy. In an authorization request, the `response_type` parameter specifies the items clients expect to get back from the authorization server following authentication. See [Supported response types](https://techdocs.akamai.com/identity-cloud/docs/supported-response-types) for more information.
+      responses:
+        200:
+          description: |
+            Valid response types.
+          content:
+            application/json:
+              example:
+                $ref: examples/view-response-types.json
+              schema:
+                $ref: schemas/view-response-types.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    put:
+      operationId: put-allowed-response-types
+      summary: Modify a login policy's allowed response types
+      tags:
+      - Response types
+      description: |
+        Modifies the response types of a login policy. In an authorization request, the `response_type` parameter specifies the items clients expect to get back from the authorization server following authentication. See [Supported response types](https://techdocs.akamai.com/identity-cloud/docs/supported-response-types) for more information.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/modify-response-types.json
+            schema:
+              $ref: schemas/modify-response-types.yaml
+      responses:
+        200:
+          description: |
+            Updates to the response types successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/view-response-types.json
+              schema:
+                $ref: schemas/view-response-types-response.yaml
+        400:
+          description: |
+            [Bad request.](ref:400.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/400.json
+              schema:
+                $ref: schemas/400.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /config/loginPolicies/{loginPolicyId}/pushClaims:
+    parameters:
+    - $ref: parameters/loginPolicyId-path.yaml
+    get:
+      operationId: get-push-claims
+      summary: List a login policy's push claims status
+      tags:
+      - Push claims
+      description: |
+        Returns a login policy’s push claims status. Push claims centralize and standardize the user profile information in an identity token or made available from the userinfo endpoint following authentication. See [Push claims](https://techdocs.akamai.com/identity-cloud/docs/push-claims) for more information.
+      responses:
+        200:
+          description: |
+            Push claims status.
+          content:
+            text/plain:
+              example:
+                $ref: examples/view-push-claims.json
+              schema:
+                $ref: schemas/view-push-claims-response.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+    put:
+      operationId: put-push-claims
+      summary: Modify a login policy's push claims status
+      tags:
+      - Push claims
+      description: |
+        Enables or disables push claims for a login policy. Push claims centralize and standardize the user profile information in an identity token or made available from the userinfo endpoint following authentication. See [Push claims](https://techdocs.akamai.com/identity-cloud/docs/push-claims) for more information.
+      requestBody:
+        required: true
+        content:
+          text/plain:
+            example:
+              $ref: examples/modify-push-claims.txt
+            schema:
+              $ref: schemas/modify-push-claims.yaml
+      responses:
+        200:
+          description: |
+            Push claims status modifications successful.
+          content:
+            application/json:
+              example:
+                $ref: examples/modify-push-claims.json
+              schema:
+                $ref: schemas/modify-push-claims.yaml
+        403:
+          description: |
+            [Forbidden.](ref:403.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/403.json
+              schema:
+                $ref: schemas/403.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+- bearerAuth: []

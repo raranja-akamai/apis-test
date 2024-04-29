@@ -1,0 +1,66 @@
+type: object
+description: |-
+  Completes a social login.
+  
+x-akamai:
+  file-path: schemas/complete-social-login.yaml
+additionalProperties: false
+required:
+- client_id
+- flow
+- flow_version
+- locale
+- redirect_uri
+- token
+properties:
+  client_id:
+    type: string
+    description: |
+      Unique identifier of the API client authenticating the operation. This client needs to have the `login_client` feature, which gives it permission to call login and registration operations.
+    minLength: 1
+  flow:
+    type: string
+    description: |
+      Name of the API client's flow.
+    minLength: 1
+  flow_version:
+    type: string
+    description: |
+      Version number of the flow in the `flow` member. Note that you can't set the value of this member to `HEAD`, a shorthand way to refer to the most recent version of the flow. Instead, you need to specify a valid version number.
+    minLength: 1
+  locale:
+    type: string
+    description: |
+      RFC 5646 language code for the profile management process. The locale determines the language for any messages the user sees and for any emails sent to that user. See [Supported languages and locales](https://techdocs.akamai.com/identity-cloud/docs/hosted-login-supported-languages-and-locales-1) for more information.
+    default: en-US
+    minLength: 1
+  merge_token:
+    type: string
+    description: |
+      If a previous operation fails with an error code of `380 email_address_in_use`, you can use this to merge the social account from that operation with an existing account. For example, suppose a user logs on by using Facebook, and Facebook returns `karim.nafir@example.com`, an email address used by an existing Identity Cloud account. In that case, set `merge_token` to add Facebook to the existing account as a social login identity provider. The value is the token from the previous operation. See [Additional Authentication API examples](https://techdocs.akamai.com/identity-cloud/docs/additional-authentication-api-examples) for sample code.
+    minLength: 1
+  redirect_uri:
+    type: string
+    description: |
+      Typically the redirect URL from the initial authorization request. If using the JavaScript SDK, this value needs to match the value of the SDK's `redirectUri` setting.
+    minLength: 1
+  registration_form:
+    type: string
+    description: |
+      Name of the social registration form.
+    minLength: 1
+  response_type:
+    type: string
+    description: |
+      Determines the item or items a user receives following a successful authentication. Allowed values are `code`, `token`, and `code_with_token`. With `code`, the user receives an authorization code. With `token`, the user receives an access token. With `code_with_token` the user receives both an authorization code and an access token. If you leave this member out the user receives an access token.
+    default: token
+    enum:
+    - code
+    - token
+    - code_with_token
+    minLength: 1
+  token:
+    type: string
+    description: |
+      One-time token for social authentication. The API client's social login application passes this token to your token URL.
+    minLength: 1

@@ -1,0 +1,309 @@
+openapi: 3.0.0
+info:
+  title: Access maps
+  version: v1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}/api/lcdn-mapping/v1
+x-akamai:
+  file-path: access-maps.yaml
+paths:
+  /access-maps:
+    post:
+      operationId: createAccessMap
+      summary: Create a new access map
+      tags:
+      - Access maps
+      description: |
+        This operation creates a new Access Map instance.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            example:
+              $ref: examples/access-map.create.multipart
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - config
+              - metadata
+              properties:
+                config:
+                  type: string
+                  description: |
+                    An access map in its native format, as described in Aura documentation.
+                  example:
+                    $ref: examples/access-map.map
+                metadata:
+                  $ref: '#/components/schemas/access-map.create'
+            encoding:
+              config:
+                contentType: text/plain
+              metadata:
+                contentType: application/json
+      responses:
+        201:
+          description: |
+            An HTTP 201 will be returned if the request is successfully processed, and a new access-map object is created.  The location of the new object will be specified in the location header.
+          headers:
+            Location:
+              $ref: headers/Location.yaml
+          content:
+            application/json:
+              example:
+                $ref: examples/access-map.update.json
+              schema:
+                $ref: '#/components/schemas/access-map.read-detailed'
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+    get:
+      operationId: listAccessMaps
+      summary: List access maps
+      tags:
+      - Access maps
+      description: |
+        This operation returns a list of all configured access maps.
+      parameters:
+      - $ref: parameters/collection_filter.yaml
+      - $ref: parameters/collection_view.yaml
+      - $ref: parameters/collection_sortBy.yaml
+      - $ref: parameters/collection_pageNumber.yaml
+      - $ref: parameters/collection_pageSize.yaml
+      responses:
+        200:
+          description: |
+            Successful response.
+          content:
+            application/json:
+              example:
+                $ref: examples/access-map.collection.json
+              schema:
+                $ref: '#/components/schemas/access-map.collection'
+        403:
+          $ref: responses/unauthorized-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - coblitz.obs
+        - lcdn-mapping.admin
+        - lcdn-mapping.read
+  /access-maps/validate:
+    post:
+      operationId: validateAccessMap
+      summary: Validate an access map
+      tags:
+      - Access maps
+      description: |
+        This operation validates an access map, and may be used to ensure correct syntax when preparing to apply a map.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            example:
+              $ref: examples/access-map.create.multipart
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - config
+              - metadata
+              properties:
+                config:
+                  type: string
+                  description: |
+                    An access map in its native format, as described in Aura documentation.
+                  example:
+                    $ref: examples/access-map.map
+                metadata:
+                  $ref: '#/components/schemas/access-map.create'
+            encoding:
+              config:
+                contentType: text/plain
+              metadata:
+                contentType: application/json
+      responses:
+        200:
+          description: |
+            An HTTP 200 will be returned if the map is successfully validated.
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+  /access-maps/{mapId}:
+    parameters:
+    - $ref: parameters/mapId-path.yaml
+    get:
+      operationId: readAccessMap
+      summary: Get an access map
+      tags:
+      - Access maps
+      description: |
+        This operation gets the details of an access map instance.
+      responses:
+        200:
+          description: |
+            Successful response.
+          content:
+            application/json:
+              example:
+                $ref: examples/access-map.update.json
+              schema:
+                $ref: '#/components/schemas/access-map.read-detailed'
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - coblitz.obs
+        - lcdn-mapping.admin
+        - lcdn-mapping.read
+    put:
+      operationId: updateAccessMap
+      summary: Update an access map
+      tags:
+      - Access maps
+      description: |
+        This operation updates the details of an access map instance.
+      requestBody:
+        content:
+          application/json:
+            example:
+              $ref: examples/access-map.update.json
+            schema:
+              $ref: '#/components/schemas/access-map.update'
+      responses:
+        200:
+          description: |
+            An HTTP 200 will signify the successful update of an access-map instance.
+          content:
+            application/json:
+              example:
+                $ref: examples/access-map.update.json
+              schema:
+                $ref: '#/components/schemas/access-map.read-detailed'
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+    delete:
+      operationId: deleteAccessMap
+      summary: Remove an access map
+      tags:
+      - Access maps
+      description: |
+        This operation removes an access map.
+      responses:
+        204:
+          description: |
+            The access map instance was successfully removed.
+        400:
+          description: |
+            [Bad request](ref:400). An HTTP 400 will be returned if the request could not be processed.  For example, if another entity is referring to this entity, and the delete could not be processed.
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+  /access-maps/{mapId}/map:
+    parameters:
+    - $ref: parameters/mapId-path.yaml
+    get:
+      operationId: readAccessMapContent
+      summary: Get contents of an access map
+      tags:
+      - Access map contents
+      description: |
+        This operation gets the content of an access map instance.
+      responses:
+        200:
+          description: |
+            An HTTP 200 will signify the successful read of an access map instance.
+          content:
+            text/plain:
+              example:
+                $ref: examples/access-map.map
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - coblitz.obs
+        - lcdn-mapping.admin
+        - lcdn-mapping.read
+    put:
+      operationId: updateAccessMapContent
+      summary: Update contents of an access map
+      tags:
+      - Access map contents
+      description: |
+        This operation updates the content of an access map instance.
+      requestBody:
+        content:
+          text/plain:
+            example:
+              $ref: examples/access-map.map
+            schema:
+              type: string
+      responses:
+        200:
+          description: |
+            An HTTP 200 will signify the successful update of an access map instance.
+        400:
+          $ref: responses/bad-request-problem.yaml
+        403:
+          $ref: responses/unauthorized-problem.yaml
+        404:
+          $ref: responses/entity-not-found.yaml
+        409:
+          $ref: responses/conflict-problem.yaml
+      security:
+      - oauth_v2:
+        - coblitz.co
+        - lcdn-mapping.admin
+components:
+  schemas:
+    access-map.collection:
+      $ref: schemas/access-map.collection.yaml
+    access-map.create:
+      $ref: schemas/access-map.create.yaml
+    access-map.read-detailed:
+      $ref: schemas/access-map.read-detailed.yaml
+    access-map.read-summary:
+      $ref: schemas/access-map.read-summary.yaml
+    access-map.update:
+      $ref: schemas/access-map.update.yaml
+  securitySchemes:
+    oauth_v2:
+      $ref: securitySchemes/oauth_v2.yaml

@@ -1,0 +1,46 @@
+type: object
+description: |-
+  Returns the identity providers available for traditional login and registration, social login and registration, and social sharing.
+  
+x-akamai:
+  file-path: schemas/get_available_providers.yaml
+additionalProperties: false
+required:
+- stat
+- signin
+- social
+- share
+properties:
+  share:
+    type: array
+    description: |
+      Identity providers available for social sharing. Social sharing is only available to legacy Identity Cloud customers. If not in the response, you don't have any share providers.
+    minItems: 0
+    items:
+      type: string
+      minLength: 1
+  signin:
+    type: array
+    description: |
+      Traditional login and registration providers available to you. With traditional login and registration, users register for or log in to an account by using an email address and password. If not in the response, you don't have any sign-in providers.
+    minItems: 0
+    items:
+      type: string
+      minLength: 1
+  social:
+    type: array
+    description: |
+      Social login and registration providers available to you. With social login and registration, users register for or log in to an account by using credentials from a third-party social login identity provider such as Facebook or Twitter. If not in the response, you don't have any social providers.
+    minItems: 0
+    items:
+      type: string
+      minLength: 1
+  stat:
+    type: string
+    description: |
+      Status of the operation. Valid values are: `ok`, which indicates that the operation succeeded, `error` which indicates the operation couldn't complete because of problem with the request, and `fail`, which means the operation couldn't complete because of an error with the Identity Cloud backend infrastructure. Contact your Identity Cloud representative if you receive the `fail` error.
+    enum:
+    - ok
+    - error
+    - fail
+    minLength: 1

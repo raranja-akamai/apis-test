@@ -1,0 +1,398 @@
+{
+  "externalDocs": {
+    "description": "See documentation for Akamai's IoT Edge Message Stream API",
+    "url": "https://techdocs.akamai.com/iot-edge-message-stream/reference"
+  },
+  "info": {
+    "description": "Read aggregated messages from topics related to IoT Edge Connect.\n",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Akamai: IoT Edge Message Stream API",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/buffer/retained/{topic}": {
+      "get": {
+        "description": "Reads the latest retained message from a single topic.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's IoT Edge Message Stream API",
+          "url": "https://techdocs.akamai.com/iot-edge-message-stream/reference/get-retained-topic"
+        },
+        "operationId": "get-retained-topic",
+        "responses": {
+          "200": {
+            "content": {
+              "application/octet-stream": {
+                "example": "VderKUx2VMqaASsbloD4AWYnnMz3ASDrQhQ"
+              }
+            },
+            "description": "Retained message string as byte array."
+          },
+          "400": {
+            "content": {
+              "text/plain": {
+                "example": "Bad Request Header `X-Akamai-DCP-Namespace` is mandatory"
+              }
+            },
+            "description": "Missing or invalid parameters."
+          },
+          "401": {
+            "content": {},
+            "description": "Client authentication error (Certificate CN or client name provided in header is not allowed to access the API)."
+          },
+          "403": {
+            "content": {},
+            "description": "Client is unauthorized to access requested topic."
+          }
+        },
+        "summary": "Get a retained message",
+        "tags": [
+          "Messages"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "The full, URL-encoded path of the topic to read from. This example reads from `diagnostics/make/model`.",
+          "example": "{{topic}}",
+          "in": "path",
+          "name": "topic",
+          "required": true,
+          "schema": {
+            "example": "diagnostics%2Fmake%2Fmodel",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/topic-path.yaml"
+          }
+        }
+      ]
+    },
+    "/buffer/topics/{topic}": {
+      "get": {
+        "description": "Reads a set of messages from a single topic.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's IoT Edge Message Stream API",
+          "url": "https://techdocs.akamai.com/iot-edge-message-stream/reference/get-topic"
+        },
+        "operationId": "get-topic",
+        "parameters": [
+          {
+            "description": "The sequence number of the first message to retrieve.",
+            "example": "{{offset}}",
+            "in": "query",
+            "name": "offset",
+            "required": true,
+            "schema": {
+              "example": 500,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/offset-query.yaml"
+            }
+          },
+          {
+            "description": "The maximum number of messages to read.",
+            "example": "{{limit}}",
+            "in": "query",
+            "name": "limit",
+            "required": true,
+            "schema": {
+              "default": 1000,
+              "example": 50,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/limit-query.yaml"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "messages": [
+                    {
+                      "clientId": "client1",
+                      "payload": "YWJj",
+                      "topicSequenceNumber": 1
+                    },
+                    {
+                      "clientId": "client3",
+                      "payload": "aDEj",
+                      "topicSequenceNumber": 2
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "A collection of messages and metadata.",
+                  "properties": {
+                    "messages": {
+                      "description": "Messages read from the topic.",
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Messages read from the topic.",
+                        "properties": {
+                          "clientId": {
+                            "description": "Identifies the publisher of the message.",
+                            "type": "string"
+                          },
+                          "payload": {
+                            "description": "The message in base64 format.",
+                            "type": "string"
+                          },
+                          "topicSequenceNumber": {
+                            "description": "The sequence number of a message in a topic.",
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "clientId",
+                          "payload",
+                          "topicSequenceNumber"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/message.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "token": {
+                      "description": "The group token.",
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "messages"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/messageBlock.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Message block containing messages and metadata."
+          },
+          "400": {
+            "content": {
+              "text/plain": {
+                "example": "Bad Request Header `X-Akamai-DCP-Namespace` is mandatory"
+              }
+            },
+            "description": "Missing or invalid parameters."
+          },
+          "401": {
+            "content": {},
+            "description": "Client authentication error (Certificate CN or client name provided in header is not allowed to access the API)."
+          },
+          "403": {
+            "content": {},
+            "description": "Client is unauthorized to access requested topic."
+          }
+        },
+        "summary": "Get messages",
+        "tags": [
+          "Messages"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "The full, URL-encoded path of the topic to read from. This example reads from `diagnostics/make/model`.",
+          "example": "{{topic}}",
+          "in": "path",
+          "name": "topic",
+          "required": true,
+          "schema": {
+            "example": "diagnostics%2Fmake%2Fmodel",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/topic-path.yaml"
+          }
+        }
+      ]
+    },
+    "/buffer/topics/{topic}/groups/{groupId}": {
+      "get": {
+        "description": "Reads a set of messages from a single topic for the provided consumer group.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's IoT Edge Message Stream API",
+          "url": "https://techdocs.akamai.com/iot-edge-message-stream/reference/get-topic-group"
+        },
+        "operationId": "get-topic-group",
+        "parameters": [
+          {
+            "description": "The maximum number of messages to read.",
+            "example": "{{limit}}",
+            "in": "query",
+            "name": "limit",
+            "required": true,
+            "schema": {
+              "default": 1000,
+              "example": 50,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/limit-query.yaml"
+            }
+          },
+          {
+            "description": "The message read acknowledgment.",
+            "example": "{{ack}}",
+            "in": "query",
+            "name": "ack",
+            "required": true,
+            "schema": {
+              "example": true,
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/ack-query.yaml"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "messages": [
+                    {
+                      "clientId": "client1",
+                      "payload": "YWJj",
+                      "topicSequenceNumber": 1
+                    },
+                    {
+                      "clientId": "client3",
+                      "payload": "aDEj",
+                      "topicSequenceNumber": 2
+                    }
+                  ],
+                  "token": 1234
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "A collection of messages and metadata.",
+                  "properties": {
+                    "messages": {
+                      "description": "Messages read from the topic.",
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Messages read from the topic.",
+                        "properties": {
+                          "clientId": {
+                            "description": "Identifies the publisher of the message.",
+                            "type": "string"
+                          },
+                          "payload": {
+                            "description": "The message in base64 format.",
+                            "type": "string"
+                          },
+                          "topicSequenceNumber": {
+                            "description": "The sequence number of a message in a topic.",
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "clientId",
+                          "payload",
+                          "topicSequenceNumber"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/message.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "token": {
+                      "description": "The group token.",
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "messages"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/messageBlock.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Message block containing messages and metadata."
+          },
+          "400": {
+            "content": {
+              "text/plain": {
+                "example": "Bad Request Header `X-Akamai-DCP-Namespace` is mandatory"
+              }
+            },
+            "description": "Missing or invalid parameters."
+          },
+          "401": {
+            "content": {},
+            "description": "Client authentication error (Certificate CN or client name provided in header is not allowed to access the API)."
+          },
+          "403": {
+            "content": {},
+            "description": "Client is unauthorized to access requested topic."
+          }
+        },
+        "summary": "Get messages for groups",
+        "tags": [
+          "Messages"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "The name of the consumer group.",
+          "example": "{{groupId}}",
+          "in": "path",
+          "name": "groupId",
+          "required": true,
+          "schema": {
+            "example": "group1",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/groupId-path.yaml"
+          }
+        },
+        {
+          "description": "The full, URL-encoded path of the topic to read from. This example reads from `diagnostics/make/model`.",
+          "example": "{{topic}}",
+          "in": "path",
+          "name": "topic",
+          "required": true,
+          "schema": {
+            "example": "diagnostics%2Fmake%2Fmodel",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/topic-path.yaml"
+          }
+        }
+      ]
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/api/v1"
+    }
+  ],
+  "tags": [],
+  "x-readme": {
+    "samples-languages": [
+      "curl",
+      "python",
+      "node"
+    ]
+  }
+}

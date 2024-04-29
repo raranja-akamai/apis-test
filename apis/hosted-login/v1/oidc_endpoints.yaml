@@ -1,0 +1,67 @@
+openapi: 3.0.0
+info:
+  title: OpenID Connect endpoints
+  version: v1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}/{customerId}
+x-akamai:
+  auth-type: OAUTH
+  file-path: oidc_endpoints.yaml
+paths:
+  /login/.well-known/openid-configuration:
+    get:
+      operationId: get-discovery-document
+      summary: View the discovery document
+      tags:
+      - OIDC endpoints
+      description: |
+        Returns the discovery document. This document a set of OpenID Connect (OIDC) values accessible to OpenID Connect clients. These values enable clients to self-configure. You don't need authorization to call this operation.
+      responses:
+        200:
+          description: |
+            Information from your discovery document.
+          content:
+            application/json:
+              example:
+                $ref: examples/view-discover-document.json
+              schema:
+                $ref: schemas/view-your-discovery-document.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+  /login/jwk:
+    get:
+      operationId: get-json-web-keys
+      summary: List JSON web keys
+      tags:
+      - OIDC endpoints
+      description: |
+        Returns your JSON web keys. JSON web keys are public cryptographic keys for verifying the signatures on Hosted Login identity tokens. You don't need authorization to call this operation.
+      responses:
+        200:
+          description: |
+            Information about your JSON web keys.
+          content:
+            application/json:
+              example:
+                $ref: examples/view-json-web-keys.json
+              schema:
+                $ref: schemas/get_json_webkeys.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml

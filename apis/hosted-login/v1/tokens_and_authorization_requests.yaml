@@ -1,0 +1,190 @@
+openapi: 3.0.0
+info:
+  title: Tokens, authorization requests, and user sessions
+  version: v1
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}/{customerId}
+x-akamai:
+  auth-type: OAUTH
+  file-path: tokens_and_authorization_requests.yaml
+paths:
+  /auth-ui/logout:
+    get:
+      operationId: get-logout-from-hl
+      summary: Logout from Hosted Login
+      tags:
+      - Log out
+      description: |
+        Logs a user out from a Hosted Login session. This brings the session to a close without expiring or otherwise invalidating the user’s access and refresh tokens. You don't need authorization to call this endpoint.
+      parameters:
+      - $ref: parameters/client_id-query.yaml
+      - $ref: parameters/redirect_uri-logout-query.yaml
+      - $ref: parameters/state-logout-query.yaml
+      responses:
+        200:
+          description: |
+            User logout successful. Note that this operation doesn't return a response. Instead, it redirects the user to a new browser page.
+  /auth-ui/profile:
+    get:
+      operationId: get-access-profile
+      summary: Access a user profile
+      tags:
+      - User profiles
+      description: |
+        Opens the **Manage Profile** screen for the user. Note that you don't need authentication to call this operation. Instead, the operation relies on a cookie that points to an active Hosted Login session. If this cookie doesn’t exist the operation fails with a `No authenticated session found` error. To access their user profile the user needs to log in. You don't need authorization to call this endpoint.
+      parameters:
+      - $ref: parameters/client_id-query.yaml
+      - $ref: parameters/redirect_uri-logout-query.yaml
+      - $ref: parameters/state-logout-query.yaml
+      responses:
+        200:
+          description: |
+            **Manage Profile** screen access successful. Note that this operation doesn't return a response. Instead, it redirects the user to a new browser page.
+  /login/authorize:
+    post:
+      operationId: post-authorize
+      summary: Submit an authorization request
+      tags:
+      - Authorization requests
+      description: |
+        Requests Hosted Login authorization for an end user. You don't need authorization to call this endpoint.
+      parameters:
+      - $ref: parameters/client_id-query.yaml
+      - $ref: parameters/response_type-query.yaml
+      - $ref: parameters/scope-query.yaml
+      - $ref: parameters/redirect_uri-query.yaml
+      - $ref: parameters/code_challenge-query.yaml
+      - $ref: parameters/code_challenge_method-query.yaml
+      - $ref: parameters/state-query.yaml
+      - $ref: parameters/prompt-query.yaml
+      - $ref: parameters/max_age-query.yaml
+      - $ref: parameters/ui_locales-query.yaml
+      - $ref: parameters/login_hint-query.yaml
+      - $ref: parameters/claims-query.yaml
+      - $ref: parameters/display-query.yaml
+      - $ref: parameters/nonce-query.yaml
+      - $ref: parameters/resource-query.yaml
+      responses:
+        200:
+          description: |
+            Authorization request successful.
+          content:
+            text/plain:
+              example:
+                $ref: examples/submit-authorization-request.txt
+              schema:
+                $ref: schemas/submit-authorization-request.yaml
+  /login/token:
+    post:
+      operationId: post-token
+      summary: Get an administrative access token
+      tags:
+      - Administrative access tokens
+      description: |
+        Requests an administrative access token. Use token to call the other Hosted Login configuration operations.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/get-admin-token-request.txt
+            schema:
+              $ref: schemas/get-admin-token-request.yaml
+      responses:
+        200:
+          description: |
+            Administrative access token.
+          content:
+            application/json:
+              example:
+                $ref: examples/request-administrative-access-token.json
+              schema:
+                $ref: schemas/request-administrative-access-token.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+      security:
+      - basicAuth: []
+  /login/token/introspect:
+    post:
+      operationId: post-introspect-token
+      summary: Introspect an access or refresh token
+      tags:
+      - Token management
+      description: |
+        Returns the current state of a Hosted Login access or refresh token. If the token is active the operation returns additional claims belonging to the token.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/introspect-token-request.txt
+            schema:
+              $ref: schemas/introspect-token-request.yaml
+      responses:
+        200:
+          description: |
+            Token status and claims.
+          content:
+            application/json:
+              example:
+                $ref: examples/introspect-token.json
+              schema:
+                $ref: schemas/introspect-token.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+      security:
+      - basicAuth: []
+  /login/token/revoke:
+    post:
+      operationId: post-revoke-token
+      summary: Revoke an access or refresh token
+      tags:
+      - Token management
+      description: |
+        Revokes an access token or refresh token. After you revoke an access token that token no longer provides access to protected resources. To restore access the user needs to reauthenticate. After you revoke a refresh token, you can no longer use that token to request a new access token. The only way to get a new refresh token is to reauthenticate. You don't need authorization to call this endpoint.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            example:
+              $ref: examples/revoke-token-request.txt
+            schema:
+              $ref: schemas/revoke-token-request.yaml
+      responses:
+        200:
+          description: |
+            The token is invalid.
+          content:
+            text/plain:
+              example:
+                $ref: examples/revoke-token-response.txt
+              schema:
+                $ref: schemas/revoke-token-response.yaml
+        404:
+          description: |
+            [Not found.](ref:404.yaml)
+          content:
+            application/json:
+              example:
+                $ref: examples/404.json
+              schema:
+                $ref: schemas/404.yaml
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
