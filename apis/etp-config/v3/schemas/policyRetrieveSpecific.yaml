@@ -66,11 +66,6 @@ properties:
       - responseId
       - categoryId
       properties:
-        description:
-          type: string
-          description: |
-            Describes the AUP setting.
-          minLength: 1
         categoryId:
           type: integer
           description: |
@@ -78,12 +73,9 @@ properties:
           readOnly: true
           minimum: 1
         categoryInfo:
-          type: array
           description: |
-            Contains data for a category.
-          minItems: 0
-          items:
-            $ref: aup-categories.yaml
+            AUP category data.
+          $ref: aup-categories.yaml
         groups:
           type: array
           description: |
@@ -98,7 +90,7 @@ properties:
             A unique identifier for the response.
           readOnly: true
           minimum: 1
-        response:
+        responseInfo:
           type: object
           description: |
             Contains data for the response.
@@ -215,12 +207,10 @@ properties:
                 type: string
                 description: |
                   URL for authorization.
-                format: uri
               checkSessionUri:
                 type: string
                 description: |
                   URL to check if session is alive.
-                format: uri
               clientId:
                 type: integer
                 description: |
@@ -236,7 +226,6 @@ properties:
                 type: string
                 description: |
                   URL for ending session.
-                format: uri
               frontChannelLogoutUrl:
                 type: array
                 description: |
@@ -244,7 +233,6 @@ properties:
                 minItems: 0
                 items:
                   type: string
-                  format: uri
               grantTypes:
                 type: array
                 description: |
@@ -282,17 +270,14 @@ properties:
                 minItems: 0
                 items:
                   type: string
-                  format: uri
               tokenUri:
                 type: string
                 description: |
                   URL for token.
-                format: uri
               userUri:
                 type: string
                 description: |
                   URL for user information.
-                format: uri
           provider:
             type: object
             description: |
@@ -306,12 +291,10 @@ properties:
                 type: string
                 description: |
                   The URL from the authorization policy.
-                format: uri
               oidcUrl:
                 type: string
                 description: |
                   The URL for the OpenID Connect (OIDC).
-                format: uri
       enabled:
         type: boolean
         description: |
@@ -422,7 +405,7 @@ properties:
                   type: string
                   description: |
                     The acceptable use policy categorization code.
-                  minLength: 1
+                  minLength: 0
                 defaultActionId:
                   type: integer
                   description: |
@@ -732,8 +715,6 @@ properties:
     - enabled
     - randomCheck
     - zdp
-    - blockUnscannableFiles
-    - blockOnUploadScanTimeout
     properties:
       enabled:
         type: boolean
@@ -785,27 +766,6 @@ properties:
     description: |
       Specifies the policy's general settings.
     additionalProperties: false
-    required:
-    - aupMigrated
-    - blockBrokenTLS
-    - bypassO365
-    - dotConfig
-    - httpProxyOverride
-    - proxyAuthEnabled
-    - avcEnabled
-    - localBreakoutForBypass
-    - disableClient
-    - wgExceptions
-    - ignoreLocalDNSResolvers
-    - etpClientMultiUserEnabled
-    - disableInsecureCiphers
-    - iOSDefaultAction
-    - androidDefaultAction
-    - chromeOSDefaultAction
-    - classifyMigrated
-    - idpUserInfoRetryInterval
-    - enableIPIntelligence
-    - fwaasEnabled
     properties:
       aupMigrated:
         type: boolean
@@ -914,7 +874,6 @@ properties:
     type: string
     description: |
       Name of proxy host machine.
-    format: hostname
   riskyFileHandlingSettings:
     type: object
     description: |
@@ -923,7 +882,6 @@ properties:
     required:
     - hugeRiskyFileResponse
     - largeRiskyFileResponse
-    - dynamicAnalysisEnabled
     properties:
       hugeRiskyFileResponse:
         type: object

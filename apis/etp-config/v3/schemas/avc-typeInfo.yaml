@@ -4,24 +4,12 @@ description: |
 additionalProperties: false
 required:
 - name
-- description
 - id
-- vendorAppId
-- isDomainBasedApp
-- fileTypeCategory
-- fileType
-- isDeprecated
 - responseId
-- categoryId
 - users
 - groups
-- risk
-- categoryInfo
-- response
 - responseOverrides
 - operationSettings
-- applicationCount
-- devicePostureRiskTiers
 properties:
   id:
     type: integer
@@ -33,6 +21,11 @@ properties:
     description: |
       Name of the AVC entity.
     minLength: 1
+  type:
+    type: string
+    description: |
+      The file type.
+    minLength: 1
   description:
     type: string
     description: |
@@ -43,7 +36,7 @@ properties:
     description: |
       Unique identifier for the vendor app.
     minimum: 1
-  isDomainBasedApp:
+  domainBasedApp:
     type: boolean
     description: |
       Specifies a domain-based AVC entity.
@@ -61,12 +54,7 @@ properties:
     - model
     - x-epoc
     minLength: 1
-  fileType:
-    type: string
-    description: |
-      The file type.
-    minLength: 1
-  isDeprecated:
+  deprecated:
     type: boolean
     description: |
       Deprecates the AVC entity.
@@ -124,6 +112,26 @@ properties:
     minItems: 0
     items:
       $ref: avc-typeInfo-nested.yaml
+  responseInfo:
+    type: object
+    description: |
+      Contains data for the response.
+    additionalProperties: false
+    required:
+    - name
+    - id
+    properties:
+      id:
+        type: integer
+        description: |
+          A unique identifier for the response.
+        readOnly: true
+        minimum: 1
+      name:
+        type: string
+        description: |
+          The name of the response.
+        minLength: 1
   applicationCount:
     type: integer
     description: |
