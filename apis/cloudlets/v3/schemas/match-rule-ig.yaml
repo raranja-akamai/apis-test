@@ -1,6 +1,9 @@
 type: object
-description: |
+description: |-
   Contains match rule information for Request Control.
+  
+x-akamai:
+  file-path: schemas/match-rule-ig.yaml
 title: Request Control
 additionalProperties: false
 required:
@@ -10,7 +13,7 @@ properties:
   id:
     type: integer
     description: |
-      Akamai internal use only.
+      __Internal__ __Internal__ Akamai internal use only.
     x-akamai:
       status: INTERNAL
     nullable: true
@@ -26,16 +29,19 @@ properties:
       The type of Cloudlet the rule is for. For example, the string for Request Control is `igMatchRule`.
     enum:
     - igMatchRule
-  matchesAlways:
+  allowDeny:
+    type: string
+    description: |
+      If set to `allow`, the request is sent to origin when all conditions are true. If `deny`, the request is denied when all conditions are true. If `denybranded`, the request is denied and rerouted according to the configuration of the [Request Control behavior](https://techdocs.akamai.com/property-mgr/reference/latest-request-control).
+    enum:
+    - allow
+    - deny
+    - denybranded
+  disabled:
     type: boolean
     description: |
-      The match rule always applies when `true`. When `false`, the rule applies within the `start` and `end` time range.
-  start:
-    type: integer
-    description: |
-      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
-    default: 0
-    minimum: 0
+      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
+    default: false
   end:
     type: integer
     description: |
@@ -48,17 +54,15 @@ properties:
       The `matchType` and the `matchValue` or `objectMatchValue` used to conditionally pass through the request. Plus additional criteria to match on, like case sensitivity (`caseSensitive`).
     nullable: true
     items:
+      type: object
       $ref: match-rule-ig-definitions.yaml#/definitions/matchCriteriaType
-  disabled:
+  matchesAlways:
     type: boolean
     description: |
-      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
-    default: false
-  allowDeny:
-    type: string
+      The match rule always applies when `true`. When `false`, the rule applies within the `start` and `end` time range.
+  start:
+    type: integer
     description: |
-      If set to `allow`, the request is sent to origin when all conditions are true. If `deny`, the request is denied when all conditions are true. If `denybranded`, the request is denied and rerouted according to the configuration of the [Request Control behavior](https://techdocs.akamai.com/property-mgr/reference/latest-request-control).
-    enum:
-    - allow
-    - deny
-    - denybranded
+      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
+    default: 0
+    minimum: 0

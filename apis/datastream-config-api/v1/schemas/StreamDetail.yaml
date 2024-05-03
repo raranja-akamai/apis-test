@@ -1,9 +1,6 @@
 type: object
-description: |-
+description: |
   Provides detailed information about the latest configuration version of a stream. It provides descriptions of the data set fields selected in the version, identifiers of properties they collect logs for, configuration of the destination where they deliver logs, and structure of these log lines. It also informs whether this version is active.
-  
-x-akamai:
-  file-path: schemas/StreamDetail.yaml
 additionalProperties: false
 required:
 - contractId
@@ -42,23 +39,26 @@ properties:
           type: string
           description: |
             The descriptive label for the property.
-  collectMidgress:
-    type: boolean
+  streamId:
+    type: integer
     description: |
-      Indicates if you've opted to capture midgress traffic within the Akamai platform, such as between two edge servers.
+      Identifies the stream.
+  streamName:
+    type: string
+    description: |
+      The name of the stream.
+  streamVersion:
+    type: integer
+    description: |
+      Identifies the configuration version of the stream.
+  groupId:
+    type: integer
+    description: |
+      Identifies the group that has access to the product and that you created the stream configuration for. When editing a stream, the value you pass is ignored as you can't change the group for an existing stream.
   contractId:
     type: string
     description: |
       Identifies the contract that the stream belongs to.
-  createdBy:
-    type: string
-    description: |
-      The username who created the stream.
-  createdDate:
-    type: string
-    description: |
-      An ISO 8601 timestamp marking when the stream was created.
-    format: date-time
   datasetFields:
     type: array
     description: |
@@ -75,14 +75,30 @@ properties:
           type: integer
           description: |
             Identifies the field.
-        datasetFieldJsonKey:
-          type: string
-          description: |
-            Specifies the JSON key for the field in a log line. You can get this value only when you run the [List data set fields](ref:get-dataset-fields) or [Get a stream](ref:get-stream) operation for a stream in the `JSON` format.
         datasetFieldName:
           type: string
           description: |
             A name of the data set field.
+        datasetFieldJsonKey:
+          type: string
+          description: |
+            Specifies the JSON key for the field in a log line. You can get this value only when you run the [List data set fields](ref:get-dataset-fields) or [Get a stream](ref:get-stream) operation for a stream in the `JSON` format.
+  destination:
+    description: |
+      Provides detailed information about the destination's configuration in the stream to send logs.
+    oneOf:
+    - $ref: AzureSavedDestination.yaml
+    - $ref: S3SavedDestination.yaml
+    - $ref: DatadogSavedDestination.yaml
+    - $ref: SplunkSavedDestination.yaml
+    - $ref: GCSSavedDestination.yaml
+    - $ref: HTTPSSavedDestination.yaml
+    - $ref: OCSSavedDestination.yaml
+    - $ref: SumoLogicSavedDestination.yaml
+    - $ref: LogglySavedDestination.yaml
+    - $ref: ElasticsearchSavedDestination.yaml
+    - $ref: NewRelicSavedDestination.yaml
+    - $ref: S3CompatibleSavedDestination.yaml
   deliveryConfiguration:
     type: object
     description: |
@@ -131,30 +147,33 @@ properties:
         description: |
           The suffix of the log file that you want to send to a object-based destination. This member supports [Dynamic time variables](ref:custom-log-field#dynamic-time-variables). It's a static string of at most 10 characters. If unspecified, it defaults to `ds`.
         default: ds
-  destination:
-    description: |
-      Provides detailed information about the destination's configuration in the stream to send logs.
-    oneOf:
-    - $ref: AzureSavedDestination.yaml
-    - $ref: S3SavedDestination.yaml
-    - $ref: DatadogSavedDestination.yaml
-    - $ref: SplunkSavedDestination.yaml
-    - $ref: GCSSavedDestination.yaml
-    - $ref: HTTPSSavedDestination.yaml
-    - $ref: OCSSavedDestination.yaml
-    - $ref: SumoLogicSavedDestination.yaml
-    - $ref: LogglySavedDestination.yaml
-    - $ref: ElasticsearchSavedDestination.yaml
-    - $ref: NewRelicSavedDestination.yaml
-    - $ref: S3CompatibleSavedDestination.yaml
-  groupId:
-    type: integer
-    description: |
-      Identifies the group that has access to the product and that you created the stream configuration for. When editing a stream, the value you pass is ignored as you can't change the group for an existing stream.
   latestVersion:
     type: integer
     description: |
       Identifies the latest configuration version of the stream.
+  productId:
+    type: string
+    description: |
+      The ID of the product that you created stream for.
+  streamStatus:
+    type: string
+    description: |
+      Indicates if the stream is `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`.
+    enum:
+    - INACTIVE
+    - ACTIVATING
+    - ACTIVATED
+    - DEACTIVATING
+    - DEACTIVATED
+  createdBy:
+    type: string
+    description: |
+      The username who created the stream.
+  createdDate:
+    type: string
+    description: |
+      An ISO 8601 timestamp marking when the stream was created.
+    format: date-time
   modifiedBy:
     type: string
     description: |
@@ -170,29 +189,7 @@ properties:
       A comma-delimited list of email addresses where the system sends notifications about activations and deactivations of the stream.
     items:
       type: string
-  productId:
-    type: string
+  collectMidgress:
+    type: boolean
     description: |
-      The ID of the product that you created stream for.
-  streamId:
-    type: integer
-    description: |
-      Identifies the stream.
-  streamName:
-    type: string
-    description: |
-      The name of the stream.
-  streamStatus:
-    type: string
-    description: |
-      Indicates if the stream is `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`.
-    enum:
-    - INACTIVE
-    - ACTIVATING
-    - ACTIVATED
-    - DEACTIVATING
-    - DEACTIVATED
-  streamVersion:
-    type: integer
-    description: |
-      Identifies the configuration version of the stream.
+      Indicates if you've opted to capture midgress traffic within the Akamai platform, such as between two edge servers.
