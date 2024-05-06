@@ -1,5 +1,3 @@
-x-akamai:
-  file-path: schemas/match-rule-as-definitions.yaml
 definitions:
   matchCriteriaType:
     type: object
@@ -20,14 +18,16 @@ definitions:
         type: boolean
         description: |
           If `true`, the match is case sensitive.
-      checkIPs:
+      matchValue:
         type: string
         description: |
-          For `clientip`, `continent`, `countrycode`, `proxy`, and `regioncode` match types, the part of the request that determines the IP address to use. Values include the connecting IP address (`CONNECTING_IP`) and the `X-Forwarded-For` header (`XFF_HEADERS`). To select both, enter the two values separated by a space delimiter. When you include both values, the connecting IP address evaluates first.
-        enum:
-        - CONNECTING_IP
-        - XFF_HEADERS
-        - CONNECTING_IP XFF_HEADERS
+          The `matchValue` depends on the `matchType`. For example if the `matchType` is `hostname`, then `matchValue` is the fully qualified domain name, like `www.akamai.com`.
+        minLength: 1
+        maxLength: 8192
+      negate:
+        type: boolean
+        description: |
+          Whether the match should be ignored (`negate` is `true`) or if the match should be acted on (`negate` is `false`).
       matchOperator:
         type: string
         description: |
@@ -57,18 +57,62 @@ definitions:
         - protocol
         - method
         - proxy
-      matchValue:
+      checkIPs:
         type: string
         description: |
-          The `matchValue` depends on the `matchType`. For example if the `matchType` is `hostname`, then `matchValue` is the fully qualified domain name, like `www.akamai.com`.
-        minLength: 1
-        maxLength: 8192
-      negate:
-        type: boolean
-        description: |
-          Whether the match should be ignored (`negate` is `true`) or if the match should be acted on (`negate` is `false`).
+          For `clientip`, `continent`, `countrycode`, `proxy`, and `regioncode` match types, the part of the request that determines the IP address to use. Values include the connecting IP address (`CONNECTING_IP`) and the `X-Forwarded-For` header (`XFF_HEADERS`). To select both, enter the two values separated by a space delimiter. When you include both values, the connecting IP address evaluates first.
+        enum:
+        - CONNECTING_IP
+        - XFF_HEADERS
+        - CONNECTING_IP XFF_HEADERS
       objectMatchValue:
         $ref: '#/definitions/objectMatchValueType'
+  objectMatchValueSimpleSubtype:
+    type: object
+    description: |
+      Use the `simple` array option when adding an array of string-based values.
+    title: Simple
+    additionalProperties: false
+    required:
+    - type
+    - value
+    properties:
+      type:
+        type: string
+        description: |
+          The object type, which is `simple`.
+        enum:
+        - simple
+      value:
+        type: array
+        description: |
+          The `simple` array values for incoming request to match on. Valid entries vary by match type. For example, GET and POST are valid entries for the `method` match type.
+        nullable: true
+        items:
+          type: string
+  objectMatchValueRangeSubtype:
+    type: object
+    description: |
+      When setting up a range match, enter the two numbers that comprise the range. If the value assigned to an incoming request falls within this inclusive range, the match is true. The specified `range` needs to be a percentage from 1 to 100.
+    title: Range
+    additionalProperties: false
+    required:
+    - type
+    - value
+    properties:
+      type:
+        type: string
+        description: |
+          The object type, which is `range`.
+        enum:
+        - range
+      value:
+        type: array
+        description: |
+          An inclusive range comprised of two numbers to match on.
+        nullable: true
+        items:
+          type: integer
   objectMatchValueObjectSubtype:
     type: object
     description: |
@@ -104,6 +148,10 @@ definitions:
             nullable: true
             items:
               type: string
+          valueHasWildcard:
+            type: boolean
+            description: |
+              Set to `true` if the entries for `value` includes wildcards.
           valueCaseSensitive:
             type: boolean
             description: |
@@ -112,10 +160,6 @@ definitions:
             type: boolean
             description: |
               Set to `true` if the entries for `value` includes escaped characters.
-          valueHasWildcard:
-            type: boolean
-            description: |
-              Set to `true` if the entries for `value` includes wildcards.
       nameCaseSensitive:
         type: boolean
         description: |
@@ -124,52 +168,6 @@ definitions:
         type: boolean
         description: |
           When set to `true`, `name` matches can include `*` and `?` wildcards.
-  objectMatchValueRangeSubtype:
-    type: object
-    description: |
-      When setting up a range match, enter the two numbers that comprise the range. If the value assigned to an incoming request falls within this inclusive range, the match is true. The specified `range` needs to be a percentage from 1 to 100.
-    title: Range
-    additionalProperties: false
-    required:
-    - type
-    - value
-    properties:
-      type:
-        type: string
-        description: |
-          The object type, which is `range`.
-        enum:
-        - range
-      value:
-        type: array
-        description: |
-          An inclusive range comprised of two numbers to match on.
-        nullable: true
-        items:
-          type: integer
-  objectMatchValueSimpleSubtype:
-    type: object
-    description: |
-      Use the `simple` array option when adding an array of string-based values.
-    title: Simple
-    additionalProperties: false
-    required:
-    - type
-    - value
-    properties:
-      type:
-        type: string
-        description: |
-          The object type, which is `simple`.
-        enum:
-        - simple
-      value:
-        type: array
-        description: |
-          The `simple` array values for incoming request to match on. Valid entries vary by match type. For example, GET and POST are valid entries for the `method` match type.
-        nullable: true
-        items:
-          type: string
   objectMatchValueType:
     type: object
     description: |
