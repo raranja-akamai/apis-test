@@ -53,17 +53,6 @@ properties:
       The `matchType` and the `matchValue` or `objectMatchValue` used to conditionally pass through the request. Plus additional criteria to match on, like case sensitivity (`caseSensitive`).
     nullable: true
     items:
-      type: object
-      additionalProperties: false
-      oneOf:
-      - required:
-        - matchType
-        - matchValue
-        title: matchType and matchValue required
-      - required:
-        - matchType
-        - objectMatchValue
-        title: matchType and objectMatchValue required
       $ref: match-rule-er-definitions.yaml#/definitions/matchCriteriaType
   matchesAlways:
     type: boolean
@@ -72,7 +61,7 @@ properties:
   redirectURL:
     type: string
     description: |
-      The URL Edge Redirector redirects the request to. If using `useRelativeUrl`, you can enter a path for the value. If `useRelativeUrl` isn't used or set to `none`, then the `redirectUrl` should be a fully qualified URL.
+      The URL Edge Redirector redirects the request to. If using `useRelativeUrl`, you can enter a path for the value. If `useRelativeUrl` is not used or set to `none`, then the `redirectUrl` should be a fully qualified URL.
     minLength: 1
     maxLength: 8192
   start:
@@ -104,6 +93,6 @@ properties:
     description: |
       If set to `relative_url`, takes the path entered for the `redirectUrl` and sets it in the response’s `Location` header. The client browser receiving the request decides which protocol and hostname to use. If set to `copy_scheme_hostname`, it creates an absolute path by taking the protocol and hostname from the incoming request and combining them with path information entered for the `redirectUrl`. This absolute path is set in the response’s `Location` header. If you don't include `useRelativeUrl`, or if you set it to `none`, then specify the `redirectUrl` as a fully qualified URL.
     enum:
-    - none
-    - copy_scheme_hostname
     - relative_url
+    - copy_scheme_hostname
+    - none
