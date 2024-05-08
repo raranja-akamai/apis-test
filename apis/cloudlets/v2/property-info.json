@@ -100,27 +100,28 @@
                       "version": 5,
                       "referencedPolicies": [
                         "fr_policy_1"
-                      ],
-                      "cloudletsOrigins": {
-                        "customerOrigin1": {
-                          "checksum": "691365709300c782c875ea43244a3d3f",
-                          "hostname": "origin1.example.com",
-                          "originId": "customerOrigin1",
-                          "type": "CUSTOMER"
-                        },
-                        "customerOrigin2": {
-                          "checksum": "da016ec7b425cc1b601352d6078d0b51",
-                          "hostname": "origin2.example.com",
-                          "originId": "customerOrigin2",
-                          "type": "CUSTOMER"
-                        },
-                        "netStorageOrigin1": {
-                          "checksum": "773636eb8f6c65f5dc01cc3d84f5c0a8",
-                          "hostname": "download.akamai.com/12345",
-                          "originId": "netStorageOrigin1",
-                          "type": "NETSTORAGE"
-                        }
-                      }
+                      ]
+                    },
+                    "id": 987654321
+                  },
+                  "cloudletsOrigins": {
+                    "customerOrigin1": {
+                      "checksum": "691365709300c782c875ea43244a3d3f",
+                      "hostname": "origin1.example.com",
+                      "originId": "customerOrigin1",
+                      "type": "CUSTOMER"
+                    },
+                    "customerOrigin2": {
+                      "checksum": "da016ec7b425cc1b601352d6078d0b51",
+                      "hostname": "origin2.example.com",
+                      "originId": "customerOrigin2",
+                      "type": "CUSTOMER"
+                    },
+                    "netStorageOrigin1": {
+                      "checksum": "773636eb8f6c65f5dc01cc3d84f5c0a8",
+                      "hostname": "download.akamai.com/12345",
+                      "originId": "netStorageOrigin1",
+                      "type": "NETSTORAGE"
                     }
                   }
                 },
@@ -137,6 +138,10 @@
                     "newestVersion"
                   ],
                   "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "Unique identifier for the property.\n"
+                    },
                     "name": {
                       "type": "string",
                       "description": "The name of the property. This value also appears at the start of each separate property object.\n"
@@ -543,6 +548,49 @@
         }
       }
     },
+    "/policies/{policyId}/properties/{propertyId}": {
+      "parameters": [
+        {
+          "name": "policyId",
+          "in": "path",
+          "description": "The ID of the policy.",
+          "x-akamai": {
+            "file-path": "parameters/policyId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 1001
+          }
+        },
+        {
+          "name": "propertyId",
+          "in": "path",
+          "description": "The ID of the property linked with the `policyId`. For the `propertyId` value, use the `id` value from the [Get associated properties for a policy](ref:get-policy-properties) response. \n",
+          "x-akamai": {
+            "file-path": "parameters/propertyId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 987654321
+          }
+        }
+      ],
+      "delete": {
+        "operationId": "delete-policy-properties",
+        "summary": "Remove a property from a policy",
+        "tags": [
+          "Associated properties"
+        ],
+        "description": "Run this operation to remove the link between the specified `policyId` and `propertyId`. It does not delete the property or the policy.\n",
+        "responses": {
+          "204": {
+            "description": "The property is no longer associated with the policy.\n"
+          }
+        }
+      }
+    },
     "/properties": {
       "get": {
         "operationId": "get-properties",
@@ -610,27 +658,28 @@
                       "version": 5,
                       "referencedPolicies": [
                         "fr_policy_1"
-                      ],
-                      "cloudletsOrigins": {
-                        "customerOrigin1": {
-                          "checksum": "691365709300c782c875ea43244a3d3f",
-                          "hostname": "origin1.example.com",
-                          "originId": "customerOrigin1",
-                          "type": "CUSTOMER"
-                        },
-                        "customerOrigin2": {
-                          "checksum": "da016ec7b425cc1b601352d6078d0b51",
-                          "hostname": "origin2.example.com",
-                          "originId": "customerOrigin2",
-                          "type": "CUSTOMER"
-                        },
-                        "netStorageOrigin1": {
-                          "checksum": "773636eb8f6c65f5dc01cc3d84f5c0a8",
-                          "hostname": "download.akamai.com/12345",
-                          "originId": "netStorageOrigin1",
-                          "type": "NETSTORAGE"
-                        }
-                      }
+                      ]
+                    },
+                    "id": 987654321
+                  },
+                  "cloudletsOrigins": {
+                    "customerOrigin1": {
+                      "checksum": "691365709300c782c875ea43244a3d3f",
+                      "hostname": "origin1.example.com",
+                      "originId": "customerOrigin1",
+                      "type": "CUSTOMER"
+                    },
+                    "customerOrigin2": {
+                      "checksum": "da016ec7b425cc1b601352d6078d0b51",
+                      "hostname": "origin2.example.com",
+                      "originId": "customerOrigin2",
+                      "type": "CUSTOMER"
+                    },
+                    "netStorageOrigin1": {
+                      "checksum": "773636eb8f6c65f5dc01cc3d84f5c0a8",
+                      "hostname": "download.akamai.com/12345",
+                      "originId": "netStorageOrigin1",
+                      "type": "NETSTORAGE"
                     }
                   }
                 },
@@ -647,6 +696,10 @@
                     "newestVersion"
                   ],
                   "properties": {
+                    "id": {
+                      "type": "integer",
+                      "description": "Unique identifier for the property.\n"
+                    },
                     "name": {
                       "type": "string",
                       "description": "The name of the property. This value also appears at the start of each separate property object.\n"
