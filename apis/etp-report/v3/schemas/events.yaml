@@ -3,25 +3,14 @@ description: |
   Details about DNS query or web request events.
 additionalProperties: false
 required:
-- detectionTime
-- detectionType
 - siteId
 - siteName
 - policyId
 - policyName
-- listId
-- listName
 - trigger
-- categoryId
-- categoryName
-- confidenceId
 - confidenceName
 - actionId
 - actionName
-- reason
-- blockDescription
-- correlatedSinkholeEvents
-- listIdentifiers
 properties:
   operationId:
     type: string
@@ -45,10 +34,10 @@ properties:
   detectionType:
     type: string
     description: |
-      Event detected during online or while offline batch processing. Either `ONLINE` or `OFFLINE`.
+      Event detected during online or while offline batch processing. Either `inline` or `N/A`.
     enum:
-    - ONLINE
-    - OFFLINE
+    - inline
+    - N/A
   siteId:
     type: string
     description: |
@@ -60,40 +49,40 @@ properties:
       The descriptive name of the source location or branch.
     minLength: 1
   policyId:
-    type: integer
+    type: string
     description: |
       A unique identifier for the policy.
-    minimum: 0
+    minLength: 1
   policyName:
     type: string
     description: |
       The descriptive name of the matching policy.
     minLength: 1
   listId:
-    type: integer
+    type: string
     description: |
       A unique identifier for the list.
-    minimum: 0
+    minLength: 1
   listName:
     type: string
     description: |
       A descriptive name for the list identifier.
     minLength: 1
   categoryId:
-    type: integer
+    type: string
     description: |
       A unique identifier for the category.
-    minimum: 0
+    minLength: 1
   categoryName:
     type: string
     description: |
       A descriptive name for the category identifier.
     minLength: 1
   confidenceId:
-    type: integer
+    type: string
     description: |
-      A unique identifier about the event confidence level.
-    minimum: 0
+      A unique identifier about the event confidence level. A value of -1 indicates no confidence data. 
+    minLength: -1
   confidenceName:
     type: string
     description: |
@@ -163,24 +152,28 @@ properties:
   onrampType:
     type: string
     description: |
-      The type of onramp for the event. Either `dns`, `web`, `onramp_dns`, `etp_client`, `etp_offnet_client`, or `explicit_policy`.
+      The event's onramp type. Either `dns`, `web`, `onramp_dns`, `etp_client`, `etp-client`, `SIA-client`, `etp_offnet_client`, `explicit_policy`, `N/A`, or ``.
+    nullable: true
     enum:
     - dns
     - web
     - onramp_dns
     - etp_client
+    - etp-client
+    - SIA-client
     - etp_offnet_client
     - explicit_policy
+    - N/A
+    - ''
   internalClientIP:
     type: string
     description: |
       The IP address of the internal client device used for web traffic.
-    format: ipv4
   clientRequestId:
     type: string
     description: |
       A unique identifier for the request client.
-    minLength: 1
+    minLength: 0
   policyEvaluationSource:
     type: string
     description: |
@@ -190,7 +183,7 @@ properties:
     type: string
     description: |
       The location of a deepscan report.
-    minLength: 1
+    minLength: 0
   httpVersion:
     type: string
     description: |
@@ -233,7 +226,7 @@ properties:
           type: integer
           description: |
             A unique identifier for the list.
-          minimum: 0
+          minimum: -1
         listName:
           type: string
           description: |
@@ -252,8 +245,8 @@ properties:
         confidenceId:
           type: integer
           description: |
-            A unique identifier about the event confidence level.
-          minimum: 0
+            A unique identifier about the event confidence level. A value of -1 indicates no confidence data.
+          minimum: -1
         confidenceName:
           type: string
           description: |
@@ -298,7 +291,6 @@ properties:
     type: string
     description: |
       The encrypted IP address of the client machine.
-    format: ipv4
   encryptedInternalClientName:
     type: string
     description: |
@@ -308,7 +300,6 @@ properties:
     type: string
     description: |
       The decrypted IP address of the client machine.
-    format: ipv4
   decryptedInternalClientName:
     type: string
     description: |
@@ -437,10 +428,10 @@ properties:
     description: |
       Unique identifier of the device owner for the event.
   configId:
-    type: string
+    type: integer
     description: |
       Unique identifier of the configuration for the event.
   alexaRanking:
     type: integer
     description: |
-      The ranking for the event.
+      The ranking for the event. A value of -1 indicates no ranking data.

@@ -1,82 +1,64 @@
+type: object
+description: |
+  Contains match rule information for API Prioritization.
+title: API Prioritization
 additionalProperties: false
-description: Contains match rule information for API Prioritization.
-properties:
-  disabled:
-    default: false
-    description: 'If `true`, disables a rule so it''s not evaluated against incoming
-      requests. The default setting is `false`.
-
-      '
-    type: boolean
-  end:
-    default: 0
-    description: 'The end time for this match rule in epoch seconds. When `end` is
-      `0`, there is no end time for this match rule.
-
-      '
-    minimum: 0
-    type: integer
-  id:
-    description: '__Internal__ __Internal__ Akamai internal use only.
-
-      '
-    nullable: true
-    type: integer
-    x-akamai:
-      status: INTERNAL
-  matchURL:
-    description: 'The URL the Cloudlet uses to match the incoming request.
-
-      '
-    maxLength: 8192
-    nullable: true
-    type: string
-  matches:
-    description: 'The `matchType` and the `matchValue` or `objectMatchValue` used
-      to conditionally pass through the request. Plus additional criteria to match
-      on, like case sensitivity (`caseSensitive`).
-
-      '
-    items:
-      $ref: match-rule-ap-definitions.yaml#/definitions/matchCriteriaType
-    nullable: true
-    type: array
-  name:
-    description: 'The name of the rule.
-
-      '
-    maxLength: 8192
-    nullable: true
-    type: string
-  passThroughPercent:
-    description: 'The percentage of requests that pass through to the origin, with
-      `100` indicating the request always passes through to the origin. For Visitor
-      Prioritization, a value of -1 sends everyone to the waiting room.
-
-      '
-    maximum: 100
-    minimum: -1
-    type: number
-  start:
-    default: 0
-    description: 'The start time for this match rule in epoch seconds. When `start`
-      is `0`, the match rule is on.
-
-      '
-    minimum: 0
-    type: integer
-  type:
-    description: 'The type of Cloudlet the rule is for. For example, the string for
-      API Prioritization is `apMatchRule`.
-
-      '
-    enum:
-    - apMatchRule
-    type: string
 required:
 - type
 - passThroughPercent
-title: API Prioritization
-type: object
-x-akamai:
-  file-path: schemas/match-rule-ap.yaml
+properties:
+  id:
+    type: integer
+    description: |
+      Akamai internal use only.
+    x-akamai:
+      status: INTERNAL
+    nullable: true
+  name:
+    type: string
+    description: |
+      The name of the rule.
+    nullable: true
+    maxLength: 8192
+  type:
+    type: string
+    description: |
+      The type of Cloudlet the rule is for. For example, the string for API Prioritization is `apMatchRule`.
+    enum:
+    - apMatchRule
+  start:
+    type: integer
+    description: |
+      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
+    default: 0
+    minimum: 0
+  end:
+    type: integer
+    description: |
+      The end time for this match rule in epoch seconds. When `end` is `0`, there is no end time for this match rule.
+    default: 0
+    minimum: 0
+  matches:
+    type: array
+    description: |
+      The `matchType` and the `matchValue` or `objectMatchValue` used to conditionally pass through the request. Plus additional criteria to match on, like case sensitivity (`caseSensitive`).
+    nullable: true
+    items:
+      $ref: match-rule-ap-definitions.yaml#/definitions/matchCriteriaType
+  disabled:
+    type: boolean
+    description: |
+      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
+    default: false
+  passThroughPercent:
+    type: number
+    description: |
+      The percentage of requests that pass through to the origin, with `100` indicating the request always passes through to the origin. For Visitor Prioritization, a value of -1 sends everyone to the waiting room.
+    minimum: -1
+    maximum: 100
+  matchURL:
+    type: string
+    description: |
+      The URL the Cloudlet uses to match the incoming request.
+    nullable: true
+    maxLength: 8192

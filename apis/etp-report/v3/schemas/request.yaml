@@ -3,8 +3,7 @@ description: |
   The details about the web request.
 additionalProperties: false
 required:
-- startTimeSec
-- endTimeSec
+- startTime
 - connectionId
 - domain
 - uri
@@ -31,10 +30,16 @@ properties:
           description: |
             The value of the HTTP request header.
           minLength: 1
-  startTimeSec:
-    $ref: startTimeSec.yaml
+  startTime:
+    type: integer
+    description: |
+      The start time for report data, in epoch seconds.
+    minimum: 1
   endTimeSec:
-    $ref: endTimeSec.yaml
+    type: integer
+    description: |
+      The end time for report data, in epoch seconds.
+    minimum: 0
   connectionId:
     type: string
     description: |
@@ -55,11 +60,10 @@ properties:
     description: |
       The HTTP action used to interact with the destination.
     minLength: 1
-  clientIP:
+  clientIp:
     type: string
     description: |
       The IP address of the source NAT branch or machine.
-    format: ipv4
   clientPort:
     type: integer
     description: |
@@ -69,11 +73,15 @@ properties:
     type: string
     description: |
       The IP address of the target machine to send the request.
-    format: ipv4
   destinationPort:
     type: integer
     description: |
       The TCP port used to connect the destination machine.
+    minimum: 0
+  endTime:
+    type: integer
+    description: |
+      The end time for report data, in epoch seconds.
     minimum: 0
   queryStrings:
     type: array
@@ -96,4 +104,8 @@ properties:
           type: string
           description: |
             The value of the query parameter.
-          minLength: 1
+          minLength: 0
+  uuid:
+    type: string
+    description: |
+      A unique ID for the request.

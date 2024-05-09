@@ -2,9 +2,6 @@ type: object
 description: |
   Provides registration details for a domain.
 additionalProperties: false
-required:
-- categoryInfo
-- description
 properties:
   description:
     type: string
@@ -24,10 +21,10 @@ properties:
       - id
       properties:
         id:
-          type: integer
+          type: string
           description: |
             Unique identifier for the category.
-          minimum: 0
+          minLength: 1
         name:
           type: string
           description: |
@@ -46,8 +43,22 @@ properties:
       List of bad URLs.
     minItems: 0
     items:
-      type: string
-      minLength: 1
+      type: object
+      additionalProperties: false
+      properties:
+        categoryId:
+          type: integer
+          description: |
+            A unique identifier for the category.
+        categoryName:
+          type: string
+          description: |
+            The name of the IOC category.
+        badUrls:
+          type: string
+          description: |
+            Bad URLs logged as IOCs.
+          nullable: true
   categories:
     type: array
     description: |
@@ -71,26 +82,23 @@ properties:
       - confidenceName
       properties:
         categoryId:
-          type: string
+          type: integer
           description: |
             A unique identifier for the category.
-          minLength: 1
+          minimum: 1
         categoryName:
           type: string
           description: |
             The name of the category.
           minLength: 1
         confidenceId:
-          type: string
+          type: integer
           description: |
-            The confidence level of the list entry. Either `SUSPECTED` or `KNOWN`.
-          enum:
-          - SUSPECTED
-          - KNOWN
+            The confidence level of the list entry. Either `1` for suspected or `2` for known.
         confidenceName:
           type: string
           description: |
-            The name of the confidence level.
+            The name of the confidence level. Either `Suspected` or `Known`.
           minLength: 1
   createDate:
     type: string
