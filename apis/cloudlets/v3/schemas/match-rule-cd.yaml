@@ -1,6 +1,9 @@
 type: object
-description: |
+description: |-
   Contains match rule information for Phased Release.
+  
+x-akamai:
+  file-path: schemas/match-rule-cd.yaml
 title: Phased Release
 additionalProperties: false
 required:
@@ -9,7 +12,7 @@ properties:
   id:
     type: integer
     description: |
-      Akamai internal use only.
+      __Internal__ __Internal__ Akamai internal use only.
     x-akamai:
       status: INTERNAL
     nullable: true
@@ -30,18 +33,30 @@ properties:
     description: |
       If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
     default: false
-  start:
-    type: integer
-    description: |
-      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
-    default: 0
-    minimum: 0
   end:
     type: integer
     description: |
       The end time for this match rule in epoch seconds. When `end` is `0`, there is no end time for this match rule.
     default: 0
     minimum: 0
+  forwardSettings:
+    type: object
+    description: |
+      Defines data used to construct a new request URL. If all set conditions are true, the edge server returns an HTTP response from the rewritten URL. You can specify any of the following with this object: `originId`, and `percent`.
+    additionalProperties: false
+    properties:
+      originId:
+        type: string
+        description: |
+          The conditional origin's unique identifier.
+        nullable: true
+        maxLength: 8192
+      percent:
+        type: number
+        description: |
+          The percentage of visitors directed to a different origin.
+        minimum: 0
+        maximum: 100
   matchURL:
     type: string
     description: |
@@ -59,21 +74,9 @@ properties:
     type: boolean
     description: |
       The match rule always applies when `true`. When `false`, the rule applies within the `start` and `end` time range.
-  forwardSettings:
-    type: object
+  start:
+    type: integer
     description: |
-      Defines data used to construct a new request URL. If all set conditions are true, the edge server returns an HTTP response from the rewritten URL. You can specify any of the following with this object: `originId`, and `percent`.
-    additionalProperties: false
-    properties:
-      percent:
-        type: number
-        description: |
-          The percentage of visitors directed to a different origin.
-        minimum: 0
-        maximum: 100
-      originId:
-        type: string
-        description: |
-          The conditional origin's unique identifier.
-        nullable: true
-        maxLength: 8192
+      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
+    default: 0
+    minimum: 0
