@@ -18088,7 +18088,7 @@
                 },
                 "schema": {
                   "additionalProperties": false,
-                  "description": "Returns information about a specific rule within a policy version.\n",
+                  "description": "Returns information about a specific rule within a policy version.",
                   "properties": {
                     "akaRuleId": {
                       "description": "The rule's unique identifier.\n",
@@ -22396,90 +22396,63 @@
                   ]
                 },
                 "schema": {
-                  "type": "object",
-                  "description": "Shows the updated attributes of an existing rule within a policy version.",
-                  "x-akamai": {
-                    "file-path": "schemas/put-policy-version-rule-response.yaml"
-                  },
                   "additionalProperties": false,
-                  "required": [
-                    "akaRuleId",
-                    "version",
-                    "policyId"
-                  ],
+                  "description": "Shows the updated attributes of an existing rule within a policy version.",
                   "properties": {
-                    "id": {
-                      "type": "integer",
-                      "description": "__Internal__ __Internal__ Akamai internal use only.\n",
-                      "x-akamai": {
-                        "status": "INTERNAL"
-                      },
-                      "nullable": true
-                    },
-                    "name": {
-                      "type": "string",
-                      "description": "The name of the rule.\n"
-                    },
-                    "type": {
-                      "type": "string",
-                      "description": "The type of Cloudlet the rule is for; Application Load Balancer is `albMatchRule`, API Prioritization is `apMatchRule`, Audience Segmentation is `asMatchRule`, Phased Release is `cdMatchRule`, Edge Redirector is `erMatchRule`, Forward Rewrite is`frMatchRule`, Request Control is `igMatchRule` and Visitor Prioritization is  `vpMatchRule`.\n",
-                      "enum": [
-                        "albMatchRule",
-                        "apMatchRule",
-                        "asMatchRule",
-                        "cdMatchRule",
-                        "erMatchRule",
-                        "frMatchRule",
-                        "igMatchRule",
-                        "vpMatchRule"
-                      ]
-                    },
                     "akaRuleId": {
-                      "type": "string",
-                      "description": "The rule's unique identifier.\n"
+                      "description": "The rule's unique identifier.\n",
+                      "type": "string"
                     },
                     "disabled": {
-                      "type": "boolean",
+                      "default": false,
                       "description": "If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.\n",
-                      "default": false
+                      "type": "boolean"
                     },
                     "end": {
-                      "type": "integer",
                       "description": "The end time for this match rule in epoch seconds.\n",
-                      "minimum": 0
+                      "minimum": 0,
+                      "type": "integer"
                     },
                     "forwardSettings": {
-                      "type": "object",
-                      "description": "Defines data used to construct a new request URL. If all set conditions are true, the edge server returns an HTTP response from the rewritten URL.\n",
                       "additionalProperties": false,
+                      "description": "Defines data used to construct a new request URL. If all set conditions are true, the edge server returns an HTTP response from the rewritten URL.\n",
                       "properties": {
                         "originId": {
-                          "type": "string",
                           "description": "The conditional origin's unique identifier.\n",
+                          "maxLength": 8192,
                           "nullable": true,
-                          "maxLength": 8192
+                          "type": "string"
                         },
                         "pathAndQS": {
-                          "type": "string",
                           "description": "If a value is provided and match conditions are met, this is the URL path to rewrite the incoming request's URL. The URL may include additional query parameters.\n",
+                          "maxLength": 8192,
                           "minLength": 1,
-                          "maxLength": 8192
+                          "type": "string"
                         },
                         "percent": {
-                          "type": "number",
                           "description": "The percent of traffic that is sent to the data center.\n",
+                          "maximum": 100,
                           "minimum": 0,
-                          "maximum": 100
+                          "type": "number"
                         },
                         "useIncomingQueryString": {
-                          "type": "boolean",
-                          "description": "If set to `true`, the Cloudlet includes the requests' query string in the rewritten or forwarded URL.\n"
+                          "description": "If set to `true`, the Cloudlet includes the requests' query string in the rewritten or forwarded URL.\n",
+                          "type": "boolean"
                         }
+                      },
+                      "type": "object"
+                    },
+                    "id": {
+                      "description": "__Internal__ __Internal__ Akamai internal use only.\n",
+                      "nullable": true,
+                      "type": "integer",
+                      "x-akamai": {
+                        "status": "INTERNAL"
                       }
                     },
                     "location": {
-                      "type": "string",
-                      "description": "The navigable endpoint used for the object referred to in the operation.\n"
+                      "description": "The navigable endpoint used for the object referred to in the operation.\n",
+                      "type": "string"
                     },
                     "matches": {
                       "description": "The `matchType` and the `matchValue` or `objectMatchValue` for the rule. Plus additional criteria to match on, like case sensitivity (`caseSensitive`).\n",
@@ -24553,11 +24526,38 @@
                         }
                       }
                     },
+                    "name": {
+                      "description": "The name of the rule.\n",
+                      "type": "string"
+                    },
                     "start": {
-                      "type": "integer",
                       "description": "The start time for this match rule in epoch seconds.\n",
-                      "minimum": 0
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "type": {
+                      "description": "The type of Cloudlet the rule is for; Application Load Balancer is `albMatchRule`, API Prioritization is `apMatchRule`, Audience Segmentation is `asMatchRule`, Phased Release is `cdMatchRule`, Edge Redirector is `erMatchRule`, Forward Rewrite is`frMatchRule`, Request Control is `igMatchRule` and Visitor Prioritization is  `vpMatchRule`.\n",
+                      "enum": [
+                        "albMatchRule",
+                        "apMatchRule",
+                        "asMatchRule",
+                        "cdMatchRule",
+                        "erMatchRule",
+                        "frMatchRule",
+                        "igMatchRule",
+                        "vpMatchRule"
+                      ],
+                      "type": "string"
                     }
+                  },
+                  "required": [
+                    "akaRuleId",
+                    "version",
+                    "policyId"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/put-policy-version-rule-response.yaml"
                   }
                 }
               }
