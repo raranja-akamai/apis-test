@@ -1,34 +1,29 @@
 {
-  "openapi": "3.0.0",
   "info": {
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
     "title": "Schemas",
     "version": "v2"
   },
-  "x-akamai": {
-    "auth-type": "EDGE_GRID"
-  },
-  "servers": [
-    {
-      "url": "https://{hostname}/cloudlets/api/v2"
-    }
-  ],
+  "openapi": "3.0.0",
   "paths": {
     "/schemas": {
       "get": {
-        "operationId": "get-schemas",
-        "summary": "List schemas per Cloudlet",
-        "tags": [
-          "Schemas"
-        ],
         "description": "Get links to all the JSON schemas by Cloudlet type (`cloudletCode`) to validate different requests used with this API. See [List Cloudlets](ref:get-cloudlets) for information on how to obtain the `cloudletCode`.\n",
+        "operationId": "get-schemas",
         "parameters": [
           {
             "description": "The two- or three- letter code of the Cloudlet you want to view all schemas for. This value corresponds to the `cloudletCode` member available from [List Cloudlets](ref:get-cloudlets).\n",
             "in": "query",
             "name": "cloudletType",
             "schema": {
-              "type": "string",
-              "example": "ER"
+              "example": "ER",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/cloudletType-query.yaml"
             }
           }
         ],
@@ -83,58 +78,64 @@
                   ]
                 },
                 "schema": {
-                  "type": "object",
                   "additionalProperties": false,
                   "description": "JSON schemas for Cloudlet policies.\n",
                   "properties": {
                     "schemas": {
+                      "description": "Returns the JSON schemas available for this API. Available schemas include; `create-policy.json`, `update-policy.json`, `clone-policy.json`, `create-nimbus_policy_version-{cloudletType}–1.0.json`, `update-nimbus_policy_version-{cloudletType}–1.0.json`, and `match_rule-{cloudletType}–1.0.json`.\n",
                       "items": {
-                        "type": "object",
-                        "description": "Return schema.\n",
                         "additionalProperties": true,
+                        "description": "Return schema.\n",
                         "properties": {
-                          "title": {
-                            "type": "string",
-                            "description": "The title of the JSON schema; `CREATE POLICY`, `UPDATE POLICY VERSION`, `CLONE POLICY`, `CREATE/CLONE POLICY VERSION`, `UPDATE POLICY VERSION`, or `{cloudletType} MATCH RULE`.\n"
-                          },
-                          "version": {
-                            "type": "string",
-                            "description": "The specific version of the JSON schema.\n"
-                          },
-                          "location": {
-                            "type": "string",
-                            "description": "The network path for the JSON schema.\n"
+                          "additionalDescription": {
+                            "description": "Cloudlet-specific information for the JSON schema.\n",
+                            "type": "string"
                           },
                           "description": {
-                            "type": "string",
-                            "description": "A description of when the JSON schema is applied.\n"
+                            "description": "A description of when the JSON schema is applied.\n",
+                            "type": "string"
                           },
-                          "additionalDescription": {
-                            "type": "string",
-                            "description": "Cloudlet-specific information for the JSON schema.\n"
+                          "location": {
+                            "description": "The network path for the JSON schema.\n",
+                            "type": "string"
+                          },
+                          "title": {
+                            "description": "The title of the JSON schema; `CREATE POLICY`, `UPDATE POLICY VERSION`, `CLONE POLICY`, `CREATE/CLONE POLICY VERSION`, `UPDATE POLICY VERSION`, or `{cloudletType} MATCH RULE`.\n",
+                            "type": "string"
+                          },
+                          "version": {
+                            "description": "The specific version of the JSON schema.\n",
+                            "type": "string"
                           }
+                        },
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/schema.yaml"
                         }
                       },
-                      "type": "array",
-                      "description": "Returns the JSON schemas available for this API. Available schemas include; `create-policy.json`, `update-policy.json`, `clone-policy.json`, `create-nimbus_policy_version-{cloudletType}–1.0.json`, `update-nimbus_policy_version-{cloudletType}–1.0.json`, and `match_rule-{cloudletType}–1.0.json`.\n"
+                      "type": "array"
                     }
+                  },
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/get-schemas-response.yaml"
                   }
                 }
               }
             },
             "description": "Returns the list of schemas.\n"
           }
-        }
+        },
+        "summary": "List schemas per Cloudlet",
+        "tags": [
+          "Schemas"
+        ]
       }
     },
     "/schemas/{schemaName}": {
       "get": {
-        "operationId": "get-schemas-schemaname",
-        "summary": "Get a schema",
-        "tags": [
-          "Schemas"
-        ],
         "description": "Get a JSON schema for interacting with policies to validate different requests used with this API.\n",
+        "operationId": "get-schemas-schemaname",
         "responses": {
           "200": {
             "content": {
@@ -190,37 +191,44 @@
                   }
                 },
                 "schema": {
-                  "type": "object",
-                  "description": "JSON schema details for a Cloudlet policy.\n",
                   "additionalProperties": true,
+                  "description": "JSON schema details for a Cloudlet policy.\n",
                   "properties": {
                     "additionalDescription": {
-                      "type": "string",
-                      "description": "Cloudlet-specific information for the JSON schema.\n"
+                      "description": "Cloudlet-specific information for the JSON schema.\n",
+                      "type": "string"
                     },
                     "description": {
-                      "type": "string",
-                      "description": "A description of when the JSON schema is applied.\n"
+                      "description": "A description of when the JSON schema is applied.\n",
+                      "type": "string"
                     },
                     "location": {
-                      "type": "string",
-                      "description": "The network path for the JSON schema.\n"
+                      "description": "The network path for the JSON schema.\n",
+                      "type": "string"
                     },
                     "title": {
-                      "type": "string",
-                      "description": "The title of the JSON schema.\n"
+                      "description": "The title of the JSON schema.\n",
+                      "type": "string"
                     },
                     "version": {
-                      "type": "string",
-                      "description": "The specific version of the JSON schema.\n"
+                      "description": "The specific version of the JSON schema.\n",
+                      "type": "string"
                     }
+                  },
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/get-schemas-schemaname-response.yaml"
                   }
                 }
               }
             },
             "description": "Return schema.\n"
           }
-        }
+        },
+        "summary": "Get a schema",
+        "tags": [
+          "Schemas"
+        ]
       },
       "parameters": [
         {
@@ -229,11 +237,23 @@
           "name": "schemaName",
           "required": true,
           "schema": {
-            "type": "string",
-            "example": "create-nimbus_policy_version-AS-1.0.json"
+            "example": "create-nimbus_policy_version-AS-1.0.json",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/schemaName-path.yaml"
           }
         }
       ]
     }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/cloudlets/api/v2"
+    }
+  ],
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "schemas.yaml"
   }
 }
