@@ -10,7 +10,7 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "title": "Akamai: Invoicing API",
-    "version": "v4"
+    "version": "v1"
   },
   "openapi": "3.0.0",
   "paths": {
@@ -31,7 +31,6 @@
             "required": true,
             "schema": {
               "example": "2020-07",
-              "format": "date",
               "type": "string"
             },
             "x-akamai": {
@@ -60,20 +59,14 @@
                     "contractId": "C-0N7RAC7",
                     "files": [
                       {
-                        "contentType": "application/pdf",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "fileFormat": "PDF",
                         "fileName": "InvoiceName_1-XYZ_1-ABCD_1234567890_FINAL_1.pdf",
-                        "fileVersion": 1,
-                        "sourceType": "REGULAR"
+                        "fileVersion": 1
                       },
                       {
-                        "contentType": "text/csv",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "fileFormat": "CSV",
                         "fileName": "1234567890_1.csv",
-                        "fileVersion": 1,
-                        "sourceType": "REGULAR"
+                        "fileVersion": 1
                       }
                     ],
                     "invoiceCurrency": "USD",
@@ -88,20 +81,14 @@
                     "contractId": "K-0N7RAK71",
                     "files": [
                       {
-                        "contentType": "application/pdf",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
-                        "fileName": "CreditMemoName_1-XYZ_1-ABCD_8234567890_FINAL_COMPUTE_1.pdf",
-                        "fileVersion": 2,
-                        "sourceType": "COMPUTE"
+                        "fileFormat": "PDF",
+                        "fileName": "CreditMemoName_1-XYZ_1-ABCD_8234567890_FINAL_1.pdf",
+                        "fileVersion": 2
                       },
                       {
-                        "contentType": "text/csv",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
-                        "fileName": "8234567890_COMPUTE_1.csv",
-                        "fileVersion": 2,
-                        "sourceType": "COMPUTE"
+                        "fileFormat": "CSV",
+                        "fileName": "8234567890_1.csv",
+                        "fileVersion": 2
                       }
                     ],
                     "invoiceCurrency": "USD",
@@ -133,23 +120,13 @@
                         "items": {
                           "additionalProperties": false,
                           "properties": {
-                            "contentType": {
-                              "description": "The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.",
+                            "fileFormat": {
+                              "description": "The format of the file, either `PDF`, `CSV`, or `JSON`.",
                               "enum": [
-                                "application/json",
-                                "application/pdf",
-                                "text/csv"
+                                "PDF",
+                                "CSV",
+                                "JSON"
                               ],
-                              "type": "string"
-                            },
-                            "fileCreationDate": {
-                              "description": "The date when the file was created.",
-                              "format": "date",
-                              "type": "string"
-                            },
-                            "fileLink": {
-                              "description": "The link to download the file.",
-                              "format": "uri-reference",
                               "type": "string"
                             },
                             "fileName": {
@@ -161,23 +138,12 @@
                               "description": "The version of the file.",
                               "minimum": 1,
                               "type": "integer"
-                            },
-                            "sourceType": {
-                              "description": "The source type of the file, either `REGULAR` or `COMPUTE`.",
-                              "enum": [
-                                "REGULAR",
-                                "COMPUTE"
-                              ],
-                              "type": "string"
                             }
                           },
                           "required": [
                             "fileName",
-                            "fileVersion",
-                            "fileCreationDate",
-                            "sourceType",
-                            "fileLink",
-                            "contentType"
+                            "fileFormat",
+                            "fileVersion"
                           ],
                           "type": "object"
                         },
@@ -326,7 +292,7 @@
                 "example": {
                   "clientIp": "192.0.2.0",
                   "detail": "The signature does not match",
-                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v4/notifications",
+                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v3/notifications",
                   "method": "GET",
                   "requestId": "933ed8a4",
                   "requestTime": "2023-02-26T17:41:25Z",
@@ -473,7 +439,7 @@
                 "example": {
                   "errors": [
                     {
-                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                       "type": "/billing/error-types/3"
                     }
                   ],
@@ -708,7 +674,7 @@
     },
     "/contracts/{contractId}/invoices/{invoiceId}/download": {
       "get": {
-        "description": "Returns the content of the selected contract's invoice, credit memo file, or usage data for Cloud Computing services. The downloadable file is available in the response body. The format of the file depends on the value of the `Accept` header. Available formats are `CSV`, `PDF`, and `JSON`. ",
+        "description": "Returns the content of the selected contract's invoice or credit memo file. The downloadable file is available in the response body. The `Content-Type` depends on the format of the file you're downloading.",
         "externalDocs": {
           "description": "See documentation for this operation in Akamai's Invoicing API",
           "url": "https://techdocs.akamai.com/invoice/reference/get-contract-invoice-download"
@@ -716,21 +682,22 @@
         "operationId": "get-contract-invoice-download",
         "parameters": [
           {
-            "description": "__Enum__ Source type of the invoice, either `REGULAR` for Control Center services, or `COMPUTE` for the Cloud Computing usage data. For the `COMPUTE` source type, data is available in the CSV format only, for invoices from February 2024 onwards. ",
-            "example": "{{sourceType}}",
+            "description": "__Enum__ File format of the invoice. These are the available values: `PDF`, `CSV`, and `JSON`.",
+            "example": "{{fileFormat}}",
             "in": "query",
-            "name": "sourceType",
+            "name": "fileFormat",
+            "required": true,
             "schema": {
-              "default": "COMPUTE",
               "enum": [
-                "REGULAR",
-                "COMPUTE"
+                "PDF",
+                "CSV",
+                "JSON"
               ],
-              "example": "REGULAR",
+              "example": "PDF",
               "type": "string"
             },
             "x-akamai": {
-              "file-path": "parameters/sourceType-query.yaml"
+              "file-path": "parameters/fileFormat-query.yaml"
             }
           },
           {
@@ -747,68 +714,7 @@
         ],
         "responses": {
           "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "additionalProperties": true,
-                  "example": {
-                    "INVOICE": {
-                      "ACCOUNT_ID": "A-CCT7890",
-                      "ACCOUNT_NAME": "Main Street Corporation",
-                      "END_CUSTOMER": [
-                        {
-                          "END_CUSTOMER_ACCOUNT_ID": "A-CCT7890",
-                          "END_CUSTOMER_ACCOUNT_NAME": "Main Street Corporation",
-                          "END_CUSTOMER_EXTERNAL_REFERENCE": "1234567890",
-                          "END_CUSTOMER_ORDER_ID": "1-23ABC4",
-                          "INVOICE_LINE": [
-                            {
-                              "CREDITED_INVOICE_LINE_NUMBER": null,
-                              "CREDITED_INVOICE_NUMBER": null,
-                              "EFFECTIVE_END_DATE": "2022-01-31",
-                              "ITEM_DESC": "1 GB of Access Control Usage ",
-                              "ITEM_END_DATE": "2021-01-31",
-                              "ITEM_START_DATE": "2021-01-01",
-                              "ITEM_TOTAL": 0.03,
-                              "ITEM_TOTAL_SERVICES": 0.02,
-                              "ITEM_TOTAL_TAXES": 0,
-                              "ITEM_TYPE": "U",
-                              "ITEM_UNITS": 1,
-                              "ITEM_UNIT_PRICE": 0.01,
-                              "PO_NUMBER": "1234567890",
-                              "PRODUCT": "Access Control",
-                              "PRODUCT_ID": "9-8ZYX76",
-                              "UNIT_MEASURE": "GB"
-                            }
-                          ]
-                        }
-                      ],
-                      "FINALIZED_DATE": "2021-02-01",
-                      "INVOICE_CURRENCY": "USD",
-                      "INVOICE_DATE": "2021-02-01",
-                      "INVOICE_ID": 1234567890,
-                      "INVOICE_ORDER_ID": "1-23ABC4",
-                      "INVOICE_TYPE": "Standard Invoice",
-                      "INVOICE_VERSION": 1,
-                      "PO_NUMBER": "1234567890"
-                    }
-                  },
-                  "type": "object"
-                }
-              },
-              "application/pdf": {
-                "schema": {
-                  "format": "binary",
-                  "type": "string"
-                }
-              },
-              "text/csv": {
-                "schema": {
-                  "example": "ACCOUNT_ID,ACCOUNT_NAME,INVOICE_START_DATE,INVOICE_ID,ITEM_START_DATE,ITEM_END_DATE,UNIT_MEASURE,PRODUCT_LINE,PRODUCT,PRODUCT_ID,ITEMTYPE,ITEM_DESC,ITEM_SPEC,CUST_CURRENCY,ITEM_CURRENCY,ITEM_UNITS,CUST_UNIT_PRICE,ITEM_UNIT_PRICE,CUST_TOTAL_SERVICES,ITEM_TOTAL_SERVICES,CUST_TAXES,CUST_TOTAL,ITEM_TOTAL,ORDER_ID,EFFECTIVE_END_DATE,PARTNER_PROVIDED_IDENTIFIER A-CCT7890,Main Street Corporation,02/01/2021,1234567890,01/01/2021,01/31/2021,GB,Cache,Cache control,9-8ZYX76,U,Advanced Cache Control,Committed,,USD,1,,0.01,,0.02,0,,0.03,1-23ABC4,01/31/2022,1234567890",
-                  "type": "string"
-                }
-              }
-            },
+            "content": {},
             "description": "The response provides requested file."
           },
           "204": {
@@ -895,7 +801,7 @@
                 "example": {
                   "clientIp": "192.0.2.0",
                   "detail": "The signature does not match",
-                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v4/notifications",
+                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v3/notifications",
                   "method": "GET",
                   "requestId": "933ed8a4",
                   "requestTime": "2023-02-26T17:41:25Z",
@@ -1042,7 +948,7 @@
                 "example": {
                   "errors": [
                     {
-                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                       "type": "/billing/error-types/3"
                     }
                   ],
@@ -1306,7 +1212,6 @@
             "required": true,
             "schema": {
               "example": "2020-07",
-              "format": "date",
               "type": "string"
             },
             "x-akamai": {
@@ -1335,20 +1240,14 @@
                     "contractId": "C-0N7RAC7",
                     "files": [
                       {
-                        "contentType": "application/pdf",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "fileFormat": "PDF",
                         "fileName": "InvoiceName_1-XYZ_1-ABCD_1234567890_FINAL_1.pdf",
-                        "fileVersion": 1,
-                        "sourceType": "REGULAR"
+                        "fileVersion": 1
                       },
                       {
-                        "contentType": "text/csv",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "fileFormat": "CSV",
                         "fileName": "1234567890_1.csv",
-                        "fileVersion": 1,
-                        "sourceType": "REGULAR"
+                        "fileVersion": 1
                       }
                     ],
                     "invoiceCurrency": "USD",
@@ -1363,20 +1262,14 @@
                     "contractId": "K-0N7RAK71",
                     "files": [
                       {
-                        "contentType": "application/pdf",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
-                        "fileName": "CreditMemoName_1-XYZ_1-ABCD_8234567890_FINAL_COMPUTE_1.pdf",
-                        "fileVersion": 2,
-                        "sourceType": "COMPUTE"
+                        "fileFormat": "PDF",
+                        "fileName": "CreditMemoName_1-XYZ_1-ABCD_8234567890_FINAL_1.pdf",
+                        "fileVersion": 2
                       },
                       {
-                        "contentType": "text/csv",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
-                        "fileName": "8234567890_COMPUTE_1.csv",
-                        "fileVersion": 2,
-                        "sourceType": "COMPUTE"
+                        "fileFormat": "CSV",
+                        "fileName": "8234567890_1.csv",
+                        "fileVersion": 2
                       }
                     ],
                     "invoiceCurrency": "USD",
@@ -1408,23 +1301,13 @@
                         "items": {
                           "additionalProperties": false,
                           "properties": {
-                            "contentType": {
-                              "description": "The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.",
+                            "fileFormat": {
+                              "description": "The format of the file, either `PDF`, `CSV`, or `JSON`.",
                               "enum": [
-                                "application/json",
-                                "application/pdf",
-                                "text/csv"
+                                "PDF",
+                                "CSV",
+                                "JSON"
                               ],
-                              "type": "string"
-                            },
-                            "fileCreationDate": {
-                              "description": "The date when the file was created.",
-                              "format": "date",
-                              "type": "string"
-                            },
-                            "fileLink": {
-                              "description": "The link to download the file.",
-                              "format": "uri-reference",
                               "type": "string"
                             },
                             "fileName": {
@@ -1436,23 +1319,12 @@
                               "description": "The version of the file.",
                               "minimum": 1,
                               "type": "integer"
-                            },
-                            "sourceType": {
-                              "description": "The source type of the file, either `REGULAR` or `COMPUTE`.",
-                              "enum": [
-                                "REGULAR",
-                                "COMPUTE"
-                              ],
-                              "type": "string"
                             }
                           },
                           "required": [
                             "fileName",
-                            "fileVersion",
-                            "fileCreationDate",
-                            "sourceType",
-                            "fileLink",
-                            "contentType"
+                            "fileFormat",
+                            "fileVersion"
                           ],
                           "type": "object"
                         },
@@ -1601,7 +1473,7 @@
                 "example": {
                   "clientIp": "192.0.2.0",
                   "detail": "The signature does not match",
-                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v4/notifications",
+                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v3/notifications",
                   "method": "GET",
                   "requestId": "933ed8a4",
                   "requestTime": "2023-02-26T17:41:25Z",
@@ -1748,7 +1620,7 @@
                 "example": {
                   "errors": [
                     {
-                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                       "type": "/billing/error-types/3"
                     }
                   ],
@@ -1991,13 +1863,13 @@
             "application/json": {
               "example": {
                 "contracts": [
-                  "C-0N7RAC7"
+                  "1-ABCDEF"
                 ],
                 "emails": [
                   "user@example.com"
                 ],
                 "notificationStatus": "ACTIVE",
-                "notificationTitle": "Notification for C-0N7RAC7"
+                "notificationTitle": "Notification for 1-ABCDEF"
               },
               "schema": {
                 "additionalProperties": false,
@@ -2058,7 +1930,7 @@
               "application/json": {
                 "example": {
                   "contracts": [
-                    "C-0N7RAC7"
+                    "1-ABCDEF"
                   ],
                   "creationDate": "2020-12-09T08:30:14Z",
                   "emails": [
@@ -2067,7 +1939,7 @@
                   "modificationDate": "2020-12-09T08:30:14Z",
                   "notificationId": 25056,
                   "notificationStatus": "ACTIVE",
-                  "notificationTitle": "Notification for C-0N7RAC7"
+                  "notificationTitle": "Notification for 1-ABCDEF"
                 },
                 "schema": {
                   "additionalProperties": false,
@@ -2139,9 +2011,9 @@
             "description": "The operation was successful.",
             "headers": {
               "Location": {
-                "description": "Location of the created resource.",
+                "description": "Location of created resource.",
                 "schema": {
-                  "example": "/invoicing-api/v4/notifications/123",
+                  "example": "/invoicing-api/v3/notifications/123",
                   "type": "string"
                 },
                 "x-akamai": {
@@ -2230,7 +2102,7 @@
                 "example": {
                   "clientIp": "192.0.2.0",
                   "detail": "The signature does not match",
-                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v4/notifications",
+                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v3/notifications",
                   "method": "GET",
                   "requestId": "933ed8a4",
                   "requestTime": "2023-02-26T17:41:25Z",
@@ -2546,7 +2418,7 @@
                 "example": [
                   {
                     "contracts": [
-                      "C-0N7RAC7"
+                      "1-ABCDEF"
                     ],
                     "creationDate": "2020-12-09T08:30:14Z",
                     "emails": [
@@ -2555,7 +2427,7 @@
                     "modificationDate": "2020-12-09T08:30:14Z",
                     "notificationId": 25056,
                     "notificationStatus": "ACTIVE",
-                    "notificationTitle": "Notification for C-0N7RAC7"
+                    "notificationTitle": "Notification for 1-ABCDEF"
                   },
                   {
                     "contracts": [
@@ -2732,7 +2604,7 @@
                 "example": {
                   "clientIp": "192.0.2.0",
                   "detail": "The signature does not match",
-                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v4/notifications",
+                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v3/notifications",
                   "method": "GET",
                   "requestId": "933ed8a4",
                   "requestTime": "2023-02-26T17:41:25Z",
@@ -3049,7 +2921,7 @@
               "application/json": {
                 "example": {
                   "contracts": [
-                    "C-0N7RAC7"
+                    "1-ABCDEF"
                   ],
                   "creationDate": "2020-12-09T08:30:14Z",
                   "emails": [
@@ -3058,7 +2930,7 @@
                   "modificationDate": "2020-12-09T08:30:14Z",
                   "notificationId": 25056,
                   "notificationStatus": "ACTIVE",
-                  "notificationTitle": "Notification for C-0N7RAC7"
+                  "notificationTitle": "Notification for 1-ABCDEF"
                 },
                 "schema": {
                   "additionalProperties": false,
@@ -3209,7 +3081,7 @@
                 "example": {
                   "clientIp": "192.0.2.0",
                   "detail": "The signature does not match",
-                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v4/notifications",
+                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v3/notifications",
                   "method": "GET",
                   "requestId": "933ed8a4",
                   "requestTime": "2023-02-26T17:41:25Z",
@@ -3356,7 +3228,7 @@
                 "example": {
                   "errors": [
                     {
-                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                       "type": "/billing/error-types/3"
                     }
                   ],
@@ -3597,13 +3469,13 @@
             "application/json": {
               "example": {
                 "contracts": [
-                  "C-0N7RAC7"
+                  "1-ABCDEF"
                 ],
                 "emails": [
                   "user@example.com"
                 ],
                 "notificationStatus": "ACTIVE",
-                "notificationTitle": "Notification for C-0N7RAC7"
+                "notificationTitle": "Notification for 1-ABCDEF"
               },
               "schema": {
                 "additionalProperties": false,
@@ -3664,7 +3536,7 @@
               "application/json": {
                 "example": {
                   "contracts": [
-                    "C-0N7RAC7"
+                    "1-ABCDEF"
                   ],
                   "creationDate": "2020-12-09T08:30:14Z",
                   "emails": [
@@ -3673,7 +3545,7 @@
                   "modificationDate": "2020-12-09T08:30:14Z",
                   "notificationId": 25056,
                   "notificationStatus": "ACTIVE",
-                  "notificationTitle": "Notification for C-0N7RAC7"
+                  "notificationTitle": "Notification for 1-ABCDEF"
                 },
                 "schema": {
                   "additionalProperties": false,
@@ -3824,7 +3696,7 @@
                 "example": {
                   "clientIp": "192.0.2.0",
                   "detail": "The signature does not match",
-                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v4/notifications",
+                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v3/notifications",
                   "method": "GET",
                   "requestId": "933ed8a4",
                   "requestTime": "2023-02-26T17:41:25Z",
@@ -3971,7 +3843,7 @@
                 "example": {
                   "errors": [
                     {
-                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                       "type": "/billing/error-types/3"
                     }
                   ],
@@ -4218,7 +4090,7 @@
                 "example": {
                   "clientIp": "192.0.2.0",
                   "detail": "The signature does not match",
-                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v4/notifications",
+                  "instance": "https://akab-xxxxx-xxxxx.luna.akamaiapis.net/invoicing-api/v3/notifications",
                   "method": "GET",
                   "requestId": "933ed8a4",
                   "requestTime": "2023-02-26T17:41:25Z",
@@ -4365,7 +4237,7 @@
                 "example": {
                   "errors": [
                     {
-                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                       "type": "/billing/error-types/3"
                     }
                   ],
@@ -4601,7 +4473,7 @@
   },
   "servers": [
     {
-      "url": "https://{hostname}/invoicing-api/v4"
+      "url": "https://{hostname}/invoicing-api/v3"
     }
   ],
   "tags": [
