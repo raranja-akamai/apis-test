@@ -1,9 +1,6 @@
 type: object
-description: |-
+description: |
   Provides detailed information about the latest configuration version of a data stream. It provides descriptions of the data set fields selected in the version, identifiers of properties they collect logs for, configuration of the destination where they deliver logs, and structure of these log lines. It also informs whether this version is active.
-  
-x-akamai:
-  file-path: schemas/StreamHistory.yaml
 additionalProperties: false
 required:
 - streamId
@@ -32,20 +29,53 @@ properties:
       description: |
         Identifies the properties that you monitor in the stream.
       $ref: Property.yaml
-  activationStatus:
+  streamId:
+    type: integer
+    description: |
+      Identifies the stream.
+  streamVersionId:
+    type: integer
+    description: |
+      Identifies the configuration version of the stream.
+  streamName:
     type: string
     description: |
-      The activation status of the data stream configuration version. These are possible values: `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`. See the [Activate a stream](ref:put-stream-activate) and [Deactivate a stream](ref:put-stream-deactivate). operations.
-    enum:
-    - INACTIVE
-    - ACTIVATING
-    - ACTIVATED
-    - DEACTIVATING
-    - DEACTIVATED
-  collectMidgress:
-    type: boolean
+      The name of the stream.
+  datasets:
+    type: array
+    items:
+      description: |
+        A list of data set fields selected from the associated that template the stream monitors in logs.
+      $ref: DetailedDataSets.yaml
+  connectors:
+    type: array
     description: |
-      Indicates if you have opted to capture midgress traffic within the Akamai platform, such as between two edge serves.
+      Provides detailed information about the connector's configuration. At this time, you can configure one connector per stream as the destination to send logs.
+    items:
+      oneOf:
+      - $ref: AzureSavedConnector.yaml
+      - $ref: S3SavedConnector.yaml
+      - $ref: DatadogSavedConnector.yaml
+      - $ref: SplunkSavedConnector.yaml
+      - $ref: GCSSavedConnector.yaml
+      - $ref: HTTPSSavedConnector.yaml
+      - $ref: SumoLogicSavedConnector.yaml
+      - $ref: OCSSavedConnector.yaml
+      - $ref: LogglySavedConnector.yaml
+  productId:
+    type: string
+    description: |
+      The ID of the product that you created stream for.
+  productName:
+    type: string
+    description: |
+      The name of the product that you created this stream for.
+  templateName:
+    type: string
+    description: |
+      The name of the template you assigned to the stream. `RAW_LOGS` is the only template currently available.
+    enum:
+    - RAW_LOGS
   config:
     type: object
     description: |
@@ -65,6 +95,14 @@ properties:
           A delimiter that you use to separate data set fields in log lines. `SPACE` is the only delimiter currently available. This field is required only for the STRUCTURED log file format.
         enum:
         - SPACE
+      uploadFilePrefix:
+        type: string
+        description: |
+          The prefix of the log file that you want to send to a destination. It's a string of at most 200 characters. If unspecified, it defaults to `ak`.
+      uploadFileSuffix:
+        type: string
+        description: |
+          The suffix of the log file that you want to send to a destination. It's a static string of at most 10 characters. If unspecified, it defaults to `ds`.
       frequency:
         type: object
         description: |
@@ -78,33 +116,34 @@ properties:
             enum:
             - 30
             - 60
-      uploadFilePrefix:
-        type: string
-        description: |
-          The prefix of the log file that you want to send to a destination. It's a string of at most 200 characters. If unspecified, it defaults to `ak`.
-      uploadFileSuffix:
-        type: string
-        description: |
-          The suffix of the log file that you want to send to a destination. It's a static string of at most 10 characters. If unspecified, it defaults to `ds`.
-  connectors:
-    type: array
+  groupId:
+    type: integer
     description: |
-      Provides detailed information about the connector's configuration. At this time, you can configure one connector per stream as the destination to send logs.
-    items:
-      oneOf:
-      - $ref: AzureSavedConnector.yaml
-      - $ref: S3SavedConnector.yaml
-      - $ref: DatadogSavedConnector.yaml
-      - $ref: SplunkSavedConnector.yaml
-      - $ref: GCSSavedConnector.yaml
-      - $ref: HTTPSSavedConnector.yaml
-      - $ref: SumoLogicSavedConnector.yaml
-      - $ref: OCSSavedConnector.yaml
-      - $ref: LogglySavedConnector.yaml
+      Identifies the group that has access to the product and that you created the stream configuration for.
+  groupName:
+    type: string
+    description: |
+      The name of the user group that you created the stream for.
   contractId:
     type: string
     description: |
       Identifies the contract that you created the stream for.
+  streamType:
+    type: string
+    description: |
+      Specifies the type of the data stream. `RAW_LOGS` is the only possible stream type currently available.
+    enum:
+    - RAW_LOGS
+  activationStatus:
+    type: string
+    description: |
+      The activation status of the data stream configuration version. These are possible values: `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`. See the [Activate a stream](ref:put-stream-activate) and [Deactivate a stream](ref:put-stream-deactivate). operations.
+    enum:
+    - INACTIVE
+    - ACTIVATING
+    - ACTIVATED
+    - DEACTIVATING
+    - DEACTIVATED
   createdBy:
     type: string
     description: |
@@ -114,24 +153,6 @@ properties:
     description: |
       An ISO 8601 timestamp marking when the stream was created.
     format: date-time
-  datasets:
-    type: array
-    items:
-      description: |
-        A list of data set fields selected from the associated that template the stream monitors in logs.
-      $ref: DetailedDataSets.yaml
-  emailIds:
-    type: string
-    description: |
-      A comma-delimited list of email addresses where the system sends notifications about activations and deactivations of the stream.
-  groupId:
-    type: integer
-    description: |
-      Identifies the group that has access to the product and that you created the stream configuration for.
-  groupName:
-    type: string
-    description: |
-      The name of the user group that you created the stream for.
   modifiedBy:
     type: string
     description: |
@@ -140,35 +161,11 @@ properties:
     type: string
     description: |
       An ISO 8601 timestamp marking when the stream was modified.
-  productId:
+  emailIds:
     type: string
     description: |
-      The ID of the product that you created stream for.
-  productName:
-    type: string
+      A comma-delimited list of email addresses where the system sends notifications about activations and deactivations of the stream.
+  collectMidgress:
+    type: boolean
     description: |
-      The name of the product that you created this stream for.
-  streamId:
-    type: integer
-    description: |
-      Identifies the stream.
-  streamName:
-    type: string
-    description: |
-      The name of the stream.
-  streamType:
-    type: string
-    description: |
-      Specifies the type of the data stream. `RAW_LOGS` is the only possible stream type currently available.
-    enum:
-    - RAW_LOGS
-  streamVersionId:
-    type: integer
-    description: |
-      Identifies the configuration version of the stream.
-  templateName:
-    type: string
-    description: |
-      The name of the template you assigned to the stream. `RAW_LOGS` is the only template currently available.
-    enum:
-    - RAW_LOGS
+      Indicates if you have opted to capture midgress traffic within the Akamai platform, such as between two edge serves.
