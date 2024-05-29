@@ -1,6 +1,9 @@
 type: object
-description: |
+description: |-
   Provides detailed information about the Splunk connector that you can use in your stream. The stream pushes a sample POST request to the endpoint to validate write access. For `STRUCTURED` logs, the data is sent as `0,access_validation`, and for `JSON` it's `{"access_validation":true}`. You can see the data only if the destination validates, and you can access the destination storage.
+  
+x-akamai:
+  file-path: schemas/Splunk.yaml
 title: SPLUNK
 additionalProperties: false
 required:
@@ -9,33 +12,6 @@ required:
 - url
 - eventCollectorToken
 properties:
-  connectorType:
-    type: string
-    description: |
-      The name of the connector type. Set this value to `SPLUNK` for this connector type.
-    enum:
-    - SPLUNK
-  connectorName:
-    type: string
-    description: |
-      The name of the connector.
-  compressLogs:
-    type: boolean
-    description: |
-      Enables gzip compression for a log file sent to a destination. If not set, this member's value is `true `by default.
-    default: true
-  url:
-    type: string
-    description: |
-      The raw event Splunk URL where you want to store your logs. You can use Akamaized property hostnames as endpoint URLs. See [Stream logs to Splunk](doc:stream-splunk#akamaized-hostname-as-endpoint).
-  eventCollectorToken:
-    type: string
-    description: |
-      The Event Collector token associated with your Splunk account. See [View usage of Event Collector token in Splunk](https://docs.splunk.com/Documentation/Splunk/8.0.3/Data/UsetheHTTPEventCollector).
-  tlsHostname:
-    type: string
-    description: |
-      The hostname that verifies the server's certificate and matches the Subject Alternative Names (SANs) in the certificate. If not provided, DataStream fetches the hostname from the endpoint URL.
   caCert:
     type: string
     description: |
@@ -48,6 +24,21 @@ properties:
     type: string
     description: |
       The private key in the non-encrypted PKCS8 format you want to use to authenticate with the back-end server. If you want to use mutual authentication, you need to provide both the client certificate and the client key.
+  compressLogs:
+    type: boolean
+    description: |
+      Enables gzip compression for a log file sent to a destination. If not set, this member's value is `true `by default.
+    default: true
+  connectorName:
+    type: string
+    description: |
+      The name of the connector.
+  connectorType:
+    type: string
+    description: |
+      The name of the connector type. Set this value to `SPLUNK` for this connector type.
+    enum:
+    - SPLUNK
   customHeaderName:
     type: string
     description: |
@@ -56,3 +47,15 @@ properties:
     type: string
     description: |
       The custom header's contents passed with the request that contains information about the client connection. For details, see the additional options discussed in [Additional options](doc:stream-splunk#additional-options).
+  eventCollectorToken:
+    type: string
+    description: |
+      The Event Collector token associated with your Splunk account. See [View usage of Event Collector token in Splunk](https://docs.splunk.com/Documentation/Splunk/8.0.3/Data/UsetheHTTPEventCollector).
+  tlsHostname:
+    type: string
+    description: |
+      The hostname that verifies the server's certificate and matches the Subject Alternative Names (SANs) in the certificate. If not provided, DataStream fetches the hostname from the endpoint URL.
+  url:
+    type: string
+    description: |
+      The raw event Splunk URL where you want to store your logs. You can use Akamaized property hostnames as endpoint URLs. See [Stream logs to Splunk](doc:stream-splunk#akamaized-hostname-as-endpoint).
