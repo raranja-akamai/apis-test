@@ -1,7 +1,6 @@
 type: object
 additionalProperties: false
 required:
-- clientName
 - apiAccess
 - groupAccess
 - authorizedUsers
@@ -24,9 +23,25 @@ properties:
     description: |
       The APIs the API client can access.
     additionalProperties: false
-    required:
-    - allAccessibleApis
-    - apis
+    oneOf:
+    - properties:
+        allAccessibleApis:
+          type: boolean
+          description: |
+            Enables the API client to access a full set of available APIs. Note there's a limit of 99 API services for each client. Clients that make calls to URLs from the 100th service get a 403 error.
+      title: Not all APIs accessible
+      additionalProperties: false
+      required:
+      - apis
+    - properties:
+        allAccessibleApis:
+          type: boolean
+          description: |
+            Enables the API client to access a full set of available APIs. Note there's a limit of 99 API services for each client. Clients that make calls to URLs from the 100th service get a 403 error.
+      title: All APIs accessible
+      additionalProperties: false
+      required:
+      - allAccessibleApis
     properties:
       allAccessibleApis:
         type: boolean
@@ -41,11 +56,7 @@ properties:
           type: object
           additionalProperties: false
           required:
-          - description
           - apiId
-          - apiName
-          - documentationUrl
-          - endPoint
           - accessLevel
           properties:
             description:
@@ -85,9 +96,25 @@ properties:
     description: |
       Specifies the API client's group access.
     additionalProperties: false
-    required:
-    - cloneAuthorizedUserGroups
-    - groups
+    oneOf:
+    - properties:
+        cloneAuthorizedUserGroups:
+          type: boolean
+          description: |
+            Sets the API client's group access the same as the authorized user.
+      title: Custom access
+      additionalProperties: false
+      required:
+      - groups
+    - properties:
+        cloneAuthorizedUserGroups:
+          type: boolean
+          description: |
+            Sets the API client's group access the same as the authorized user.
+      title: Cloned access
+      additionalProperties: false
+      required:
+      - cloneAuthorizedUserGroups
     properties:
       cloneAuthorizedUserGroups:
         type: boolean
@@ -125,7 +152,7 @@ properties:
   purgeOptions:
     type: object
     description: |
-      Configures the API client for access to the [Fast Purge API](https://techdocs.akamai.com/purge-cache/reference/api) in `apis`.
+      Configures the API client for access to the [Fast Purge API](https://techdocs.akamai.com/purge-cache/reference/api). Provide it only if the `apis` object includes an `apiName` of `CCU APIs`.
     additionalProperties: false
     required:
     - canPurgeByCacheTag

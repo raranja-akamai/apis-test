@@ -1,98 +1,130 @@
-type: object
-description: |-
-  Contains match rule information for Edge Redirector.
-  
-x-akamai:
-  file-path: schemas/match-rule-er.yaml
-title: Edge Redirector
 additionalProperties: false
-required:
-- type
-- redirectURL
-- statusCode
+description: 'Contains match rule information for Edge Redirector.
+
+  '
 properties:
-  id:
+  disabled:
+    default: false
+    description: 'If `true`, disables a rule so it''s not evaluated against incoming
+      requests. The default setting is `false`.
+
+      '
+    type: boolean
+  end:
+    default: 0
+    description: 'The end time for this match rule in epoch seconds. When `end` is
+      `0`, there is no end time for this match rule.
+
+      '
+    minimum: 0
     type: integer
-    description: |
-      __Internal__ __Internal__ Akamai internal use only.
+  id:
+    description: '__Internal__ __Internal__ Akamai internal use only.
+
+      '
+    nullable: true
+    type: integer
     x-akamai:
       status: INTERNAL
-    nullable: true
-  name:
-    type: string
-    description: |
-      The name of the rule.
-    nullable: true
-    maxLength: 8192
-  type:
-    type: string
-    description: |
-      The type of Cloudlet the rule is for. For example, the string for Edge Redirector is `erMatchRule`.
-    enum:
-    - erMatchRule
-  disabled:
-    type: boolean
-    description: |
-      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
-    default: false
-  end:
-    type: integer
-    description: |
-      The end time for this match rule in epoch seconds. When `end` is `0`, there is no end time for this match rule.
-    default: 0
-    minimum: 0
   matchURL:
-    type: string
-    description: |
-      The URL the Cloudlet uses to match the incoming request.
-    nullable: true
+    description: 'The URL the Cloudlet uses to match the incoming request.
+
+      '
     maxLength: 8192
-  matches:
-    type: array
-    description: |
-      The `matchType` and the `matchValue` or `objectMatchValue` used to conditionally pass through the request. Plus additional criteria to match on, like case sensitivity (`caseSensitive`).
     nullable: true
+    type: string
+  matches:
+    description: 'The `matchType` and the `matchValue` or `objectMatchValue` used
+      to conditionally pass through the request. Plus additional criteria to match
+      on, like case sensitivity (`caseSensitive`).
+
+      '
     items:
       $ref: match-rule-er-definitions.yaml#/definitions/matchCriteriaType
+    nullable: true
+    type: array
   matchesAlways:
+    description: 'The match rule always applies when `true`. When `false`, the rule
+      applies within the `start` and `end` time range.
+
+      '
     type: boolean
-    description: |
-      The match rule always applies when `true`. When `false`, the rule applies within the `start` and `end` time range.
-  redirectURL:
-    type: string
-    description: |
-      The URL Edge Redirector redirects the request to. If using `useRelativeUrl`, you can enter a path for the value. If `useRelativeUrl` is not used or set to `none`, then the `redirectUrl` should be a fully qualified URL.
-    minLength: 1
+  name:
+    description: 'The name of the rule.
+
+      '
     maxLength: 8192
+    nullable: true
+    type: string
+  redirectURL:
+    description: 'The URL Edge Redirector redirects the request to. If using `useRelativeUrl`,
+      you can enter a path for the value. If `useRelativeUrl` is not used or set to
+      `none`, then the `redirectUrl` should be a fully qualified URL.
+
+      '
+    maxLength: 8192
+    minLength: 1
+    type: string
   start:
-    type: integer
-    description: |
-      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
     default: 0
+    description: 'The start time for this match rule in epoch seconds. When `start`
+      is `0`, the match rule is on.
+
+      '
     minimum: 0
-  statusCode:
     type: integer
-    description: |
-      The HTTP response redirect type status code: `301` for permanent redirect, `302` for temporary redirect, `303` for temporary using GET, `307` for temporary retain method, or `308` for permanent retain method.
+  statusCode:
+    description: 'The HTTP response redirect type status code: `301` for permanent
+      redirect, `302` for temporary redirect, `303` for temporary using GET, `307`
+      for temporary retain method, or `308` for permanent retain method.
+
+      '
     enum:
     - 301
     - 302
     - 303
     - 307
     - 308
-  useIncomingQueryString:
-    type: boolean
-    description: |
-      If set to `true`, the Cloudlet includes the requests' query string in the rewritten or forwarded URL.
-  useIncomingSchemeAndHost:
-    type: boolean
-    description: |
-      If set to `true`, the Cloudlet copies both the scheme and the hostname from the incoming request to use in the redirect URL.
-  useRelativeUrl:
+    type: integer
+  type:
+    description: 'The type of Cloudlet the rule is for. For example, the string for
+      Edge Redirector is `erMatchRule`.
+
+      '
+    enum:
+    - erMatchRule
     type: string
-    description: |
-      If set to `relative_url`, takes the path entered for the `redirectUrl` and sets it in the response’s `Location` header. The client browser receiving the request decides which protocol and hostname to use. If set to `copy_scheme_hostname`, it creates an absolute path by taking the protocol and hostname from the incoming request and combining them with path information entered for the `redirectUrl`. This absolute path is set in the response’s `Location` header. If you don't include `useRelativeUrl`, or if you set it to `none`, then specify the `redirectUrl` as a fully qualified URL.
+  useIncomingQueryString:
+    description: 'If set to `true`, the Cloudlet includes the requests'' query string
+      in the rewritten or forwarded URL.
+
+      '
+    type: boolean
+  useIncomingSchemeAndHost:
+    description: 'If set to `true`, the Cloudlet copies both the scheme and the hostname
+      from the incoming request to use in the redirect URL.
+
+      '
+    type: boolean
+  useRelativeUrl:
+    description: "If set to `relative_url`, takes the path entered for the `redirectUrl`\
+      \ and sets it in the response\u2019s `Location` header. The client browser receiving\
+      \ the request decides which protocol and hostname to use. If set to `copy_scheme_hostname`,\
+      \ it creates an absolute path by taking the protocol and hostname from the incoming\
+      \ request and combining them with path information entered for the `redirectUrl`.\
+      \ This absolute path is set in the response\u2019s `Location` header. If you\
+      \ don't include `useRelativeUrl`, or if you set it to `none`, then specify the\
+      \ `redirectUrl` as a fully qualified URL.\n"
     enum:
     - relative_url
     - copy_scheme_hostname
     - none
+    type: string
+required:
+- type
+- redirectURL
+- statusCode
+title: Edge Redirector
+type: object
+x-akamai:
+  file-path: schemas/match-rule-er.yaml
