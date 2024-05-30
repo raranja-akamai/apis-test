@@ -48,51 +48,53 @@
                   }
                 },
                 "schema": {
-                  "additionalProperties": false,
+                  "type": "object",
                   "description": "Provides information on the current load balancing activations.\n",
+                  "additionalProperties": false,
                   "properties": {
+                    "originId": {
+                      "type": "string",
+                      "description": "The conditional origin's unique identifier for the current load balancing activation on either or both the `PRODUCTION` and `STAGING` networks.\n"
+                    },
                     "PRODUCTION": {
                       "description": "Contains information for current load balancing activations on the `PRODUCTION` network.\n",
                       "items": {
+                        "type": "object",
                         "additionalProperties": false,
                         "description": "Contains information for the current load balancing activations on either or both the `PRODUCTION` and `STAGING` networks.\n",
                         "properties": {
                           "activatedBy": {
-                            "description": "The name of the user who activated the load balancing configuration.\n",
-                            "type": "string"
+                            "type": "string",
+                            "description": "The name of the user who activated the load balancing configuration.\n"
                           },
                           "activatedDate": {
-                            "description": "The date and time, in ISO 8601 format, on which the load balancing configuration was activated.\n",
                             "format": "date-time",
-                            "type": "string"
+                            "type": "string",
+                            "description": "The date and time, in ISO 8601 format, on which the load balancing configuration was activated.\n"
                           },
                           "network": {
-                            "description": "The network, either `STAGING` or `PRODUCTION`, on which a load balancing configuration for Application Load Balancer has been activated.\n",
                             "enum": [
                               "STAGING",
                               "PRODUCTION"
                             ],
-                            "type": "string"
+                            "type": "string",
+                            "description": "The network, either `STAGING` or `PRODUCTION`, on which a load balancing configuration for Application Load Balancer has been activated.\n"
                           },
                           "originId": {
-                            "description": "The conditional origin's unique identifier.\n",
-                            "type": "string"
+                            "type": "string",
+                            "description": "The conditional origin's unique identifier.\n"
                           },
                           "status": {
-                            "description": "The activation status for load balancing configuration. An `active` status indicates that the load balancing version is currently active (published) and its associated property version is also active.\n",
                             "enum": [
                               "active"
                             ],
-                            "type": "string"
+                            "type": "string",
+                            "description": "The activation status for load balancing configuration. An `active` status indicates that the load balancing version is currently active (published) and its associated property version is also active.\n"
                           },
                           "version": {
-                            "description": "The version number of the activated load balancing configuration.\n",
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "The version number of the activated load balancing configuration.\n"
                           }
-                        },
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/origin-currentactivations.yaml"
                         }
                       },
                       "type": "array"
@@ -100,57 +102,46 @@
                     "STAGING": {
                       "description": "Contains information for current load balancing activations on the `STAGING` network.\n",
                       "items": {
+                        "type": "object",
                         "additionalProperties": false,
                         "description": "Contains information for the current load balancing activations on either or both the `PRODUCTION` and `STAGING` networks.\n",
                         "properties": {
                           "activatedBy": {
-                            "description": "The name of the user who activated the load balancing configuration.\n",
-                            "type": "string"
+                            "type": "string",
+                            "description": "The name of the user who activated the load balancing configuration.\n"
                           },
                           "activatedDate": {
-                            "description": "The date and time, in ISO 8601 format, on which the load balancing configuration was activated.\n",
                             "format": "date-time",
-                            "type": "string"
+                            "type": "string",
+                            "description": "The date and time, in ISO 8601 format, on which the load balancing configuration was activated.\n"
                           },
                           "network": {
-                            "description": "The network, either `STAGING` or `PRODUCTION`, on which a load balancing configuration for Application Load Balancer has been activated.\n",
                             "enum": [
                               "STAGING",
                               "PRODUCTION"
                             ],
-                            "type": "string"
+                            "type": "string",
+                            "description": "The network, either `STAGING` or `PRODUCTION`, on which a load balancing configuration for Application Load Balancer has been activated.\n"
                           },
                           "originId": {
-                            "description": "The conditional origin's unique identifier.\n",
-                            "type": "string"
+                            "type": "string",
+                            "description": "The conditional origin's unique identifier.\n"
                           },
                           "status": {
-                            "description": "The activation status for load balancing configuration. An `active` status indicates that the load balancing version is currently active (published) and its associated property version is also active.\n",
                             "enum": [
                               "active"
                             ],
-                            "type": "string"
+                            "type": "string",
+                            "description": "The activation status for load balancing configuration. An `active` status indicates that the load balancing version is currently active (published) and its associated property version is also active.\n"
                           },
                           "version": {
-                            "description": "The version number of the activated load balancing configuration.\n",
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "The version number of the activated load balancing configuration.\n"
                           }
-                        },
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/origin-currentactivations.yaml"
                         }
                       },
                       "type": "array"
-                    },
-                    "originId": {
-                      "description": "The conditional origin's unique identifier for the current load balancing activation on either or both the `PRODUCTION` and `STAGING` networks.\n",
-                      "type": "string"
                     }
-                  },
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/get-origins-currentactivations-response.yaml"
                   }
                 }
               }
@@ -191,26 +182,29 @@
                   }
                 ],
                 "schema": {
-                  "description": "List of current load balancing activations on `STAGING`, and `PRODUCTION` networks.\n",
                   "items": {
+                    "type": "object",
+                    "required": [
+                      "network",
+                      "version"
+                    ],
                     "additionalProperties": false,
                     "description": "Schema for a load balancer activation.\n",
                     "properties": {
                       "activatedBy": {
-                        "description": "The name of the user who activated the load balancing configuration.\n",
-                        "type": "string"
+                        "type": "string",
+                        "description": "The name of the user who activated the load balancing configuration.\n"
                       },
                       "activatedDate": {
-                        "description": "The date and time, in ISO 8601 format, on which the load balancing configuration was activated.\n",
                         "format": "date-time",
-                        "type": "string"
+                        "type": "string",
+                        "description": "The date and time, in ISO 8601 format, on which the load balancing configuration was activated.\n"
                       },
                       "dryrun": {
-                        "description": "If `true`, the operation validates the configuration, but does not activate the load balancing version. The default setting is `false`.\n",
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "If `true`, the operation validates the configuration, but does not activate the load balancing version. The default setting is `false`.\n"
                       },
                       "network": {
-                        "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
                         "enum": [
                           "STAGING",
                           "PRODUCTION",
@@ -218,14 +212,14 @@
                           "staging",
                           "production"
                         ],
-                        "type": "string"
+                        "type": "string",
+                        "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n"
                       },
                       "originId": {
-                        "description": "The conditional origin's unique identifier.\n",
-                        "type": "string"
+                        "type": "string",
+                        "description": "The conditional origin's unique identifier.\n"
                       },
                       "status": {
-                        "description": "The activation status for the policy or property. Values include the following: `inactive` where the policy version has not been activated. No active property versions reference this policy. An `active` value means the policy version is currently active (published) and its associated property version is also active. A `deactivated` value means the policy version was previously activated but it has been superseded by a more recent activation of another policy version. A `pending` value means the policy version is proceeding through the activation workflow. Otherwise the value is `failed` if a problem occurs.\n",
                         "enum": [
                           "inactive",
                           "active",
@@ -233,27 +227,18 @@
                           "pending",
                           "failed"
                         ],
-                        "type": "string"
+                        "type": "string",
+                        "description": "The activation status for the policy or property. Values include the following: `inactive` where the policy version has not been activated. No active property versions reference this policy. An `active` value means the policy version is currently active (published) and its associated property version is also active. A `deactivated` value means the policy version was previously activated but it has been superseded by a more recent activation of another policy version. A `pending` value means the policy version is proceeding through the activation workflow. Otherwise the value is `failed` if a problem occurs.\n"
                       },
                       "version": {
-                        "description": "The version number of the activated load balancing configuration.\n",
                         "minimum": 0,
-                        "type": "integer"
+                        "type": "integer",
+                        "description": "The version number of the activated load balancing configuration.\n"
                       }
-                    },
-                    "required": [
-                      "network",
-                      "version"
-                    ],
-                    "type": "object",
-                    "x-akamai": {
-                      "file-path": "schemas/origin-activation.yaml"
                     }
                   },
                   "type": "array",
-                  "x-akamai": {
-                    "file-path": "schemas/get-origin-activations-response.yaml"
-                  }
+                  "description": "List of current load balancing activations on `STAGING`, and `PRODUCTION` networks.\n"
                 }
               }
             },
@@ -272,11 +257,8 @@
           "name": "originId",
           "required": true,
           "schema": {
-            "example": "originremote2",
-            "type": "string"
-          },
-          "x-akamai": {
-            "file-path": "parameters/originId-path.yaml"
+            "type": "string",
+            "example": "originremote2"
           }
         }
       ],
@@ -292,9 +274,6 @@
               "default": false,
               "example": true,
               "type": "boolean"
-            },
-            "x-akamai": {
-              "file-path": "parameters/async-query.yaml"
             }
           }
         ],
@@ -307,15 +286,19 @@
                 "version": 1
               },
               "schema": {
-                "additionalProperties": false,
+                "type": "object",
                 "description": "TBD.\n",
+                "required": [
+                  "network",
+                  "version"
+                ],
+                "additionalProperties": false,
                 "properties": {
                   "dryrun": {
-                    "description": "If `true`, the operation validates the configuration, but does not activate the load balancing version. The default setting is `false`.\n",
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "If `true`, the operation validates the configuration, but does not activate the load balancing version. The default setting is `false`.\n"
                   },
                   "network": {
-                    "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
                     "enum": [
                       "STAGING",
                       "PRODUCTION",
@@ -323,21 +306,14 @@
                       "staging",
                       "production"
                     ],
-                    "type": "string"
+                    "type": "string",
+                    "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n"
                   },
                   "version": {
-                    "description": "The version number of the activated load balancing configuration.\n",
                     "minimum": 0,
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "The version number of the activated load balancing configuration.\n"
                   }
-                },
-                "required": [
-                  "network",
-                  "version"
-                ],
-                "type": "object",
-                "x-akamai": {
-                  "file-path": "schemas/post-origin-activations-request.yaml"
                 }
               }
             }
@@ -358,24 +334,28 @@
                   "version": 1
                 },
                 "schema": {
-                  "additionalProperties": false,
+                  "type": "object",
                   "description": "Details to activate a specific load balancing version on the `network` you select.\n",
+                  "required": [
+                    "network",
+                    "version"
+                  ],
+                  "additionalProperties": false,
                   "properties": {
                     "activatedBy": {
-                      "description": "The name of the user who activated the load balancing configuration.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The name of the user who activated the load balancing configuration.\n"
                     },
                     "activatedDate": {
-                      "description": "The date and time, in ISO 8601 format, on which the load balancing configuration was activated.\n",
                       "format": "date-time",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The date and time, in ISO 8601 format, on which the load balancing configuration was activated.\n"
                     },
                     "dryrun": {
-                      "description": "If `true`, the operation validates the configuration, but does not activate the load balancing version. The default setting is `false`.\n",
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "If `true`, the operation validates the configuration, but does not activate the load balancing version. The default setting is `false`.\n"
                     },
                     "network": {
-                      "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
                       "enum": [
                         "STAGING",
                         "PRODUCTION",
@@ -383,14 +363,14 @@
                         "staging",
                         "production"
                       ],
-                      "type": "string"
+                      "type": "string",
+                      "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n"
                     },
                     "originId": {
-                      "description": "The conditional origin's unique identifier.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The conditional origin's unique identifier.\n"
                     },
                     "status": {
-                      "description": "The activation status for the load balancing version. Values include the following: `inactive` where the load balancing version has not been activated. No active property versions reference this policy. A value of `active` means the load balancing version is currently active (published) and its associated property version is also active. A `deactivated` value means the load balancing version was previously activated but it has been superseded by a more recent activation of another load balancing version. A `pending` value means the load balancing version is proceeding through the activation workflow. Otherwise the value is `failed` if a problem occurs.\n",
                       "enum": [
                         "inactive",
                         "active",
@@ -398,21 +378,14 @@
                         "pending",
                         "failed"
                       ],
-                      "type": "string"
+                      "type": "string",
+                      "description": "The activation status for the load balancing version. Values include the following: `inactive` where the load balancing version has not been activated. No active property versions reference this policy. A value of `active` means the load balancing version is currently active (published) and its associated property version is also active. A `deactivated` value means the load balancing version was previously activated but it has been superseded by a more recent activation of another load balancing version. A `pending` value means the load balancing version is proceeding through the activation workflow. Otherwise the value is `failed` if a problem occurs.\n"
                     },
                     "version": {
-                      "description": "The version number of the activated load balancing configuration.\n",
                       "minimum": 0,
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "The version number of the activated load balancing configuration.\n"
                     }
-                  },
-                  "required": [
-                    "network",
-                    "version"
-                  ],
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/post-origin-activations-response.yaml"
                   }
                 }
               }
