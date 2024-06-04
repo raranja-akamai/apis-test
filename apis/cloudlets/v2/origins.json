@@ -162,10 +162,6 @@
                     "file-path": "schemas/get-origins-response.yaml"
                   },
                   "items": {
-                    "description": "Schema for a Cloudlets Origin.",
-                    "x-akamai": {
-                      "file-path": "schemas/origin.yaml"
-                    },
                     "anyOf": [
                       {
                         "title": "APPLICATION_LOAD_BALANCER",
@@ -254,7 +250,11 @@
                           }
                         }
                       }
-                    ]
+                    ],
+                    "description": "Schema for a Cloudlets Origin.",
+                    "x-akamai": {
+                      "file-path": "schemas/origin.yaml"
+                    }
                   }
                 }
               }
@@ -298,34 +298,34 @@
                   "type": "APPLICATION_LOAD_BALANCER"
                 },
                 "schema": {
-                  "type": "object",
-                  "description": "Application Load Balancer configuration.",
-                  "x-akamai": {
-                    "file-path": "schemas/get-origin-response.yaml"
-                  },
                   "additionalProperties": false,
+                  "description": "Application Load Balancer configuration.",
                   "properties": {
+                    "checksum": {
+                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "The description of the load balancing configuration provided by a user.\n",
+                      "type": "string"
+                    },
+                    "originId": {
+                      "description": "The conditional origin's unique identifier.\n",
+                      "maxLength": 63,
+                      "minLength": 2,
+                      "type": "string"
+                    },
                     "type": {
-                      "type": "string",
                       "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
                       "enum": [
                         "APPLICATION_LOAD_BALANCER"
-                      ]
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "The description of the load balancing configuration provided by a user.\n"
-                    },
-                    "checksum": {
-                      "type": "string",
-                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n"
-                    },
-                    "originId": {
-                      "type": "string",
-                      "description": "The conditional origin's unique identifier.\n",
-                      "minLength": 2,
-                      "maxLength": 63
+                      ],
+                      "type": "string"
                     }
+                  },
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/get-origin-response.yaml"
                   }
                 }
               }
@@ -348,17 +348,17 @@
                 "description": "Test load balancing configuration."
               },
               "schema": {
-                "type": "object",
-                "description": "TBD.\n",
-                "x-akamai": {
-                  "file-path": "schemas/put-origin-request.yaml"
-                },
                 "additionalProperties": false,
+                "description": "TBD.\n",
                 "properties": {
                   "description": {
-                    "type": "string",
-                    "description": "The new description of the load balancing configuration provided by a user.\n"
+                    "description": "The new description of the load balancing configuration provided by a user.\n",
+                    "type": "string"
                   }
+                },
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/put-origin-request.yaml"
                 }
               }
             }
@@ -376,34 +376,34 @@
                   "type": "APPLICATION_LOAD_BALANCER"
                 },
                 "schema": {
-                  "type": "object",
-                  "description": "Application Load Balancer configuration.",
-                  "x-akamai": {
-                    "file-path": "schemas/put-origin-response.yaml"
-                  },
                   "additionalProperties": false,
+                  "description": "Application Load Balancer configuration.",
                   "properties": {
+                    "checksum": {
+                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "The description of the load balancing configuration provided by a user.\n",
+                      "type": "string"
+                    },
+                    "originId": {
+                      "description": "The conditional origin's unique identifier.\n",
+                      "maxLength": 63,
+                      "minLength": 2,
+                      "type": "string"
+                    },
                     "type": {
-                      "type": "string",
                       "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
                       "enum": [
                         "APPLICATION_LOAD_BALANCER"
-                      ]
-                    },
-                    "description": {
-                      "type": "string",
-                      "description": "The description of the load balancing configuration provided by a user.\n"
-                    },
-                    "checksum": {
-                      "type": "string",
-                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n"
-                    },
-                    "originId": {
-                      "type": "string",
-                      "description": "The conditional origin's unique identifier.\n",
-                      "minLength": 2,
-                      "maxLength": 63
+                      ],
+                      "type": "string"
                     }
+                  },
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/put-origin-response.yaml"
                   }
                 }
               }
@@ -472,30 +472,19 @@
                 ]
               },
               "schema": {
-                "type": "object",
-                "description": "TBD.\n",
-                "x-akamai": {
-                  "file-path": "schemas/post-origin-versions-request.yaml"
-                },
                 "additionalProperties": false,
+                "description": "TBD.\n",
                 "properties": {
-                  "description": {
-                    "type": "string",
-                    "description": "The description of the load balancing configuration provided by a user.\n"
-                  },
                   "balancingType": {
-                    "type": "string",
                     "description": "The type of load balancing, either `WEIGHTED` or `PERFORMANCE`.\n",
                     "enum": [
                       "WEIGHTED",
                       "PERFORMANCE"
-                    ]
+                    ],
+                    "type": "string"
                   },
                   "dataCenters": {
-                    "type": "array",
                     "description": "The object containing information on conditional origins being used as data centers for an Application Load Balancer implementation, as detailed [below](#datacenters). Only conditional origins with an `originType` of `CUSTOMER` or `NETSTORAGE` can be used as data centers in an Application Load Balancer configuration.\n",
-                    "minItems": 1,
-                    "maxItems": 199,
                     "items": {
                       "type": "object",
                       "description": "Contains information about the data centers where the origins are located.",
@@ -586,22 +575,33 @@
                           "description": "The state, province, or region where the data center is located. See [region codes](https://control.akamai.com/dl/edgescape/region_codes.txt).\n"
                         }
                       }
-                    }
+                    },
+                    "maxItems": 199,
+                    "minItems": 1,
+                    "type": "array"
                   },
                   "deleted": {
-                    "type": "boolean",
-                    "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n"
+                    "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n",
+                    "type": "boolean"
+                  },
+                  "description": {
+                    "description": "The description of the load balancing configuration provided by a user.\n",
+                    "type": "string"
                   },
                   "livenessSettings": {
-                    "type": "object",
-                    "description": "The object containing information on the liveness settings for an Application Load Balancer implementation, as detailed [below](#livenesssettings).\n"
+                    "description": "The object containing information on the liveness settings for an Application Load Balancer implementation, as detailed [below](#livenesssettings).\n",
+                    "type": "object"
                   },
                   "originId": {
-                    "type": "string",
                     "description": "The conditional origin's unique identifier.\n",
+                    "maxLength": 62,
                     "minLength": 2,
-                    "maxLength": 62
+                    "type": "string"
                   }
+                },
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/post-origin-versions-request.yaml"
                 }
               }
             }
@@ -652,44 +652,28 @@
                   ]
                 },
                 "schema": {
-                  "type": "object",
-                  "description": "Details for a version of the Application Load Balancer configuration.",
-                  "x-akamai": {
-                    "file-path": "schemas/post-origin-versions-response.yaml"
-                  },
                   "additionalProperties": false,
+                  "description": "Details for a version of the Application Load Balancer configuration.",
                   "properties": {
-                    "description": {
-                      "type": "string",
-                      "description": "The description of the load balancing configuration provided by a user.\n"
-                    },
-                    "version": {
-                      "type": "integer",
-                      "description": "The version number of the activated load balancing configuration.\n",
-                      "minimum": 0
-                    },
                     "balancingType": {
-                      "type": "string",
                       "description": "The type of load balancing, either `WEIGHTED` or `PERFORMANCE`.\n",
                       "enum": [
                         "WEIGHTED",
                         "PERFORMANCE"
-                      ]
+                      ],
+                      "type": "string"
                     },
                     "createdBy": {
-                      "type": "string",
-                      "description": "The name of the user who created this load balancing configuration.\n"
+                      "description": "The name of the user who created this load balancing configuration.\n",
+                      "type": "string"
                     },
                     "createdDate": {
-                      "type": "string",
                       "description": "The date and time, in ISO 8601 format, when this load balancing configuration was created.\n",
-                      "format": "date-time"
+                      "format": "date-time",
+                      "type": "string"
                     },
                     "dataCenters": {
-                      "type": "array",
                       "description": "The object containing information on conditional origins being used as data centers for an Application Load Balancer implementation, as detailed [below](#datacenters). Only conditional origins with an `originType` of `CUSTOMER` or `NETSTORAGE` can be used as data centers in an Application Load Balancer configuration.\n",
-                      "minItems": 1,
-                      "maxItems": 199,
                       "items": {
                         "type": "object",
                         "description": "Contains information about the data centers where the origins are located.",
@@ -780,37 +764,48 @@
                             "description": "The state, province, or region where the data center is located. See [region codes](https://control.akamai.com/dl/edgescape/region_codes.txt).\n"
                           }
                         }
-                      }
+                      },
+                      "maxItems": 199,
+                      "minItems": 1,
+                      "type": "array"
                     },
                     "deleted": {
-                      "type": "boolean",
-                      "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n"
+                      "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n",
+                      "type": "boolean"
+                    },
+                    "description": {
+                      "description": "The description of the load balancing configuration provided by a user.\n",
+                      "type": "string"
                     },
                     "immutable": {
-                      "type": "boolean",
-                      "description": "Indicates whether you can edit the load balancing version. The default setting is `false`. It becomes `true` when you activate the load balancing version for the first time.\n"
+                      "description": "Indicates whether you can edit the load balancing version. The default setting is `false`. It becomes `true` when you activate the load balancing version for the first time.\n",
+                      "type": "boolean"
                     },
                     "lastModifiedBy": {
-                      "type": "string",
-                      "description": "The user who last modified the load balancing configuration.\n"
+                      "description": "The user who last modified the load balancing configuration.\n",
+                      "type": "string"
                     },
                     "lastModifiedDate": {
-                      "type": "string",
                       "description": "The date and time, in ISO 8601 format, when the initial load balancing configuration was last modified.\n",
-                      "format": "date-time"
+                      "format": "date-time",
+                      "type": "string"
                     },
                     "livenessSettings": {
-                      "type": "object",
-                      "description": "The object containing information on the liveness settings for an Application Load Balancer implementation, as detailed [below](#livenesssettings).\n"
+                      "description": "The object containing information on the liveness settings for an Application Load Balancer implementation, as detailed [below](#livenesssettings).\n",
+                      "type": "object"
                     },
                     "originId": {
-                      "type": "string",
                       "description": "The conditional origin's unique identifier.\n",
+                      "maxLength": 62,
                       "minLength": 2,
-                      "maxLength": 62
+                      "type": "string"
+                    },
+                    "version": {
+                      "description": "The version number of the activated load balancing configuration.\n",
+                      "minimum": 0,
+                      "type": "integer"
                     },
                     "warnings": {
-                      "type": "array",
                       "description": "Provides error response data to help diagnose the problem that led to the error.\n",
                       "items": {
                         "type": "object",
@@ -895,8 +890,13 @@
                             "description": "The HTTP problem status code.\n"
                           }
                         }
-                      }
+                      },
+                      "type": "array"
                     }
+                  },
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/post-origin-versions-response.yaml"
                   }
                 }
               }
