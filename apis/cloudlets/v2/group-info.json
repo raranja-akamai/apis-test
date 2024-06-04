@@ -84,30 +84,68 @@
                   }
                 ],
                 "schema": {
+                  "type": "array",
                   "description": "Returns information about the Cloudlet types associated with the selected group.",
+                  "x-akamai": {
+                    "file-path": "schemas/get-group-info-response.yaml"
+                  },
                   "items": {
-                    "additionalProperties": false,
+                    "type": "object",
                     "description": "Returns information about the Cloudlet types associated with the groups you have edit privileges for.",
+                    "x-akamai": {
+                      "file-path": "schemas/group-info-object.yaml"
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "groupId",
+                      "groupName",
+                      "parentId",
+                      "capabilities",
+                      "properties",
+                      "location"
+                    ],
                     "properties": {
+                      "properties": {
+                        "type": "array",
+                        "description": "List of associated properties with this group.\n",
+                        "nullable": true,
+                        "items": {
+                          "type": "string"
+                        }
+                      },
                       "apiVersion": {
-                        "description": "The specific version of this API.\n",
-                        "type": "string"
+                        "type": "string",
+                        "description": "The specific version of this API.\n"
                       },
                       "capabilities": {
+                        "type": "array",
                         "description": "Type and permission information for each cloudlet.\n",
                         "items": {
-                          "additionalProperties": false,
+                          "type": "object",
                           "description": "Returns information about the Cloudlet capabilities.",
+                          "x-akamai": {
+                            "file-path": "schemas/cloudlet-capability.yaml"
+                          },
+                          "additionalProperties": false,
+                          "required": [
+                            "cloudletCode",
+                            "cloudletId",
+                            "capabilities"
+                          ],
                           "properties": {
                             "capabilities": {
+                              "type": "array",
                               "description": "Possible permission values include: `Activate`, `Edit`, and `View`.\n",
                               "items": {
                                 "type": "string"
-                              },
-                              "type": "array"
+                              }
                             },
                             "cloudletCode": {
+                              "type": "string",
                               "description": "The type of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Possible values include: `ALB` for Application Load Balancer, `AP` for API Prioritization, `AS` for Audience Segmentation, `CD` for Phased Release, `ER` for Edge Redirector, `FR` for Forward Rewrite, `IG` for Request Control, and `VP` for Visitor Prioritization.",
+                              "x-akamai": {
+                                "file-path": "schemas/cloudlet-code-enum.yaml"
+                              },
                               "enum": [
                                 "ALB",
                                 "AP",
@@ -117,76 +155,38 @@
                                 "FR",
                                 "IG",
                                 "VP"
-                              ],
-                              "type": "string",
-                              "x-akamai": {
-                                "file-path": "schemas/cloudlet-code-enum.yaml"
-                              }
+                              ]
                             },
                             "cloudletId": {
-                              "description": "The ID of cloudlet that this policy is for. The `cloudletId` for Edge Redirector is `0`, Visitor Prioritization is `1`, Forward Rewrite is `3`, Request Control is `4`, API Prioritization is `5`, Audience Segmentation is `6`, Phased Release is `7`, and Application Load Balancer is `9`. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation.\n",
-                              "type": "integer"
+                              "type": "integer",
+                              "description": "The ID of cloudlet that this policy is for. The `cloudletId` for Edge Redirector is `0`, Visitor Prioritization is `1`, Forward Rewrite is `3`, Request Control is `4`, API Prioritization is `5`, Audience Segmentation is `6`, Phased Release is `7`, and Application Load Balancer is `9`. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation.\n"
                             }
-                          },
-                          "required": [
-                            "cloudletCode",
-                            "cloudletId",
-                            "capabilities"
-                          ],
-                          "type": "object",
-                          "x-akamai": {
-                            "file-path": "schemas/cloudlet-capability.yaml"
                           }
-                        },
-                        "type": "array"
+                        }
                       },
                       "groupId": {
-                        "description": "The ID of group.\n",
-                        "type": "integer"
+                        "type": "integer",
+                        "description": "The ID of group.\n"
                       },
                       "groupName": {
-                        "description": "The name of group.\n",
-                        "type": "string"
+                        "type": "string",
+                        "description": "The name of group.\n"
                       },
                       "location": {
-                        "description": "The navigable endpoint used for the object referred to in the operation.\n",
-                        "type": "string"
+                        "type": "string",
+                        "description": "The navigable endpoint used for the object referred to in the operation.\n"
                       },
                       "parentId": {
-                        "description": "The ID of parent group.\n",
-                        "type": "integer"
-                      },
-                      "properties": {
-                        "description": "List of associated properties with this group.\n",
-                        "items": {
-                          "type": "string"
-                        },
-                        "nullable": true,
-                        "type": "array"
+                        "type": "integer",
+                        "description": "The ID of parent group.\n"
                       },
                       "serviceVersion": {
-                        "deprecated": true,
+                        "type": "string",
                         "description": "The build of the software running on the server. The value can be `null`.\n",
                         "nullable": true,
-                        "type": "string"
+                        "deprecated": true
                       }
-                    },
-                    "required": [
-                      "groupId",
-                      "groupName",
-                      "parentId",
-                      "capabilities",
-                      "properties",
-                      "location"
-                    ],
-                    "type": "object",
-                    "x-akamai": {
-                      "file-path": "schemas/group-info-object.yaml"
                     }
-                  },
-                  "type": "array",
-                  "x-akamai": {
-                    "file-path": "schemas/get-group-info-response.yaml"
                   }
                 }
               }
@@ -254,28 +254,62 @@
                   ]
                 },
                 "schema": {
-                  "additionalProperties": false,
+                  "type": "object",
                   "description": "Returns information about the Cloudlet types associated with the groups you have edit privileges for.",
+                  "x-akamai": {
+                    "file-path": "schemas/group-info-object.yaml"
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "groupId",
+                    "groupName",
+                    "parentId",
+                    "capabilities",
+                    "properties",
+                    "location"
+                  ],
                   "properties": {
+                    "properties": {
+                      "type": "array",
+                      "description": "List of associated properties with this group.\n",
+                      "nullable": true,
+                      "items": {
+                        "type": "string"
+                      }
+                    },
                     "apiVersion": {
-                      "description": "The specific version of this API.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The specific version of this API.\n"
                     },
                     "capabilities": {
+                      "type": "array",
                       "description": "Type and permission information for each cloudlet.\n",
                       "items": {
-                        "additionalProperties": false,
+                        "type": "object",
                         "description": "Returns information about the Cloudlet capabilities.",
+                        "x-akamai": {
+                          "file-path": "schemas/cloudlet-capability.yaml"
+                        },
+                        "additionalProperties": false,
+                        "required": [
+                          "cloudletCode",
+                          "cloudletId",
+                          "capabilities"
+                        ],
                         "properties": {
                           "capabilities": {
+                            "type": "array",
                             "description": "Possible permission values include: `Activate`, `Edit`, and `View`.\n",
                             "items": {
                               "type": "string"
-                            },
-                            "type": "array"
+                            }
                           },
                           "cloudletCode": {
+                            "type": "string",
                             "description": "The type of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Possible values include: `ALB` for Application Load Balancer, `AP` for API Prioritization, `AS` for Audience Segmentation, `CD` for Phased Release, `ER` for Edge Redirector, `FR` for Forward Rewrite, `IG` for Request Control, and `VP` for Visitor Prioritization.",
+                            "x-akamai": {
+                              "file-path": "schemas/cloudlet-code-enum.yaml"
+                            },
                             "enum": [
                               "ALB",
                               "AP",
@@ -285,71 +319,37 @@
                               "FR",
                               "IG",
                               "VP"
-                            ],
-                            "type": "string",
-                            "x-akamai": {
-                              "file-path": "schemas/cloudlet-code-enum.yaml"
-                            }
+                            ]
                           },
                           "cloudletId": {
-                            "description": "The ID of cloudlet that this policy is for. The `cloudletId` for Edge Redirector is `0`, Visitor Prioritization is `1`, Forward Rewrite is `3`, Request Control is `4`, API Prioritization is `5`, Audience Segmentation is `6`, Phased Release is `7`, and Application Load Balancer is `9`. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation.\n",
-                            "type": "integer"
+                            "type": "integer",
+                            "description": "The ID of cloudlet that this policy is for. The `cloudletId` for Edge Redirector is `0`, Visitor Prioritization is `1`, Forward Rewrite is `3`, Request Control is `4`, API Prioritization is `5`, Audience Segmentation is `6`, Phased Release is `7`, and Application Load Balancer is `9`. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation.\n"
                           }
-                        },
-                        "required": [
-                          "cloudletCode",
-                          "cloudletId",
-                          "capabilities"
-                        ],
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/cloudlet-capability.yaml"
                         }
-                      },
-                      "type": "array"
+                      }
                     },
                     "groupId": {
-                      "description": "The ID of group.\n",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "The ID of group.\n"
                     },
                     "groupName": {
-                      "description": "The name of group.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The name of group.\n"
                     },
                     "location": {
-                      "description": "The navigable endpoint used for the object referred to in the operation.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The navigable endpoint used for the object referred to in the operation.\n"
                     },
                     "parentId": {
-                      "description": "The ID of parent group.\n",
-                      "type": "integer"
-                    },
-                    "properties": {
-                      "description": "List of associated properties with this group.\n",
-                      "items": {
-                        "type": "string"
-                      },
-                      "nullable": true,
-                      "type": "array"
+                      "type": "integer",
+                      "description": "The ID of parent group.\n"
                     },
                     "serviceVersion": {
-                      "deprecated": true,
+                      "type": "string",
                       "description": "The build of the software running on the server. The value can be `null`.\n",
                       "nullable": true,
-                      "type": "string"
+                      "deprecated": true
                     }
-                  },
-                  "required": [
-                    "groupId",
-                    "groupName",
-                    "parentId",
-                    "capabilities",
-                    "properties",
-                    "location"
-                  ],
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/group-info-object.yaml"
                   }
                 }
               }
