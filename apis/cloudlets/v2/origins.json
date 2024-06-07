@@ -1,34 +1,132 @@
 {
+  "openapi": "3.0.0",
   "info": {
+    "title": "Cloudlets Origins for Application Load Balancer",
+    "version": "v2",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    },
-    "title": "Cloudlets Origins for Application Load Balancer",
-    "version": "v2"
+    }
   },
-  "openapi": "3.0.0",
+  "servers": [
+    {
+      "url": "https://{hostname}/cloudlets/api/v2"
+    }
+  ],
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "origins.yaml"
+  },
   "paths": {
     "/origins": {
+      "post": {
+        "operationId": "post-origin",
+        "summary": "Create a load balancing configuration",
+        "tags": [
+          "Load balancing configurations"
+        ],
+        "description": "For Application Load Balancer, run this operation to create a load balancing configuration. This operation is only available for the `APPLICATION_LOAD_BALANCER` origin type.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "description": "Test load balancer.",
+                "originId": "loadBalancer1"
+              },
+              "schema": {
+                "type": "object",
+                "description": "TBD.\n",
+                "x-akamai": {
+                  "file-path": "schemas/post-origins-request.yaml"
+                },
+                "additionalProperties": false,
+                "required": [
+                  "originId"
+                ],
+                "properties": {
+                  "originId": {
+                    "type": "string",
+                    "description": "The conditional origin's unique identifier.\n",
+                    "minLength": 2,
+                    "maxLength": 63
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Schema for a Cloudlets Origin.\n",
+            "content": {
+              "application/json": {
+                "example": {
+                  "checksum": "958a75d5f1ffbb24f6eb35fe6c4a13a4",
+                  "description": "Test load balancer.",
+                  "originId": "loadBalancer1",
+                  "type": "APPLICATION_LOAD_BALANCER"
+                },
+                "schema": {
+                  "type": "object",
+                  "description": "Application Load Balancer configuration.",
+                  "x-akamai": {
+                    "file-path": "schemas/post-origins-response.yaml"
+                  },
+                  "additionalProperties": false,
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
+                      "enum": [
+                        "APPLICATION_LOAD_BALANCER"
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "A description you provide for each load balancing configuration.\n"
+                    },
+                    "checksum": {
+                      "type": "string",
+                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n"
+                    },
+                    "originId": {
+                      "type": "string",
+                      "description": "The conditional origin's unique identifier.\n",
+                      "minLength": 2,
+                      "maxLength": 63
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       "get": {
-        "description": "Lists the Application Load Balancer conditonal origins. You can use `type` to narrow the number of results returned. Options for the origin type include `APPLICATION_LOAD_BALANCER` for Application Load Balancer origins, `CUSTOMER` for standard origins, and `NETSTORAGE` for NetStorage-based origins.\n",
         "operationId": "get-origins",
+        "summary": "List conditional origins",
+        "tags": [
+          "Conditional origins"
+        ],
+        "description": "Lists the Application Load Balancer conditonal origins. You can use `type` to narrow the number of results returned. Options for the origin type include `APPLICATION_LOAD_BALANCER` for Application Load Balancer origins, `CUSTOMER` for standard origins, and `NETSTORAGE` for NetStorage-based origins.\n",
         "parameters": [
           {
-            "description": "Returns data for a specific type of origin as defined in Property Manager. Options include `alb` for Application Load Balancer origins, `customer` for standard origins, and `netstorage` for NetStorage-based origins.\n",
-            "in": "query",
             "name": "type",
-            "schema": {
-              "example": "alb",
-              "type": "string"
-            },
+            "in": "query",
+            "description": "Returns data for a specific type of origin as defined in Property Manager. Options include `alb` for Application Load Balancer origins, `customer` for standard origins, and `netstorage` for NetStorage-based origins.",
             "x-akamai": {
               "file-path": "parameters/type-query.yaml"
+            },
+            "schema": {
+              "type": "string",
+              "example": "alb"
             }
           }
         ],
         "responses": {
           "200": {
+            "description": "Schema for a list of origins.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -58,208 +156,139 @@
                   }
                 ],
                 "schema": {
-                  "description": "Conditional origin type.\n",
+                  "type": "array",
+                  "description": "Conditional origin type.",
+                  "x-akamai": {
+                    "file-path": "schemas/get-origins-response.yaml"
+                  },
                   "items": {
+                    "description": "Schema for a Cloudlets Origin.",
+                    "x-akamai": {
+                      "file-path": "schemas/origin.yaml"
+                    },
                     "anyOf": [
                       {
+                        "title": "APPLICATION_LOAD_BALANCER",
                         "additionalProperties": false,
                         "properties": {
-                          "checksum": {
-                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
-                            "type": "string"
-                          },
-                          "description": {
-                            "description": "The description of the load balancing configuration provided by a user.\n",
-                            "type": "string"
-                          },
-                          "originId": {
-                            "description": "The conditional origin's unique identifier.\n",
-                            "maxLength": 63,
-                            "minLength": 2,
-                            "type": "string"
-                          },
                           "type": {
+                            "type": "string",
                             "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
                             "enum": [
                               "APPLICATION_LOAD_BALANCER"
-                            ],
-                            "type": "string"
-                          }
-                        },
-                        "title": "APPLICATION_LOAD_BALANCER"
-                      },
-                      {
-                        "additionalProperties": false,
-                        "properties": {
-                          "checksum": {
-                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
-                            "type": "string"
+                            ]
                           },
-                          "hostname": {
-                            "description": "The name of the host that can be used as a conditional origin.\n",
-                            "type": "string"
+                          "description": {
+                            "type": "string",
+                            "description": "The description of the load balancing configuration provided by a user.\n"
+                          },
+                          "checksum": {
+                            "type": "string",
+                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n"
                           },
                           "originId": {
+                            "type": "string",
                             "description": "The conditional origin's unique identifier.\n",
-                            "type": "string"
-                          },
+                            "minLength": 2,
+                            "maxLength": 63
+                          }
+                        }
+                      },
+                      {
+                        "title": "CUSTOMER",
+                        "additionalProperties": false,
+                        "required": [
+                          "hostname",
+                          "originId",
+                          "type"
+                        ],
+                        "properties": {
                           "type": {
+                            "type": "string",
                             "description": "The type of origin this conditional origin is set up as, in this case `CUSTOMER`.\n",
                             "enum": [
                               "CUSTOMER"
-                            ],
-                            "type": "string"
+                            ]
+                          },
+                          "checksum": {
+                            "type": "string",
+                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n"
+                          },
+                          "hostname": {
+                            "type": "string",
+                            "description": "The name of the host that can be used as a conditional origin.\n"
+                          },
+                          "originId": {
+                            "type": "string",
+                            "description": "The conditional origin's unique identifier.\n"
                           }
-                        },
+                        }
+                      },
+                      {
+                        "title": "NETSTORAGE",
+                        "additionalProperties": false,
                         "required": [
                           "hostname",
                           "originId",
                           "type"
                         ],
-                        "title": "CUSTOMER"
-                      },
-                      {
-                        "additionalProperties": false,
                         "properties": {
-                          "checksum": {
-                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
-                            "type": "string"
-                          },
-                          "hostname": {
-                            "description": "The name of the host that can be used as a conditional origin.\n",
-                            "type": "string"
-                          },
-                          "originId": {
-                            "description": "The conditional origin's unique identifier.\n",
-                            "type": "string"
-                          },
                           "type": {
+                            "type": "string",
                             "description": "The type of origin this conditional origin is set up as, in this case `NETSTORAGE`.\n",
                             "enum": [
                               "NETSTORAGE"
-                            ],
-                            "type": "string"
+                            ]
+                          },
+                          "checksum": {
+                            "type": "string",
+                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n"
+                          },
+                          "hostname": {
+                            "type": "string",
+                            "description": "The name of the host that can be used as a conditional origin.\n"
+                          },
+                          "originId": {
+                            "type": "string",
+                            "description": "The conditional origin's unique identifier.\n"
                           }
-                        },
-                        "required": [
-                          "hostname",
-                          "originId",
-                          "type"
-                        ],
-                        "title": "NETSTORAGE"
+                        }
                       }
-                    ],
-                    "description": "Schema for a Cloudlets Origin.\n",
-                    "x-akamai": {
-                      "file-path": "schemas/origin.yaml"
-                    }
-                  },
-                  "type": "array",
-                  "x-akamai": {
-                    "file-path": "schemas/get-origins-response.yaml"
+                    ]
                   }
-                }
-              }
-            },
-            "description": "Schema for a list of origins.\n"
-          }
-        },
-        "summary": "List conditional origins",
-        "tags": [
-          "Conditional origins"
-        ]
-      },
-      "post": {
-        "description": "For Application Load Balancer, run this operation to create a load balancing configuration. This operation is only available for the `APPLICATION_LOAD_BALANCER` origin type.\n",
-        "operationId": "post-origin",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "example": {
-                "description": "Test load balancer.",
-                "originId": "loadBalancer1"
-              },
-              "schema": {
-                "additionalProperties": false,
-                "description": "TBD.\n",
-                "properties": {
-                  "originId": {
-                    "description": "The conditional origin's unique identifier.\n",
-                    "maxLength": 63,
-                    "minLength": 2,
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "originId"
-                ],
-                "type": "object",
-                "x-akamai": {
-                  "file-path": "schemas/post-origins-request.yaml"
                 }
               }
             }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "checksum": "958a75d5f1ffbb24f6eb35fe6c4a13a4",
-                  "description": "Test load balancer.",
-                  "originId": "loadBalancer1",
-                  "type": "APPLICATION_LOAD_BALANCER"
-                },
-                "schema": {
-                  "additionalProperties": false,
-                  "description": "Application Load Balancer configuration.\n",
-                  "properties": {
-                    "checksum": {
-                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
-                      "type": "string"
-                    },
-                    "description": {
-                      "description": "A description you provide for each load balancing configuration.\n",
-                      "type": "string"
-                    },
-                    "originId": {
-                      "description": "The conditional origin's unique identifier.\n",
-                      "maxLength": 63,
-                      "minLength": 2,
-                      "type": "string"
-                    },
-                    "type": {
-                      "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
-                      "enum": [
-                        "APPLICATION_LOAD_BALANCER"
-                      ],
-                      "type": "string"
-                    }
-                  },
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/post-origins-response.yaml"
-                  }
-                }
-              }
-            },
-            "description": "Schema for a Cloudlets Origin.\n"
           }
-        },
-        "summary": "Create a load balancing configuration",
-        "tags": [
-          "Load balancing configurations"
-        ]
+        }
       }
     },
     "/origins/{originId}": {
+      "parameters": [
+        {
+          "name": "originId",
+          "in": "path",
+          "description": "Unique identifier for the origin.",
+          "x-akamai": {
+            "file-path": "parameters/originId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "originremote2"
+          }
+        }
+      ],
       "get": {
-        "description": "Run this operation to get data for a specific conditional origin using the `originId`. Run the [List conditional origins](https://techdocs.akamai.com/cloudlets/v2/reference/get-origins) to get the `originId`. This operation is only available for the `APPLICATION_LOAD_BALANCER` origin type.\n",
         "operationId": "get-origin",
+        "summary": "Get a conditional origin",
+        "tags": [
+          "Conditional origins"
+        ],
+        "description": "Run this operation to get data for a specific conditional origin using the `originId`. Run the [List conditional origins](https://techdocs.akamai.com/cloudlets/v2/reference/get-origins) to get the `originId`. This operation is only available for the `APPLICATION_LOAD_BALANCER` origin type.\n",
         "responses": {
           "200": {
+            "description": "Schema for a Cloudlets Origin.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -270,7 +299,7 @@
                 },
                 "schema": {
                   "additionalProperties": false,
-                  "description": "Application Load Balancer configuration.\n",
+                  "description": "Application Load Balancer configuration.",
                   "properties": {
                     "checksum": {
                       "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
@@ -300,59 +329,44 @@
                   }
                 }
               }
-            },
-            "description": "Schema for a Cloudlets Origin.\n"
-          }
-        },
-        "summary": "Get a conditional origin",
-        "tags": [
-          "Conditional origins"
-        ]
-      },
-      "parameters": [
-        {
-          "description": "Unique identifier for the origin.\n",
-          "in": "path",
-          "name": "originId",
-          "required": true,
-          "schema": {
-            "example": "originremote2",
-            "type": "string"
-          },
-          "x-akamai": {
-            "file-path": "parameters/originId-path.yaml"
+            }
           }
         }
-      ],
+      },
       "put": {
-        "description": "For Application Load Balancer, run this operation to update the description of an existing load balancing configuration. This operation is only available for the `APPLICATION_LOAD_BALANCER` origin type.\n",
         "operationId": "put-origin",
+        "summary": "Update a load balancing configuration",
+        "tags": [
+          "Load balancing configurations"
+        ],
+        "description": "For Application Load Balancer, run this operation to update the description of an existing load balancing configuration. This operation is only available for the `APPLICATION_LOAD_BALANCER` origin type.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": {
                 "description": "Test load balancing configuration."
               },
               "schema": {
-                "additionalProperties": false,
-                "description": "TBD.\n",
-                "properties": {
-                  "description": {
-                    "description": "The new description of the load balancing configuration provided by a user.\n",
-                    "type": "string"
-                  }
-                },
                 "type": "object",
+                "description": "TBD.\n",
                 "x-akamai": {
                   "file-path": "schemas/put-origin-request.yaml"
+                },
+                "additionalProperties": false,
+                "properties": {
+                  "description": {
+                    "type": "string",
+                    "description": "The new description of the load balancing configuration provided by a user.\n"
+                  }
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "Schema for a Cloudlets Origin.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -362,166 +376,67 @@
                   "type": "APPLICATION_LOAD_BALANCER"
                 },
                 "schema": {
+                  "type": "object",
+                  "description": "Application Load Balancer configuration.",
+                  "x-akamai": {
+                    "file-path": "schemas/put-origin-response.yaml"
+                  },
                   "additionalProperties": false,
-                  "description": "Application Load Balancer configuration.\n",
                   "properties": {
-                    "checksum": {
-                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
-                      "type": "string"
-                    },
-                    "description": {
-                      "description": "The description of the load balancing configuration provided by a user.\n",
-                      "type": "string"
-                    },
-                    "originId": {
-                      "description": "The conditional origin's unique identifier.\n",
-                      "maxLength": 63,
-                      "minLength": 2,
-                      "type": "string"
-                    },
                     "type": {
+                      "type": "string",
                       "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
                       "enum": [
                         "APPLICATION_LOAD_BALANCER"
-                      ],
-                      "type": "string"
+                      ]
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "The description of the load balancing configuration provided by a user.\n"
+                    },
+                    "checksum": {
+                      "type": "string",
+                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n"
+                    },
+                    "originId": {
+                      "type": "string",
+                      "description": "The conditional origin's unique identifier.\n",
+                      "minLength": 2,
+                      "maxLength": 63
                     }
-                  },
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/put-origin-response.yaml"
                   }
                 }
               }
-            },
-            "description": "Schema for a Cloudlets Origin.\n"
+            }
           }
-        },
-        "summary": "Update a load balancing configuration",
-        "tags": [
-          "Load balancing configurations"
-        ]
+        }
       }
     },
     "/origins/{originId}/versions": {
-      "get": {
-        "description": "For Application Load Balancer, run this operation to list all versions of a load balancing configuration. The response lists the versions in descending order.\n",
-        "operationId": "get-origin-versions",
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "example": [
-                  {
-                    "createdBy": "hgildong",
-                    "createdDate": "2017-12-20T00:00:00.000Z",
-                    "deleted": false,
-                    "description": "Load Balancer version 2",
-                    "immutable": true,
-                    "lastModifiedBy": "jsmith",
-                    "lastModifiedDate": "2017-12-20T00:00:00.000Z",
-                    "originId": "loadBalancer1",
-                    "version": 2
-                  },
-                  {
-                    "createdBy": "jsmith",
-                    "createdDate": "2017-12-10T00:00:00.000Z",
-                    "deleted": false,
-                    "description": "Load Balancer version 1",
-                    "immutable": true,
-                    "lastModifiedBy": "jdupont",
-                    "lastModifiedDate": "2017-12-10T00:00:00.000Z",
-                    "originId": "loadBalancer1",
-                    "version": 1
-                  }
-                ],
-                "schema": {
-                  "description": "Lists origin versions for load balancing.\n",
-                  "items": {
-                    "additionalProperties": false,
-                    "description": "Lists origin versions for load balancing.\n",
-                    "properties": {
-                      "createdBy": {
-                        "description": "The name of the user who created this load balancing configuration.\n",
-                        "type": "string"
-                      },
-                      "createdDate": {
-                        "description": "The date and time, in ISO 8601 format, when this load balancing configuration was created.\n",
-                        "format": "date-time",
-                        "type": "string"
-                      },
-                      "deleted": {
-                        "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n",
-                        "type": "boolean"
-                      },
-                      "description": {
-                        "description": "The description of the load balancing configuration provided by a user.\n",
-                        "type": "string"
-                      },
-                      "immutable": {
-                        "description": "Indicates whether you can edit the load balancing version. The default setting is `false`. It automatically becomes `true` when the load balancing version is activated for the first time.\n",
-                        "type": "boolean"
-                      },
-                      "lastModifiedBy": {
-                        "description": "The user who last modified the load balancing configuration.\n",
-                        "type": "string"
-                      },
-                      "lastModifiedDate": {
-                        "description": "The date and time, in ISO 8601 format, when the initial load balancing configuration was last modified.\n",
-                        "format": "date-time",
-                        "type": "string"
-                      },
-                      "originId": {
-                        "description": "The conditional origin's unique identifier.\n",
-                        "maxLength": 62,
-                        "minLength": 2,
-                        "type": "string"
-                      },
-                      "version": {
-                        "description": "The version number of the activated load balancing configuration.\n",
-                        "minimum": 0,
-                        "type": "integer"
-                      }
-                    },
-                    "type": "object",
-                    "x-akamai": {
-                      "file-path": "schemas/origin-version.yaml"
-                    }
-                  },
-                  "type": "array",
-                  "x-akamai": {
-                    "file-path": "schemas/get-origin-versions-response.yaml"
-                  }
-                }
-              }
-            },
-            "description": "Schema for a list of load balancer versions.\n"
-          }
-        },
-        "summary": "List load balancing versions",
-        "tags": [
-          "Load balancing versions"
-        ]
-      },
       "parameters": [
         {
-          "description": "Unique identifier for the origin.\n",
-          "in": "path",
           "name": "originId",
-          "required": true,
-          "schema": {
-            "example": "originremote2",
-            "type": "string"
-          },
+          "in": "path",
+          "description": "Unique identifier for the origin.",
           "x-akamai": {
             "file-path": "parameters/originId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "originremote2"
           }
         }
       ],
       "post": {
-        "description": "You can create multiple versions of the load balancing configuration. By versioning these settings, you can test new configurations, or manage changes to the data centers supporting Application Load Balancer.\n",
         "operationId": "post-origin-versions",
+        "summary": "Create a load balancing version",
+        "tags": [
+          "Load balancing versions"
+        ],
+        "description": "You can create multiple versions of the load balancing configuration. By versioning these settings, you can test new configurations, or manage changes to the data centers supporting Application Load Balancer.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -557,96 +472,37 @@
                 ]
               },
               "schema": {
-                "additionalProperties": false,
+                "type": "object",
                 "description": "TBD.\n",
+                "x-akamai": {
+                  "file-path": "schemas/post-origin-versions-request.yaml"
+                },
+                "additionalProperties": false,
                 "properties": {
+                  "description": {
+                    "type": "string",
+                    "description": "The description of the load balancing configuration provided by a user.\n"
+                  },
                   "balancingType": {
+                    "type": "string",
                     "description": "The type of load balancing, either `WEIGHTED` or `PERFORMANCE`.\n",
                     "enum": [
                       "WEIGHTED",
                       "PERFORMANCE"
-                    ],
-                    "type": "string"
+                    ]
                   },
                   "dataCenters": {
+                    "type": "array",
                     "description": "The object containing information on conditional origins being used as data centers for an Application Load Balancer implementation, as detailed [below](#datacenters). Only conditional origins with an `originType` of `CUSTOMER` or `NETSTORAGE` can be used as data centers in an Application Load Balancer configuration.\n",
+                    "minItems": 1,
+                    "maxItems": 199,
                     "items": {
-                      "additionalProperties": false,
-                      "description": "Contains information about the data centers where the origins are located.\n",
-                      "properties": {
-                        "city": {
-                          "description": "The city in which the data center is located.\n",
-                          "type": "string"
-                        },
-                        "cloudServerHostHeaderOverride": {
-                          "description": "When set to `true`, overides the host header for load balancing in a cloud environment.\n",
-                          "type": "boolean"
-                        },
-                        "cloudService": {
-                          "description": "If `true`, caching for the data center is updated at a certain interval, like it would for a cloud-based service.\n",
-                          "type": "boolean"
-                        },
-                        "continent": {
-                          "description": "The continent on which the data center is located. See [Continent Codes](https://control.akamai.com/dl/edgescape/continentCodes.csv) for a list of valid codes.\n",
-                          "enum": [
-                            "AF",
-                            "AS",
-                            "EU",
-                            "NA",
-                            "OC",
-                            "OT",
-                            "SA"
-                          ],
-                          "type": "string"
-                        },
-                        "country": {
-                          "description": "The country in which the data center is located. See [Country Codes](https://control.akamai.com/dl/edgescape/cc2continent.csv) for a list of valid codes.\n",
-                          "maxLength": 2,
-                          "minLength": 2,
-                          "type": "string"
-                        },
-                        "hostname": {
-                          "description": "The name of the host that can be used as a conditional origin.\n",
-                          "maxLength": 256,
-                          "type": "string"
-                        },
-                        "latitude": {
-                          "description": "The latitude value for the data center. This member supports six decimal places of precision.\n",
-                          "maximum": 180,
-                          "minimum": -180,
-                          "type": "number"
-                        },
-                        "livenessHosts": {
-                          "description": "An array of strings that represent the origin servers used to poll the data centers in an Application Load Balancer configuration. These servers support basic HTTP polling.\n",
-                          "items": {
-                            "type": "string"
-                          },
-                          "minItems": 1,
-                          "type": "array",
-                          "uniqueItems": true
-                        },
-                        "longitude": {
-                          "description": "The longitude value for the data center. This member supports six decimal places of precision.\n",
-                          "maximum": 180,
-                          "minimum": -180,
-                          "type": "number"
-                        },
-                        "originId": {
-                          "description": "The conditional origin's unique identifier.\n",
-                          "maxLength": 128,
-                          "type": "string"
-                        },
-                        "percent": {
-                          "description": "The percent of traffic that is sent to the data center. The total for all `dataCenters` objects within the array must equal 100%.\n",
-                          "maximum": 100,
-                          "minimum": 0,
-                          "type": "number"
-                        },
-                        "stateOrProvince": {
-                          "description": "The state, province, or region where the data center is located. See [region codes](https://control.akamai.com/dl/edgescape/region_codes.txt).\n",
-                          "type": "string"
-                        }
+                      "type": "object",
+                      "description": "Contains information about the data centers where the origins are located.",
+                      "x-akamai": {
+                        "file-path": "schemas/dataCenter.yaml"
                       },
+                      "additionalProperties": false,
                       "required": [
                         "cloudService",
                         "continent",
@@ -656,45 +512,104 @@
                         "originId",
                         "percent"
                       ],
-                      "type": "object",
-                      "x-akamai": {
-                        "file-path": "schemas/dataCenter.yaml"
+                      "properties": {
+                        "city": {
+                          "type": "string",
+                          "description": "The city in which the data center is located.\n"
+                        },
+                        "cloudServerHostHeaderOverride": {
+                          "type": "boolean",
+                          "description": "When set to `true`, overides the host header for load balancing in a cloud environment.\n"
+                        },
+                        "cloudService": {
+                          "type": "boolean",
+                          "description": "If `true`, caching for the data center is updated at a certain interval, like it would for a cloud-based service.\n"
+                        },
+                        "continent": {
+                          "type": "string",
+                          "description": "The continent on which the data center is located. See [Continent Codes](https://control.akamai.com/dl/edgescape/continentCodes.csv) for a list of valid codes.\n",
+                          "enum": [
+                            "AF",
+                            "AS",
+                            "EU",
+                            "NA",
+                            "OC",
+                            "OT",
+                            "SA"
+                          ]
+                        },
+                        "country": {
+                          "type": "string",
+                          "description": "The country in which the data center is located. See [Country Codes](https://control.akamai.com/dl/edgescape/cc2continent.csv) for a list of valid codes.\n",
+                          "minLength": 2,
+                          "maxLength": 2
+                        },
+                        "hostname": {
+                          "type": "string",
+                          "description": "The name of the host that can be used as a conditional origin.\n",
+                          "maxLength": 256
+                        },
+                        "latitude": {
+                          "type": "number",
+                          "description": "The latitude value for the data center. This member supports six decimal places of precision.\n",
+                          "minimum": -180,
+                          "maximum": 180
+                        },
+                        "livenessHosts": {
+                          "type": "array",
+                          "description": "An array of strings that represent the origin servers used to poll the data centers in an Application Load Balancer configuration. These servers support basic HTTP polling.\n",
+                          "minItems": 1,
+                          "uniqueItems": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "longitude": {
+                          "type": "number",
+                          "description": "The longitude value for the data center. This member supports six decimal places of precision.\n",
+                          "minimum": -180,
+                          "maximum": 180
+                        },
+                        "originId": {
+                          "type": "string",
+                          "description": "The conditional origin's unique identifier.\n",
+                          "maxLength": 128
+                        },
+                        "percent": {
+                          "type": "number",
+                          "description": "The percent of traffic that is sent to the data center. The total for all `dataCenters` objects within the array must equal 100%.\n",
+                          "minimum": 0,
+                          "maximum": 100
+                        },
+                        "stateOrProvince": {
+                          "type": "string",
+                          "description": "The state, province, or region where the data center is located. See [region codes](https://control.akamai.com/dl/edgescape/region_codes.txt).\n"
+                        }
                       }
-                    },
-                    "maxItems": 199,
-                    "minItems": 1,
-                    "type": "array"
+                    }
                   },
                   "deleted": {
-                    "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n",
-                    "type": "boolean"
-                  },
-                  "description": {
-                    "description": "The description of the load balancing configuration provided by a user.\n",
-                    "type": "string"
+                    "type": "boolean",
+                    "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n"
                   },
                   "livenessSettings": {
-                    "description": "The object containing information on the liveness settings for an Application Load Balancer implementation, as detailed [below](#livenesssettings).\n",
-                    "type": "object"
+                    "type": "object",
+                    "description": "The object containing information on the liveness settings for an Application Load Balancer implementation, as detailed [below](#livenesssettings).\n"
                   },
                   "originId": {
+                    "type": "string",
                     "description": "The conditional origin's unique identifier.\n",
-                    "maxLength": 62,
                     "minLength": 2,
-                    "type": "string"
+                    "maxLength": 62
                   }
-                },
-                "type": "object",
-                "x-akamai": {
-                  "file-path": "schemas/post-origin-versions-request.yaml"
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "201": {
+            "description": "Returns details about an origin version.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -737,105 +652,51 @@
                   ]
                 },
                 "schema": {
+                  "type": "object",
+                  "description": "Details for a version of the Application Load Balancer configuration.",
+                  "x-akamai": {
+                    "file-path": "schemas/post-origin-versions-response.yaml"
+                  },
                   "additionalProperties": false,
-                  "description": "Details for a version of the Application Load Balancer configuration.\n",
                   "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "The description of the load balancing configuration provided by a user.\n"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "description": "The version number of the activated load balancing configuration.\n",
+                      "minimum": 0
+                    },
                     "balancingType": {
+                      "type": "string",
                       "description": "The type of load balancing, either `WEIGHTED` or `PERFORMANCE`.\n",
                       "enum": [
                         "WEIGHTED",
                         "PERFORMANCE"
-                      ],
-                      "type": "string"
+                      ]
                     },
                     "createdBy": {
-                      "description": "The name of the user who created this load balancing configuration.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The name of the user who created this load balancing configuration.\n"
                     },
                     "createdDate": {
+                      "type": "string",
                       "description": "The date and time, in ISO 8601 format, when this load balancing configuration was created.\n",
-                      "format": "date-time",
-                      "type": "string"
+                      "format": "date-time"
                     },
                     "dataCenters": {
+                      "type": "array",
                       "description": "The object containing information on conditional origins being used as data centers for an Application Load Balancer implementation, as detailed [below](#datacenters). Only conditional origins with an `originType` of `CUSTOMER` or `NETSTORAGE` can be used as data centers in an Application Load Balancer configuration.\n",
+                      "minItems": 1,
+                      "maxItems": 199,
                       "items": {
-                        "additionalProperties": false,
-                        "description": "Contains information about the data centers where the origins are located.\n",
-                        "properties": {
-                          "city": {
-                            "description": "The city in which the data center is located.\n",
-                            "type": "string"
-                          },
-                          "cloudServerHostHeaderOverride": {
-                            "description": "When set to `true`, overides the host header for load balancing in a cloud environment.\n",
-                            "type": "boolean"
-                          },
-                          "cloudService": {
-                            "description": "If `true`, caching for the data center is updated at a certain interval, like it would for a cloud-based service.\n",
-                            "type": "boolean"
-                          },
-                          "continent": {
-                            "description": "The continent on which the data center is located. See [Continent Codes](https://control.akamai.com/dl/edgescape/continentCodes.csv) for a list of valid codes.\n",
-                            "enum": [
-                              "AF",
-                              "AS",
-                              "EU",
-                              "NA",
-                              "OC",
-                              "OT",
-                              "SA"
-                            ],
-                            "type": "string"
-                          },
-                          "country": {
-                            "description": "The country in which the data center is located. See [Country Codes](https://control.akamai.com/dl/edgescape/cc2continent.csv) for a list of valid codes.\n",
-                            "maxLength": 2,
-                            "minLength": 2,
-                            "type": "string"
-                          },
-                          "hostname": {
-                            "description": "The name of the host that can be used as a conditional origin.\n",
-                            "maxLength": 256,
-                            "type": "string"
-                          },
-                          "latitude": {
-                            "description": "The latitude value for the data center. This member supports six decimal places of precision.\n",
-                            "maximum": 180,
-                            "minimum": -180,
-                            "type": "number"
-                          },
-                          "livenessHosts": {
-                            "description": "An array of strings that represent the origin servers used to poll the data centers in an Application Load Balancer configuration. These servers support basic HTTP polling.\n",
-                            "items": {
-                              "type": "string"
-                            },
-                            "minItems": 1,
-                            "type": "array",
-                            "uniqueItems": true
-                          },
-                          "longitude": {
-                            "description": "The longitude value for the data center. This member supports six decimal places of precision.\n",
-                            "maximum": 180,
-                            "minimum": -180,
-                            "type": "number"
-                          },
-                          "originId": {
-                            "description": "The conditional origin's unique identifier.\n",
-                            "maxLength": 128,
-                            "type": "string"
-                          },
-                          "percent": {
-                            "description": "The percent of traffic that is sent to the data center. The total for all `dataCenters` objects within the array must equal 100%.\n",
-                            "maximum": 100,
-                            "minimum": 0,
-                            "type": "number"
-                          },
-                          "stateOrProvince": {
-                            "description": "The state, province, or region where the data center is located. See [region codes](https://control.akamai.com/dl/edgescape/region_codes.txt).\n",
-                            "type": "string"
-                          }
+                        "type": "object",
+                        "description": "Contains information about the data centers where the origins are located.",
+                        "x-akamai": {
+                          "file-path": "schemas/dataCenter.yaml"
                         },
+                        "additionalProperties": false,
                         "required": [
                           "cloudService",
                           "continent",
@@ -845,176 +706,357 @@
                           "originId",
                           "percent"
                         ],
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/dataCenter.yaml"
+                        "properties": {
+                          "city": {
+                            "type": "string",
+                            "description": "The city in which the data center is located.\n"
+                          },
+                          "cloudServerHostHeaderOverride": {
+                            "type": "boolean",
+                            "description": "When set to `true`, overides the host header for load balancing in a cloud environment.\n"
+                          },
+                          "cloudService": {
+                            "type": "boolean",
+                            "description": "If `true`, caching for the data center is updated at a certain interval, like it would for a cloud-based service.\n"
+                          },
+                          "continent": {
+                            "type": "string",
+                            "description": "The continent on which the data center is located. See [Continent Codes](https://control.akamai.com/dl/edgescape/continentCodes.csv) for a list of valid codes.\n",
+                            "enum": [
+                              "AF",
+                              "AS",
+                              "EU",
+                              "NA",
+                              "OC",
+                              "OT",
+                              "SA"
+                            ]
+                          },
+                          "country": {
+                            "type": "string",
+                            "description": "The country in which the data center is located. See [Country Codes](https://control.akamai.com/dl/edgescape/cc2continent.csv) for a list of valid codes.\n",
+                            "minLength": 2,
+                            "maxLength": 2
+                          },
+                          "hostname": {
+                            "type": "string",
+                            "description": "The name of the host that can be used as a conditional origin.\n",
+                            "maxLength": 256
+                          },
+                          "latitude": {
+                            "type": "number",
+                            "description": "The latitude value for the data center. This member supports six decimal places of precision.\n",
+                            "minimum": -180,
+                            "maximum": 180
+                          },
+                          "livenessHosts": {
+                            "type": "array",
+                            "description": "An array of strings that represent the origin servers used to poll the data centers in an Application Load Balancer configuration. These servers support basic HTTP polling.\n",
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "longitude": {
+                            "type": "number",
+                            "description": "The longitude value for the data center. This member supports six decimal places of precision.\n",
+                            "minimum": -180,
+                            "maximum": 180
+                          },
+                          "originId": {
+                            "type": "string",
+                            "description": "The conditional origin's unique identifier.\n",
+                            "maxLength": 128
+                          },
+                          "percent": {
+                            "type": "number",
+                            "description": "The percent of traffic that is sent to the data center. The total for all `dataCenters` objects within the array must equal 100%.\n",
+                            "minimum": 0,
+                            "maximum": 100
+                          },
+                          "stateOrProvince": {
+                            "type": "string",
+                            "description": "The state, province, or region where the data center is located. See [region codes](https://control.akamai.com/dl/edgescape/region_codes.txt).\n"
+                          }
                         }
-                      },
-                      "maxItems": 199,
-                      "minItems": 1,
-                      "type": "array"
+                      }
                     },
                     "deleted": {
-                      "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n",
-                      "type": "boolean"
-                    },
-                    "description": {
-                      "description": "The description of the load balancing configuration provided by a user.\n",
-                      "type": "string"
+                      "type": "boolean",
+                      "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n"
                     },
                     "immutable": {
-                      "description": "Indicates whether you can edit the load balancing version. The default setting is `false`. It becomes `true` when you activate the load balancing version for the first time.\n",
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "Indicates whether you can edit the load balancing version. The default setting is `false`. It becomes `true` when you activate the load balancing version for the first time.\n"
                     },
                     "lastModifiedBy": {
-                      "description": "The user who last modified the load balancing configuration.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The user who last modified the load balancing configuration.\n"
                     },
                     "lastModifiedDate": {
+                      "type": "string",
                       "description": "The date and time, in ISO 8601 format, when the initial load balancing configuration was last modified.\n",
-                      "format": "date-time",
-                      "type": "string"
+                      "format": "date-time"
                     },
                     "livenessSettings": {
-                      "description": "The object containing information on the liveness settings for an Application Load Balancer implementation, as detailed [below](#livenesssettings).\n",
-                      "type": "object"
+                      "type": "object",
+                      "description": "The object containing information on the liveness settings for an Application Load Balancer implementation, as detailed [below](#livenesssettings).\n"
                     },
                     "originId": {
+                      "type": "string",
                       "description": "The conditional origin's unique identifier.\n",
-                      "maxLength": 62,
                       "minLength": 2,
-                      "type": "string"
-                    },
-                    "version": {
-                      "description": "The version number of the activated load balancing configuration.\n",
-                      "minimum": 0,
-                      "type": "integer"
+                      "maxLength": 62
                     },
                     "warnings": {
+                      "type": "array",
                       "description": "Provides error response data to help diagnose the problem that led to the error.\n",
                       "items": {
-                        "additionalProperties": false,
-                        "description": "Provides error response data to help diagnose the problem that led to the error.\n",
-                        "properties": {
-                          "detail": {
-                            "description": "Provides actionable instructions to diagnose the problem that caused the error.\n",
-                            "type": "string"
-                          },
-                          "errors": {
-                            "description": "Error objects that provide information for debugging.\n",
-                            "items": {
-                              "additionalProperties": false,
-                              "description": "Provides error response data to help diagnose the problem that led to the error.\n",
-                              "properties": {
-                                "detail": {
-                                  "description": "Provides actionable instructions to diagnose the problem that caused the error.\n",
-                                  "type": "string"
-                                },
-                                "errors": {
-                                  "description": "Error objects that provide information for debugging.\n",
-                                  "items": {
-                                    "description": "A further-nested HTTP problem object.",
-                                    "type": "object",
-                                    "x-akamai": {
-                                      "file-path": "schemas/http-problem-nested.yaml"
-                                    }
-                                  },
-                                  "type": "array"
-                                },
-                                "jsonPointer": {
-                                  "description": "The pointer to the error response JSON body.\n",
-                                  "maxLength": 128,
-                                  "type": "string"
-                                },
-                                "status": {
-                                  "description": "The HTTP problem status code.\n",
-                                  "type": "integer"
-                                },
-                                "title": {
-                                  "description": "The descriptive label for the overall problem.\n",
-                                  "type": "string"
-                                },
-                                "type": {
-                                  "description": "The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.\n",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "detail",
-                                "title",
-                                "type"
-                              ],
-                              "type": "object"
-                            },
-                            "type": "array"
-                          },
-                          "jsonPointer": {
-                            "description": "The pointer to the error response JSON body.\n",
-                            "maxLength": 128,
-                            "type": "string"
-                          },
-                          "status": {
-                            "description": "The HTTP problem status code.\n",
-                            "type": "integer"
-                          },
-                          "title": {
-                            "description": "The descriptive label for the overall problem.\n",
-                            "type": "string"
-                          },
-                          "type": {
-                            "description": "The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.\n",
-                            "type": "string"
-                          }
+                        "type": "object",
+                        "description": "Provides error response data to help diagnose the problem that led to the error.",
+                        "x-akamai": {
+                          "file-path": "schemas/warning.yaml"
                         },
+                        "additionalProperties": false,
                         "required": [
                           "detail",
                           "title",
                           "type"
                         ],
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/warning.yaml"
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "description": "The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.\n"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The descriptive label for the overall problem.\n"
+                          },
+                          "detail": {
+                            "type": "string",
+                            "description": "Provides actionable instructions to diagnose the problem that caused the error.\n"
+                          },
+                          "errors": {
+                            "type": "array",
+                            "description": "Error objects that provide information for debugging.\n",
+                            "items": {
+                              "type": "object",
+                              "description": "Provides error response data to help diagnose the problem that led to the error.\n",
+                              "additionalProperties": false,
+                              "required": [
+                                "detail",
+                                "title",
+                                "type"
+                              ],
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "description": "The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.\n"
+                                },
+                                "title": {
+                                  "type": "string",
+                                  "description": "The descriptive label for the overall problem.\n"
+                                },
+                                "detail": {
+                                  "type": "string",
+                                  "description": "Provides actionable instructions to diagnose the problem that caused the error.\n"
+                                },
+                                "errors": {
+                                  "type": "array",
+                                  "description": "Error objects that provide information for debugging.\n",
+                                  "items": {
+                                    "type": "object",
+                                    "description": "A further-nested HTTP problem object.\n",
+                                    "x-akamai": {
+                                      "file-path": "schemas/http-problem-nested.yaml"
+                                    }
+                                  }
+                                },
+                                "jsonPointer": {
+                                  "type": "string",
+                                  "description": "The pointer to the error response JSON body.\n",
+                                  "maxLength": 128
+                                },
+                                "status": {
+                                  "type": "integer",
+                                  "description": "The HTTP problem status code.\n"
+                                }
+                              }
+                            }
+                          },
+                          "jsonPointer": {
+                            "type": "string",
+                            "description": "The pointer to the error response JSON body.\n",
+                            "maxLength": 128
+                          },
+                          "status": {
+                            "type": "integer",
+                            "description": "The HTTP problem status code.\n"
+                          }
                         }
-                      },
-                      "type": "array"
+                      }
                     }
-                  },
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/post-origin-versions-response.yaml"
                   }
                 }
               }
-            },
-            "description": "Returns details about an origin version.\n"
+            }
           }
-        },
-        "summary": "Create a load balancing version",
+        }
+      },
+      "get": {
+        "operationId": "get-origin-versions",
+        "summary": "List load balancing versions",
         "tags": [
           "Load balancing versions"
-        ]
+        ],
+        "description": "For Application Load Balancer, run this operation to list all versions of a load balancing configuration. The response lists the versions in descending order.\n",
+        "responses": {
+          "200": {
+            "description": "Schema for a list of load balancer versions.\n",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "createdBy": "hgildong",
+                    "createdDate": "2017-12-20T00:00:00.000Z",
+                    "deleted": false,
+                    "description": "Load Balancer version 2",
+                    "immutable": true,
+                    "lastModifiedBy": "jsmith",
+                    "lastModifiedDate": "2017-12-20T00:00:00.000Z",
+                    "originId": "loadBalancer1",
+                    "version": 2
+                  },
+                  {
+                    "createdBy": "jsmith",
+                    "createdDate": "2017-12-10T00:00:00.000Z",
+                    "deleted": false,
+                    "description": "Load Balancer version 1",
+                    "immutable": true,
+                    "lastModifiedBy": "jdupont",
+                    "lastModifiedDate": "2017-12-10T00:00:00.000Z",
+                    "originId": "loadBalancer1",
+                    "version": 1
+                  }
+                ],
+                "schema": {
+                  "type": "array",
+                  "description": "Lists origin versions for load balancing.",
+                  "x-akamai": {
+                    "file-path": "schemas/get-origin-versions-response.yaml"
+                  },
+                  "items": {
+                    "type": "object",
+                    "description": "Lists origin versions for load balancing.",
+                    "x-akamai": {
+                      "file-path": "schemas/origin-version.yaml"
+                    },
+                    "additionalProperties": false,
+                    "properties": {
+                      "description": {
+                        "type": "string",
+                        "description": "The description of the load balancing configuration provided by a user.\n"
+                      },
+                      "version": {
+                        "type": "integer",
+                        "description": "The version number of the activated load balancing configuration.\n",
+                        "minimum": 0
+                      },
+                      "createdBy": {
+                        "type": "string",
+                        "description": "The name of the user who created this load balancing configuration.\n"
+                      },
+                      "createdDate": {
+                        "type": "string",
+                        "description": "The date and time, in ISO 8601 format, when this load balancing configuration was created.\n",
+                        "format": "date-time"
+                      },
+                      "deleted": {
+                        "type": "boolean",
+                        "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n"
+                      },
+                      "immutable": {
+                        "type": "boolean",
+                        "description": "Indicates whether you can edit the load balancing version. The default setting is `false`. It automatically becomes `true` when the load balancing version is activated for the first time.\n"
+                      },
+                      "lastModifiedBy": {
+                        "type": "string",
+                        "description": "The user who last modified the load balancing configuration.\n"
+                      },
+                      "lastModifiedDate": {
+                        "type": "string",
+                        "description": "The date and time, in ISO 8601 format, when the initial load balancing configuration was last modified.\n",
+                        "format": "date-time"
+                      },
+                      "originId": {
+                        "type": "string",
+                        "description": "The conditional origin's unique identifier.\n",
+                        "minLength": 2,
+                        "maxLength": 62
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/origins/{originId}/versions/{version}": {
+      "parameters": [
+        {
+          "name": "version",
+          "in": "path",
+          "description": "The version number of the policy.",
+          "x-akamai": {
+            "file-path": "parameters/version-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "number",
+            "example": 2
+          }
+        },
+        {
+          "name": "originId",
+          "in": "path",
+          "description": "Unique identifier for the origin.",
+          "x-akamai": {
+            "file-path": "parameters/originId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "originremote2"
+          }
+        }
+      ],
       "get": {
-        "description": "For this operation, you have the option of using the `validate` query parameter.  When set to `true`, this parameter verifies whether the settings for the selected `loadBalancerId` and `version` are valid. The default setting for this parameter is `false`.\n",
         "operationId": "get-origin-version",
+        "summary": "Get a load balancing version",
+        "tags": [
+          "Load balancing versions"
+        ],
+        "description": "For this operation, you have the option of using the `validate` query parameter.  When set to `true`, this parameter verifies whether the settings for the selected `loadBalancerId` and `version` are valid. The default setting for this parameter is `false`.\n",
         "parameters": [
           {
-            "description": "For GET operations, verifies that the current settings for the selected `originId` and `version` are valid.\n",
-            "in": "query",
             "name": "validate",
-            "schema": {
-              "example": true,
-              "type": "boolean"
-            },
+            "in": "query",
+            "description": "For GET operations, verifies that the current settings for the selected `originId` and `version` are valid.",
             "x-akamai": {
               "file-path": "parameters/validate-query.yaml"
+            },
+            "schema": {
+              "type": "boolean",
+              "example": true
             }
           }
         ],
         "responses": {
           "200": {
+            "description": "Returns details about an origin version.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -1057,105 +1099,51 @@
                   ]
                 },
                 "schema": {
+                  "type": "object",
+                  "description": "Details for an Application Load Balancer configuration version.",
+                  "x-akamai": {
+                    "file-path": "schemas/get-origin-version-response.yaml"
+                  },
                   "additionalProperties": false,
-                  "description": "Details for an Application Load Balancer configuration version.\n",
                   "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "The description of the load balancing configuration provided by a user.\n"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "description": "The version number of the activated load balancing configuration.\n",
+                      "minimum": 0
+                    },
                     "balancingType": {
+                      "type": "string",
                       "description": "The type of load balancing, either `WEIGHTED` or `PERFORMANCE`.\n",
                       "enum": [
                         "WEIGHTED",
                         "PERFORMANCE"
-                      ],
-                      "type": "string"
+                      ]
                     },
                     "createdBy": {
-                      "description": "The name of the user who created this load balancing configuration.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The name of the user who created this load balancing configuration.\n"
                     },
                     "createdDate": {
+                      "type": "string",
                       "description": "The date and time, in ISO 8601 format, when this load balancing configuration was created.\n",
-                      "format": "date-time",
-                      "type": "string"
+                      "format": "date-time"
                     },
                     "dataCenters": {
+                      "type": "array",
                       "description": "The object containing information on conditional origins being used as data centers for an Application Load Balancer implementation. Only conditional origins with an `originType` of `CUSTOMER` or `NETSTORAGE` can be used as data centers in an Application Load Balancer configuration.\n",
+                      "minItems": 1,
+                      "maxItems": 199,
                       "items": {
-                        "additionalProperties": false,
-                        "description": "Contains information about the data centers where the origins are located.\n",
-                        "properties": {
-                          "city": {
-                            "description": "The city in which the data center is located.\n",
-                            "type": "string"
-                          },
-                          "cloudServerHostHeaderOverride": {
-                            "description": "When set to `true`, overides the host header for load balancing in a cloud environment.\n",
-                            "type": "boolean"
-                          },
-                          "cloudService": {
-                            "description": "If `true`, caching for the data center is updated at a certain interval, like it would for a cloud-based service.\n",
-                            "type": "boolean"
-                          },
-                          "continent": {
-                            "description": "The continent on which the data center is located. See [Continent Codes](https://control.akamai.com/dl/edgescape/continentCodes.csv) for a list of valid codes.\n",
-                            "enum": [
-                              "AF",
-                              "AS",
-                              "EU",
-                              "NA",
-                              "OC",
-                              "OT",
-                              "SA"
-                            ],
-                            "type": "string"
-                          },
-                          "country": {
-                            "description": "The country in which the data center is located. See [Country Codes](https://control.akamai.com/dl/edgescape/cc2continent.csv) for a list of valid codes.\n",
-                            "maxLength": 2,
-                            "minLength": 2,
-                            "type": "string"
-                          },
-                          "hostname": {
-                            "description": "The name of the host that can be used as a conditional origin.\n",
-                            "maxLength": 256,
-                            "type": "string"
-                          },
-                          "latitude": {
-                            "description": "The latitude value for the data center. This member supports six decimal places of precision.\n",
-                            "maximum": 180,
-                            "minimum": -180,
-                            "type": "number"
-                          },
-                          "livenessHosts": {
-                            "description": "An array of strings that represent the origin servers used to poll the data centers in an Application Load Balancer configuration. These servers support basic HTTP polling.\n",
-                            "items": {
-                              "type": "string"
-                            },
-                            "minItems": 1,
-                            "type": "array",
-                            "uniqueItems": true
-                          },
-                          "longitude": {
-                            "description": "The longitude value for the data center. This member supports six decimal places of precision.\n",
-                            "maximum": 180,
-                            "minimum": -180,
-                            "type": "number"
-                          },
-                          "originId": {
-                            "description": "The conditional origin's unique identifier.\n",
-                            "maxLength": 128,
-                            "type": "string"
-                          },
-                          "percent": {
-                            "description": "The percent of traffic that is sent to the data center. The total for all `dataCenters` objects within the array must equal 100%.\n",
-                            "maximum": 100,
-                            "minimum": 0,
-                            "type": "number"
-                          },
-                          "stateOrProvince": {
-                            "description": "The state, province, or region where the data center is located. See [region codes](https://control.akamai.com/dl/edgescape/region_codes.txt).\n",
-                            "type": "string"
-                          }
+                        "type": "object",
+                        "description": "Contains information about the data centers where the origins are located.",
+                        "x-akamai": {
+                          "file-path": "schemas/dataCenter.yaml"
                         },
+                        "additionalProperties": false,
                         "required": [
                           "cloudService",
                           "continent",
@@ -1165,187 +1153,213 @@
                           "originId",
                           "percent"
                         ],
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/dataCenter.yaml"
+                        "properties": {
+                          "city": {
+                            "type": "string",
+                            "description": "The city in which the data center is located.\n"
+                          },
+                          "cloudServerHostHeaderOverride": {
+                            "type": "boolean",
+                            "description": "When set to `true`, overides the host header for load balancing in a cloud environment.\n"
+                          },
+                          "cloudService": {
+                            "type": "boolean",
+                            "description": "If `true`, caching for the data center is updated at a certain interval, like it would for a cloud-based service.\n"
+                          },
+                          "continent": {
+                            "type": "string",
+                            "description": "The continent on which the data center is located. See [Continent Codes](https://control.akamai.com/dl/edgescape/continentCodes.csv) for a list of valid codes.\n",
+                            "enum": [
+                              "AF",
+                              "AS",
+                              "EU",
+                              "NA",
+                              "OC",
+                              "OT",
+                              "SA"
+                            ]
+                          },
+                          "country": {
+                            "type": "string",
+                            "description": "The country in which the data center is located. See [Country Codes](https://control.akamai.com/dl/edgescape/cc2continent.csv) for a list of valid codes.\n",
+                            "minLength": 2,
+                            "maxLength": 2
+                          },
+                          "hostname": {
+                            "type": "string",
+                            "description": "The name of the host that can be used as a conditional origin.\n",
+                            "maxLength": 256
+                          },
+                          "latitude": {
+                            "type": "number",
+                            "description": "The latitude value for the data center. This member supports six decimal places of precision.\n",
+                            "minimum": -180,
+                            "maximum": 180
+                          },
+                          "livenessHosts": {
+                            "type": "array",
+                            "description": "An array of strings that represent the origin servers used to poll the data centers in an Application Load Balancer configuration. These servers support basic HTTP polling.\n",
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "longitude": {
+                            "type": "number",
+                            "description": "The longitude value for the data center. This member supports six decimal places of precision.\n",
+                            "minimum": -180,
+                            "maximum": 180
+                          },
+                          "originId": {
+                            "type": "string",
+                            "description": "The conditional origin's unique identifier.\n",
+                            "maxLength": 128
+                          },
+                          "percent": {
+                            "type": "number",
+                            "description": "The percent of traffic that is sent to the data center. The total for all `dataCenters` objects within the array must equal 100%.\n",
+                            "minimum": 0,
+                            "maximum": 100
+                          },
+                          "stateOrProvince": {
+                            "type": "string",
+                            "description": "The state, province, or region where the data center is located. See [region codes](https://control.akamai.com/dl/edgescape/region_codes.txt).\n"
+                          }
                         }
-                      },
-                      "maxItems": 199,
-                      "minItems": 1,
-                      "type": "array"
+                      }
                     },
                     "deleted": {
-                      "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n",
-                      "type": "boolean"
-                    },
-                    "description": {
-                      "description": "The description of the load balancing configuration provided by a user.\n",
-                      "type": "string"
+                      "type": "boolean",
+                      "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n"
                     },
                     "immutable": {
-                      "description": "Indicates whether you can edit the load balancing version. The default setting is `false`. It automatically becomes `true` when the load balancing version is activated for the first time.\n",
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "Indicates whether you can edit the load balancing version. The default setting is `false`. It automatically becomes `true` when the load balancing version is activated for the first time.\n"
                     },
                     "lastModifiedBy": {
-                      "description": "The user who last modified the load balancing configuration.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The user who last modified the load balancing configuration.\n"
                     },
                     "lastModifiedDate": {
+                      "type": "string",
                       "description": "The date and time, in ISO 8601 format, when the initial load balancing configuration was last modified.\n",
-                      "format": "date-time",
-                      "type": "string"
+                      "format": "date-time"
                     },
                     "livenessSettings": {
-                      "description": "The object containing information on the liveness settings for an Application Load Balancer implementation.\n",
-                      "type": "object"
+                      "type": "object",
+                      "description": "The object containing information on the liveness settings for an Application Load Balancer implementation.\n"
                     },
                     "originId": {
+                      "type": "string",
                       "description": "The conditional origin's unique identifier.\n",
-                      "maxLength": 62,
                       "minLength": 2,
-                      "type": "string"
-                    },
-                    "version": {
-                      "description": "The version number of the activated load balancing configuration.\n",
-                      "minimum": 0,
-                      "type": "integer"
+                      "maxLength": 62
                     },
                     "warnings": {
+                      "type": "array",
                       "description": "Provides error response data to help diagnose the problem that led to the error.\n",
                       "items": {
-                        "additionalProperties": false,
-                        "description": "Provides error response data to help diagnose the problem that led to the error.\n",
-                        "properties": {
-                          "detail": {
-                            "description": "Provides actionable instructions to diagnose the problem that caused the error.\n",
-                            "type": "string"
-                          },
-                          "errors": {
-                            "description": "Error objects that provide information for debugging.\n",
-                            "items": {
-                              "additionalProperties": false,
-                              "description": "Provides error response data to help diagnose the problem that led to the error.\n",
-                              "properties": {
-                                "detail": {
-                                  "description": "Provides actionable instructions to diagnose the problem that caused the error.\n",
-                                  "type": "string"
-                                },
-                                "errors": {
-                                  "description": "Error objects that provide information for debugging.\n",
-                                  "items": {
-                                    "description": "A further-nested HTTP problem object.",
-                                    "type": "object",
-                                    "x-akamai": {
-                                      "file-path": "schemas/http-problem-nested.yaml"
-                                    }
-                                  },
-                                  "type": "array"
-                                },
-                                "jsonPointer": {
-                                  "description": "The pointer to the error response JSON body.\n",
-                                  "maxLength": 128,
-                                  "type": "string"
-                                },
-                                "status": {
-                                  "description": "The HTTP problem status code.\n",
-                                  "type": "integer"
-                                },
-                                "title": {
-                                  "description": "The descriptive label for the overall problem.\n",
-                                  "type": "string"
-                                },
-                                "type": {
-                                  "description": "The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.\n",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "detail",
-                                "title",
-                                "type"
-                              ],
-                              "type": "object"
-                            },
-                            "type": "array"
-                          },
-                          "jsonPointer": {
-                            "description": "The pointer to the error response JSON body.\n",
-                            "maxLength": 128,
-                            "type": "string"
-                          },
-                          "status": {
-                            "description": "The HTTP problem status code.\n",
-                            "type": "integer"
-                          },
-                          "title": {
-                            "description": "The descriptive label for the overall problem.\n",
-                            "type": "string"
-                          },
-                          "type": {
-                            "description": "The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.\n",
-                            "type": "string"
-                          }
+                        "type": "object",
+                        "description": "Provides error response data to help diagnose the problem that led to the error.",
+                        "x-akamai": {
+                          "file-path": "schemas/warning.yaml"
                         },
+                        "additionalProperties": false,
                         "required": [
                           "detail",
                           "title",
                           "type"
                         ],
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/warning.yaml"
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "description": "The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.\n"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The descriptive label for the overall problem.\n"
+                          },
+                          "detail": {
+                            "type": "string",
+                            "description": "Provides actionable instructions to diagnose the problem that caused the error.\n"
+                          },
+                          "errors": {
+                            "type": "array",
+                            "description": "Error objects that provide information for debugging.\n",
+                            "items": {
+                              "type": "object",
+                              "description": "Provides error response data to help diagnose the problem that led to the error.\n",
+                              "additionalProperties": false,
+                              "required": [
+                                "detail",
+                                "title",
+                                "type"
+                              ],
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "description": "The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.\n"
+                                },
+                                "title": {
+                                  "type": "string",
+                                  "description": "The descriptive label for the overall problem.\n"
+                                },
+                                "detail": {
+                                  "type": "string",
+                                  "description": "Provides actionable instructions to diagnose the problem that caused the error.\n"
+                                },
+                                "errors": {
+                                  "type": "array",
+                                  "description": "Error objects that provide information for debugging.\n",
+                                  "items": {
+                                    "type": "object",
+                                    "description": "A further-nested HTTP problem object.\n",
+                                    "x-akamai": {
+                                      "file-path": "schemas/http-problem-nested.yaml"
+                                    }
+                                  }
+                                },
+                                "jsonPointer": {
+                                  "type": "string",
+                                  "description": "The pointer to the error response JSON body.\n",
+                                  "maxLength": 128
+                                },
+                                "status": {
+                                  "type": "integer",
+                                  "description": "The HTTP problem status code.\n"
+                                }
+                              }
+                            }
+                          },
+                          "jsonPointer": {
+                            "type": "string",
+                            "description": "The pointer to the error response JSON body.\n",
+                            "maxLength": 128
+                          },
+                          "status": {
+                            "type": "integer",
+                            "description": "The HTTP problem status code.\n"
+                          }
                         }
-                      },
-                      "type": "array"
+                      }
                     }
-                  },
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/get-origin-version-response.yaml"
                   }
                 }
               }
-            },
-            "description": "Returns details about an origin version.\n"
-          }
-        },
-        "summary": "Get a load balancing version",
-        "tags": [
-          "Load balancing versions"
-        ]
-      },
-      "parameters": [
-        {
-          "description": "The number of the version.\n",
-          "in": "path",
-          "name": "version",
-          "required": true,
-          "schema": {
-            "example": 2001,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/version-path.yaml"
-          }
-        },
-        {
-          "description": "Unique identifier for the origin.\n",
-          "in": "path",
-          "name": "originId",
-          "required": true,
-          "schema": {
-            "example": "originremote2",
-            "type": "string"
-          },
-          "x-akamai": {
-            "file-path": "parameters/originId-path.yaml"
+            }
           }
         }
-      ],
+      },
       "put": {
-        "description": "Use this operation to update a selected load balancer version. You cannot edit a load balancer version that has ever been activated.\n",
         "operationId": "put-origin-version",
+        "summary": "Update a load balancing version",
+        "tags": [
+          "Load balancing versions"
+        ],
+        "description": "Use this operation to update a selected load balancer version. You cannot edit a load balancer version that has ever been activated.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -1383,96 +1397,37 @@
                 ]
               },
               "schema": {
-                "additionalProperties": false,
+                "type": "object",
                 "description": "TBD.\n",
+                "x-akamai": {
+                  "file-path": "schemas/put-origin-version-request.yaml"
+                },
+                "additionalProperties": false,
                 "properties": {
+                  "description": {
+                    "type": "string",
+                    "description": "The description of the load balancing configuration provided by a user.\n"
+                  },
                   "balancingType": {
+                    "type": "string",
                     "description": "The type of load balancing, either `WEIGHTED` or `PERFORMANCE`.\n",
                     "enum": [
                       "WEIGHTED",
                       "PERFORMANCE"
-                    ],
-                    "type": "string"
+                    ]
                   },
                   "dataCenters": {
+                    "type": "array",
                     "description": "The object containing information on conditional origins being used as data centers for an Application Load Balancer implementation, as detailed [below](#datacenters). Only conditional origins with an `originType` of `CUSTOMER` or `NETSTORAGE` can be used as data centers in an Application Load Balancer configuration.\n",
+                    "minItems": 1,
+                    "maxItems": 199,
                     "items": {
-                      "additionalProperties": false,
-                      "description": "Contains information about the data centers where the origins are located.\n",
-                      "properties": {
-                        "city": {
-                          "description": "The city in which the data center is located.\n",
-                          "type": "string"
-                        },
-                        "cloudServerHostHeaderOverride": {
-                          "description": "When set to `true`, overides the host header for load balancing in a cloud environment.\n",
-                          "type": "boolean"
-                        },
-                        "cloudService": {
-                          "description": "If `true`, caching for the data center is updated at a certain interval, like it would for a cloud-based service.\n",
-                          "type": "boolean"
-                        },
-                        "continent": {
-                          "description": "The continent on which the data center is located. See [Continent Codes](https://control.akamai.com/dl/edgescape/continentCodes.csv) for a list of valid codes.\n",
-                          "enum": [
-                            "AF",
-                            "AS",
-                            "EU",
-                            "NA",
-                            "OC",
-                            "OT",
-                            "SA"
-                          ],
-                          "type": "string"
-                        },
-                        "country": {
-                          "description": "The country in which the data center is located. See [Country Codes](https://control.akamai.com/dl/edgescape/cc2continent.csv) for a list of valid codes.\n",
-                          "maxLength": 2,
-                          "minLength": 2,
-                          "type": "string"
-                        },
-                        "hostname": {
-                          "description": "The name of the host that can be used as a conditional origin.\n",
-                          "maxLength": 256,
-                          "type": "string"
-                        },
-                        "latitude": {
-                          "description": "The latitude value for the data center. This member supports six decimal places of precision.\n",
-                          "maximum": 180,
-                          "minimum": -180,
-                          "type": "number"
-                        },
-                        "livenessHosts": {
-                          "description": "An array of strings that represent the origin servers used to poll the data centers in an Application Load Balancer configuration. These servers support basic HTTP polling.\n",
-                          "items": {
-                            "type": "string"
-                          },
-                          "minItems": 1,
-                          "type": "array",
-                          "uniqueItems": true
-                        },
-                        "longitude": {
-                          "description": "The longitude value for the data center. This member supports six decimal places of precision.\n",
-                          "maximum": 180,
-                          "minimum": -180,
-                          "type": "number"
-                        },
-                        "originId": {
-                          "description": "The conditional origin's unique identifier.\n",
-                          "maxLength": 128,
-                          "type": "string"
-                        },
-                        "percent": {
-                          "description": "The percent of traffic that is sent to the data center. The total for all `dataCenters` objects within the array must equal 100%.\n",
-                          "maximum": 100,
-                          "minimum": 0,
-                          "type": "number"
-                        },
-                        "stateOrProvince": {
-                          "description": "The state, province, or region where the data center is located. See [region codes](https://control.akamai.com/dl/edgescape/region_codes.txt).\n",
-                          "type": "string"
-                        }
+                      "type": "object",
+                      "description": "Contains information about the data centers where the origins are located.",
+                      "x-akamai": {
+                        "file-path": "schemas/dataCenter.yaml"
                       },
+                      "additionalProperties": false,
                       "required": [
                         "cloudService",
                         "continent",
@@ -1482,45 +1437,104 @@
                         "originId",
                         "percent"
                       ],
-                      "type": "object",
-                      "x-akamai": {
-                        "file-path": "schemas/dataCenter.yaml"
+                      "properties": {
+                        "city": {
+                          "type": "string",
+                          "description": "The city in which the data center is located.\n"
+                        },
+                        "cloudServerHostHeaderOverride": {
+                          "type": "boolean",
+                          "description": "When set to `true`, overides the host header for load balancing in a cloud environment.\n"
+                        },
+                        "cloudService": {
+                          "type": "boolean",
+                          "description": "If `true`, caching for the data center is updated at a certain interval, like it would for a cloud-based service.\n"
+                        },
+                        "continent": {
+                          "type": "string",
+                          "description": "The continent on which the data center is located. See [Continent Codes](https://control.akamai.com/dl/edgescape/continentCodes.csv) for a list of valid codes.\n",
+                          "enum": [
+                            "AF",
+                            "AS",
+                            "EU",
+                            "NA",
+                            "OC",
+                            "OT",
+                            "SA"
+                          ]
+                        },
+                        "country": {
+                          "type": "string",
+                          "description": "The country in which the data center is located. See [Country Codes](https://control.akamai.com/dl/edgescape/cc2continent.csv) for a list of valid codes.\n",
+                          "minLength": 2,
+                          "maxLength": 2
+                        },
+                        "hostname": {
+                          "type": "string",
+                          "description": "The name of the host that can be used as a conditional origin.\n",
+                          "maxLength": 256
+                        },
+                        "latitude": {
+                          "type": "number",
+                          "description": "The latitude value for the data center. This member supports six decimal places of precision.\n",
+                          "minimum": -180,
+                          "maximum": 180
+                        },
+                        "livenessHosts": {
+                          "type": "array",
+                          "description": "An array of strings that represent the origin servers used to poll the data centers in an Application Load Balancer configuration. These servers support basic HTTP polling.\n",
+                          "minItems": 1,
+                          "uniqueItems": true,
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "longitude": {
+                          "type": "number",
+                          "description": "The longitude value for the data center. This member supports six decimal places of precision.\n",
+                          "minimum": -180,
+                          "maximum": 180
+                        },
+                        "originId": {
+                          "type": "string",
+                          "description": "The conditional origin's unique identifier.\n",
+                          "maxLength": 128
+                        },
+                        "percent": {
+                          "type": "number",
+                          "description": "The percent of traffic that is sent to the data center. The total for all `dataCenters` objects within the array must equal 100%.\n",
+                          "minimum": 0,
+                          "maximum": 100
+                        },
+                        "stateOrProvince": {
+                          "type": "string",
+                          "description": "The state, province, or region where the data center is located. See [region codes](https://control.akamai.com/dl/edgescape/region_codes.txt).\n"
+                        }
                       }
-                    },
-                    "maxItems": 199,
-                    "minItems": 1,
-                    "type": "array"
+                    }
                   },
                   "deleted": {
-                    "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n",
-                    "type": "boolean"
-                  },
-                  "description": {
-                    "description": "The description of the load balancing configuration provided by a user.\n",
-                    "type": "string"
+                    "type": "boolean",
+                    "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n"
                   },
                   "livenessSettings": {
-                    "description": "The object containing information on the liveness settings for an Application Load Balancer implementation, as detailed [below](#livenesssettings).\n",
-                    "type": "object"
+                    "type": "object",
+                    "description": "The object containing information on the liveness settings for an Application Load Balancer implementation, as detailed [below](#livenesssettings).\n"
                   },
                   "originId": {
+                    "type": "string",
                     "description": "The conditional origin's unique identifier.\n",
-                    "maxLength": 62,
                     "minLength": 2,
-                    "type": "string"
+                    "maxLength": 62
                   }
-                },
-                "type": "object",
-                "x-akamai": {
-                  "file-path": "schemas/put-origin-version-request.yaml"
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "Returns details about an origin version.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -1563,105 +1577,51 @@
                   ]
                 },
                 "schema": {
+                  "type": "object",
+                  "description": "Details for a version of the Application Load Balancer configuration.",
+                  "x-akamai": {
+                    "file-path": "schemas/put-origin-version-response.yaml"
+                  },
                   "additionalProperties": false,
-                  "description": "Details for a version of the Application Load Balancer configuration.\n",
                   "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "The description of the load balancing configuration provided by a user.\n"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "description": "The version number of the activated load balancing configuration.\n",
+                      "minimum": 0
+                    },
                     "balancingType": {
+                      "type": "string",
                       "description": "The type of load balancing, either `WEIGHTED` or `PERFORMANCE`.\n",
                       "enum": [
                         "WEIGHTED",
                         "PERFORMANCE"
-                      ],
-                      "type": "string"
+                      ]
                     },
                     "createdBy": {
-                      "description": "The name of the user who created this load balancing configuration.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The name of the user who created this load balancing configuration.\n"
                     },
                     "createdDate": {
+                      "type": "string",
                       "description": "The date and time, in ISO 8601 format, when this load balancing configuration was created.\n",
-                      "format": "date-time",
-                      "type": "string"
+                      "format": "date-time"
                     },
                     "dataCenters": {
+                      "type": "array",
                       "description": "The object containing information on conditional origins being used as data centers for an Application Load Balancer implementation, as detailed [below](#datacenters). Only conditional origins with an `originType` of `CUSTOMER` or `NETSTORAGE` can be used as data centers in an Application Load Balancer configuration.\n",
+                      "minItems": 1,
+                      "maxItems": 199,
                       "items": {
-                        "additionalProperties": false,
-                        "description": "Contains information about the data centers where the origins are located.\n",
-                        "properties": {
-                          "city": {
-                            "description": "The city in which the data center is located.\n",
-                            "type": "string"
-                          },
-                          "cloudServerHostHeaderOverride": {
-                            "description": "When set to `true`, overides the host header for load balancing in a cloud environment.\n",
-                            "type": "boolean"
-                          },
-                          "cloudService": {
-                            "description": "If `true`, caching for the data center is updated at a certain interval, like it would for a cloud-based service.\n",
-                            "type": "boolean"
-                          },
-                          "continent": {
-                            "description": "The continent on which the data center is located. See [Continent Codes](https://control.akamai.com/dl/edgescape/continentCodes.csv) for a list of valid codes.\n",
-                            "enum": [
-                              "AF",
-                              "AS",
-                              "EU",
-                              "NA",
-                              "OC",
-                              "OT",
-                              "SA"
-                            ],
-                            "type": "string"
-                          },
-                          "country": {
-                            "description": "The country in which the data center is located. See [Country Codes](https://control.akamai.com/dl/edgescape/cc2continent.csv) for a list of valid codes.\n",
-                            "maxLength": 2,
-                            "minLength": 2,
-                            "type": "string"
-                          },
-                          "hostname": {
-                            "description": "The name of the host that can be used as a conditional origin.\n",
-                            "maxLength": 256,
-                            "type": "string"
-                          },
-                          "latitude": {
-                            "description": "The latitude value for the data center. This member supports six decimal places of precision.\n",
-                            "maximum": 180,
-                            "minimum": -180,
-                            "type": "number"
-                          },
-                          "livenessHosts": {
-                            "description": "An array of strings that represent the origin servers used to poll the data centers in an Application Load Balancer configuration. These servers support basic HTTP polling.\n",
-                            "items": {
-                              "type": "string"
-                            },
-                            "minItems": 1,
-                            "type": "array",
-                            "uniqueItems": true
-                          },
-                          "longitude": {
-                            "description": "The longitude value for the data center. This member supports six decimal places of precision.\n",
-                            "maximum": 180,
-                            "minimum": -180,
-                            "type": "number"
-                          },
-                          "originId": {
-                            "description": "The conditional origin's unique identifier.\n",
-                            "maxLength": 128,
-                            "type": "string"
-                          },
-                          "percent": {
-                            "description": "The percent of traffic that is sent to the data center. The total for all `dataCenters` objects within the array must equal 100%.\n",
-                            "maximum": 100,
-                            "minimum": 0,
-                            "type": "number"
-                          },
-                          "stateOrProvince": {
-                            "description": "The state, province, or region where the data center is located. See [region codes](https://control.akamai.com/dl/edgescape/region_codes.txt).\n",
-                            "type": "string"
-                          }
+                        "type": "object",
+                        "description": "Contains information about the data centers where the origins are located.",
+                        "x-akamai": {
+                          "file-path": "schemas/dataCenter.yaml"
                         },
+                        "additionalProperties": false,
                         "required": [
                           "cloudService",
                           "continent",
@@ -1671,164 +1631,204 @@
                           "originId",
                           "percent"
                         ],
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/dataCenter.yaml"
+                        "properties": {
+                          "city": {
+                            "type": "string",
+                            "description": "The city in which the data center is located.\n"
+                          },
+                          "cloudServerHostHeaderOverride": {
+                            "type": "boolean",
+                            "description": "When set to `true`, overides the host header for load balancing in a cloud environment.\n"
+                          },
+                          "cloudService": {
+                            "type": "boolean",
+                            "description": "If `true`, caching for the data center is updated at a certain interval, like it would for a cloud-based service.\n"
+                          },
+                          "continent": {
+                            "type": "string",
+                            "description": "The continent on which the data center is located. See [Continent Codes](https://control.akamai.com/dl/edgescape/continentCodes.csv) for a list of valid codes.\n",
+                            "enum": [
+                              "AF",
+                              "AS",
+                              "EU",
+                              "NA",
+                              "OC",
+                              "OT",
+                              "SA"
+                            ]
+                          },
+                          "country": {
+                            "type": "string",
+                            "description": "The country in which the data center is located. See [Country Codes](https://control.akamai.com/dl/edgescape/cc2continent.csv) for a list of valid codes.\n",
+                            "minLength": 2,
+                            "maxLength": 2
+                          },
+                          "hostname": {
+                            "type": "string",
+                            "description": "The name of the host that can be used as a conditional origin.\n",
+                            "maxLength": 256
+                          },
+                          "latitude": {
+                            "type": "number",
+                            "description": "The latitude value for the data center. This member supports six decimal places of precision.\n",
+                            "minimum": -180,
+                            "maximum": 180
+                          },
+                          "livenessHosts": {
+                            "type": "array",
+                            "description": "An array of strings that represent the origin servers used to poll the data centers in an Application Load Balancer configuration. These servers support basic HTTP polling.\n",
+                            "minItems": 1,
+                            "uniqueItems": true,
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "longitude": {
+                            "type": "number",
+                            "description": "The longitude value for the data center. This member supports six decimal places of precision.\n",
+                            "minimum": -180,
+                            "maximum": 180
+                          },
+                          "originId": {
+                            "type": "string",
+                            "description": "The conditional origin's unique identifier.\n",
+                            "maxLength": 128
+                          },
+                          "percent": {
+                            "type": "number",
+                            "description": "The percent of traffic that is sent to the data center. The total for all `dataCenters` objects within the array must equal 100%.\n",
+                            "minimum": 0,
+                            "maximum": 100
+                          },
+                          "stateOrProvince": {
+                            "type": "string",
+                            "description": "The state, province, or region where the data center is located. See [region codes](https://control.akamai.com/dl/edgescape/region_codes.txt).\n"
+                          }
                         }
-                      },
-                      "maxItems": 199,
-                      "minItems": 1,
-                      "type": "array"
+                      }
                     },
                     "deleted": {
-                      "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n",
-                      "type": "boolean"
-                    },
-                    "description": {
-                      "description": "The description of the load balancing configuration provided by a user.\n",
-                      "type": "string"
+                      "type": "boolean",
+                      "description": "If `true`, the conditional origin version has been deleted. If you set this member to `false`, you can use this version again.\n"
                     },
                     "immutable": {
-                      "description": "Indicated whether you can edit the load balancing version. The default is `false`. It automatically becomes `true` when the load balancing version is activated for the first time.\n",
-                      "type": "boolean"
+                      "type": "boolean",
+                      "description": "Indicated whether you can edit the load balancing version. The default is `false`. It automatically becomes `true` when the load balancing version is activated for the first time.\n"
                     },
                     "lastModifiedBy": {
-                      "description": "The user who last modified the load balancing configuration.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The user who last modified the load balancing configuration.\n"
                     },
                     "lastModifiedDate": {
+                      "type": "string",
                       "description": "The date and time, in ISO 8601 format, when the initial load balancing configuration was last modified.\n",
-                      "format": "date-time",
-                      "type": "string"
+                      "format": "date-time"
                     },
                     "livenessSettings": {
-                      "description": "The object containing information on the liveness settings for an Application Load Balancer implementation, as detailed [below](#livenesssettings).\n",
-                      "type": "object"
+                      "type": "object",
+                      "description": "The object containing information on the liveness settings for an Application Load Balancer implementation, as detailed [below](#livenesssettings).\n"
                     },
                     "originId": {
+                      "type": "string",
                       "description": "The conditional origin's unique identifier.\n",
-                      "maxLength": 62,
                       "minLength": 2,
-                      "type": "string"
-                    },
-                    "version": {
-                      "description": "The version number of the activated load balancing configuration.\n",
-                      "minimum": 0,
-                      "type": "integer"
+                      "maxLength": 62
                     },
                     "warnings": {
+                      "type": "array",
                       "description": "Provides error response data to help diagnose the problem that led to the error.\n",
                       "items": {
-                        "additionalProperties": false,
-                        "description": "Provides error response data to help diagnose the problem that led to the error.\n",
-                        "properties": {
-                          "detail": {
-                            "description": "Provides actionable instructions to diagnose the problem that caused the error.\n",
-                            "type": "string"
-                          },
-                          "errors": {
-                            "description": "Error objects that provide information for debugging.\n",
-                            "items": {
-                              "additionalProperties": false,
-                              "description": "Provides error response data to help diagnose the problem that led to the error.\n",
-                              "properties": {
-                                "detail": {
-                                  "description": "Provides actionable instructions to diagnose the problem that caused the error.\n",
-                                  "type": "string"
-                                },
-                                "errors": {
-                                  "description": "Error objects that provide information for debugging.\n",
-                                  "items": {
-                                    "description": "A further-nested HTTP problem object.",
-                                    "type": "object",
-                                    "x-akamai": {
-                                      "file-path": "schemas/http-problem-nested.yaml"
-                                    }
-                                  },
-                                  "type": "array"
-                                },
-                                "jsonPointer": {
-                                  "description": "The pointer to the error response JSON body.\n",
-                                  "maxLength": 128,
-                                  "type": "string"
-                                },
-                                "status": {
-                                  "description": "The HTTP problem status code.\n",
-                                  "type": "integer"
-                                },
-                                "title": {
-                                  "description": "The descriptive label for the overall problem.\n",
-                                  "type": "string"
-                                },
-                                "type": {
-                                  "description": "The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.\n",
-                                  "type": "string"
-                                }
-                              },
-                              "required": [
-                                "detail",
-                                "title",
-                                "type"
-                              ],
-                              "type": "object"
-                            },
-                            "type": "array"
-                          },
-                          "jsonPointer": {
-                            "description": "The pointer to the error response JSON body.\n",
-                            "maxLength": 128,
-                            "type": "string"
-                          },
-                          "status": {
-                            "description": "The HTTP problem status code.\n",
-                            "type": "integer"
-                          },
-                          "title": {
-                            "description": "The descriptive label for the overall problem.\n",
-                            "type": "string"
-                          },
-                          "type": {
-                            "description": "The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.\n",
-                            "type": "string"
-                          }
+                        "type": "object",
+                        "description": "Provides error response data to help diagnose the problem that led to the error.",
+                        "x-akamai": {
+                          "file-path": "schemas/warning.yaml"
                         },
+                        "additionalProperties": false,
                         "required": [
                           "detail",
                           "title",
                           "type"
                         ],
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/warning.yaml"
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "description": "The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.\n"
+                          },
+                          "title": {
+                            "type": "string",
+                            "description": "The descriptive label for the overall problem.\n"
+                          },
+                          "detail": {
+                            "type": "string",
+                            "description": "Provides actionable instructions to diagnose the problem that caused the error.\n"
+                          },
+                          "errors": {
+                            "type": "array",
+                            "description": "Error objects that provide information for debugging.\n",
+                            "items": {
+                              "type": "object",
+                              "description": "Provides error response data to help diagnose the problem that led to the error.\n",
+                              "additionalProperties": false,
+                              "required": [
+                                "detail",
+                                "title",
+                                "type"
+                              ],
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "description": "The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.\n"
+                                },
+                                "title": {
+                                  "type": "string",
+                                  "description": "The descriptive label for the overall problem.\n"
+                                },
+                                "detail": {
+                                  "type": "string",
+                                  "description": "Provides actionable instructions to diagnose the problem that caused the error.\n"
+                                },
+                                "errors": {
+                                  "type": "array",
+                                  "description": "Error objects that provide information for debugging.\n",
+                                  "items": {
+                                    "type": "object",
+                                    "description": "A further-nested HTTP problem object.\n",
+                                    "x-akamai": {
+                                      "file-path": "schemas/http-problem-nested.yaml"
+                                    }
+                                  }
+                                },
+                                "jsonPointer": {
+                                  "type": "string",
+                                  "description": "The pointer to the error response JSON body.\n",
+                                  "maxLength": 128
+                                },
+                                "status": {
+                                  "type": "integer",
+                                  "description": "The HTTP problem status code.\n"
+                                }
+                              }
+                            }
+                          },
+                          "jsonPointer": {
+                            "type": "string",
+                            "description": "The pointer to the error response JSON body.\n",
+                            "maxLength": 128
+                          },
+                          "status": {
+                            "type": "integer",
+                            "description": "The HTTP problem status code.\n"
+                          }
                         }
-                      },
-                      "type": "array"
+                      }
                     }
-                  },
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/put-origin-version-response.yaml"
                   }
                 }
               }
-            },
-            "description": "Returns details about an origin version.\n"
+            }
           }
-        },
-        "summary": "Update a load balancing version",
-        "tags": [
-          "Load balancing versions"
-        ]
+        }
       }
     }
-  },
-  "servers": [
-    {
-      "url": "https://{hostname}/cloudlets/api/v2"
-    }
-  ],
-  "x-akamai": {
-    "auth-type": "EDGE_GRID",
-    "file-path": "origins.yaml"
   }
 }

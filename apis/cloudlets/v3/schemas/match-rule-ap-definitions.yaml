@@ -41,7 +41,6 @@ definitions:
         description: |
           The type of match used.
         enum:
-        - header
         - hostname
         - path
         - extension
@@ -53,6 +52,7 @@ definitions:
         - countrycode
         - regioncode
         - protocol
+        - header
         - method
         - proxy
       matchValue:
@@ -70,7 +70,7 @@ definitions:
   objectMatchValueObjectSubtype:
     type: object
     description: |
-      Use the `objectMatchValueObjectSubtype` for more complex match criteria.
+      Use this for more complex match criteria.
     title: Object
     additionalProperties: false
     required:
@@ -80,7 +80,7 @@ definitions:
       name:
         type: string
         description: |
-          If matching any name, specify the `name` value in the incoming request to match on. The following match types support this: `cookie`, `header`, `parameter`, and `query`.
+          If using a match type that supports `name` attributes, enter the value in the incoming request to match on. The following match types support this property: `cookie`, `header`, `parameter`, and `query`.
         minLength: 1
         maxLength: 8192
       type:
@@ -92,28 +92,28 @@ definitions:
       options:
         type: object
         description: |
-          If using the `object` type, use this array to list the values to match on.
+          If using the `object` match value subtype, use this array to list the values to match on.
         additionalProperties: false
         properties:
           value:
             type: array
             description: |
-              The value attributes in the incoming request to match on. Valid entries vary by match type. For example, `GET` and `POST` are valid entries for the `method` match type, and an integer is valid for the `numberOfFields` match type.
+              If using the `simple` match value subtype, enter the value attributes in the incoming request to match on. Valid entries vary by match type. For example, GET and POST are valid entries for the `method` match type.
             nullable: true
             items:
               type: string
           valueCaseSensitive:
             type: boolean
             description: |
-              Set to `true` if the entries for the value property should be evaluated based on case sensitivity.
+              Set to `true` if the entries for `value` should be evaluated based on case sensitivity.
           valueEscaped:
             type: boolean
             description: |
-              Set to `true` if the entries for the value property includes escaped characters.
+              Set to `true` if the entries for `value` includes escaped characters.
           valueHasWildcard:
             type: boolean
             description: |
-              Set to `true` if the entries for the value property includes wildcards.
+              Set to `true` if the entries for `value` includes wildcards.
       nameCaseSensitive:
         type: boolean
         description: |
@@ -141,7 +141,7 @@ definitions:
       value:
         type: array
         description: |
-          The `simple` array values for incoming request to match on. For example, if the match type is `method`, the array values could be `GET` and `POST`.
+          The `simple` array values for incoming request to match on. Valid entries vary by match type. For example, GET and POST are valid entries for the `method` match type.
         nullable: true
         items:
           type: string
