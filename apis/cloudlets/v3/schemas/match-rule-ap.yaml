@@ -1,9 +1,6 @@
 type: object
-description: |-
+description: |
   Contains match rule information for API Prioritization.
-  
-x-akamai:
-  file-path: schemas/match-rule-ap.yaml
 title: API Prioritization
 additionalProperties: false
 required:
@@ -13,7 +10,7 @@ properties:
   id:
     type: integer
     description: |
-      __Internal__ Akamai internal use only.
+      Akamai internal use only.
     x-akamai:
       status: INTERNAL
     nullable: true
@@ -29,23 +26,18 @@ properties:
       The type of Cloudlet the rule is for. For example, the string for API Prioritization is `apMatchRule`.
     enum:
     - apMatchRule
-  disabled:
-    type: boolean
+  start:
+    type: integer
     description: |
-      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
-    default: false
+      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
+    default: 0
+    minimum: 0
   end:
     type: integer
     description: |
       The end time for this match rule in epoch seconds. When `end` is `0`, there is no end time for this match rule.
     default: 0
     minimum: 0
-  matchURL:
-    type: string
-    description: |
-      The URL the Cloudlet uses to match the incoming request.
-    nullable: true
-    maxLength: 8192
   matches:
     type: array
     description: |
@@ -53,15 +45,20 @@ properties:
     nullable: true
     items:
       $ref: match-rule-ap-definitions.yaml#/definitions/matchCriteriaType
+  disabled:
+    type: boolean
+    description: |
+      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
+    default: false
   passThroughPercent:
     type: number
     description: |
       The percentage of requests that pass through to the origin, with `100` indicating the request always passes through to the origin. For Visitor Prioritization, a value of -1 sends everyone to the waiting room.
     minimum: -1
     maximum: 100
-  start:
-    type: integer
+  matchURL:
+    type: string
     description: |
-      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
-    default: 0
-    minimum: 0
+      The URL the Cloudlet uses to match the incoming request.
+    nullable: true
+    maxLength: 8192

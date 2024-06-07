@@ -1,9 +1,6 @@
 type: object
-description: |-
+description: |
   Contains match rule information for Visitor Prioritization.
-  
-x-akamai:
-  file-path: schemas/match-rule-vp.yaml
 title: Visitor Prioritization
 additionalProperties: false
 required:
@@ -29,23 +26,18 @@ properties:
       The type of Cloudlet the rule is for. For example, the string for Visitor Prioritization is `vpMatchRule`.
     enum:
     - vpMatchRule
-  disabled:
-    type: boolean
+  start:
+    type: integer
     description: |
-      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
-    default: false
+      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
+    default: 0
+    minimum: 0
   end:
     type: integer
     description: |
       The end time for this match rule in epoch seconds. When `end` is `0`, there is no end time for this match rule.
     default: 0
     minimum: 0
-  matchURL:
-    type: string
-    description: |
-      The URL the Cloudlet uses to match the incoming request.
-    nullable: true
-    maxLength: 8192
   matches:
     type: array
     description: |
@@ -53,18 +45,23 @@ properties:
     nullable: true
     items:
       $ref: match-rule-vp-definitions.yaml#/definitions/matchCriteriaType
+  disabled:
+    type: boolean
+    description: |
+      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
+    default: false
   passThroughPercent:
     type: number
     description: |
       The range `0.000: 99.000` specifies the percentage of requests that pass through to the origin. The value of `100` means the request always passes through to the origin. For Visitor Prioritization, a value of `-1` means send everyone to the waiting room.
     minimum: -1
     maximum: 100
-  start:
-    type: integer
+  matchURL:
+    type: string
     description: |
-      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
-    default: 0
-    minimum: 0
+      The URL the Cloudlet uses to match the incoming request.
+    nullable: true
+    maxLength: 8192
   useIncomingQueryString:
     type: boolean
     description: |
