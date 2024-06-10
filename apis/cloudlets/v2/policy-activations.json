@@ -4,73 +4,42 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "title": "Policy Activations",
-    "version": "v2"
+    "title": "Activations",
+    "version": "v3"
   },
   "openapi": "3.0.0",
   "paths": {
     "/policies/{policyId}/activations": {
       "get": {
-        "description": "Returns the activation history for the policy. The policy activation history provides results for each property where the policy applies dating back up to one year. If no activations occurred within the year, only the latest activation data is returned.\n",
+        "description": "Returns the complete activation history for the selected policy.\n",
         "operationId": "get-policy-activations",
         "parameters": [
           {
-            "description": "The selected network, either `staging` or `prod`.\n",
+            "description": "Specifies a page number for batched results, starting at zero.\n",
             "in": "query",
-            "name": "network",
+            "name": "page",
+            "required": true,
             "schema": {
-              "enum": [
-                "staging",
-                "prod"
-              ],
-              "example": "staging",
-              "type": "string"
-            },
-            "x-akamai": {
-              "file-path": "parameters/network-query.yaml"
-            }
-          },
-          {
-            "description": "Returns only activations for the selected property.\n",
-            "in": "query",
-            "name": "propertyName",
-            "schema": {
-              "example": "www.example.org",
-              "type": "string"
-            },
-            "x-akamai": {
-              "file-path": "parameters/propertyName-query.yaml"
-            }
-          },
-          {
-            "description": "When requesting pages of data, `offset` is the record after which to start. Use `offset` with `pageSize`. For example: offset=25&pageSize=15 starts at record 26 and displays up to 15 records for each property the policy applies to.\n",
-            "in": "query",
-            "name": "offset",
-            "required": false,
-            "schema": {
-              "default": 0,
-              "example": 25,
+              "example": 3,
               "minimum": 0,
               "type": "integer"
             },
             "x-akamai": {
-              "file-path": "parameters/offset-query.yaml"
+              "file-path": "parameters/page-query.yaml"
             }
           },
           {
-            "description": "The number of records to return. Use with `offset` to manage the number of records returned.\n",
+            "description": "Specifies the number of objects on a page, at least `10` objects.\n",
             "in": "query",
-            "name": "pageSize",
-            "required": false,
+            "name": "size",
+            "required": true,
             "schema": {
-              "default": 100,
-              "example": 15,
-              "maximum": 1000,
-              "minimum": 5,
+              "example": 100,
+              "minimum": 10,
               "type": "integer"
             },
             "x-akamai": {
-              "file-path": "parameters/pageSize-query.yaml"
+              "file-path": "parameters/size-query.yaml"
             }
           }
         ],
@@ -78,230 +47,416 @@
           "200": {
             "content": {
               "application/json": {
-                "example": [
-                  {
-                    "serviceVersion": null,
-                    "apiVersion": "2.0",
-                    "network": "staging",
-                    "policyInfo": {
-                      "policyId": 2962,
-                      "name": "RequestControlPolicy",
-                      "version": 1,
-                      "status": "ACTIVE",
-                      "statusDetail": "File successfully deployed to Akamai's network",
-                      "detailCode": 4000,
-                      "activatedBy": "jdupont",
-                      "activationDate": 1427428800000
-                    },
-                    "propertyInfo": {
-                      "name": "www.rc-cloudlet.com",
-                      "version": 0,
-                      "groupId": 54321,
-                      "status": "INACTIVE",
-                      "activatedBy": null,
-                      "activationDate": 0
-                    }
-                  }
-                ],
-                "schema": {
-                  "description": "Returns policy and property activation details.\n",
-                  "items": {
-                    "additionalProperties": false,
-                    "description": "Returns details of a policy activation.\n",
-                    "properties": {
-                      "apiVersion": {
-                        "description": "The specific version of this API.\n",
-                        "type": "string"
-                      },
-                      "network": {
-                        "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
-                        "enum": [
-                          "prod",
-                          "staging"
-                        ],
-                        "type": "string"
-                      },
-                      "policyInfo": {
-                        "additionalProperties": false,
-                        "description": "Returns details of a policy associated with policy activation.\n",
-                        "properties": {
-                          "activatedBy": {
-                            "description": "User name who issued the activation.\n",
-                            "type": "string"
-                          },
-                          "activationDate": {
-                            "description": "Date of the activation in milliseconds.\n",
-                            "type": "integer"
-                          },
-                          "name": {
-                            "description": "Name of the policy.\n",
-                            "type": "string"
-                          },
-                          "policyId": {
-                            "description": "ID of the policy.\n",
-                            "type": "integer"
-                          },
-                          "status": {
-                            "description": "Value representing activation status.\n",
-                            "enum": [
-                              "INACTIVE",
-                              "PENDING",
-                              "ACTIVE",
-                              "FAILED",
-                              "DEACTIVATED"
-                            ],
-                            "type": "string",
-                            "x-akamai": {
-                              "file-path": "schemas/activation-status-enum.yaml"
-                            }
-                          },
-                          "statusDetail": {
-                            "description": "Details of the activation status.\n",
-                            "type": "string"
-                          },
-                          "version": {
-                            "description": "Version of the policy.\n",
-                            "type": "integer"
-                          }
-                        },
-                        "required": [
-                          "policyId",
-                          "name",
-                          "version",
-                          "status",
-                          "statusDetail",
-                          "activatedBy",
-                          "activationDate"
-                        ],
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/policy-activation-policy-info.yaml"
+                "example": {
+                  "page": {
+                    "number": 0,
+                    "size": 1000,
+                    "totalElements": 4,
+                    "totalPages": 1
+                  },
+                  "content": [
+                    {
+                      "createdBy": "hgildong",
+                      "createdDate": "2020-10-01T12:35:24.520Z",
+                      "finishDate": "2020-10-01T12:35:25.962Z",
+                      "id": 300001,
+                      "network": "PRODUCTION",
+                      "operation": "ACTIVATION",
+                      "policyId": 1001,
+                      "status": "IN_PROGRESS",
+                      "policyVersion": 1,
+                      "policyVersionDeleted": false,
+                      "links": [
+                        {
+                          "href": "/cloudlets/v3/policies/1001/activations/300001",
+                          "rel": "self"
                         }
-                      },
-                      "propertyInfo": {
+                      ]
+                    }
+                  ],
+                  "links": [
+                    {
+                      "href": "/cloudlets/v3/policies/1001/activations?page=0&size=1000",
+                      "rel": "self"
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "",
+                  "properties": {
+                    "content": {
+                      "description": "Lists the results of the request.\n",
+                      "items": {
                         "additionalProperties": false,
-                        "description": "Returns details of a property associated with policy activation.\n",
+                        "description": "The status of an activation or deactivation operation for a policy version.\n",
+                        "nullable": true,
                         "properties": {
-                          "activatedBy": {
-                            "description": "User name who issued the activation.\n",
+                          "createdBy": {
+                            "description": "The username who created the activation.\n",
                             "type": "string"
                           },
-                          "activationDate": {
-                            "description": "Date of the activation in milliseconds.\n",
-                            "type": "integer"
+                          "createdDate": {
+                            "description": "ISO 8601 timestamp indicating when the activation was created.\n",
+                            "format": "date-time",
+                            "type": "string"
                           },
-                          "groupId": {
-                            "description": "Identifies the group where the property is placed.\n",
-                            "type": "integer"
+                          "failureDetails": {
+                            "description": "A detailed description of the reason why the activation failed.\n",
+                            "type": "string"
+                          },
+                          "finishDate": {
+                            "description": "ISO 8601 timestamp indicating when the activation ended, either successfully or unsuccessfully. You can check details of unsuccessful attempts in `failureDetails`.\n",
+                            "format": "date-time",
+                            "nullable": true,
+                            "type": "string"
                           },
                           "id": {
-                            "description": "ID of the property.\n",
+                            "description": "Identifies the activation.\n",
                             "type": "integer"
                           },
-                          "name": {
-                            "description": "Name of the property.\n",
-                            "type": "string"
+                          "links": {
+                            "description": "Hypermedia links to help navigate through the result set.\n",
+                            "items": {
+                              "additionalProperties": false,
+                              "description": "Hypermedia links to help navigate through the result set, or to identify the current item whose `rel` is `self`.\n",
+                              "properties": {
+                                "href": {
+                                  "description": "A relative path to the currently requested object or a specific page of the result set.\n",
+                                  "type": "string"
+                                },
+                                "rel": {
+                                  "description": "The relationship between the current and linked result sets. A value of `self` links to the current result set, while `first`, `next`, and `last` link to different sets of paginated data.\n",
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "href",
+                                "rel"
+                              ],
+                              "type": "object"
+                            },
+                            "type": "array",
+                            "x-akamai": {
+                              "file-path": "schemas/links.yaml"
+                            }
                           },
-                          "status": {
-                            "description": "Value representing activation status.\n",
+                          "network": {
+                            "description": "The networks where you can activate or deactivate the policy version, either `PRODUCTION` or `STAGING`.\n",
                             "enum": [
-                              "INACTIVE",
-                              "PENDING",
-                              "ACTIVE",
-                              "FAILED",
-                              "DEACTIVATED"
+                              "PRODUCTION",
+                              "STAGING"
                             ],
                             "type": "string",
                             "x-akamai": {
-                              "file-path": "schemas/activation-status-enum.yaml"
+                              "file-path": "schemas/network-enum.yaml"
                             }
                           },
-                          "version": {
-                            "description": "Version of the property.\n",
+                          "operation": {
+                            "description": "The operations that you can perform on a policy version, either `ACTIVATION` or `DEACTIVATION`.\n",
+                            "enum": [
+                              "ACTIVATION",
+                              "DEACTIVATION"
+                            ],
+                            "type": "string",
+                            "x-akamai": {
+                              "file-path": "schemas/activation-operation-enum.yaml"
+                            }
+                          },
+                          "policyId": {
+                            "description": "Identifies the shared policy.\n",
                             "type": "integer"
+                          },
+                          "policyVersion": {
+                            "description": "The number of the policy version.\n",
+                            "type": "integer"
+                          },
+                          "policyVersionDeleted": {
+                            "description": "Indicates if the policy version is deleted.\n",
+                            "type": "boolean"
+                          },
+                          "status": {
+                            "description": "The status of the operation, either `IN_PROGRESS`, `SUCCESS`, or `FAILED`.\n",
+                            "enum": [
+                              "IN_PROGRESS",
+                              "SUCCESS",
+                              "FAILED"
+                            ],
+                            "type": "string"
                           }
                         },
                         "required": [
-                          "name",
-                          "version",
-                          "groupId",
-                          "status",
-                          "activatedBy",
-                          "activationDate",
-                          "id"
+                          "createdBy",
+                          "createdDate",
+                          "id",
+                          "network",
+                          "operation",
+                          "policyId",
+                          "policyVersion",
+                          "status"
                         ],
                         "type": "object",
                         "x-akamai": {
-                          "file-path": "schemas/policy-activation-property-info.yaml"
+                          "file-path": "schemas/policy-activation.yaml"
                         }
                       },
-                      "serviceVersion": {
-                        "description": "__Deprecated__ __Deprecated__ The build of the software running on the server. The value can be `null`.\n",
-                        "nullable": true,
-                        "type": "string",
-                        "x-akamai": {
-                          "status": "DEPRECATED"
-                        }
+                      "type": "array"
+                    },
+                    "links": {
+                      "description": "Hypermedia links to help navigate through the result set.\n",
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Hypermedia links to help navigate through the result set, or to identify the current item whose `rel` is `self`.\n",
+                        "properties": {
+                          "href": {
+                            "description": "A relative path to the currently requested object or a specific page of the result set.\n",
+                            "type": "string"
+                          },
+                          "rel": {
+                            "description": "The relationship between the current and linked result sets. A value of `self` links to the current result set, while `first`, `next`, and `last` link to different sets of paginated data.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "href",
+                          "rel"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array",
+                      "x-akamai": {
+                        "file-path": "schemas/links.yaml"
                       }
                     },
-                    "required": [
-                      "network",
-                      "policyInfo",
-                      "propertyInfo"
-                    ],
-                    "type": "object",
-                    "x-akamai": {
-                      "file-path": "schemas/policy-activation.yaml"
+                    "page": {
+                      "additionalProperties": false,
+                      "description": "Contains informational data about pagination.\n",
+                      "properties": {
+                        "number": {
+                          "description": "Specifies the number of the returned page.\n",
+                          "type": "integer"
+                        },
+                        "size": {
+                          "description": "Specifies the number of objects on a page, at least `10` objects.\n",
+                          "type": "integer"
+                        },
+                        "totalElements": {
+                          "description": "Specifies the total number of the available objects.\n",
+                          "type": "integer"
+                        },
+                        "totalPages": {
+                          "description": "Specifies the total number of the available pages.\n",
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "totalPages",
+                        "totalElements",
+                        "number",
+                        "size"
+                      ],
+                      "type": "object",
+                      "x-akamai": {
+                        "file-path": "schemas/page-head.yaml"
+                      }
                     }
                   },
-                  "type": "array",
+                  "required": [
+                    "content",
+                    "page"
+                  ],
+                  "type": "object",
                   "x-akamai": {
                     "file-path": "schemas/get-policy-activations-response.yaml"
                   }
                 }
               }
             },
-            "description": "Returns the policy's activation history.\n"
+            "description": "Returns the policy activation history.\n"
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "instance": "579e9f73-688d-4887-8f5b-5a2dd789b29e",
+                  "status": 403,
+                  "title": "Access Denied",
+                  "type": "/cloudlets/v3/error-types/access-denied",
+                  "errors": [
+                    {
+                      "detail": "User does not have edit capability for Edge Redirector Cloudlet in group 1000.",
+                      "title": "Access Denied"
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "properties": {
+                    "errors": {
+                      "description": "A nested error object.\n",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "properties": {
+                          "instance": {
+                            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                            "type": "string"
+                          },
+                          "status": {
+                            "description": "HTTP response status code.\n",
+                            "type": "integer"
+                          },
+                          "title": {
+                            "description": "Short descriptive title of the problem response.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "A URI path that identifies the problem type.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "instance",
+                          "status",
+                          "title",
+                          "type",
+                          "errors"
+                        ],
+                        "x-akamai": {
+                          "file-path": "schemas/error-nested.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "HTTP response status code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Short descriptive title of the problem response.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI path that identifies the problem type.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "instance",
+                    "status",
+                    "title",
+                    "type",
+                    "errors"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[No permission to access this resource.](ref:403)\n"
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "instance": "ec37d23b-b3c1-45f9-9f49-5695da2738a4",
+                  "status": 404,
+                  "title": "Not found",
+                  "type": "/cloudlets/v3/error-types/not-found",
+                  "errors": [
+                    {
+                      "detail": "Policy Version `100` not found in Policy `100000`.",
+                      "title": "Not found"
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "properties": {
+                    "errors": {
+                      "description": "A nested error object.\n",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "properties": {
+                          "instance": {
+                            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                            "type": "string"
+                          },
+                          "status": {
+                            "description": "HTTP response status code.\n",
+                            "type": "integer"
+                          },
+                          "title": {
+                            "description": "Short descriptive title of the problem response.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "A URI path that identifies the problem type.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "instance",
+                          "status",
+                          "title",
+                          "type",
+                          "errors"
+                        ],
+                        "x-akamai": {
+                          "file-path": "schemas/error-nested.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "HTTP response status code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Short descriptive title of the problem response.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI path that identifies the problem type.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "instance",
+                    "status",
+                    "title",
+                    "type",
+                    "errors"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Resource not found.](ref:404)\n"
           }
         },
         "summary": "List policy activations",
         "tags": [
-          "Policy activations"
+          "Activations"
         ]
       },
       "parameters": [
         {
-          "description": "The ID of the policy.\n",
-          "in": "path",
-          "name": "policyId",
-          "required": true,
-          "schema": {
-            "example": 1001,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/policyId-path.yaml"
-          }
-        }
-      ]
-    },
-    "/policies/{policyId}/versions/{version}/activations": {
-      "parameters": [
-        {
-          "description": "The version number of the policy.\n",
-          "in": "path",
-          "name": "version",
-          "required": true,
-          "schema": {
-            "example": 2,
-            "type": "number"
-          },
-          "x-akamai": {
-            "file-path": "parameters/version-path.yaml"
-          }
-        },
-        {
-          "description": "The ID of the policy.\n",
+          "description": "Identifies the shared policy.\n",
           "in": "path",
           "name": "policyId",
           "required": true,
@@ -315,55 +470,54 @@
         }
       ],
       "post": {
-        "description": "Activate the selected cloudlet policy version.  After activation completes, the Cloudlets policy is ready for use.\n",
-        "operationId": "post-policy-version-activations",
-        "parameters": [
-          {
-            "description": "Set `async` to `true` for policy activations on multiple properties to reduce API response time and let the policy activation continue asynchronously in the background. Default is `false`.\n",
-            "in": "query",
-            "name": "async",
-            "schema": {
-              "default": false,
-              "example": true,
-              "type": "boolean"
-            },
-            "x-akamai": {
-              "file-path": "parameters/async-query.yaml"
-            }
-          }
-        ],
+        "description": "Asynchronously activates or deactivates the selected Cloudlet policy version on the staging or production networks. When a policy version becomes active on the network, the previously active version gets automatically deactivated. Activating a policy version returns the `id` of the activation, which you can store and use to run the [Get status for an activation](ref:get-policy-activation) operation to check the status value. You can activate a policy on each network only after any previous activations have completed, otherwise you get a 409 error.\n",
+        "operationId": "post-policy-activations",
         "requestBody": {
           "content": {
             "application/json": {
               "example": {
-                "network": "staging",
-                "additionalPropertyNames": [
-                  "Ion-Premier-Demo-Property"
-                ]
+                "network": "PRODUCTION",
+                "operation": "ACTIVATION",
+                "policyVersion": 1
               },
               "schema": {
                 "additionalProperties": false,
-                "description": "TBD.\n",
                 "properties": {
-                  "additionalPropertyNames": {
-                    "description": "An array of one or more additional properties that you want to activate with the Cloudlet policy. Once activated, the property and policy are permanently linked.\n",
-                    "items": {
-                      "type": "string"
-                    },
-                    "type": "array"
-                  },
                   "network": {
-                    "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
+                    "description": "The networks where you can activate or deactivate the policy version, either `PRODUCTION` or `STAGING`.\n",
                     "enum": [
-                      "prod",
-                      "staging"
+                      "PRODUCTION",
+                      "STAGING"
                     ],
-                    "type": "string"
+                    "type": "string",
+                    "x-akamai": {
+                      "file-path": "schemas/network-enum.yaml"
+                    }
+                  },
+                  "operation": {
+                    "description": "The operations that you can perform on a policy version, either `ACTIVATION` or `DEACTIVATION`.\n",
+                    "enum": [
+                      "ACTIVATION",
+                      "DEACTIVATION"
+                    ],
+                    "type": "string",
+                    "x-akamai": {
+                      "file-path": "schemas/activation-operation-enum.yaml"
+                    }
+                  },
+                  "policyVersion": {
+                    "description": "Identifies the policy version.\n",
+                    "type": "integer"
                   }
                 },
+                "required": [
+                  "network",
+                  "operation",
+                  "policyVersion"
+                ],
                 "type": "object",
                 "x-akamai": {
-                  "file-path": "schemas/post-policy-version-activations-request.yaml"
+                  "file-path": "schemas/post-policy-activations-request.yaml"
                 }
               }
             }
@@ -371,205 +525,594 @@
           "required": true
         },
         "responses": {
-          "200": {
+          "202": {
             "content": {
               "application/json": {
-                "example": [
-                  {
-                    "serviceVersion": null,
-                    "apiVersion": "2.0",
-                    "network": "staging",
-                    "policyInfo": {
-                      "policyId": 2962,
-                      "name": "RequestControlPolicy",
-                      "version": 1,
-                      "status": "ACTIVE",
-                      "statusDetail": "File successfully deployed to Akamai's network",
-                      "detailCode": 4000,
-                      "activatedBy": "jkowalski",
-                      "activationDate": 1427428800000
-                    },
-                    "propertyInfo": {
-                      "name": "www.rc-cloudlet.com",
-                      "version": 0,
-                      "groupId": 12345,
-                      "status": "INACTIVE",
-                      "activatedBy": null,
-                      "activationDate": 0
+                "example": {
+                  "createdBy": "mrossi",
+                  "createdDate": "2020-10-01T12:35:24.520Z",
+                  "finishDate": "2020-10-01T12:35:25.962Z",
+                  "id": 300001,
+                  "network": "PRODUCTION",
+                  "operation": "ACTIVATION",
+                  "policyId": 1001,
+                  "status": "SUCCESS",
+                  "policyVersion": 1,
+                  "policyVersionDeleted": false,
+                  "links": [
+                    {
+                      "href": "/cloudlets/v3/policies/1001/activations/300001",
+                      "rel": "self"
                     }
-                  }
-                ],
+                  ]
+                },
                 "schema": {
-                  "description": "Returns policy and property activation details.\n",
-                  "items": {
-                    "additionalProperties": false,
-                    "description": "Returns details of a policy activation.\n",
-                    "properties": {
-                      "apiVersion": {
-                        "description": "The specific version of this API.\n",
-                        "type": "string"
-                      },
-                      "network": {
-                        "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
-                        "enum": [
-                          "prod",
-                          "staging"
-                        ],
-                        "type": "string"
-                      },
-                      "policyInfo": {
+                  "additionalProperties": false,
+                  "description": "The status of an activation or deactivation operation for a policy version.\n",
+                  "nullable": true,
+                  "properties": {
+                    "createdBy": {
+                      "description": "The username who created the activation.\n",
+                      "type": "string"
+                    },
+                    "createdDate": {
+                      "description": "ISO 8601 timestamp indicating when the activation was created.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "failureDetails": {
+                      "description": "A detailed description of the reason why the activation failed.\n",
+                      "type": "string"
+                    },
+                    "finishDate": {
+                      "description": "ISO 8601 timestamp indicating when the activation ended, either successfully or unsuccessfully. You can check details of unsuccessful attempts in `failureDetails`.\n",
+                      "format": "date-time",
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "id": {
+                      "description": "Identifies the activation.\n",
+                      "type": "integer"
+                    },
+                    "links": {
+                      "description": "Hypermedia links to help navigate through the result set.\n",
+                      "items": {
                         "additionalProperties": false,
-                        "description": "Returns details of a policy associated with policy activation.\n",
+                        "description": "Hypermedia links to help navigate through the result set, or to identify the current item whose `rel` is `self`.\n",
                         "properties": {
-                          "activatedBy": {
-                            "description": "User name who issued the activation.\n",
+                          "href": {
+                            "description": "A relative path to the currently requested object or a specific page of the result set.\n",
                             "type": "string"
                           },
-                          "activationDate": {
-                            "description": "Date of the activation in milliseconds.\n",
-                            "type": "integer"
-                          },
-                          "name": {
-                            "description": "Name of the policy.\n",
+                          "rel": {
+                            "description": "The relationship between the current and linked result sets. A value of `self` links to the current result set, while `first`, `next`, and `last` link to different sets of paginated data.\n",
                             "type": "string"
-                          },
-                          "policyId": {
-                            "description": "ID of the policy.\n",
-                            "type": "integer"
-                          },
-                          "status": {
-                            "description": "Value representing activation status.\n",
-                            "enum": [
-                              "INACTIVE",
-                              "PENDING",
-                              "ACTIVE",
-                              "FAILED",
-                              "DEACTIVATED"
-                            ],
-                            "type": "string",
-                            "x-akamai": {
-                              "file-path": "schemas/activation-status-enum.yaml"
-                            }
-                          },
-                          "statusDetail": {
-                            "description": "Details of the activation status.\n",
-                            "type": "string"
-                          },
-                          "version": {
-                            "description": "Version of the policy.\n",
-                            "type": "integer"
                           }
                         },
                         "required": [
-                          "policyId",
-                          "name",
-                          "version",
-                          "status",
-                          "statusDetail",
-                          "activatedBy",
-                          "activationDate"
+                          "href",
+                          "rel"
                         ],
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/policy-activation-policy-info.yaml"
-                        }
+                        "type": "object"
                       },
-                      "propertyInfo": {
-                        "additionalProperties": false,
-                        "description": "Returns details of a property associated with policy activation.\n",
-                        "properties": {
-                          "activatedBy": {
-                            "description": "User name who issued the activation.\n",
-                            "type": "string"
-                          },
-                          "activationDate": {
-                            "description": "Date of the activation in milliseconds.\n",
-                            "type": "integer"
-                          },
-                          "groupId": {
-                            "description": "Identifies the group where the property is placed.\n",
-                            "type": "integer"
-                          },
-                          "id": {
-                            "description": "ID of the property.\n",
-                            "type": "integer"
-                          },
-                          "name": {
-                            "description": "Name of the property.\n",
-                            "type": "string"
-                          },
-                          "status": {
-                            "description": "Value representing activation status.\n",
-                            "enum": [
-                              "INACTIVE",
-                              "PENDING",
-                              "ACTIVE",
-                              "FAILED",
-                              "DEACTIVATED"
-                            ],
-                            "type": "string",
-                            "x-akamai": {
-                              "file-path": "schemas/activation-status-enum.yaml"
-                            }
-                          },
-                          "version": {
-                            "description": "Version of the property.\n",
-                            "type": "integer"
-                          }
-                        },
-                        "required": [
-                          "name",
-                          "version",
-                          "groupId",
-                          "status",
-                          "activatedBy",
-                          "activationDate",
-                          "id"
-                        ],
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/policy-activation-property-info.yaml"
-                        }
-                      },
-                      "serviceVersion": {
-                        "description": "__Deprecated__ __Deprecated__ The build of the software running on the server. The value can be `null`.\n",
-                        "nullable": true,
-                        "type": "string",
-                        "x-akamai": {
-                          "status": "DEPRECATED"
-                        }
+                      "type": "array",
+                      "x-akamai": {
+                        "file-path": "schemas/links.yaml"
                       }
                     },
-                    "required": [
-                      "network",
-                      "policyInfo",
-                      "propertyInfo"
-                    ],
-                    "type": "object",
-                    "x-akamai": {
-                      "file-path": "schemas/policy-activation.yaml"
+                    "network": {
+                      "description": "The networks where you can activate or deactivate the policy version, either `PRODUCTION` or `STAGING`.\n",
+                      "enum": [
+                        "PRODUCTION",
+                        "STAGING"
+                      ],
+                      "type": "string",
+                      "x-akamai": {
+                        "file-path": "schemas/network-enum.yaml"
+                      }
+                    },
+                    "operation": {
+                      "description": "The operations that you can perform on a policy version, either `ACTIVATION` or `DEACTIVATION`.\n",
+                      "enum": [
+                        "ACTIVATION",
+                        "DEACTIVATION"
+                      ],
+                      "type": "string",
+                      "x-akamai": {
+                        "file-path": "schemas/activation-operation-enum.yaml"
+                      }
+                    },
+                    "policyId": {
+                      "description": "Identifies the shared policy.\n",
+                      "type": "integer"
+                    },
+                    "policyVersion": {
+                      "description": "The number of the policy version.\n",
+                      "type": "integer"
+                    },
+                    "policyVersionDeleted": {
+                      "description": "Indicates if the policy version is deleted.\n",
+                      "type": "boolean"
+                    },
+                    "status": {
+                      "description": "The status of the operation, either `IN_PROGRESS`, `SUCCESS`, or `FAILED`.\n",
+                      "enum": [
+                        "IN_PROGRESS",
+                        "SUCCESS",
+                        "FAILED"
+                      ],
+                      "type": "string"
                     }
                   },
-                  "type": "array",
+                  "required": [
+                    "createdBy",
+                    "createdDate",
+                    "id",
+                    "network",
+                    "operation",
+                    "policyId",
+                    "policyVersion",
+                    "status"
+                  ],
+                  "type": "object",
                   "x-akamai": {
-                    "file-path": "schemas/post-policy-version-activations-response.yaml"
+                    "file-path": "schemas/policy-activation.yaml"
                   }
                 }
               }
             },
-            "description": "Returns the activation history for the policy.\n"
+            "description": "The status of an activation or deactivation operation for a policy version.\n"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "instance": "ab8ef931-9b2e-4337-8878-cfe3c7eaafd0",
+                  "status": 400,
+                  "title": "Validation failed",
+                  "type": "/cloudlets/v3/error-types/validation-failed",
+                  "errors": [
+                    {
+                      "detail": "Unable to activate because a previous activation for this policy is pending.",
+                      "title": "Validation failed"
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "properties": {
+                    "errors": {
+                      "description": "A nested error object.\n",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "properties": {
+                          "instance": {
+                            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                            "type": "string"
+                          },
+                          "status": {
+                            "description": "HTTP response status code.\n",
+                            "type": "integer"
+                          },
+                          "title": {
+                            "description": "Short descriptive title of the problem response.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "A URI path that identifies the problem type.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "instance",
+                          "status",
+                          "title",
+                          "type",
+                          "errors"
+                        ],
+                        "x-akamai": {
+                          "file-path": "schemas/error-nested.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "HTTP response status code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Short descriptive title of the problem response.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI path that identifies the problem type.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "instance",
+                    "status",
+                    "title",
+                    "type",
+                    "errors"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Invalid request parameters, or problems parsing or validating the request object.](ref:400)\n"
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "instance": "579e9f73-688d-4887-8f5b-5a2dd789b29e",
+                  "status": 403,
+                  "title": "Access Denied",
+                  "type": "/cloudlets/v3/error-types/access-denied",
+                  "errors": [
+                    {
+                      "detail": "User does not have edit capability for Edge Redirector Cloudlet in group 1000.",
+                      "title": "Access Denied"
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "properties": {
+                    "errors": {
+                      "description": "A nested error object.\n",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "properties": {
+                          "instance": {
+                            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                            "type": "string"
+                          },
+                          "status": {
+                            "description": "HTTP response status code.\n",
+                            "type": "integer"
+                          },
+                          "title": {
+                            "description": "Short descriptive title of the problem response.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "A URI path that identifies the problem type.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "instance",
+                          "status",
+                          "title",
+                          "type",
+                          "errors"
+                        ],
+                        "x-akamai": {
+                          "file-path": "schemas/error-nested.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "HTTP response status code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Short descriptive title of the problem response.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI path that identifies the problem type.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "instance",
+                    "status",
+                    "title",
+                    "type",
+                    "errors"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[No permission to access this resource.](ref:403)\n"
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "instance": "ec37d23b-b3c1-45f9-9f49-5695da2738a4",
+                  "status": 404,
+                  "title": "Not found",
+                  "type": "/cloudlets/v3/error-types/not-found",
+                  "errors": [
+                    {
+                      "detail": "Policy Version `100` not found in Policy `100000`.",
+                      "title": "Not found"
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "properties": {
+                    "errors": {
+                      "description": "A nested error object.\n",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "properties": {
+                          "instance": {
+                            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                            "type": "string"
+                          },
+                          "status": {
+                            "description": "HTTP response status code.\n",
+                            "type": "integer"
+                          },
+                          "title": {
+                            "description": "Short descriptive title of the problem response.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "A URI path that identifies the problem type.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "instance",
+                          "status",
+                          "title",
+                          "type",
+                          "errors"
+                        ],
+                        "x-akamai": {
+                          "file-path": "schemas/error-nested.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "HTTP response status code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Short descriptive title of the problem response.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI path that identifies the problem type.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "instance",
+                    "status",
+                    "title",
+                    "type",
+                    "errors"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Resource not found.](ref:404)\n"
           }
         },
         "summary": "Activate a policy version",
         "tags": [
-          "Policy activations"
+          "Activations"
         ]
       }
+    },
+    "/policies/{policyId}/activations/{activationId}": {
+      "get": {
+        "description": "Returns the status of an activation. See [Activation status](ref:activation-status).\n",
+        "operationId": "get-policy-activation",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "createdBy": "mrossi",
+                  "createdDate": "2020-10-01T12:35:24.520Z",
+                  "finishDate": "2020-10-01T12:35:25.962Z",
+                  "id": 300001,
+                  "network": "PRODUCTION",
+                  "operation": "ACTIVATION",
+                  "policyId": 1001,
+                  "status": "SUCCESS",
+                  "policyVersion": 1,
+                  "policyVersionDeleted": false,
+                  "links": [
+                    {
+                      "href": "/cloudlets/v3/policies/1001/activations/300001",
+                      "rel": "self"
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "The status of an activation or deactivation operation for a policy version.\n",
+                  "nullable": true,
+                  "properties": {
+                    "createdBy": {
+                      "description": "The username who created the activation.\n",
+                      "type": "string"
+                    },
+                    "createdDate": {
+                      "description": "ISO 8601 timestamp indicating when the activation was created.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "failureDetails": {
+                      "description": "A detailed description of the reason why the activation failed.\n",
+                      "type": "string"
+                    },
+                    "finishDate": {
+                      "description": "ISO 8601 timestamp indicating when the activation ended, either successfully or unsuccessfully. You can check details of unsuccessful attempts in `failureDetails`.\n",
+                      "format": "date-time",
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "id": {
+                      "description": "Identifies the activation.\n",
+                      "type": "integer"
+                    },
+                    "links": {
+                      "description": "Hypermedia links to help navigate through the result set.\n",
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Hypermedia links to help navigate through the result set, or to identify the current item whose `rel` is `self`.\n",
+                        "properties": {
+                          "href": {
+                            "description": "A relative path to the currently requested object or a specific page of the result set.\n",
+                            "type": "string"
+                          },
+                          "rel": {
+                            "description": "The relationship between the current and linked result sets. A value of `self` links to the current result set, while `first`, `next`, and `last` link to different sets of paginated data.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "href",
+                          "rel"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array",
+                      "x-akamai": {
+                        "file-path": "schemas/links.yaml"
+                      }
+                    },
+                    "network": {
+                      "description": "The networks where you can activate or deactivate the policy version, either `PRODUCTION` or `STAGING`.\n",
+                      "enum": [
+                        "PRODUCTION",
+                        "STAGING"
+                      ],
+                      "type": "string",
+                      "x-akamai": {
+                        "file-path": "schemas/network-enum.yaml"
+                      }
+                    },
+                    "operation": {
+                      "description": "The operations that you can perform on a policy version, either `ACTIVATION` or `DEACTIVATION`.\n",
+                      "enum": [
+                        "ACTIVATION",
+                        "DEACTIVATION"
+                      ],
+                      "type": "string",
+                      "x-akamai": {
+                        "file-path": "schemas/activation-operation-enum.yaml"
+                      }
+                    },
+                    "policyId": {
+                      "description": "Identifies the shared policy.\n",
+                      "type": "integer"
+                    },
+                    "policyVersion": {
+                      "description": "The number of the policy version.\n",
+                      "type": "integer"
+                    },
+                    "policyVersionDeleted": {
+                      "description": "Indicates if the policy version is deleted.\n",
+                      "type": "boolean"
+                    },
+                    "status": {
+                      "description": "The status of the operation, either `IN_PROGRESS`, `SUCCESS`, or `FAILED`.\n",
+                      "enum": [
+                        "IN_PROGRESS",
+                        "SUCCESS",
+                        "FAILED"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "createdBy",
+                    "createdDate",
+                    "id",
+                    "network",
+                    "operation",
+                    "policyId",
+                    "policyVersion",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/policy-activation.yaml"
+                  }
+                }
+              }
+            },
+            "description": "The status of an activation or deactivation operation for a policy version.\n"
+          }
+        },
+        "summary": "Get status for an activation",
+        "tags": [
+          "Activations"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Identifies the policy activation.\n",
+          "in": "path",
+          "name": "activationId",
+          "required": true,
+          "schema": {
+            "example": 3001,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/activationId-path.yaml"
+          }
+        },
+        {
+          "description": "Identifies the shared policy.\n",
+          "in": "path",
+          "name": "policyId",
+          "required": true,
+          "schema": {
+            "example": 1001,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/policyId-path.yaml"
+          }
+        }
+      ]
     }
   },
   "servers": [
     {
-      "url": "https://{hostname}/cloudlets/api/v2"
+      "url": "https://{hostname}/cloudlets/v3"
     }
   ],
   "x-akamai": {
