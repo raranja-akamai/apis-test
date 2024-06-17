@@ -1,9 +1,6 @@
 type: object
-description: |-
+description: |
   List of invoices and credit memos.
-  
-x-akamai:
-  file-path: schemas/invoice-schema.yaml
 additionalProperties: false
 required:
 - invoiceId
@@ -15,15 +12,46 @@ required:
 - accountId
 - files
 properties:
-  accountId:
+  invoiceId:
+    type: integer
+    description: |
+      Identifies the invoice or credit memo.
+    minimum: 1
+  invoiceDate:
     type: string
     description: |
-      Identifies the account.
+      The invoice's or credit memo's published date, formatted as ISO 8601 date.
+    format: date
+  invoiceDueDate:
+    type: string
+    description: |
+      The invoice's or credit memo's due date.
+    format: date
+  invoiceTotal:
+    type: number
+    description: |
+      The amount billed.
+  invoiceCurrency:
+    type: string
+    description: |
+      Three-letter ISO 4217 code indicating the currency that measures all totals.
     minLength: 1
+  invoiceType:
+    type: string
+    description: |
+      The overall category for the document, such as `INVOICE` or `CREDIT_MEMO` for adjustments.
+    enum:
+    - INVOICE
+    - CREDIT_MEMO
   contractId:
     type: string
     description: |
       Identifies the contract the data reflects.
+    minLength: 1
+  accountId:
+    type: string
+    description: |
+      Identifies the account.
     minLength: 1
   files:
     type: array
@@ -41,24 +69,6 @@ properties:
       - fileLink
       - contentType
       properties:
-        contentType:
-          type: string
-          description: |
-            The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.
-          enum:
-          - application/json
-          - application/pdf
-          - text/csv
-        fileCreationDate:
-          type: string
-          description: |
-            The date when the file was created.
-          format: date
-        fileLink:
-          type: string
-          description: |
-            The link to download the file.
-          format: uri-reference
         fileName:
           type: string
           description: |
@@ -69,6 +79,11 @@ properties:
           description: |
             The version of the file.
           minimum: 1
+        fileCreationDate:
+          type: string
+          description: |
+            The date when the file was created.
+          format: date
         sourceType:
           type: string
           description: |
@@ -76,34 +91,16 @@ properties:
           enum:
           - REGULAR
           - COMPUTE
-  invoiceCurrency:
-    type: string
-    description: |
-      Three-letter ISO 4217 code indicating the currency that measures all totals.
-    minLength: 1
-  invoiceDate:
-    type: string
-    description: |
-      The invoice's or credit memo's published date, formatted as ISO 8601 date.
-    format: date
-  invoiceDueDate:
-    type: string
-    description: |
-      The invoice's or credit memo's due date.
-    format: date
-  invoiceId:
-    type: integer
-    description: |
-      Identifies the invoice or credit memo.
-    minimum: 1
-  invoiceTotal:
-    type: number
-    description: |
-      The amount billed.
-  invoiceType:
-    type: string
-    description: |
-      The overall category for the document, such as `INVOICE` or `CREDIT_MEMO` for adjustments.
-    enum:
-    - INVOICE
-    - CREDIT_MEMO
+        fileLink:
+          type: string
+          description: |
+            The link to download the file.
+          format: uri-reference
+        contentType:
+          type: string
+          description: |
+            The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.
+          enum:
+          - application/json
+          - application/pdf
+          - text/csv
