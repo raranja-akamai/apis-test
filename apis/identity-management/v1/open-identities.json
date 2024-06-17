@@ -1,0 +1,939 @@
+{
+  "info": {
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Credentials",
+    "version": "1"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/open-identities/tokens/{accessToken}": {
+      "get": {
+        "description": "View an API client's details. This operation lets you get a specific API client by passing the client's token in the request.\n",
+        "operationId": "get-identity-access-token",
+        "parameters": [
+          {
+            "description": "Includes actions you can perform on the object, `false` by default.\n",
+            "in": "query",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/actions-query.yaml"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "identity": {
+                    "openIdentityId": "24n75iohuvt3ta2v",
+                    "clientName": "Client Name",
+                    "uiUserName": "johnDoe",
+                    "uiIdentityId": "1-abcd",
+                    "activeCredentialCount": 1,
+                    "createdDate": "2016-02-24T22:43:12.000Z",
+                    "createdBy": "jkowalski",
+                    "clientDescription": "reporting client",
+                    "useLunaUserAccess": true,
+                    "allowAccountSwitch": true,
+                    "actions": {
+                      "delete": false,
+                      "transfer": false,
+                      "lock": true,
+                      "deactivateAll": true,
+                      "editAuth": true
+                    }
+                  },
+                  "authorization": {
+                    "serviceProviderId": 1,
+                    "serviceProviderName": "LUNA",
+                    "authorizationId": 137850,
+                    "openIdentityId": "B-C-4NPCYX",
+                    "name": "IDM Auth",
+                    "description": "IDM Auth",
+                    "baseURL": "https://akaa-ylebtkmgfpnm5p4y-syw7bxjr2y4fgo5q.luna.akamaiapis.net/",
+                    "accessToken": "akab-xokhgtv6kebvuctv-q2iopin6rtw68875",
+                    "ccuParams": {
+                      "purgeByCpcode": true,
+                      "purgeByCacheTag": true,
+                      "purgeCpcodes": [
+                        461295,
+                        461145
+                      ]
+                    },
+                    "services": [
+                      {
+                        "serviceId": 406,
+                        "serviceName": "Traffic Management Configurations",
+                        "description": "Traffic Management Configurations",
+                        "endPoint": "/config-gtm/v1/",
+                        "grantScopes": [
+                          {
+                            "name": "READ-ONLY",
+                            "description": "READ-ONLY"
+                          },
+                          {
+                            "name": "READ-WRITE",
+                            "description": "READ-WRITE"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  "groupAccess": [
+                    {
+                      "groupId": 54321,
+                      "roleId": 14,
+                      "isBlocked": false,
+                      "subGroups": [
+                        {
+                          "groupId": 12345,
+                          "roleId": 11111,
+                          "isBlocked": false,
+                          "subGroups": []
+                        }
+                      ]
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "This object encapsulates the response schema for creating API client.\n",
+                  "properties": {
+                    "authorization": {
+                      "description": "An API client's combination of services and grant scopes that allow you to make calls with that client.\n",
+                      "properties": {
+                        "accessToken": {
+                          "description": "Part of the client secret that identifies your API client and lets you access applications and resources. Tokens are unique per client.\n",
+                          "type": "string"
+                        },
+                        "authorizationId": {
+                          "description": "Unique identifier of the authorization.\n",
+                          "type": "integer"
+                        },
+                        "baseURL": {
+                          "description": "The base URL for the service.\n",
+                          "format": "uri",
+                          "type": "string"
+                        },
+                        "ccuParams": {
+                          "description": "Fast Purge (CCU) details, applicable only for users with Fast Purge enabled.\n",
+                          "properties": {
+                            "purgeByCacheTag": {
+                              "description": "If `purgeByCacheTag` is `true` you can purge by cache tag with your API client.\n",
+                              "type": "boolean"
+                            },
+                            "purgeByCpcode": {
+                              "description": "If `purgeByCpCode` is `true` you can purge that CP code with your API client.\n",
+                              "type": "boolean"
+                            },
+                            "purgeCpcodes": {
+                              "description": "Lists all CP codes that your API client is allowed to purge.\n",
+                              "items": {
+                                "type": "integer"
+                              },
+                              "type": "array"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "description": {
+                          "description": "Description of the API client's authorization.\n",
+                          "type": "string"
+                        },
+                        "name": {
+                          "description": "Name of the authorization.\n",
+                          "type": "string"
+                        },
+                        "openIdentityId": {
+                          "description": "Unique identifier for an API client.\n",
+                          "type": "string"
+                        },
+                        "serviceProviderId": {
+                          "description": "A unique identifier for a service provider.\n",
+                          "type": "integer"
+                        },
+                        "serviceProviderName": {
+                          "description": "The name of the service provider, like DNS or CCU.\n",
+                          "type": "string"
+                        },
+                        "services": {
+                          "description": "Lists APIs you'd like to use, like Property Manager.\n",
+                          "items": {
+                            "properties": {
+                              "description": {
+                                "description": "The description of a service.\n",
+                                "type": "string"
+                              },
+                              "endPoint": {
+                                "description": "The endpoint to access a service.\n",
+                                "type": "string"
+                              },
+                              "grantScopes": {
+                                "description": "The amount of access you give to an API client on a per-service basis.\n",
+                                "items": {
+                                  "properties": {
+                                    "description": {
+                                      "description": "The description of a grant scope.\n",
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "description": "The name of a grant scope.\n",
+                                      "type": "string"
+                                    }
+                                  },
+                                  "type": "object"
+                                },
+                                "type": "array"
+                              },
+                              "serviceId": {
+                                "description": "A unique identifier for a service.\n",
+                                "type": "integer"
+                              },
+                              "serviceName": {
+                                "description": "The name of a service, like Edge Diagnostics, or Identity Management: API.\n",
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          },
+                          "type": "array"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "groupAccess": {
+                      "description": "List group access.\n",
+                      "items": {
+                        "properties": {
+                          "groupId": {
+                            "description": "The group's unique identifier.\n",
+                            "type": "integer"
+                          },
+                          "groupName": {
+                            "description": "The human-readable name for a group.\n",
+                            "type": "string"
+                          },
+                          "isBlocked": {
+                            "description": "If `true`, the API client has access to the group's parent, but cannot access the child group.\n",
+                            "type": "boolean"
+                          },
+                          "parentGroupId": {
+                            "description": "The unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
+                            "type": "string"
+                          },
+                          "roleDescription": {
+                            "description": "The human-readable description for a role.\n",
+                            "type": "string"
+                          },
+                          "roleId": {
+                            "description": "A role's unique identifier.\n",
+                            "type": "integer"
+                          },
+                          "roleName": {
+                            "description": "The human-readable name for a role.\n",
+                            "type": "string"
+                          },
+                          "subGroups": {
+                            "description": "Children of the parent group, represented as an array of `groupAccess` objects. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+                            "items": {
+                              "description": "Children of the parent group, represented as an array of `groupAccess` objects. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "identity": {
+                      "description": "The API client. API clients contain a set of permissions and tokens, providing a user with access to specific APIs.\n",
+                      "properties": {
+                        "actions": {
+                          "description": "Encapsulates the different ways you can edit an API client, such as changing its owner, changing its access rights to Control Center services or resources, or by deleting it.\n",
+                          "properties": {
+                            "deactivateAll": {
+                              "description": "If the client's `deactivateAll` is `true`, you can deactivate all credentials for the API client at once. Otherwise, you need to deactivate the credentials individually.\n",
+                              "type": "boolean"
+                            },
+                            "delete": {
+                              "description": "If `true`, you can delete the API client. Otherwise, contact an admin on your account to have them delete the client.\n",
+                              "type": "boolean"
+                            },
+                            "editAuth": {
+                              "description": "If the client's `editAuth` is `true`,  you can change the client's group and role assignments, and which API services it can access.\n",
+                              "type": "boolean"
+                            },
+                            "lock": {
+                              "description": "If the client's `lock` is `true`, you can lock the client to prevent anyone from using it to access services on Control Center.\n",
+                              "type": "boolean"
+                            },
+                            "transfer": {
+                              "description": "If the client's `transfer` is `true`, you can give this API client to a different user.\n",
+                              "type": "boolean"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "activeCredentialCount": {
+                          "description": "Number of credentials active for the API client.\n",
+                          "type": "integer"
+                        },
+                        "allowAccountSwitch": {
+                          "description": "If you can use the API client to manage more than one account.\n",
+                          "type": "boolean"
+                        },
+                        "clientDescription": {
+                          "description": "Description of the API client.\n",
+                          "type": "string"
+                        },
+                        "clientName": {
+                          "description": "The API client's human-readable name.\n",
+                          "type": "string"
+                        },
+                        "createdBy": {
+                          "description": "The user who created the API client.\n",
+                          "type": "string"
+                        },
+                        "createdDate": {
+                          "description": "The date the API client was made.\n",
+                          "format": "date-time",
+                          "type": "string"
+                        },
+                        "openIdentityId": {
+                          "description": "Unique identifier for an API client.\n",
+                          "type": "string"
+                        },
+                        "uiIdentityId": {
+                          "description": "The unique identifier of the user the API client is being created for.\n",
+                          "type": "string"
+                        },
+                        "uiUserName": {
+                          "description": "The human-readable username of the person who owns the API client.\n",
+                          "type": "string"
+                        },
+                        "useLunaUserAccess": {
+                          "description": "If the API client's permissions are tied to a Control Center user's permissions.\n",
+                          "type": "boolean"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/identity.yaml"
+                  }
+                }
+              }
+            },
+            "description": "The response provides API client's details.\n"
+          }
+        },
+        "summary": "Get a client by its access token",
+        "tags": [
+          "Tokens"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "An access token identifies a collection of APIs belonging to an API client.\n",
+          "in": "path",
+          "name": "accessToken",
+          "required": true,
+          "schema": {
+            "example": "akaa-onah2fsgph6i7sx2-j4vrsb3rbyqxuslo",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/access-token-path.yaml"
+          }
+        }
+      ]
+    },
+    "/open-identities/{openIdentityId}/account-switch-keys": {
+      "get": {
+        "description": "The response object contains the `accountSwitchKeys` and account names you can access based on the permissions of your API client. Once you have the `accountSwitchKeys` you need, [you can make an API call to another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client).\n",
+        "operationId": "get-account-switch-keys",
+        "parameters": [
+          {
+            "description": "Optionally filter results by `accountId` or `accountName`. Enter at least three characters in the string to filter the results.\n",
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "example": "1-2ABCD",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/search-query.yaml"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "accountName": "Main Street Corporation",
+                    "accountSwitchKey": "1-EFGH"
+                  },
+                  {
+                    "accountName": "Internet Company",
+                    "accountSwitchKey": "1-ABCD:Z-XYZ"
+                  },
+                  {
+                    "accountName": "Main Street Corporation",
+                    "accountSwitchKey": "1-ABCD:Z-PQR"
+                  }
+                ],
+                "schema": {
+                  "description": "This object encapsulates a collection of contexts the open client can manage.\n",
+                  "items": {
+                    "properties": {
+                      "accountName": {
+                        "description": "The name you supply for an account.\n",
+                        "type": "string"
+                      },
+                      "accountSwitchKey": {
+                        "description": "The identifier for an account other than your API client's default.\n",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/get-open-identities-openidentityid-account-switch-keys-response.yaml"
+                  }
+                }
+              }
+            },
+            "description": "The response lists account switch keys.\n"
+          }
+        },
+        "summary": "List account switch keys",
+        "tags": [
+          "Account switch keys"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "A unique identifier for each API client.\n",
+          "in": "path",
+          "name": "openIdentityId",
+          "required": true,
+          "schema": {
+            "example": "pa444oyidwo6j4hy",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/open-identity-id-path.yaml"
+          }
+        }
+      ]
+    },
+    "/open-identities/{openIdentityId}/credentials": {
+      "get": {
+        "description": "Get an API client's credentials.\n",
+        "operationId": "get-identity-credentials",
+        "parameters": [
+          {
+            "description": "Includes actions you can perform on the object, `false` by default.\n",
+            "in": "query",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/actions-query.yaml"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "credentialId": 99999,
+                    "clientToken": "akaa-abcdakjsdkfnanva-abcdakjsdkfnanv",
+                    "createdOn": "2019-11-01T23:06:59.000Z",
+                    "expiresOn": "2020-11-01T23:06:59.000Z",
+                    "status": "ACTIVE",
+                    "description": "John's access to Property Manager"
+                  },
+                  {
+                    "credentialId": 88888,
+                    "clientToken": "akaa-abcdakjsdkfnanva-abcdakjsdkouoiuo",
+                    "createdOn": "2019-11-01T23:06:59.000Z",
+                    "expiresOn": "2020-11-01T23:06:59.000Z",
+                    "status": "INACTIVE",
+                    "description": "John's access to Event Center"
+                  }
+                ],
+                "schema": {
+                  "description": "A collection of credentials.\n",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Specifies credentials.\n",
+                    "properties": {
+                      "clientToken": {
+                        "description": "Identifies the API client.\n",
+                        "type": "string"
+                      },
+                      "createdOn": {
+                        "description": "ISO 8601 timestamp indicating when credentials were created.\n",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "credentialId": {
+                        "description": "A unique identifier for each credential.\n",
+                        "type": "integer"
+                      },
+                      "description": {
+                        "description": "Notes or description for credentials.\n",
+                        "type": "string"
+                      },
+                      "expiresOn": {
+                        "description": "ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.\n",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "status": {
+                        "description": "Indicates credentials' status.\n",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "credentialId",
+                      "clientToken",
+                      "createdOn",
+                      "expiresOn",
+                      "status",
+                      "description"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/credential-nosecret.yaml"
+                    }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/credentials.yaml"
+                  }
+                }
+              }
+            },
+            "description": "The response returns credentials.\n"
+          }
+        },
+        "summary": "List credentials",
+        "tags": [
+          "Credentials"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "A unique identifier for each API client.\n",
+          "in": "path",
+          "name": "openIdentityId",
+          "required": true,
+          "schema": {
+            "example": "pa444oyidwo6j4hy",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/open-identity-id-path.yaml"
+          }
+        }
+      ],
+      "post": {
+        "description": "Create a new credential for an API client. Only the owner of an identity can create credentials for it.  Credentials are in `active` status at creation, and by  default expire two years from their creation date.  However, credentials expire differently when the API client is based on Control Center user permissions, and follow the same rotation schedule  listed for user passwords on those accounts. Run the [Update a credential](ref:put-identity-credential) operation to change the expiration date, description or status.  Save information from the response information like the `credentialID` for future use.  This is the only time you see the client secret. If you don't save it at this time, you'll need to create a new credential.\n",
+        "operationId": "post-identity-credential",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "credentialId": 14111,
+                  "clientToken": "akaa-abcdakjsdkfnanva-abcdakjsdkfnanv",
+                  "clientSecret": "aasd3adHRjBfroGqYC/rc/jDaZTZxssdaa/YjD6uA=",
+                  "createdOn": "2018-11-01T23:06:59.000Z",
+                  "expiresOn": "2020-11-01T23:06:59.000Z",
+                  "status": "ACTIVE",
+                  "description": "New credential for John."
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "This object encapsulates all members for the credential data structure.\n",
+                  "properties": {
+                    "clientSecret": {
+                      "description": "The client secret.\n",
+                      "type": "string"
+                    },
+                    "clientToken": {
+                      "description": "Identifies the API client.\n",
+                      "type": "string"
+                    },
+                    "createdOn": {
+                      "description": "ISO 8601 timestamp indicating when credentials were created.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "credentialId": {
+                      "description": "A unique identifier for each credential.\n",
+                      "type": "integer"
+                    },
+                    "description": {
+                      "description": "Lets you add your own notes or description for your credential.\n",
+                      "type": "string"
+                    },
+                    "expiresOn": {
+                      "description": "ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "Shows whether a credential is `ACTIVE`, `INACTIVE`, or `DELETED`. You can switch a credential's `status` between `ACTIVE` and `INACTIVE`. Note that once you change the status to `DELETED`, you've actually deleted it and it can't be reactivated.\n",
+                      "enum": [
+                        "ACTIVE",
+                        "INACTIVE",
+                        "DELETED"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "credentialId",
+                    "clientToken",
+                    "createdOn",
+                    "expiresOn",
+                    "status",
+                    "description"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/credential.yaml"
+                  }
+                }
+              }
+            },
+            "description": "The response provides created credentials.\n"
+          }
+        },
+        "summary": "Create a credential",
+        "tags": [
+          "Credentials"
+        ]
+      }
+    },
+    "/open-identities/{openIdentityId}/credentials/deactivate": {
+      "parameters": [
+        {
+          "description": "A unique identifier for each API client.\n",
+          "in": "path",
+          "name": "openIdentityId",
+          "required": true,
+          "schema": {
+            "example": "pa444oyidwo6j4hy",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/open-identity-id-path.yaml"
+          }
+        }
+      ],
+      "post": {
+        "description": "Deactivate all credentials for an API client. This doesn't delete the API identity or the credentials. To deactivate a single credential, run the [Update a credential](ref:put-identity-credential) operation and set the status to `INACTIVE`.\n",
+        "operationId": "post-identity-credential-deactivate",
+        "responses": {
+          "200": {
+            "description": "Credentials deactivated.\n"
+          }
+        },
+        "summary": "Deactivate all credentials",
+        "tags": [
+          "Credentials"
+        ]
+      }
+    },
+    "/open-identities/{openIdentityId}/credentials/{credentialId}": {
+      "delete": {
+        "description": "Delete a credential. You can only delete inactive credentials.\n",
+        "operationId": "delete-identity-credential",
+        "responses": {
+          "200": {
+            "description": "Credential removed.\n"
+          }
+        },
+        "summary": "Remove a credential",
+        "tags": [
+          "Credentials"
+        ]
+      },
+      "get": {
+        "description": "Get details for a single credential. Use [Update a credential](ref:put-identity-credential) to change the credential's expiration date, or toggle the credential's activation status.\n",
+        "operationId": "get-identity-credential",
+        "parameters": [
+          {
+            "description": "Includes actions you can perform on the object, `false` by default.\n",
+            "in": "query",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/actions-query.yaml"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "credentialId": 99999,
+                  "clientToken": "akaa-abcdakjsdkfnanva-abcdakjsdkfnanv",
+                  "status": "ACTIVE",
+                  "createdOn": "2020-11-01T23:06:59.000Z",
+                  "description": "Credential with no secret",
+                  "expiresOn": "2021-11-01T23:06:59.000Z"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Specifies credentials.\n",
+                  "properties": {
+                    "clientToken": {
+                      "description": "Identifies the API client.\n",
+                      "type": "string"
+                    },
+                    "createdOn": {
+                      "description": "ISO 8601 timestamp indicating when credentials were created.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "credentialId": {
+                      "description": "A unique identifier for each credential.\n",
+                      "type": "integer"
+                    },
+                    "description": {
+                      "description": "Notes or description for credentials.\n",
+                      "type": "string"
+                    },
+                    "expiresOn": {
+                      "description": "ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "Indicates credentials' status.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "credentialId",
+                    "clientToken",
+                    "createdOn",
+                    "expiresOn",
+                    "status",
+                    "description"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/credential-nosecret.yaml"
+                  }
+                }
+              }
+            },
+            "description": "The response returns credentials.\n"
+          }
+        },
+        "summary": "Get a credential",
+        "tags": [
+          "Credentials"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "A credential's unique identifier.\n",
+          "in": "path",
+          "name": "credentialId",
+          "required": true,
+          "schema": {
+            "example": 345678,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/credential-id-path.yaml"
+          }
+        },
+        {
+          "description": "A unique identifier for each API client.\n",
+          "in": "path",
+          "name": "openIdentityId",
+          "required": true,
+          "schema": {
+            "example": "pa444oyidwo6j4hy",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/open-identity-id-path.yaml"
+          }
+        }
+      ],
+      "put": {
+        "description": "Edit credential details. You can change the expiration date, description, or toggle the activation status. This isn't the same as rotating a credential. For credential rotation, see [Rotate credentials](ref:rotate-credentials).\n",
+        "operationId": "put-identity-credential",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "credentialId": 99999,
+                "clientToken": "akaa-abcdakjsdkfnanva-abcdakjsdkfnanv",
+                "status": "ACTIVE",
+                "createdOn": "2020-11-01T23:06:59.000Z",
+                "description": "Credential with no secret",
+                "expiresOn": "2021-11-01T23:06:59.000Z"
+              },
+              "schema": {
+                "additionalProperties": false,
+                "description": "Specifies credentials.\n",
+                "properties": {
+                  "clientToken": {
+                    "description": "Identifies the API client.\n",
+                    "type": "string"
+                  },
+                  "createdOn": {
+                    "description": "__Read-only__ ISO 8601 timestamp indicating when credentials were created.\n",
+                    "format": "date-time",
+                    "readOnly": true,
+                    "type": "string"
+                  },
+                  "credentialId": {
+                    "description": "A unique identifier for each credential.\n",
+                    "type": "integer"
+                  },
+                  "description": {
+                    "description": "Notes or description for credentials.\n",
+                    "type": "string"
+                  },
+                  "expiresOn": {
+                    "description": "__Read-only__ ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.\n",
+                    "format": "date-time",
+                    "readOnly": true,
+                    "type": "string"
+                  },
+                  "status": {
+                    "description": "Identifies the condition of the credential.\n",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "expiresOn",
+                  "status",
+                  "credentialId",
+                  "clientToken",
+                  "createdOn",
+                  "description"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/update-credential.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "credentialId": 99999,
+                  "clientToken": "akaa-abcdakjsdkfnanva-abcdakjsdkfnanv",
+                  "status": "ACTIVE",
+                  "createdOn": "2020-11-01T23:06:59.000Z",
+                  "description": "Credential with no secret",
+                  "expiresOn": "2021-11-01T23:06:59.000Z"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Specifies credentials.\n",
+                  "properties": {
+                    "clientToken": {
+                      "description": "Identifies the API client.\n",
+                      "type": "string"
+                    },
+                    "createdOn": {
+                      "description": "ISO 8601 timestamp indicating when credentials were created.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "credentialId": {
+                      "description": "A unique identifier for each credential.\n",
+                      "type": "integer"
+                    },
+                    "description": {
+                      "description": "Notes or description for credentials.\n",
+                      "type": "string"
+                    },
+                    "expiresOn": {
+                      "description": "ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "Indicates credentials' status.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "credentialId",
+                    "clientToken",
+                    "createdOn",
+                    "expiresOn",
+                    "status",
+                    "description"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/credential-nosecret.yaml"
+                  }
+                }
+              }
+            },
+            "description": "The response provides updated credentials.\n"
+          }
+        },
+        "summary": "Update a credential",
+        "tags": [
+          "Credentials"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/identity-management/v1"
+    }
+  ],
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "open-identities.yaml"
+  }
+}
