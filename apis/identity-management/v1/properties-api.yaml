@@ -1,162 +1,142 @@
+openapi: 3.0.0
 info:
-  license:
-    name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0.html
   title: Properties
   version: '2'
-openapi: 3.0.0
+servers:
+- url: https://{hostname}/identity-management/v2
+x-akamai:
+  auth-type: EDGE_GRID
 paths:
   /user-admin/properties:
     get:
-      description: 'Return a list of properties for an account. Include the `groupId`
-        parameter in your request to filter the results by group.
-
-        '
       operationId: get-properties
+      summary: List properties
+      tags:
+      - Properties
+      description: |
+        Return a list of properties for an account. Include the `groupId` parameter in your request to filter the results by group.
       parameters:
       - $ref: parameters/groupIdopt_groupId.yaml
       responses:
         200:
+          description: |
+            The response lists properties.
           content:
             application/json:
               example:
                 $ref: examples/get-response-properties.json
               schema:
                 $ref: schemas/ListOfPropertyListItem.yaml
-          description: 'The response lists properties.
-
-            '
-      summary: List properties
+  /user-admin/properties/{propertyId}:
+    parameters:
+    - $ref: parameters/propertyId-path.yaml
+    get:
+      operationId: get-property
+      summary: Get a property
       tags:
       - Properties
-  /user-admin/properties/{propertyId}:
-    get:
-      description: 'Get information about a property.
-
-        '
-      operationId: get-property
+      description: |
+        Get information about a property.
       parameters:
       - $ref: parameters/groupIdreqQP_groupId.yaml
       responses:
         200:
+          description: |
+            The response returns the property.
           content:
             application/json:
               example:
                 $ref: examples/get-response-property-details.json
               schema:
                 $ref: schemas/PropertyResponse.yaml
-          description: 'The response returns the property.
-
-            '
-      summary: Get a property
+    put:
+      operationId: put-property
+      summary: Move a property
       tags:
       - Properties
-    parameters:
-    - $ref: parameters/propertyId-path.yaml
-    put:
-      description: 'Move a property from one group to another group. You can only
-        move a property into another group within the same group hierarchy. Depending
-        on your role in the destination group, you may lose access to resources the
-        property uses.
-
-        '
-      operationId: put-property
+      description: |
+        Move a property from one group to another group. You can only move a property into another group within the same group hierarchy. Depending on your role in the destination group, you may lose access to resources the property uses.
       requestBody:
+        required: true
         content:
           application/json:
             example:
               $ref: examples/put-request-property-move.json
             schema:
               $ref: schemas/MovePropertyRequest.yaml
-        required: true
       responses:
         204:
-          description: 'Property moved.
-
-            '
-      summary: Move a property
-      tags:
-      - Properties
+          description: |
+            Property moved.
   /user-admin/properties/{propertyId}/resources:
+    parameters:
+    - $ref: parameters/propertyId-path.yaml
     get:
-      description: 'List of resources the property uses.
-
-        '
       operationId: get-property-resources
+      summary: Get a property's resources
+      tags:
+      - Resources
+      description: |
+        List of resources the property uses.
       parameters:
       - $ref: parameters/groupIdreqQP_groupId.yaml
       responses:
         200:
+          description: |
+            The response returns resources.
           content:
             application/json:
               example:
                 $ref: examples/get-response-property-resources.json
               schema:
                 $ref: schemas/ListOfResourceItem.yaml
-          description: 'The response returns resources.
-
-            '
-      summary: Get a property's resources
-      tags:
-      - Resources
+  /user-admin/properties/{propertyId}/users:
     parameters:
     - $ref: parameters/propertyId-path.yaml
-  /user-admin/properties/{propertyId}/users:
     get:
-      description: 'List users who can access this property.
-
-        '
       operationId: get-property-users
+      summary: List users for property
+      tags:
+      - Users
+      description: |
+        List users who can access this property.
       parameters:
       - $ref: parameters/userType-query.yaml
       responses:
         200:
+          description: |
+            The response lists users.
           content:
             application/json:
               example:
                 $ref: examples/get-response-property-users-access.json
               schema:
                 $ref: schemas/UsersOfPropertyResponse.yaml
-          description: 'The response lists users.
-
-            '
-      summary: List users for property
-      tags:
-      - Users
-    parameters:
-    - $ref: parameters/propertyId-path.yaml
   /user-admin/properties/{propertyId}/users/block:
     parameters:
     - $ref: parameters/propertyId-path.yaml
     put:
-      description: 'Block the list of users on a property.
-
-        '
       operationId: put-property-users-block
+      summary: Block users
+      tags:
+      - Users
+      description: |
+        Block the list of users on a property.
       requestBody:
+        required: true
         content:
           application/json:
             example:
               $ref: examples/put-request-block-uiidentities.json
             schema:
               $ref: schemas/UsersBlockUIIdentities.yaml
-        required: true
       responses:
         200:
+          description: |
+            The response lists block users.
           content:
             application/json:
               example:
                 $ref: examples/get-response-property-users-access.json
               schema:
                 $ref: schemas/UsersOfPropertyResponse.yaml
-          description: 'The response lists block users.
-
-            '
-      summary: Block users
-      tags:
-      - Users
-servers:
-- url: https://{hostname}/identity-management/v2
-x-akamai:
-  auth-type: EDGE_GRID
-  file-path: properties-api.yaml

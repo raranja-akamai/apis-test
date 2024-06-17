@@ -1,54 +1,79 @@
 type: object
-description: |-
-  Provides basic information about the latest version of a stream. Apart from contextual information and the activation status, it provides names of the properties the stream monitors and the destinations where it sends logs.
-  
-x-akamai:
-  file-path: schemas/Stream.yaml
+description: |
+  Provides basic information about the latest version of a stream. Apart from contextual information and the activation status, it provides names of the properties the stream monitors.
 additionalProperties: false
 required:
-- streamId
-- streamVersionId
-- streamName
+- contractId
 - createdBy
 - createdDate
-- currentVersionId
-- archived
-- activationStatus
 - groupId
-- groupName
-- contractId
+- latestVersion
+- modifiedBy
+- modifiedDate
+- productId
 - properties
-- connectors
-- streamTypeName
+- streamId
+- streamName
+- streamStatus
+- streamVersion
 properties:
   properties:
     type: array
+    description: |
+      Identifies the properties that you monitor in the stream.
     items:
-      description: |
-        Identifies the properties that you monitor in the stream.
-      $ref: Property.yaml
-  activationStatus:
+      type: object
+      additionalProperties: false
+      required:
+      - propertyId
+      - propertyName
+      properties:
+        propertyId:
+          type: integer
+          description: |
+            The identifier of the property.
+        propertyName:
+          type: string
+          description: |
+            The descriptive label for the property.
+  streamId:
+    type: integer
+    description: |
+      Identifies the stream.
+  streamName:
     type: string
     description: |
-      The activation status of the stream. These are possible values: `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`.
+      The name of the stream.
+  streamVersion:
+    type: integer
+    description: |
+      Identifies the version of the stream.
+  groupId:
+    type: integer
+    description: |
+      Identifies the group where the stream is created.
+  contractId:
+    type: string
+    description: |
+      Identifies the contract that the stream belongs to.
+  latestVersion:
+    type: integer
+    description: |
+      Identifies the latest version of the stream.
+  productId:
+    type: string
+    description: |
+      The ID of the product that you created stream for.
+  streamStatus:
+    type: string
+    description: |
+      Indicates if the stream version is `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`.
     enum:
     - INACTIVE
     - ACTIVATING
     - ACTIVATED
     - DEACTIVATING
     - DEACTIVATED
-  archived:
-    type: boolean
-    description: |
-      Whether the stream is archived.
-  connectors:
-    type: string
-    description: |
-      The connector where the stream sends logs. At this time, you can configure one connector per stream as the destination to send logs.
-  contractId:
-    type: string
-    description: |
-      Identifies the contract that the stream is associated with.
   createdBy:
     type: string
     description: |
@@ -58,37 +83,12 @@ properties:
     description: |
       An ISO 8601 timestamp marking when the stream was created.
     format: date-time
-  currentVersionId:
-    type: integer
-    description: |
-      Identifies the current version of the stream.
-  errors:
-    type: array
-    items:
-      description: |
-        Errors associated to the stream.
-      $ref: Error.yaml
-  groupId:
-    type: integer
-    description: |
-      Identifies the group where the stream is created.
-  groupName:
+  modifiedBy:
     type: string
     description: |
-      The group name where the stream is created.
-  streamId:
-    type: integer
-    description: |
-      Identifies the stream.
-  streamName:
+      The username who modified the stream.
+  modifiedDate:
     type: string
     description: |
-      The name of the stream.
-  streamTypeName:
-    type: string
-    description: |
-      Specifies the type of the data stream. `Logs - Raw` is the only stream type name currently available.
-  streamVersionId:
-    type: integer
-    description: |
-      Identifies the version of the stream.
+      The date and time in the ISO 8601 format when the stream was modified.
+    format: date-time
