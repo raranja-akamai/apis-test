@@ -1,6 +1,9 @@
 type: object
-description: |
+description: |-
   Provides basic information about the latest version of a stream. Apart from contextual information and the activation status, it provides names of the properties the stream monitors and the destinations where it sends logs.
+  
+x-akamai:
+  file-path: schemas/Stream.yaml
 additionalProperties: false
 required:
 - streamId
@@ -23,19 +26,29 @@ properties:
     items:
       description: |
         Identifies the properties that you monitor in the stream.
-      "$ref": Property.yaml
-  streamId:
-    type: integer
-    description: |
-      Identifies the stream.
-  streamName:
+      $ref: Property.yaml
+  activationStatus:
     type: string
     description: |
-      The name of the stream.
-  streamVersionId:
-    type: integer
+      The activation status of the stream. These are possible values: `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`.
+    enum:
+    - INACTIVE
+    - ACTIVATING
+    - ACTIVATED
+    - DEACTIVATING
+    - DEACTIVATED
+  archived:
+    type: boolean
     description: |
-      Identifies the version of the stream.
+      Whether the stream is archived.
+  connectors:
+    type: string
+    description: |
+      The connector where the stream sends logs. At this time, you can configure one connector per stream as the destination to send logs.
+  contractId:
+    type: string
+    description: |
+      Identifies the contract that the stream is associated with.
   createdBy:
     type: string
     description: |
@@ -49,20 +62,12 @@ properties:
     type: integer
     description: |
       Identifies the current version of the stream.
-  archived:
-    type: boolean
-    description: |
-      Whether the stream is archived.
-  activationStatus:
-    type: string
-    description: |
-      The activation status of the stream. These are possible values: `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`.
-    enum:
-    - INACTIVE
-    - ACTIVATING
-    - ACTIVATED
-    - DEACTIVATING
-    - DEACTIVATED
+  errors:
+    type: array
+    items:
+      description: |
+        Errors associated to the stream.
+      $ref: Error.yaml
   groupId:
     type: integer
     description: |
@@ -71,21 +76,19 @@ properties:
     type: string
     description: |
       The group name where the stream is created.
-  contractId:
+  streamId:
+    type: integer
+    description: |
+      Identifies the stream.
+  streamName:
     type: string
     description: |
-      Identifies the contract that the stream is associated with.
-  connectors:
-    type: string
-    description: |
-      The connector where the stream sends logs. At this time, you can configure one connector per stream as the destination to send logs.
+      The name of the stream.
   streamTypeName:
     type: string
     description: |
       Specifies the type of the data stream. `Logs - Raw` is the only stream type name currently available.
-  errors:
-    type: array
-    items:
-      description: |
-        Errors associated to the stream.
-      "$ref": Error.yaml
+  streamVersionId:
+    type: integer
+    description: |
+      Identifies the version of the stream.

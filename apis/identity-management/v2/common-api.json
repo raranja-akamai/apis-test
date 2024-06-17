@@ -1,34 +1,20 @@
 {
-  "openapi": "3.0.0",
   "info": {
-    "title": "Common resources, for administrators",
-    "version": "2",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    },
+    "title": "Common resources, for administrators",
+    "version": "2"
   },
-  "servers": [
-    {
-      "url": "https://{hostname}/identity-management/v2"
-    }
-  ],
-  "x-akamai": {
-    "auth-type": "EDGE_GRID",
-    "file-path": "common-api.yaml"
-  },
+  "openapi": "3.0.0",
   "paths": {
     "/user-admin/common/contact-types": {
       "get": {
-        "operationId": "get-common-contact-types",
-        "summary": "View contact types",
-        "tags": [
-          "Contact types"
-        ],
         "description": "List all the possible contact types that Akamai supports. Use the values from this operation to add or update a user's `contactType`. Administrators use this operation to set a user's contact type. Users who modify it need to run [View contact types for a user profile](ref:get-user-contact-types).\n",
+        "operationId": "get-common-contact-types",
         "responses": {
           "200": {
-            "description": "The response lists contact types.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -38,33 +24,33 @@
                   "Security"
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Lists available values.",
+                  "items": {
+                    "description": "Available value.\n",
+                    "type": "string"
+                  },
+                  "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/ListOfString.yaml"
-                  },
-                  "items": {
-                    "type": "string",
-                    "description": "Available value.\n"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists contact types.\n"
           }
-        }
+        },
+        "summary": "View contact types",
+        "tags": [
+          "Contact types"
+        ]
       }
     },
     "/user-admin/common/countries": {
       "get": {
-        "operationId": "get-common-countries",
-        "summary": "View supported countries",
-        "tags": [
-          "Locale"
-        ],
         "description": "Return all the possible countries that Akamai supports. Use the values from this operation to add or update a user's country information. Administrators use this operation to set a user's country. Users who modify it need to run [View supported countries for a user profile](ref:get-user-countries).\n",
+        "operationId": "get-common-countries",
         "responses": {
           "200": {
-            "description": "The response lists countries.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -329,48 +315,33 @@
                   "Greenland"
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Lists available values.",
+                  "items": {
+                    "description": "Available value.\n",
+                    "type": "string"
+                  },
+                  "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/ListOfString.yaml"
-                  },
-                  "items": {
-                    "type": "string",
-                    "description": "Available value.\n"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists countries.\n"
           }
-        }
+        },
+        "summary": "View supported countries",
+        "tags": [
+          "Locale"
+        ]
       }
     },
     "/user-admin/common/countries/{country}/states": {
-      "parameters": [
-        {
-          "name": "country",
-          "in": "path",
-          "description": "Filters the results by country, but only returns lists of states and provinces for `USA` and `Canada`.",
-          "x-akamai": {
-            "file-path": "parameters/country-path.yaml"
-          },
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "Canada"
-          }
-        }
-      ],
       "get": {
-        "operationId": "get-common-states",
-        "summary": "View states",
-        "tags": [
-          "Locale"
-        ],
         "description": "List U.S. states or Canadian provinces. If `country=USA` you may enter a value of `TBD` if you don't know a user's state. Administrators use this operation to set a user's state. Users who modify it need to run [View states for a user profile](ref:get-user-states).\n",
+        "operationId": "get-common-states",
         "responses": {
           "200": {
-            "description": "The response lists states.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -391,33 +362,48 @@
                   "ON"
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Lists available values.",
+                  "items": {
+                    "description": "Available value.\n",
+                    "type": "string"
+                  },
+                  "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/ListOfString.yaml"
-                  },
-                  "items": {
-                    "type": "string",
-                    "description": "Available value.\n"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists states.\n"
+          }
+        },
+        "summary": "View states",
+        "tags": [
+          "Locale"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Filters the results by country, but only returns lists of states and provinces for `USA` and `Canada`.",
+          "in": "path",
+          "name": "country",
+          "required": true,
+          "schema": {
+            "example": "Canada",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/country-path.yaml"
           }
         }
-      }
+      ]
     },
     "/user-admin/common/notification-products": {
       "get": {
-        "operationId": "get-common-notification-products",
-        "summary": "View products",
-        "tags": [
-          "Products"
-        ],
         "description": "Return all products a user can subscribe to and receive notifications for on the account. The account is determined by the tokens in your API client. Administrators use this operation to set the products for which users receive notifications. Users who modify this set need to run [View products for a user profile](ref:get-user-notification-products).\n",
+        "operationId": "get-common-notification-products",
         "responses": {
           "200": {
-            "description": "The response lists products.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -434,33 +420,33 @@
                   "NetStorage"
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Lists available values.",
+                  "items": {
+                    "description": "Available value.\n",
+                    "type": "string"
+                  },
+                  "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/ListOfString.yaml"
-                  },
-                  "items": {
-                    "type": "string",
-                    "description": "Available value.\n"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists products.\n"
           }
-        }
+        },
+        "summary": "View products",
+        "tags": [
+          "Products"
+        ]
       }
     },
     "/user-admin/common/password-policy": {
       "get": {
-        "operationId": "get-common-password-policy",
-        "summary": "View password policy",
-        "tags": [
-          "Policies"
-        ],
         "description": "Return the password policy for the current account. The current account is determined by the tokens in your API client. Administrators use this operation to set a user's password policy. Users who modify it need to run [View password policy for a user profile](ref:get-user-password-policy).\n",
+        "operationId": "get-common-password-policy",
         "responses": {
           "200": {
-            "description": "The response returns the password policy.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -475,12 +461,46 @@
                   "rotateFrequency": 90
                 },
                 "schema": {
-                  "type": "object",
-                  "description": "Encapsulates all information for a password policy.",
-                  "x-akamai": {
-                    "file-path": "schemas/PortalPasswordClass.yaml"
-                  },
                   "additionalProperties": false,
+                  "description": "Encapsulates all information for a password policy.",
+                  "properties": {
+                    "caseDif": {
+                      "description": "The minimum number of characters with a different case. For example, a value of 1 means at least one letter needs to be uppercase if the rest are lowercase.\n",
+                      "type": "integer"
+                    },
+                    "maxRepeating": {
+                      "description": "The maximum allowed number of repeating characters.\n",
+                      "type": "integer"
+                    },
+                    "minDigits": {
+                      "description": "The minimum number of digits in a password.\n",
+                      "type": "integer"
+                    },
+                    "minLength": {
+                      "description": "The minimum length of a password.\n",
+                      "type": "integer"
+                    },
+                    "minLetters": {
+                      "description": "The minimum number of letters in a password.\n",
+                      "type": "integer"
+                    },
+                    "minNonAlpha": {
+                      "description": "The minimum number of non-alphabetic characters in a password.\n",
+                      "type": "integer"
+                    },
+                    "minReuse": {
+                      "description": "The minimum number of previous passwords to retain to prevent password reuse.\n",
+                      "type": "integer"
+                    },
+                    "pwclass": {
+                      "description": "A unique identifier for a password policy.\n",
+                      "type": "string"
+                    },
+                    "rotateFrequency": {
+                      "description": "The number of days a password is valid.\n",
+                      "type": "integer"
+                    }
+                  },
                   "required": [
                     "pwclass",
                     "minLength",
@@ -491,62 +511,28 @@
                     "maxRepeating",
                     "minReuse"
                   ],
-                  "properties": {
-                    "minLength": {
-                      "type": "integer",
-                      "description": "The minimum length of a password.\n"
-                    },
-                    "caseDif": {
-                      "type": "integer",
-                      "description": "The minimum number of characters with a different case. For example, a value of 1 means at least one letter needs to be uppercase if the rest are lowercase.\n"
-                    },
-                    "maxRepeating": {
-                      "type": "integer",
-                      "description": "The maximum allowed number of repeating characters.\n"
-                    },
-                    "minDigits": {
-                      "type": "integer",
-                      "description": "The minimum number of digits in a password.\n"
-                    },
-                    "minLetters": {
-                      "type": "integer",
-                      "description": "The minimum number of letters in a password.\n"
-                    },
-                    "minNonAlpha": {
-                      "type": "integer",
-                      "description": "The minimum number of non-alphabetic characters in a password.\n"
-                    },
-                    "minReuse": {
-                      "type": "integer",
-                      "description": "The minimum number of previous passwords to retain to prevent password reuse.\n"
-                    },
-                    "pwclass": {
-                      "type": "string",
-                      "description": "A unique identifier for a password policy.\n"
-                    },
-                    "rotateFrequency": {
-                      "type": "integer",
-                      "description": "The number of days a password is valid.\n"
-                    }
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/PortalPasswordClass.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns the password policy.\n"
           }
-        }
+        },
+        "summary": "View password policy",
+        "tags": [
+          "Policies"
+        ]
       }
     },
     "/user-admin/common/supported-languages": {
       "get": {
-        "operationId": "get-common-languages",
-        "summary": "View languages",
-        "tags": [
-          "Locale"
-        ],
         "description": "List all the possible languages Akamai supports. Use the values from this API to set the preferred `language` for a user. Users should see Control Center in the language you set for them. Administrators use this operation to set a user's preferred language. Users who modify it need to run [View languages for a user profile](ref:get-user-languages).\n",
+        "operationId": "get-common-languages",
         "responses": {
           "200": {
-            "description": "The response lists languages.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -563,33 +549,33 @@
                   "한국어"
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Lists available values.",
+                  "items": {
+                    "description": "Available value.\n",
+                    "type": "string"
+                  },
+                  "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/ListOfString.yaml"
-                  },
-                  "items": {
-                    "type": "string",
-                    "description": "Available value.\n"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists languages.\n"
           }
-        }
+        },
+        "summary": "View languages",
+        "tags": [
+          "Locale"
+        ]
       }
     },
     "/user-admin/common/timeout-policies": {
       "get": {
-        "operationId": "get-common-timeout-policies",
-        "summary": "View timeout policies",
-        "tags": [
-          "Policies"
-        ],
         "description": "Lists all the possible session timeout policies that Akamai supports. Use the values from this operation to set the `sessionTimeout` for a user. The `name` for each timeout period is in minutes, and the time `value` is in seconds. Administrators use this operation to set a user's timeout policy. Users who modify it need to run [View timeout policies for a user profile](ref:get-user-timeout-policies).\n",
+        "operationId": "get-common-timeout-policies",
         "responses": {
           "200": {
-            "description": "The response returns timeout policies.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -623,51 +609,51 @@
                   }
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Specifies session timeout policy options that can be assigned to each user.",
-                  "x-akamai": {
-                    "file-path": "schemas/ListOfSessionTimeoutPolicy.yaml"
-                  },
                   "items": {
-                    "type": "object",
-                    "description": "Specifies session timeout policy options that can be assigned to each user.",
-                    "x-akamai": {
-                      "file-path": "schemas/SessionTimeoutPolicy.yaml"
-                    },
                     "additionalProperties": false,
+                    "description": "Specifies session timeout policy options that can be assigned to each user.",
+                    "properties": {
+                      "name": {
+                        "description": "The unit of time in which the timeout is measured. The timeout is measured in seconds.\n",
+                        "type": "string"
+                      },
+                      "value": {
+                        "description": "The number of seconds until the timeout.\n",
+                        "type": "integer"
+                      }
+                    },
                     "required": [
                       "name",
                       "value"
                     ],
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "The unit of time in which the timeout is measured. The timeout is measured in seconds.\n"
-                      },
-                      "value": {
-                        "type": "integer",
-                        "description": "The number of seconds until the timeout.\n"
-                      }
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/SessionTimeoutPolicy.yaml"
                     }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/ListOfSessionTimeoutPolicy.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns timeout policies.\n"
           }
-        }
+        },
+        "summary": "View timeout policies",
+        "tags": [
+          "Policies"
+        ]
       }
     },
     "/user-admin/common/timezones": {
       "get": {
-        "operationId": "get-common-timezones",
-        "summary": "View time zones",
-        "tags": [
-          "Locale"
-        ],
         "description": "List all time zones Akamai supports. Time zones are in ISO 8601 format. Use the values from this operation to set the `timeZone` for a user. Administrators use this operation to set a user's time zone. Users who modify it need to run [View time zones for a user profile](ref:get-user-timezones).\n",
+        "operationId": "get-common-timezones",
         "responses": {
           "200": {
-            "description": "The response lists time zones.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -693,33 +679,33 @@
                 "schema": {
                   "description": "Specifies time zones that can be assigned to each user.",
                   "items": {
-                    "type": "object",
-                    "description": "Specifies time zones that can be assigned to each user.",
-                    "x-akamai": {
-                      "file-path": "schemas/TimeZone.yaml"
-                    },
                     "additionalProperties": false,
+                    "description": "Specifies time zones that can be assigned to each user.",
+                    "properties": {
+                      "description": {
+                        "description": "The description of a time zone, including the GMT +/-.\n",
+                        "type": "string"
+                      },
+                      "offset": {
+                        "description": "The time zone offset from GMT.\n",
+                        "type": "string"
+                      },
+                      "posix": {
+                        "description": "The time zone posix.\n",
+                        "type": "string"
+                      },
+                      "timezone": {
+                        "description": "The time zone ID.\n",
+                        "type": "string"
+                      }
+                    },
                     "required": [
                       "timezone",
                       "description"
                     ],
-                    "properties": {
-                      "description": {
-                        "type": "string",
-                        "description": "The description of a time zone, including the GMT +/-.\n"
-                      },
-                      "offset": {
-                        "type": "string",
-                        "description": "The time zone offset from GMT.\n"
-                      },
-                      "posix": {
-                        "type": "string",
-                        "description": "The time zone posix.\n"
-                      },
-                      "timezone": {
-                        "type": "string",
-                        "description": "The time zone ID.\n"
-                      }
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/TimeZone.yaml"
                     }
                   },
                   "type": "array",
@@ -728,10 +714,24 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists time zones.\n"
           }
-        }
+        },
+        "summary": "View time zones",
+        "tags": [
+          "Locale"
+        ]
       }
     }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/identity-management/v2"
+    }
+  ],
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "common-api.yaml"
   }
 }
