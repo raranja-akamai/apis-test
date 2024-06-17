@@ -1,20 +1,34 @@
 {
+  "openapi": "3.0.0",
   "info": {
+    "title": "Common resources, for administrators",
+    "version": "2",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    },
-    "title": "Common resources, for administrators",
-    "version": "2"
+    }
   },
-  "openapi": "3.0.0",
+  "servers": [
+    {
+      "url": "https://{hostname}/identity-management/v2"
+    }
+  ],
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "common-api.yaml"
+  },
   "paths": {
     "/user-admin/common/contact-types": {
       "get": {
-        "description": "List all the possible contact types that Akamai supports. Use the values from this operation to add or update a user's `contactType`. Administrators use this operation to set a user's contact type. Users who modify it need to run [View contact types for a user profile](ref:get-user-contact-types).\n",
         "operationId": "get-common-contact-types",
+        "summary": "View contact types",
+        "tags": [
+          "Contact types"
+        ],
+        "description": "List all the possible contact types that Akamai supports. Use the values from this operation to add or update a user's `contactType`. Administrators use this operation to set a user's contact type. Users who modify it need to run [View contact types for a user profile](ref:get-user-contact-types).\n",
         "responses": {
           "200": {
+            "description": "The response lists contact types.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -35,22 +49,22 @@
                   }
                 }
               }
-            },
-            "description": "The response lists contact types.\n"
+            }
           }
-        },
-        "summary": "View contact types",
-        "tags": [
-          "Contact types"
-        ]
+        }
       }
     },
     "/user-admin/common/countries": {
       "get": {
-        "description": "Return all the possible countries that Akamai supports. Use the values from this operation to add or update a user's country information. Administrators use this operation to set a user's country. Users who modify it need to run [View supported countries for a user profile](ref:get-user-countries).\n",
         "operationId": "get-common-countries",
+        "summary": "View supported countries",
+        "tags": [
+          "Locale"
+        ],
+        "description": "Return all the possible countries that Akamai supports. Use the values from this operation to add or update a user's country information. Administrators use this operation to set a user's country. Users who modify it need to run [View supported countries for a user profile](ref:get-user-countries).\n",
         "responses": {
           "200": {
+            "description": "The response lists countries.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -326,22 +340,37 @@
                   }
                 }
               }
-            },
-            "description": "The response lists countries.\n"
+            }
           }
-        },
-        "summary": "View supported countries",
-        "tags": [
-          "Locale"
-        ]
+        }
       }
     },
     "/user-admin/common/countries/{country}/states": {
+      "parameters": [
+        {
+          "name": "country",
+          "in": "path",
+          "description": "Filters the results by country, but only returns lists of states and provinces for `USA` and `Canada`.",
+          "x-akamai": {
+            "file-path": "parameters/country-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "Canada"
+          }
+        }
+      ],
       "get": {
-        "description": "List U.S. states or Canadian provinces. If `country=USA` you may enter a value of `TBD` if you don't know a user's state. Administrators use this operation to set a user's state. Users who modify it need to run [View states for a user profile](ref:get-user-states).\n",
         "operationId": "get-common-states",
+        "summary": "View states",
+        "tags": [
+          "Locale"
+        ],
+        "description": "List U.S. states or Canadian provinces. If `country=USA` you may enter a value of `TBD` if you don't know a user's state. Administrators use this operation to set a user's state. Users who modify it need to run [View states for a user profile](ref:get-user-states).\n",
         "responses": {
           "200": {
+            "description": "The response lists states.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -373,37 +402,22 @@
                   }
                 }
               }
-            },
-            "description": "The response lists states.\n"
-          }
-        },
-        "summary": "View states",
-        "tags": [
-          "Locale"
-        ]
-      },
-      "parameters": [
-        {
-          "description": "Filters the results by country, but only returns lists of states and provinces for `USA` and `Canada`.",
-          "in": "path",
-          "name": "country",
-          "required": true,
-          "schema": {
-            "example": "Canada",
-            "type": "string"
-          },
-          "x-akamai": {
-            "file-path": "parameters/country-path.yaml"
+            }
           }
         }
-      ]
+      }
     },
     "/user-admin/common/notification-products": {
       "get": {
-        "description": "Return all products a user can subscribe to and receive notifications for on the account. The account is determined by the tokens in your API client. Administrators use this operation to set the products for which users receive notifications. Users who modify this set need to run [View products for a user profile](ref:get-user-notification-products).\n",
         "operationId": "get-common-notification-products",
+        "summary": "View products",
+        "tags": [
+          "Products"
+        ],
+        "description": "Return all products a user can subscribe to and receive notifications for on the account. The account is determined by the tokens in your API client. Administrators use this operation to set the products for which users receive notifications. Users who modify this set need to run [View products for a user profile](ref:get-user-notification-products).\n",
         "responses": {
           "200": {
+            "description": "The response lists products.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -431,22 +445,22 @@
                   }
                 }
               }
-            },
-            "description": "The response lists products.\n"
+            }
           }
-        },
-        "summary": "View products",
-        "tags": [
-          "Products"
-        ]
+        }
       }
     },
     "/user-admin/common/password-policy": {
       "get": {
-        "description": "Return the password policy for the current account. The current account is determined by the tokens in your API client. Administrators use this operation to set a user's password policy. Users who modify it need to run [View password policy for a user profile](ref:get-user-password-policy).\n",
         "operationId": "get-common-password-policy",
+        "summary": "View password policy",
+        "tags": [
+          "Policies"
+        ],
+        "description": "Return the password policy for the current account. The current account is determined by the tokens in your API client. Administrators use this operation to set a user's password policy. Users who modify it need to run [View password policy for a user profile](ref:get-user-password-policy).\n",
         "responses": {
           "200": {
+            "description": "The response returns the password policy.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -517,22 +531,22 @@
                   }
                 }
               }
-            },
-            "description": "The response returns the password policy.\n"
+            }
           }
-        },
-        "summary": "View password policy",
-        "tags": [
-          "Policies"
-        ]
+        }
       }
     },
     "/user-admin/common/supported-languages": {
       "get": {
-        "description": "List all the possible languages Akamai supports. Use the values from this API to set the preferred `language` for a user. Users should see Control Center in the language you set for them. Administrators use this operation to set a user's preferred language. Users who modify it need to run [View languages for a user profile](ref:get-user-languages).\n",
         "operationId": "get-common-languages",
+        "summary": "View languages",
+        "tags": [
+          "Locale"
+        ],
+        "description": "List all the possible languages Akamai supports. Use the values from this API to set the preferred `language` for a user. Users should see Control Center in the language you set for them. Administrators use this operation to set a user's preferred language. Users who modify it need to run [View languages for a user profile](ref:get-user-languages).\n",
         "responses": {
           "200": {
+            "description": "The response lists languages.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -560,22 +574,22 @@
                   }
                 }
               }
-            },
-            "description": "The response lists languages.\n"
+            }
           }
-        },
-        "summary": "View languages",
-        "tags": [
-          "Locale"
-        ]
+        }
       }
     },
     "/user-admin/common/timeout-policies": {
       "get": {
-        "description": "Lists all the possible session timeout policies that Akamai supports. Use the values from this operation to set the `sessionTimeout` for a user. The `name` for each timeout period is in minutes, and the time `value` is in seconds. Administrators use this operation to set a user's timeout policy. Users who modify it need to run [View timeout policies for a user profile](ref:get-user-timeout-policies).\n",
         "operationId": "get-common-timeout-policies",
+        "summary": "View timeout policies",
+        "tags": [
+          "Policies"
+        ],
+        "description": "Lists all the possible session timeout policies that Akamai supports. Use the values from this operation to set the `sessionTimeout` for a user. The `name` for each timeout period is in minutes, and the time `value` is in seconds. Administrators use this operation to set a user's timeout policy. Users who modify it need to run [View timeout policies for a user profile](ref:get-user-timeout-policies).\n",
         "responses": {
           "200": {
+            "description": "The response returns timeout policies.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -638,22 +652,22 @@
                   }
                 }
               }
-            },
-            "description": "The response returns timeout policies.\n"
+            }
           }
-        },
-        "summary": "View timeout policies",
-        "tags": [
-          "Policies"
-        ]
+        }
       }
     },
     "/user-admin/common/timezones": {
       "get": {
-        "description": "List all time zones Akamai supports. Time zones are in ISO 8601 format. Use the values from this operation to set the `timeZone` for a user. Administrators use this operation to set a user's time zone. Users who modify it need to run [View time zones for a user profile](ref:get-user-timezones).\n",
         "operationId": "get-common-timezones",
+        "summary": "View time zones",
+        "tags": [
+          "Locale"
+        ],
+        "description": "List all time zones Akamai supports. Time zones are in ISO 8601 format. Use the values from this operation to set the `timeZone` for a user. Administrators use this operation to set a user's time zone. Users who modify it need to run [View time zones for a user profile](ref:get-user-timezones).\n",
         "responses": {
           "200": {
+            "description": "The response lists time zones.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -714,24 +728,10 @@
                   }
                 }
               }
-            },
-            "description": "The response lists time zones.\n"
+            }
           }
-        },
-        "summary": "View time zones",
-        "tags": [
-          "Locale"
-        ]
+        }
       }
     }
-  },
-  "servers": [
-    {
-      "url": "https://{hostname}/identity-management/v2"
-    }
-  ],
-  "x-akamai": {
-    "auth-type": "EDGE_GRID",
-    "file-path": "common-api.yaml"
   }
 }
