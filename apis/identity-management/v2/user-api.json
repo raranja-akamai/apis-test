@@ -1,297 +1,48 @@
 {
+  "openapi": "3.0.0",
   "info": {
+    "title": "Users, for administrators",
+    "version": "2",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    },
-    "title": "Users, for administrators",
-    "version": "2"
+    }
   },
-  "openapi": "3.0.0",
+  "servers": [
+    {
+      "url": "https://{hostname}/identity-management/v2"
+    }
+  ],
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "user-api.yaml"
+  },
   "paths": {
     "/user-admin/ui-identities": {
-      "get": {
-        "description": "Return a list of users who have access on this account. The account is determined by the tokens in your API client. You can pass a `groupId` to filter users based on group. Additionally, you can return additional user information such as what product notifications they subscribe to, or what group and role assignments they have. Set  the `actions` parameter to `true` to return the actions you can  take on each user.\n",
-        "operationId": "get-ui-identities",
-        "parameters": [
-          {
-            "description": "A unique identifier for each group.",
-            "in": "query",
-            "name": "groupId",
-            "required": false,
-            "schema": {
-              "example": 54321,
-              "type": "integer"
-            },
-            "x-akamai": {
-              "file-path": "parameters/rolesFilterParamsGroup_groupId.yaml"
-            }
-          },
-          {
-            "description": "Includes the list of your group and role assignments, `false` by default.",
-            "in": "query",
-            "name": "authGrants",
-            "required": false,
-            "schema": {
-              "default": false,
-              "example": true,
-              "type": "boolean"
-            },
-            "x-akamai": {
-              "file-path": "parameters/authGrants-query.yaml"
-            }
-          },
-          {
-            "description": "Includes actions such as `edit` or `delete` that a user can perform on an object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
-            "in": "query",
-            "name": "actions",
-            "required": false,
-            "schema": {
-              "default": false,
-              "example": true,
-              "type": "boolean"
-            },
-            "x-akamai": {
-              "file-path": "parameters/adminActions_actions.yaml"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "example": [
-                  {
-                    "uiIdentityId": "A-B-123456",
-                    "firstName": "John",
-                    "lastName": "Smith",
-                    "uiUserName": "johnsmith",
-                    "email": "afero@mycompany.com",
-                    "accountId": "A-CCT1234",
-                    "lastLoginDate": "2016-01-13T17:53:57Z",
-                    "tfaEnabled": true,
-                    "tfaConfigured": true,
-                    "isLocked": false,
-                    "actions": {
-                      "resetPassword": true,
-                      "delete": true,
-                      "edit": true,
-                      "apiClient": true,
-                      "thirdPartyAccess": true,
-                      "isCloneable": true,
-                      "editProfile": true,
-                      "canEditTFA": false
-                    },
-                    "authGrants": [
-                      {
-                        "groupId": 12345,
-                        "roleId": 12,
-                        "groupName": "mygroup",
-                        "roleName": "admin",
-                        "roleDescription": "This is a new role that has been created to",
-                        "isBlocked": false
-                      }
-                    ]
-                  }
-                ],
-                "schema": {
-                  "description": "Encapsulates information about each user.",
-                  "items": {
-                    "additionalProperties": false,
-                    "description": "Encapsulates information about each user.",
-                    "properties": {
-                      "accountId": {
-                        "description": "A unique identifier for each account.\n",
-                        "type": "string"
-                      },
-                      "actions": {
-                        "additionalProperties": false,
-                        "description": "Encapsulates permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
-                        "properties": {
-                          "apiClient": {
-                            "description": "Allows the administrator to create an API client.\n",
-                            "type": "boolean"
-                          },
-                          "canEditTFA": {
-                            "description": "If `true`, logged in users can turn their TFA settings on or off.\n",
-                            "type": "boolean"
-                          },
-                          "delete": {
-                            "description": "Whether the user is deletable.\n",
-                            "type": "boolean"
-                          },
-                          "edit": {
-                            "description": "Whether the user is editable.\n",
-                            "type": "boolean"
-                          },
-                          "editProfile": {
-                            "description": "If `true`, the user profile can be edited by the logged in user.\n",
-                            "type": "boolean"
-                          },
-                          "isCloneable": {
-                            "description": "If `true`, an admin can create a new user with the same permissions as this user.\n",
-                            "type": "boolean"
-                          },
-                          "resetPassword": {
-                            "description": "Allows an administrator to send a user a password by email or see a one-time token.\n",
-                            "type": "boolean"
-                          },
-                          "thirdPartyAccess": {
-                            "description": "Allows the administrator to manage extended access.\n",
-                            "type": "boolean"
-                          }
-                        },
-                        "required": [
-                          "delete",
-                          "edit",
-                          "resetPassword",
-                          "isCloneable",
-                          "thirdPartyAccess",
-                          "apiClient",
-                          "editProfile",
-                          "canEditTFA"
-                        ],
-                        "type": "object"
-                      },
-                      "authGrants": {
-                        "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
-                        "items": {
-                          "additionalProperties": false,
-                          "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.",
-                          "properties": {
-                            "groupId": {
-                              "description": "A unique identifier for each group.\n",
-                              "type": "integer"
-                            },
-                            "groupName": {
-                              "description": "A group's name.\n",
-                              "type": "string"
-                            },
-                            "isBlocked": {
-                              "description": "Indicates whether a user's access is blocked for a group.\n",
-                              "type": "boolean"
-                            },
-                            "roleDescription": {
-                              "description": "Descriptive text for the role.\n",
-                              "type": "string"
-                            },
-                            "roleId": {
-                              "description": "A unique identifier for each role.\n",
-                              "type": "integer"
-                            },
-                            "roleName": {
-                              "description": "The role's name.\n",
-                              "type": "string"
-                            },
-                            "subGroups": {
-                              "description": "Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-                              "items": {
-                                "description": "A further-nested group.",
-                                "type": "object",
-                                "x-akamai": {
-                                  "file-path": "schemas/groups-nested.yaml"
-                                }
-                              },
-                              "type": "array"
-                            }
-                          },
-                          "type": "object",
-                          "x-akamai": {
-                            "file-path": "schemas/AuthGrantResponse.yaml"
-                          }
-                        },
-                        "type": "array"
-                      },
-                      "email": {
-                        "description": "The user's email address.\n",
-                        "format": "email",
-                        "type": "string"
-                      },
-                      "firstName": {
-                        "description": "The user's first name.\n",
-                        "type": "string"
-                      },
-                      "isLocked": {
-                        "description": "The user's lock status.\n",
-                        "type": "boolean"
-                      },
-                      "lastLoginDate": {
-                        "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
-                        "format": "date-time",
-                        "type": "string"
-                      },
-                      "lastName": {
-                        "description": "The user's last name.\n",
-                        "type": "string"
-                      },
-                      "tfaConfigured": {
-                        "description": "The TFA is configured.\n",
-                        "type": "boolean"
-                      },
-                      "tfaEnabled": {
-                        "description": "Indicates if TFA is enabled.\n",
-                        "type": "boolean"
-                      },
-                      "uiIdentityId": {
-                        "description": "A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.\n",
-                        "type": "string"
-                      },
-                      "uiUserName": {
-                        "description": "A user's `loginId`. Typically, a user's email address.\n",
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "uiIdentityId",
-                      "firstName",
-                      "lastName",
-                      "uiUserName",
-                      "email",
-                      "accountId",
-                      "lastLoginDate",
-                      "tfaEnabled",
-                      "tfaConfigured",
-                      "isLocked"
-                    ],
-                    "type": "object",
-                    "x-akamai": {
-                      "file-path": "schemas/UiIdentitiesResponse.yaml"
-                    }
-                  },
-                  "type": "array",
-                  "x-akamai": {
-                    "file-path": "schemas/ListOfUserResponse.yaml"
-                  }
-                }
-              }
-            },
-            "description": "The response lists users.\n"
-          }
-        },
-        "summary": "List users",
+      "post": {
+        "operationId": "post-ui-identity",
+        "summary": "Create a user",
         "tags": [
           "Users"
-        ]
-      },
-      "post": {
+        ],
         "description": "Create a user in the account specified in your own API client credentials or clone an existing user's role assignments. Optionally, send a randomly generated one-time use password to the new user. If you send the email with the password directly to the user, the response for this operation doesn't include that password. If you don't send the password to the user through email, the password is included in the response.\n",
-        "operationId": "post-ui-identity",
         "parameters": [
           {
-            "description": "Sends a one-time password to the new user, `false` by default.",
-            "in": "query",
             "name": "sendEmail",
-            "schema": {
-              "default": false,
-              "example": true,
-              "type": "boolean"
-            },
+            "in": "query",
+            "description": "Sends a one-time password to the new user, `false` by default.",
             "x-akamai": {
               "file-path": "parameters/sendEmail_sendEmail.yaml"
+            },
+            "schema": {
+              "type": "boolean",
+              "example": true,
+              "default": false
             }
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -350,14 +101,27 @@
                 ]
               },
               "schema": {
-                "additionalProperties": false,
+                "type": "object",
                 "description": "Specifies a user.",
+                "x-akamai": {
+                  "file-path": "schemas/CreateUserRequest.yaml"
+                },
+                "additionalProperties": false,
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "email",
+                  "phone",
+                  "country",
+                  "authGrants"
+                ],
                 "properties": {
                   "address": {
-                    "description": "The user's street address.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "The user's street address.\n"
                   },
                   "authGrants": {
+                    "type": "array",
                     "description": "The user's role assignments, per group.\n",
                     "items": {
                       "additionalProperties": false,
@@ -454,145 +218,132 @@
                       "x-akamai": {
                         "file-path": "schemas/AuthGrantRequest.yaml"
                       }
-                    },
-                    "type": "array"
+                    }
                   },
                   "city": {
-                    "description": "The user's city.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "The user's city.\n"
                   },
                   "cloneFrom": {
-                    "description": "The username to clone a user's `authGrants` from. If you provide this member in a POST request, don't include the `authGrants` member in the request too.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "The username to clone a user's `authGrants` from. If you provide this member in a POST request, don't include the `authGrants` member in the request too.\n"
                   },
                   "contactType": {
-                    "description": "To help characterize the user, this can be any value available from the [View contact](ref:get-common-contact-types) types operation.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "To help characterize the user, this can be any value available from the [View contact](ref:get-common-contact-types) types operation.\n"
                   },
                   "country": {
-                    "description": "Part of the user's location. This can be any value available from the [View supported countries](ref:get-common-countries) operation.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "Part of the user's location. This can be any value available from the [View supported countries](ref:get-common-countries) operation.\n"
                   },
                   "email": {
+                    "type": "string",
                     "description": "The user's email address.\n",
-                    "format": "email",
-                    "type": "string"
+                    "format": "email"
                   },
                   "firstName": {
-                    "description": "The user's first name.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "The user's first name.\n"
                   },
                   "jobTitle": {
-                    "description": "The user's job title.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "The user's job title.\n"
                   },
                   "lastName": {
-                    "description": "The user's last name.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "The user's last name.\n"
                   },
                   "mobilePhone": {
-                    "description": "The user's mobile phone number, represented as a 10-digit integer within a string.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "The user's mobile phone number, represented as a 10-digit integer within a string.\n"
                   },
                   "notifications": {
-                    "additionalProperties": false,
+                    "type": "object",
                     "description": "Emails the user can receive for their products.\n",
+                    "additionalProperties": false,
                     "properties": {
-                      "enableEmailNotifications": {
-                        "description": "Enables email notifications.\n",
-                        "type": "boolean"
-                      },
                       "options": {
-                        "additionalProperties": false,
+                        "type": "object",
                         "description": "Email settings.\n",
+                        "additionalProperties": false,
                         "properties": {
                           "newUserNotification": {
-                            "description": "Email notification for new user creation.\n",
-                            "type": "boolean"
+                            "type": "boolean",
+                            "description": "Email notification for new user creation.\n"
                           },
                           "passwordExpiry": {
-                            "description": "Email notifications for password expirations.\n",
-                            "type": "boolean"
+                            "type": "boolean",
+                            "description": "Email notifications for password expirations.\n"
                           },
                           "proactive": {
+                            "type": "array",
                             "description": "Email notifications for proactive maintenance to products.\n",
                             "items": {
-                              "description": "Product names.\n",
-                              "type": "string"
-                            },
-                            "type": "array"
+                              "type": "string",
+                              "description": "Product names.\n"
+                            }
                           },
                           "upgrade": {
+                            "type": "array",
                             "description": "Email notifications for upgrades to products.\n",
                             "items": {
-                              "description": "Product names.\n",
-                              "type": "string"
-                            },
-                            "type": "array"
+                              "type": "string",
+                              "description": "Product names.\n"
+                            }
                           }
-                        },
-                        "type": "object"
+                        }
+                      },
+                      "enableEmailNotifications": {
+                        "type": "boolean",
+                        "description": "Enables email notifications.\n"
                       }
-                    },
-                    "type": "object"
+                    }
                   },
                   "phone": {
-                    "description": "The user's main phone number, represented as a ten-digit integer within a string.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "The user's main phone number, represented as a ten-digit integer within a string.\n"
                   },
                   "preferredLanguage": {
-                    "description": "This can be any value available from the [View languages](ref:get-common-languages) operation.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "This can be any value available from the [View languages](ref:get-common-languages) operation.\n"
                   },
                   "secondaryEmail": {
+                    "type": "string",
                     "description": "The user's alternate email address.\n",
-                    "format": "email",
-                    "type": "string"
+                    "format": "email"
                   },
                   "sessionTimeOut": {
-                    "description": "The number of seconds it takes for the user's Control Center session to time out if there hasn't been any activity. This corresponds to the value from the [View timeout policies](ref:get-common-timeout-policies) operation's response.\n",
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "The number of seconds it takes for the user's Control Center session to time out if there hasn't been any activity. This corresponds to the value from the [View timeout policies](ref:get-common-timeout-policies) operation's response.\n"
                   },
                   "state": {
-                    "description": "The name of the state where the user is located.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "The name of the state where the user is located.\n"
                   },
                   "tfaEnabled": {
-                    "description": "When enabled, two-factor authentication confirms the user's identity.\n",
-                    "type": "boolean"
+                    "type": "boolean",
+                    "description": "When enabled, two-factor authentication confirms the user's identity.\n"
                   },
                   "timeZone": {
-                    "description": "The user's time zone. The value can be any that are available from the [View time zones](ref:get-common-timezones) operation.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "The user's time zone. The value can be any that are available from the [View time zones](ref:get-common-timezones) operation.\n"
                   },
                   "timezone": {
-                    "description": "The user's time zone. The value can be any that are available from the [View time zones](ref:get-common-timezones) operation.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "The user's time zone. The value can be any that are available from the [View time zones](ref:get-common-timezones) operation.\n"
                   },
                   "zipCode": {
-                    "description": "The user's five-digit ZIP code, represented as a string.\n",
-                    "type": "string"
+                    "type": "string",
+                    "description": "The user's five-digit ZIP code, represented as a string.\n"
                   }
-                },
-                "required": [
-                  "firstName",
-                  "lastName",
-                  "email",
-                  "phone",
-                  "country",
-                  "authGrants"
-                ],
-                "type": "object",
-                "x-akamai": {
-                  "file-path": "schemas/CreateUserRequest.yaml"
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "The response returns the created user.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -899,78 +650,343 @@
                   }
                 }
               }
-            },
-            "description": "The response returns the created user.\n"
+            }
           }
-        },
-        "summary": "Create a user",
-        "tags": [
-          "Users"
-        ]
-      }
-    },
-    "/user-admin/ui-identities/{uiIdentityId}": {
-      "delete": {
-        "description": "You can only delete users who don't have any API or Webservices clients. To delete users, first transfer their API clients and delete their Webservices clients.\n",
-        "operationId": "delete-ui-identity",
-        "responses": {
-          "204": {
-            "description": "User removed.\n"
-          }
-        },
-        "summary": "Remove a user",
-        "tags": [
-          "Users"
-        ]
+        }
       },
       "get": {
-        "description": "Return a specific user's profile.\n",
-        "operationId": "get-ui-identity",
+        "operationId": "get-ui-identities",
+        "summary": "List users",
+        "tags": [
+          "Users"
+        ],
+        "description": "Return a list of users who have access on this account. The account is determined by the tokens in your API client. You can pass a `groupId` to filter users based on group. Additionally, you can return additional user information such as what product notifications they subscribe to, or what group and role assignments they have. Set  the `actions` parameter to `true` to return the actions you can  take on each user.\n",
         "parameters": [
           {
-            "description": "Includes the list of your group and role assignments, `false` by default.",
+            "name": "groupId",
             "in": "query",
-            "name": "authGrants",
+            "description": "A unique identifier for each group.",
+            "x-akamai": {
+              "file-path": "parameters/rolesFilterParamsGroup_groupId.yaml"
+            },
             "required": false,
             "schema": {
-              "default": false,
-              "example": true,
-              "type": "boolean"
-            },
+              "type": "integer",
+              "example": 54321
+            }
+          },
+          {
+            "name": "authGrants",
+            "in": "query",
+            "description": "Includes the list of your group and role assignments, `false` by default.",
             "x-akamai": {
               "file-path": "parameters/authGrants-query.yaml"
-            }
-          },
-          {
-            "description": "Includes product notifications you subscribe to, `false` by default.",
-            "in": "query",
-            "name": "notifications",
-            "schema": {
-              "default": false,
-              "example": true,
-              "type": "boolean"
             },
-            "x-akamai": {
-              "file-path": "parameters/notifications-query.yaml"
-            }
-          },
-          {
-            "description": "Includes actions such as `edit` or `delete` that a user can perform on an object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
-            "in": "query",
-            "name": "actions",
             "required": false,
             "schema": {
-              "default": false,
+              "type": "boolean",
               "example": true,
-              "type": "boolean"
-            },
+              "default": false
+            }
+          },
+          {
+            "name": "actions",
+            "in": "query",
+            "description": "Includes actions such as `edit` or `delete` that a user can perform on an object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
             "x-akamai": {
               "file-path": "parameters/adminActions_actions.yaml"
+            },
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": true,
+              "default": false
             }
           }
         ],
         "responses": {
           "200": {
+            "description": "The response lists users.\n",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "uiIdentityId": "A-B-123456",
+                    "firstName": "John",
+                    "lastName": "Smith",
+                    "uiUserName": "johnsmith",
+                    "email": "afero@mycompany.com",
+                    "accountId": "A-CCT1234",
+                    "lastLoginDate": "2016-01-13T17:53:57Z",
+                    "tfaEnabled": true,
+                    "tfaConfigured": true,
+                    "isLocked": false,
+                    "actions": {
+                      "resetPassword": true,
+                      "delete": true,
+                      "edit": true,
+                      "apiClient": true,
+                      "thirdPartyAccess": true,
+                      "isCloneable": true,
+                      "editProfile": true,
+                      "canEditTFA": false
+                    },
+                    "authGrants": [
+                      {
+                        "groupId": 12345,
+                        "roleId": 12,
+                        "groupName": "mygroup",
+                        "roleName": "admin",
+                        "roleDescription": "This is a new role that has been created to",
+                        "isBlocked": false
+                      }
+                    ]
+                  }
+                ],
+                "schema": {
+                  "description": "Encapsulates information about each user.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Encapsulates information about each user.",
+                    "properties": {
+                      "accountId": {
+                        "description": "A unique identifier for each account.\n",
+                        "type": "string"
+                      },
+                      "actions": {
+                        "additionalProperties": false,
+                        "description": "Encapsulates permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
+                        "properties": {
+                          "apiClient": {
+                            "description": "Allows the administrator to create an API client.\n",
+                            "type": "boolean"
+                          },
+                          "canEditTFA": {
+                            "description": "If `true`, logged in users can turn their TFA settings on or off.\n",
+                            "type": "boolean"
+                          },
+                          "delete": {
+                            "description": "Whether the user is deletable.\n",
+                            "type": "boolean"
+                          },
+                          "edit": {
+                            "description": "Whether the user is editable.\n",
+                            "type": "boolean"
+                          },
+                          "editProfile": {
+                            "description": "If `true`, the user profile can be edited by the logged in user.\n",
+                            "type": "boolean"
+                          },
+                          "isCloneable": {
+                            "description": "If `true`, an admin can create a new user with the same permissions as this user.\n",
+                            "type": "boolean"
+                          },
+                          "resetPassword": {
+                            "description": "Allows an administrator to send a user a password by email or see a one-time token.\n",
+                            "type": "boolean"
+                          },
+                          "thirdPartyAccess": {
+                            "description": "Allows the administrator to manage extended access.\n",
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "delete",
+                          "edit",
+                          "resetPassword",
+                          "isCloneable",
+                          "thirdPartyAccess",
+                          "apiClient",
+                          "editProfile",
+                          "canEditTFA"
+                        ],
+                        "type": "object"
+                      },
+                      "authGrants": {
+                        "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
+                        "items": {
+                          "additionalProperties": false,
+                          "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.",
+                          "properties": {
+                            "groupId": {
+                              "description": "A unique identifier for each group.\n",
+                              "type": "integer"
+                            },
+                            "groupName": {
+                              "description": "A group's name.\n",
+                              "type": "string"
+                            },
+                            "isBlocked": {
+                              "description": "Indicates whether a user's access is blocked for a group.\n",
+                              "type": "boolean"
+                            },
+                            "roleDescription": {
+                              "description": "Descriptive text for the role.\n",
+                              "type": "string"
+                            },
+                            "roleId": {
+                              "description": "A unique identifier for each role.\n",
+                              "type": "integer"
+                            },
+                            "roleName": {
+                              "description": "The role's name.\n",
+                              "type": "string"
+                            },
+                            "subGroups": {
+                              "description": "Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+                              "items": {
+                                "description": "A further-nested group.",
+                                "type": "object",
+                                "x-akamai": {
+                                  "file-path": "schemas/groups-nested.yaml"
+                                }
+                              },
+                              "type": "array"
+                            }
+                          },
+                          "type": "object",
+                          "x-akamai": {
+                            "file-path": "schemas/AuthGrantResponse.yaml"
+                          }
+                        },
+                        "type": "array"
+                      },
+                      "email": {
+                        "description": "The user's email address.\n",
+                        "format": "email",
+                        "type": "string"
+                      },
+                      "firstName": {
+                        "description": "The user's first name.\n",
+                        "type": "string"
+                      },
+                      "isLocked": {
+                        "description": "The user's lock status.\n",
+                        "type": "boolean"
+                      },
+                      "lastLoginDate": {
+                        "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "lastName": {
+                        "description": "The user's last name.\n",
+                        "type": "string"
+                      },
+                      "tfaConfigured": {
+                        "description": "The TFA is configured.\n",
+                        "type": "boolean"
+                      },
+                      "tfaEnabled": {
+                        "description": "Indicates if TFA is enabled.\n",
+                        "type": "boolean"
+                      },
+                      "uiIdentityId": {
+                        "description": "A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.\n",
+                        "type": "string"
+                      },
+                      "uiUserName": {
+                        "description": "A user's `loginId`. Typically, a user's email address.\n",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "uiIdentityId",
+                      "firstName",
+                      "lastName",
+                      "uiUserName",
+                      "email",
+                      "accountId",
+                      "lastLoginDate",
+                      "tfaEnabled",
+                      "tfaConfigured",
+                      "isLocked"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/UiIdentitiesResponse.yaml"
+                    }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/ListOfUserResponse.yaml"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user-admin/ui-identities/{uiIdentityId}": {
+      "parameters": [
+        {
+          "name": "uiIdentityId",
+          "in": "path",
+          "description": "A unique identifier for a user.",
+          "x-akamai": {
+            "file-path": "parameters/uiIdentityId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "1-ABCDE"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "get-ui-identity",
+        "summary": "Get a user",
+        "tags": [
+          "Users"
+        ],
+        "description": "Return a specific user's profile.\n",
+        "parameters": [
+          {
+            "name": "authGrants",
+            "in": "query",
+            "description": "Includes the list of your group and role assignments, `false` by default.",
+            "x-akamai": {
+              "file-path": "parameters/authGrants-query.yaml"
+            },
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": true,
+              "default": false
+            }
+          },
+          {
+            "name": "notifications",
+            "in": "query",
+            "description": "Includes product notifications you subscribe to, `false` by default.",
+            "x-akamai": {
+              "file-path": "parameters/notifications-query.yaml"
+            },
+            "schema": {
+              "type": "boolean",
+              "example": true,
+              "default": false
+            }
+          },
+          {
+            "name": "actions",
+            "in": "query",
+            "description": "Includes actions such as `edit` or `delete` that a user can perform on an object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
+            "x-akamai": {
+              "file-path": "parameters/adminActions_actions.yaml"
+            },
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "example": true,
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The response returns the user's profile.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -1275,51 +1291,49 @@
                   }
                 }
               }
-            },
-            "description": "The response returns the user's profile.\n"
-          }
-        },
-        "summary": "Get a user",
-        "tags": [
-          "Users"
-        ]
-      },
-      "parameters": [
-        {
-          "description": "A unique identifier for a user.",
-          "in": "path",
-          "name": "uiIdentityId",
-          "required": true,
-          "schema": {
-            "example": "1-ABCDE",
-            "type": "string"
-          },
-          "x-akamai": {
-            "file-path": "parameters/uiIdentityId-path.yaml"
+            }
           }
         }
-      ]
+      },
+      "delete": {
+        "operationId": "delete-ui-identity",
+        "summary": "Remove a user",
+        "tags": [
+          "Users"
+        ],
+        "description": "You can only delete users who don't have any API or Webservices clients. To delete users, first transfer their API clients and delete their Webservices clients.\n",
+        "responses": {
+          "204": {
+            "description": "User removed.\n"
+          }
+        }
+      }
     },
     "/user-admin/ui-identities/{uiIdentityId}/auth-grants": {
       "parameters": [
         {
-          "description": "A unique identifier for a user.",
-          "in": "path",
           "name": "uiIdentityId",
-          "required": true,
-          "schema": {
-            "example": "1-ABCDE",
-            "type": "string"
-          },
+          "in": "path",
+          "description": "A unique identifier for a user.",
           "x-akamai": {
             "file-path": "parameters/uiIdentityId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "1-ABCDE"
           }
         }
       ],
       "put": {
-        "description": "Edit what groups a user has access to, and how the use can interact with the objects in those groups.\n",
         "operationId": "put-ui-uiidentity-auth-grants",
+        "summary": "Modify a user's group and role assignments",
+        "tags": [
+          "Assignments"
+        ],
+        "description": "Edit what groups a user has access to, and how the use can interact with the objects in those groups.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": [
@@ -1439,11 +1453,11 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "The response returns updated assignments.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -1520,36 +1534,36 @@
                   }
                 }
               }
-            },
-            "description": "The response returns updated assignments.\n"
+            }
           }
-        },
-        "summary": "Modify a user's group and role assignments",
-        "tags": [
-          "Assignments"
-        ]
+        }
       }
     },
     "/user-admin/ui-identities/{uiIdentityId}/basic-info": {
       "parameters": [
         {
-          "description": "A unique identifier for a user.",
-          "in": "path",
           "name": "uiIdentityId",
-          "required": true,
-          "schema": {
-            "example": "1-ABCDE",
-            "type": "string"
-          },
+          "in": "path",
+          "description": "A unique identifier for a user.",
           "x-akamai": {
             "file-path": "parameters/uiIdentityId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "1-ABCDE"
           }
         }
       ],
       "put": {
-        "description": "Modify user information. Pass the entire body of data in the request, including members you're not changing. Otherwise, the operation removes unspecified data.\n",
         "operationId": "put-ui-identity-basic-info",
+        "summary": "Update a user",
+        "tags": [
+          "Users"
+        ],
+        "description": "Modify user information. Pass the entire body of data in the request, including members you're not changing. Otherwise, the operation removes unspecified data.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -1657,11 +1671,11 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "The response returns updated user's profile.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -1928,22 +1942,50 @@
                   }
                 }
               }
-            },
-            "description": "The response returns updated user's profile.\n"
+            }
           }
-        },
-        "summary": "Update a user",
-        "tags": [
-          "Users"
-        ]
+        }
       }
     },
     "/user-admin/ui-identities/{uiIdentityId}/groups/{groupId}/blocked-properties": {
+      "parameters": [
+        {
+          "name": "groupId",
+          "in": "path",
+          "description": "A unique identifier for each group.",
+          "x-akamai": {
+            "file-path": "parameters/groupId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 54321
+          }
+        },
+        {
+          "name": "uiIdentityId",
+          "in": "path",
+          "description": "A unique identifier for a user.",
+          "x-akamai": {
+            "file-path": "parameters/uiIdentityId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "1-ABCDE"
+          }
+        }
+      ],
       "get": {
-        "description": "Return all properties a user doesn't have access to in a group.\n",
         "operationId": "get-blocked-properties",
+        "summary": "List blocked properties",
+        "tags": [
+          "Blocked properties"
+        ],
+        "description": "Return all properties a user doesn't have access to in a group.\n",
         "responses": {
           "200": {
+            "description": "The response lists blocked properties.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -1962,47 +2004,19 @@
                   }
                 }
               }
-            },
-            "description": "The response lists blocked properties.\n"
-          }
-        },
-        "summary": "List blocked properties",
-        "tags": [
-          "Blocked properties"
-        ]
-      },
-      "parameters": [
-        {
-          "description": "A unique identifier for each group.",
-          "in": "path",
-          "name": "groupId",
-          "required": true,
-          "schema": {
-            "example": 54321,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/groupId-path.yaml"
-          }
-        },
-        {
-          "description": "A unique identifier for a user.",
-          "in": "path",
-          "name": "uiIdentityId",
-          "required": true,
-          "schema": {
-            "example": "1-ABCDE",
-            "type": "string"
-          },
-          "x-akamai": {
-            "file-path": "parameters/uiIdentityId-path.yaml"
+            }
           }
         }
-      ],
+      },
       "put": {
-        "description": "Remove or grant user access to properties. By default, users have access to all properties in a group.\n",
         "operationId": "put-blocked-properties",
+        "summary": "Update blocked properties",
+        "tags": [
+          "Blocked properties"
+        ],
+        "description": "Remove or grant user access to properties. By default, users have access to all properties in a group.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": [
@@ -2021,11 +2035,11 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "The response lists blocked properties.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -2044,66 +2058,66 @@
                   }
                 }
               }
-            },
-            "description": "The response lists blocked properties.\n"
+            }
           }
-        },
-        "summary": "Update blocked properties",
-        "tags": [
-          "Blocked properties"
-        ]
+        }
       }
     },
     "/user-admin/ui-identities/{uiIdentityId}/lock": {
       "parameters": [
         {
-          "description": "A unique identifier for a user.",
-          "in": "path",
           "name": "uiIdentityId",
-          "required": true,
-          "schema": {
-            "example": "1-ABCDE",
-            "type": "string"
-          },
+          "in": "path",
+          "description": "A unique identifier for a user.",
           "x-akamai": {
             "file-path": "parameters/uiIdentityId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "1-ABCDE"
           }
         }
       ],
       "post": {
-        "description": "Prevent a user from logging in to Control center.\n",
         "operationId": "post-ui-identity-lock",
+        "summary": "Lock a user's account",
+        "tags": [
+          "User access"
+        ],
+        "description": "Prevent a user from logging in to Control center.\n",
         "responses": {
           "204": {
             "description": "User locked.\n"
           }
-        },
-        "summary": "Lock a user's account",
-        "tags": [
-          "User access"
-        ]
+        }
       }
     },
     "/user-admin/ui-identities/{uiIdentityId}/notifications": {
       "parameters": [
         {
-          "description": "A unique identifier for a user.",
-          "in": "path",
           "name": "uiIdentityId",
-          "required": true,
-          "schema": {
-            "example": "1-ABCDE",
-            "type": "string"
-          },
+          "in": "path",
+          "description": "A unique identifier for a user.",
           "x-akamai": {
             "file-path": "parameters/uiIdentityId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "1-ABCDE"
           }
         }
       ],
       "put": {
-        "description": "Subscribe or un-subscribe users to product notification emails.\n",
         "operationId": "put-notifications",
+        "summary": "Update a user's notifications",
+        "tags": [
+          "User notifications"
+        ],
+        "description": "Subscribe or un-subscribe users to product notification emails.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -2122,54 +2136,54 @@
                 }
               },
               "schema": {
-                "additionalProperties": false,
+                "type": "object",
                 "description": "Encapsulates the types of email notifications you can receive.",
+                "x-akamai": {
+                  "file-path": "schemas/NotificationsRequest.yaml"
+                },
+                "additionalProperties": false,
                 "properties": {
-                  "enableEmailNotifications": {
-                    "description": "Enables email notifications.\n",
-                    "type": "boolean"
-                  },
                   "options": {
-                    "additionalProperties": false,
+                    "type": "object",
                     "description": "Specific notification types users can subscribe to.\n",
+                    "additionalProperties": false,
                     "properties": {
                       "newUserNotification": {
-                        "description": "If `true`, send emails to group admins. This notification informs the admin a new user was created and granted access to their group.\n",
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "If `true`, send emails to group admins. This notification informs the admin a new user was created and granted access to their group.\n"
                       },
                       "passwordExpiry": {
-                        "description": "Send emails regarding password expiration.\n",
-                        "type": "boolean"
+                        "type": "boolean",
+                        "description": "Send emails regarding password expiration.\n"
                       },
                       "proactive": {
+                        "type": "array",
                         "description": "A list of products subscribed to for proactive notification emails.\n",
                         "items": {
                           "type": "string"
-                        },
-                        "type": "array"
+                        }
                       },
                       "upgrade": {
+                        "type": "array",
                         "description": "A list of products subscribed to for upgrade notification emails.\n",
                         "items": {
                           "type": "string"
-                        },
-                        "type": "array"
+                        }
                       }
-                    },
-                    "type": "object"
+                    }
+                  },
+                  "enableEmailNotifications": {
+                    "type": "boolean",
+                    "description": "Enables email notifications.\n"
                   }
-                },
-                "type": "object",
-                "x-akamai": {
-                  "file-path": "schemas/NotificationsRequest.yaml"
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "The response returns updated user's notifications.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -2188,95 +2202,95 @@
                   }
                 },
                 "schema": {
-                  "additionalProperties": false,
+                  "type": "object",
                   "description": "Encapsulates the types of email notifications you can receive.",
+                  "x-akamai": {
+                    "file-path": "schemas/NotificationsResponse.yaml"
+                  },
+                  "additionalProperties": false,
                   "properties": {
-                    "enableEmailNotifications": {
-                      "description": "Indicates if email notifications are enabled.\n",
-                      "type": "boolean"
-                    },
                     "options": {
-                      "additionalProperties": false,
+                      "type": "object",
                       "description": "Specific notification types users can subscribe to.\n",
+                      "additionalProperties": false,
                       "properties": {
                         "newUserNotification": {
-                          "description": "Send emails to group admins regarding new user creation.\n",
-                          "type": "boolean"
+                          "type": "boolean",
+                          "description": "Send emails to group admins regarding new user creation.\n"
                         },
                         "passwordExpiry": {
-                          "description": "Send emails regarding password expiration.\n",
-                          "type": "boolean"
+                          "type": "boolean",
+                          "description": "Send emails regarding password expiration.\n"
                         },
                         "proactive": {
+                          "type": "array",
                           "description": "A list of products subscribed to for proactive notification emails.\n",
                           "items": {
                             "type": "string"
-                          },
-                          "type": "array"
+                          }
                         },
                         "upgrade": {
+                          "type": "array",
                           "description": "A list of products subscribed to for upgrade notification emails.\n",
                           "items": {
                             "type": "string"
-                          },
-                          "type": "array"
+                          }
                         }
-                      },
-                      "type": "object"
+                      }
+                    },
+                    "enableEmailNotifications": {
+                      "type": "boolean",
+                      "description": "Indicates if email notifications are enabled.\n"
                     }
-                  },
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/NotificationsResponse.yaml"
                   }
                 }
               }
-            },
-            "description": "The response returns updated user's notifications.\n"
+            }
           }
-        },
-        "summary": "Update a user's notifications",
-        "tags": [
-          "User notifications"
-        ]
+        }
       }
     },
     "/user-admin/ui-identities/{uiIdentityId}/reset-password": {
       "parameters": [
         {
-          "description": "A unique identifier for a user.",
-          "in": "path",
           "name": "uiIdentityId",
-          "required": true,
-          "schema": {
-            "example": "1-ABCDE",
-            "type": "string"
-          },
+          "in": "path",
+          "description": "A unique identifier for a user.",
           "x-akamai": {
             "file-path": "parameters/uiIdentityId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "1-ABCDE"
           }
         }
       ],
       "post": {
-        "description": "Optionally send a one-time use password to the user. If you send the email with the password directly to the user, the response for this operation doesn't include that password. If you don't send the password to the user through email, the password is included in the response.\n",
         "operationId": "post-reset-password",
+        "summary": "Reset a user's password",
+        "tags": [
+          "User access"
+        ],
+        "description": "Optionally send a one-time use password to the user. If you send the email with the password directly to the user, the response for this operation doesn't include that password. If you don't send the password to the user through email, the password is included in the response.\n",
         "parameters": [
           {
-            "description": "Sends a one-time password to the new user, `false` by default.",
-            "in": "query",
             "name": "sendEmail",
-            "schema": {
-              "default": false,
-              "example": true,
-              "type": "boolean"
-            },
+            "in": "query",
+            "description": "Sends a one-time password to the new user, `false` by default.",
             "x-akamai": {
               "file-path": "parameters/sendEmail_sendEmail.yaml"
+            },
+            "schema": {
+              "type": "boolean",
+              "example": true,
+              "default": false
             }
           }
         ],
         "responses": {
           "200": {
+            "description": "The response returns new password.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -2297,39 +2311,39 @@
                   }
                 }
               }
-            },
-            "description": "The response returns new password.\n"
+            }
           },
           "204": {
             "description": "Password sent.\n"
           }
-        },
-        "summary": "Reset a user's password",
-        "tags": [
-          "User access"
-        ]
+        }
       }
     },
     "/user-admin/ui-identities/{uiIdentityId}/set-password": {
       "parameters": [
         {
-          "description": "A unique identifier for a user.",
-          "in": "path",
           "name": "uiIdentityId",
-          "required": true,
-          "schema": {
-            "example": "1-ABCDE",
-            "type": "string"
-          },
+          "in": "path",
+          "description": "A unique identifier for a user.",
           "x-akamai": {
             "file-path": "parameters/uiIdentityId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "1-ABCDE"
           }
         }
       ],
       "post": {
-        "description": "Set a specific password for a user. This differs from [Reset a user's password](ref:post-reset-password) because this password may be used more than once, and isn't randomly generated.\n",
         "operationId": "post-set-password",
+        "summary": "Set a user's password",
+        "tags": [
+          "User access"
+        ],
+        "description": "Set a specific password for a user. This differs from [Reset a user's password](ref:post-reset-password) because this password may be used more than once, and isn't randomly generated.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -2350,56 +2364,55 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "204": {
             "description": "Password set.\n"
           }
-        },
-        "summary": "Set a user's password",
-        "tags": [
-          "User access"
-        ]
+        }
       }
     },
     "/user-admin/ui-identities/{uiIdentityId}/tfa": {
       "parameters": [
         {
-          "description": "A unique identifier for a user.",
-          "in": "path",
           "name": "uiIdentityId",
-          "required": true,
-          "schema": {
-            "example": "1-ABCDE",
-            "type": "string"
-          },
+          "in": "path",
+          "description": "A unique identifier for a user.",
           "x-akamai": {
             "file-path": "parameters/uiIdentityId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "1-ABCDE"
           }
         }
       ],
       "put": {
-        "description": "Actions for this operation are `enable`, `disable`, and `reset`. Users can make five attempts to log in with TFA before their accounts lock. If the account gets locked, use `reset` value to unlock.\n",
         "operationId": "put-ui-identity-tfa",
+        "summary": "Set a user's two-factor authentication",
+        "tags": [
+          "User access"
+        ],
+        "description": "Actions for this operation are `enable`, `disable`, and `reset`. Users can make five attempts to log in with TFA before their accounts lock. If the account gets locked, use `reset` value to unlock.\n",
         "parameters": [
           {
-            "description": "Includes the actions you can perform for TFA on your own profile, either `enable`, `disable`, or `reset`. Don't confuse this with the `actions` parameter, which applies to the various operations that get user data.",
-            "in": "query",
             "name": "action",
+            "in": "query",
+            "description": "Includes the actions you can perform for TFA on your own profile, either `enable`, `disable`, or `reset`. Don't confuse this with the `actions` parameter, which applies to the various operations that get user data.",
+            "x-akamai": {
+              "file-path": "parameters/action-query.yaml"
+            },
             "required": true,
             "schema": {
+              "type": "string",
+              "example": "enable",
               "enum": [
                 "enable",
                 "disable",
                 "reset"
-              ],
-              "example": "enable",
-              "type": "string"
-            },
-            "x-akamai": {
-              "file-path": "parameters/action-query.yaml"
+              ]
             }
           }
         ],
@@ -2407,51 +2420,38 @@
           "204": {
             "description": "Authentication updated.\n"
           }
-        },
-        "summary": "Set a user's two-factor authentication",
-        "tags": [
-          "User access"
-        ]
+        }
       }
     },
     "/user-admin/ui-identities/{uiIdentityId}/unlock": {
       "parameters": [
         {
-          "description": "A unique identifier for a user.",
-          "in": "path",
           "name": "uiIdentityId",
-          "required": true,
-          "schema": {
-            "example": "1-ABCDE",
-            "type": "string"
-          },
+          "in": "path",
+          "description": "A unique identifier for a user.",
           "x-akamai": {
             "file-path": "parameters/uiIdentityId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "string",
+            "example": "1-ABCDE"
           }
         }
       ],
       "post": {
-        "description": "Release the lock on a user's account and allow them to access Control Center.\n",
         "operationId": "post-ui-identity-unlock",
+        "summary": "Unlock a user's account",
+        "tags": [
+          "User access"
+        ],
+        "description": "Release the lock on a user's account and allow them to access Control Center.\n",
         "responses": {
           "204": {
             "description": "User's account unlocked.\n"
           }
-        },
-        "summary": "Unlock a user's account",
-        "tags": [
-          "User access"
-        ]
+        }
       }
     }
-  },
-  "servers": [
-    {
-      "url": "https://{hostname}/identity-management/v2"
-    }
-  ],
-  "x-akamai": {
-    "auth-type": "EDGE_GRID",
-    "file-path": "user-api.yaml"
   }
 }
