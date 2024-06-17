@@ -1,5 +1,3 @@
-x-akamai:
-  file-path: schemas/match-rule-as-definitions.yaml
 definitions:
   matchCriteriaType:
     type: object
@@ -16,26 +14,6 @@ definitions:
       - objectMatchValue
       title: matchType and objectMatchValue required
     properties:
-      caseSensitive:
-        type: boolean
-        description: |
-          If `true`, the match is case sensitive.
-      checkIPs:
-        type: string
-        description: |
-          For `clientip`, `continent`, `countrycode`, `proxy`, and `regioncode` match types, the part of the request that determines the IP address to use. Values include the connecting IP address (`CONNECTING_IP`) and the `X-Forwarded-For` header (`XFF_HEADERS`). To select both, enter the two values separated by a space delimiter. When you include both values, the connecting IP address evaluates first.
-        enum:
-        - CONNECTING_IP
-        - XFF_HEADERS
-        - CONNECTING_IP XFF_HEADERS
-      matchOperator:
-        type: string
-        description: |
-          This checks the incoming request to see if it `contains` or `equals` the `matchValue`, or if the request `header` you want to match on `exists`. With the exception of `hostname`, when using a wildcard, you need to set `matchOperator` to `contains`. For `hostname`, you don't need `contains`. Asterisks (`*`) in the `hostname` behave as wildcards. For example, `*.example.com` can match many subdomains.
-        enum:
-        - contains
-        - exists
-        - equals
       matchType:
         type: string
         description: |
@@ -57,6 +35,10 @@ definitions:
         - protocol
         - method
         - proxy
+      caseSensitive:
+        type: boolean
+        description: |
+          If `true`, the match is case sensitive.
       matchValue:
         type: string
         description: |
@@ -67,86 +49,24 @@ definitions:
         type: boolean
         description: |
           Whether the match should be ignored (`negate` is `true`) or if the match should be acted on (`negate` is `false`).
+      matchOperator:
+        type: string
+        description: |
+          This checks the incoming request to see if it `contains` or `equals` the `matchValue`, or if the request `header` you want to match on `exists`. With the exception of `hostname`, when using a wildcard, you need to set `matchOperator` to `contains`. For `hostname`, you don't need `contains`. Asterisks (`*`) in the `hostname` behave as wildcards. For example, `*.example.com` can match many subdomains.
+        enum:
+        - contains
+        - exists
+        - equals
+      checkIPs:
+        type: string
+        description: |
+          For `clientip`, `continent`, `countrycode`, `proxy`, and `regioncode` match types, the part of the request that determines the IP address to use. Values include the connecting IP address (`CONNECTING_IP`) and the `X-Forwarded-For` header (`XFF_HEADERS`). To select both, enter the two values separated by a space delimiter. When you include both values, the connecting IP address evaluates first.
+        enum:
+        - CONNECTING_IP
+        - XFF_HEADERS
+        - CONNECTING_IP XFF_HEADERS
       objectMatchValue:
         $ref: '#/definitions/objectMatchValueType'
-  objectMatchValueObjectSubtype:
-    type: object
-    description: |
-      Use the `objectMatchValueObjectSubtype` for more complex match criteria.
-    title: Object
-    additionalProperties: false
-    required:
-    - name
-    - type
-    properties:
-      name:
-        type: string
-        description: |
-          If using a match type that supports `name` attributes, enter the value in the incoming request to match on. The following match types support this property: `cookie`, `header`, `parameter`, and `query`.
-        minLength: 1
-        maxLength: 8192
-      type:
-        type: string
-        description: |
-          The array type, which is `object`.
-        enum:
-        - object
-      options:
-        type: object
-        description: |
-          If using the `object` match value subtype, use this array to list the values to match on.
-        additionalProperties: false
-        properties:
-          value:
-            type: array
-            description: |
-              If using the `simple` or `range` match value subtypes, enter the value attributes in the incoming request to match on. Valid entries vary by match type. For example, GET and POST are valid entries for the `method` match type.
-            nullable: true
-            items:
-              type: string
-          valueCaseSensitive:
-            type: boolean
-            description: |
-              Set to `true` if the entries for `value` should be evaluated based on case sensitivity.
-          valueEscaped:
-            type: boolean
-            description: |
-              Set to `true` if the entries for `value` includes escaped characters.
-          valueHasWildcard:
-            type: boolean
-            description: |
-              Set to `true` if the entries for `value` includes wildcards.
-      nameCaseSensitive:
-        type: boolean
-        description: |
-          When set to `true`, the `name` match is case-sensitive.
-      nameHasWildcard:
-        type: boolean
-        description: |
-          When set to `true`, `name` matches can include `*` and `?` wildcards.
-  objectMatchValueRangeSubtype:
-    type: object
-    description: |
-      When setting up a range match, enter the two numbers that comprise the range. If the value assigned to an incoming request falls within this inclusive range, the match is true. The specified `range` needs to be a percentage from 1 to 100.
-    title: Range
-    additionalProperties: false
-    required:
-    - type
-    - value
-    properties:
-      type:
-        type: string
-        description: |
-          The object type, which is `range`.
-        enum:
-        - range
-      value:
-        type: array
-        description: |
-          An inclusive range comprised of two numbers to match on.
-        nullable: true
-        items:
-          type: integer
   objectMatchValueSimpleSubtype:
     type: object
     description: |
@@ -166,10 +86,88 @@ definitions:
       value:
         type: array
         description: |
-          The `simple` array values for incoming request to match on. Valid entries vary by match type. For example, GET and POST are valid entries for the `method` match type.
+          The `simple` array values for incoming request to match on. For example, if the match type is `method`, the array values could be `GET` and `POST`.
         nullable: true
         items:
           type: string
+  objectMatchValueRangeSubtype:
+    type: object
+    description: |
+      When setting up a range match, enter the two numbers that comprise the range. If the value assigned to an incoming request falls within this inclusive range, the match is true. The specified range needs to be a percentage from 1 to 100.
+    title: Range
+    additionalProperties: false
+    required:
+    - type
+    - value
+    properties:
+      type:
+        type: string
+        description: |
+          The object type, which is `range`.
+        enum:
+        - range
+      value:
+        type: integer
+        description: |
+          An inclusive range comprised of two numbers to match on.
+        nullable: true
+        items:
+          type: integer
+  objectMatchValueObjectSubtype:
+    type: object
+    description: |
+      Use the `objectMatchValueObjectSubtype` for more complex match criteria.
+    title: Object
+    additionalProperties: false
+    required:
+    - name
+    - type
+    properties:
+      name:
+        type: string
+        description: |
+          If matching any name, specify the `name` value in the incoming request to match on. The following match types support this: `cookie`, `header`, `parameter`, and `query`.
+        minLength: 1
+        maxLength: 8192
+      type:
+        type: string
+        description: |
+          The array type, which is `object`.
+        enum:
+        - object
+      options:
+        type: object
+        description: |
+          If using the `object` type, use this array to list the values to match on.
+        additionalProperties: false
+        properties:
+          value:
+            type: array
+            description: |
+              The value attributes in the incoming request to match on. Valid entries vary by match type. For example, `GET` and `POST` are valid entries for the `method` match type, and an integer is valid for the `numberOfFields` match type.
+            nullable: true
+            items:
+              type: string
+          valueHasWildcard:
+            type: boolean
+            description: |
+              Set to `true` if the entries for the value property includes wildcards.
+          valueCaseSensitive:
+            type: boolean
+            description: |
+              Set to `true` if the entries for the value property should be evaluated based on case sensitivity.
+          valueEscaped:
+            type: boolean
+            description: |
+              Set to `true` if the entries for the value property includes escaped characters.
+      nameCaseSensitive:
+        type: boolean
+        description: |
+          When set to `true`, the `name` match is case-sensitive.
+      nameHasWildcard:
+        type: boolean
+        description: |
+          When set to `true`, `name` matches can include `*` and `?` wildcards.
   objectMatchValueType:
     type: object
     description: |

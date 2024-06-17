@@ -1,0 +1,665 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "IP allowlists",
+    "version": "2",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/identity-management/v2"
+    }
+  ],
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "ip-acl.yaml"
+  },
+  "paths": {
+    "/user-admin/ip-acl/allowlist": {
+      "post": {
+        "operationId": "post-allowlist",
+        "summary": "Create a CIDR block",
+        "tags": [
+          "CIDR blocks"
+        ],
+        "description": "Add CIDR blocks to your account's allowlist. You can add only one CIDR block at a time.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "enabled": true,
+                "comments": "EMEA Offices",
+                "cidrBlock": "128.10.46.60/24"
+              },
+              "schema": {
+                "type": "object",
+                "description": "Encapsulates all data sent while creating or updating a CIDR block.",
+                "x-akamai": {
+                  "file-path": "schemas/post-ip-acl.yaml"
+                },
+                "additionalProperties": false,
+                "required": [
+                  "enabled",
+                  "cidrBlock"
+                ],
+                "properties": {
+                  "cidrBlock": {
+                    "type": "string",
+                    "description": "The value of an IP address or IP address range.\n"
+                  },
+                  "comments": {
+                    "type": "string",
+                    "description": "Descriptive text for the CIDR block.\n"
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "If `false`, the allowlist ignores the CIDR block.\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The response returns the created CIDR block.\n",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cidrBlockId": 2567,
+                  "enabled": true,
+                  "comments": "APAC Region",
+                  "cidrBlock": "128.5.6.6/24",
+                  "createdDate": "2017-07-27T18:11:25.000Z",
+                  "createdBy": "hgildong",
+                  "modifiedDate": "2017-07-27T18:11:25.000Z",
+                  "modifiedBy": "szhang",
+                  "actions": {
+                    "delete": true,
+                    "edit": false
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "description": "Encapsulates all members for a CIDR block in the IP allowlist data structure.",
+                  "x-akamai": {
+                    "file-path": "schemas/ip-acl-200.yaml"
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "cidrBlockId",
+                    "enabled",
+                    "cidrBlock",
+                    "createdDate",
+                    "createdBy",
+                    "modifiedDate",
+                    "modifiedBy"
+                  ],
+                  "properties": {
+                    "actions": {
+                      "type": "object",
+                      "description": "Encapsulates the actions you can perform against a CIDR block.\n",
+                      "additionalProperties": false,
+                      "properties": {
+                        "delete": {
+                          "type": "boolean",
+                          "description": "Indicates whether you can delete this CIDR block. You can't delete a CIDR block from an IP address not on the allowlist, or if the CIDR block is the only one on the allowlist.\n"
+                        },
+                        "edit": {
+                          "type": "boolean",
+                          "description": "Indicates whether you can edit this CIDR block. You can't edit  CIDR block from an IP address not on the allowlist, or if the CIDR block is the only one on the allowlist.\n"
+                        }
+                      }
+                    },
+                    "cidrBlock": {
+                      "type": "string",
+                      "description": "The value of an IP address or IP address range.\n"
+                    },
+                    "cidrBlockId": {
+                      "type": "integer",
+                      "description": "A unique identifier for each CIDR block.\n"
+                    },
+                    "comments": {
+                      "type": "string",
+                      "description": "Descriptive text for the CIDR block.\n"
+                    },
+                    "createdBy": {
+                      "type": "string",
+                      "description": "The user who created the CIDR block.\n"
+                    },
+                    "createdDate": {
+                      "type": "string",
+                      "description": "The ISO 8601 timestamp indicating when the CIDR block was created.\n",
+                      "format": "date-time"
+                    },
+                    "enabled": {
+                      "type": "boolean",
+                      "description": "Indicates IP allowlist is enabled on the account.\n"
+                    },
+                    "modifiedBy": {
+                      "type": "string",
+                      "description": "The user who last modified the CIDR block.\n"
+                    },
+                    "modifiedDate": {
+                      "type": "string",
+                      "description": "The ISO 8601 timestamp indicating when the CIDR block was last modified.\n",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "operationId": "get-allowlist",
+        "summary": "List CIDR blocks",
+        "tags": [
+          "CIDR blocks"
+        ],
+        "description": "List all CIDR blocks on your account's allowlist. This allowlist is for the account designated by your API client.\n",
+        "parameters": [
+          {
+            "name": "actions",
+            "in": "query",
+            "description": "Includes actions you can perform on the object, `false` by default.",
+            "x-akamai": {
+              "file-path": "parameters/actions-query.yaml"
+            },
+            "schema": {
+              "type": "boolean",
+              "example": true,
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The response lists CIDR blocks.\n",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "cidrBlockId": 921,
+                    "enabled": true,
+                    "comments": "West Coast Office",
+                    "cidrBlock": "127.0.0.1/24",
+                    "createdDate": "2017-07-27T18:11:25.000Z",
+                    "createdBy": "jsmith",
+                    "modifiedDate": "2017-07-27T18:11:25.000Z",
+                    "modifiedBy": "jperez",
+                    "actions": {
+                      "delete": true,
+                      "edit": true
+                    }
+                  },
+                  {
+                    "cidrBlockId": 6042,
+                    "enabled": true,
+                    "comments": "East Coast Office",
+                    "cidrBlock": "128.5.6.6/24",
+                    "createdDate": "2017-07-27T18:11:25.000Z",
+                    "createdBy": "jdupont",
+                    "modifiedDate": "2017-07-27T18:11:25.000Z",
+                    "modifiedBy": "hgildong",
+                    "actions": {
+                      "delete": true,
+                      "edit": false
+                    }
+                  }
+                ],
+                "schema": {
+                  "type": "array",
+                  "description": "This object encapsulates a collection of CIDR blocks.",
+                  "x-akamai": {
+                    "file-path": "schemas/ip-acls-200.yaml"
+                  },
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                      "actions": {
+                        "type": "object",
+                        "description": "Encapsulates the actions you can take against a CIDR block.\n",
+                        "additionalProperties": false,
+                        "properties": {
+                          "delete": {
+                            "type": "boolean",
+                            "description": "Indicates whether you can delete this CIDR block. You may not be able to delete a CIDR block if you're trying to delete it from an IP address not on the allowlist, or if the CIDR block is the only one on the allowlist.\n"
+                          },
+                          "edit": {
+                            "type": "boolean",
+                            "description": "Indicates whether you can edit this CIDR block. You may not be able to edit a CIDR block if you're trying to modify it from an IP address not on the allowlist, or if the CIDR block is the only one on the allowlist.\n"
+                          }
+                        }
+                      },
+                      "cidrBlock": {
+                        "type": "string",
+                        "description": "The value of an IP address or IP address range.\n"
+                      },
+                      "cidrBlockId": {
+                        "type": "integer",
+                        "description": "A unique identifier for each CIDR block.\n"
+                      },
+                      "comments": {
+                        "type": "string",
+                        "description": "Descriptive text for the CIDR block.\n"
+                      },
+                      "createdBy": {
+                        "type": "string",
+                        "description": "The user who created the CIDR block.\n"
+                      },
+                      "createdDate": {
+                        "type": "string",
+                        "description": "The ISO 8601 timestamp indicating when the CIDR block was created.\n",
+                        "format": "date-time"
+                      },
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "Indicates the CIDR block is enabled.\n"
+                      },
+                      "modifiedBy": {
+                        "type": "string",
+                        "description": "The user who last modified the CIDR block.\n"
+                      },
+                      "modifiedDate": {
+                        "type": "string",
+                        "description": "The ISO 8601 timestamp indicating when the CIDR block was last modified.\n",
+                        "format": "date-time"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user-admin/ip-acl/allowlist/disable": {
+      "post": {
+        "operationId": "post-allowlist-disable",
+        "summary": "Disable IP allowlist",
+        "tags": [
+          "Allowlists"
+        ],
+        "description": "After you disable IP allowlist on your account, users can access Control Center regardless of their IP address or who assigns it.\n",
+        "responses": {
+          "204": {
+            "description": "IP allowlist disabled.\n"
+          }
+        }
+      }
+    },
+    "/user-admin/ip-acl/allowlist/enable": {
+      "post": {
+        "operationId": "post-allowlist-enable",
+        "summary": "Enable IP allowlist",
+        "tags": [
+          "Allowlists"
+        ],
+        "description": "Before you enable IP allowlist on your account, add at least one IP address to allow access to Control Center. The allowlist can't be empty with IP allowlist enabled.\n",
+        "responses": {
+          "204": {
+            "description": "IP allowlist enabled.\n"
+          }
+        }
+      }
+    },
+    "/user-admin/ip-acl/allowlist/status": {
+      "get": {
+        "operationId": "get-allowlist-status",
+        "summary": "View IP allowlist status",
+        "tags": [
+          "Allowlists"
+        ],
+        "description": "Indicates whether IP allowlist is enabled or disabled on your account.\n",
+        "responses": {
+          "200": {
+            "description": "The response verifies the IP allowlist status.\n",
+            "content": {
+              "application/json": {
+                "example": {
+                  "enabled": true
+                },
+                "schema": {
+                  "type": "object",
+                  "description": "Encapsulates the status of IP allowlist on the account.",
+                  "x-akamai": {
+                    "file-path": "schemas/account-status.yaml"
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "enabled"
+                  ],
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean",
+                      "description": "Indicates whether IP allowlist is enabled on the account.\n"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/user-admin/ip-acl/allowlist/validate": {
+      "get": {
+        "operationId": "get-allowlist-validate",
+        "summary": "Validate CIDR blocks",
+        "tags": [
+          "CIDR blocks"
+        ],
+        "description": "Check the format of your CIDR blocks. To validate, pass the CIDR block or an individual IP address in the `cidrblock` query parameter. Encode any slash characters as `%2F`.\n",
+        "parameters": [
+          {
+            "name": "cidrblock",
+            "in": "query",
+            "description": "The CIDR block value you want to validate. This isn't the same as a `cidrBlockId`.",
+            "x-akamai": {
+              "file-path": "parameters/cidrblock-query.yaml"
+            },
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "127.0.0.1/20"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "CIDR block is valid.\n"
+          }
+        }
+      }
+    },
+    "/user-admin/ip-acl/allowlist/{cidrBlockId}": {
+      "parameters": [
+        {
+          "name": "cidrBlockId",
+          "in": "path",
+          "description": "A unique identifier for a CIDR block.",
+          "x-akamai": {
+            "file-path": "parameters/cidrBlockId-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 6688
+          }
+        }
+      ],
+      "get": {
+        "operationId": "get-allowlist-cidrblockid",
+        "summary": "Get a CIDR block",
+        "tags": [
+          "CIDR blocks"
+        ],
+        "description": "Get a specific CIDR block.\n",
+        "parameters": [
+          {
+            "name": "actions",
+            "in": "query",
+            "description": "Includes actions you can perform on the object, `false` by default.",
+            "x-akamai": {
+              "file-path": "parameters/actions-query.yaml"
+            },
+            "schema": {
+              "type": "boolean",
+              "example": true,
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The response returns the CIDR block.\n",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cidrBlockId": 2567,
+                  "enabled": true,
+                  "comments": "APAC Region",
+                  "cidrBlock": "128.5.6.6/24",
+                  "createdDate": "2017-07-27T18:11:25.000Z",
+                  "createdBy": "hgildong",
+                  "modifiedDate": "2017-07-27T18:11:25.000Z",
+                  "modifiedBy": "szhang",
+                  "actions": {
+                    "delete": true,
+                    "edit": false
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "description": "Encapsulates all members for a CIDR block in the IP allowlist data structure.",
+                  "x-akamai": {
+                    "file-path": "schemas/ip-acl-200.yaml"
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "cidrBlockId",
+                    "enabled",
+                    "cidrBlock",
+                    "createdDate",
+                    "createdBy",
+                    "modifiedDate",
+                    "modifiedBy"
+                  ],
+                  "properties": {
+                    "actions": {
+                      "type": "object",
+                      "description": "Encapsulates the actions you can perform against a CIDR block.\n",
+                      "additionalProperties": false,
+                      "properties": {
+                        "delete": {
+                          "type": "boolean",
+                          "description": "Indicates whether you can delete this CIDR block. You can't delete a CIDR block from an IP address not on the allowlist, or if the CIDR block is the only one on the allowlist.\n"
+                        },
+                        "edit": {
+                          "type": "boolean",
+                          "description": "Indicates whether you can edit this CIDR block. You can't edit  CIDR block from an IP address not on the allowlist, or if the CIDR block is the only one on the allowlist.\n"
+                        }
+                      }
+                    },
+                    "cidrBlock": {
+                      "type": "string",
+                      "description": "The value of an IP address or IP address range.\n"
+                    },
+                    "cidrBlockId": {
+                      "type": "integer",
+                      "description": "A unique identifier for each CIDR block.\n"
+                    },
+                    "comments": {
+                      "type": "string",
+                      "description": "Descriptive text for the CIDR block.\n"
+                    },
+                    "createdBy": {
+                      "type": "string",
+                      "description": "The user who created the CIDR block.\n"
+                    },
+                    "createdDate": {
+                      "type": "string",
+                      "description": "The ISO 8601 timestamp indicating when the CIDR block was created.\n",
+                      "format": "date-time"
+                    },
+                    "enabled": {
+                      "type": "boolean",
+                      "description": "Indicates IP allowlist is enabled on the account.\n"
+                    },
+                    "modifiedBy": {
+                      "type": "string",
+                      "description": "The user who last modified the CIDR block.\n"
+                    },
+                    "modifiedDate": {
+                      "type": "string",
+                      "description": "The ISO 8601 timestamp indicating when the CIDR block was last modified.\n",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "put-allowlist-cidrblockid",
+        "summary": "Modify a CIDR block",
+        "tags": [
+          "CIDR blocks"
+        ],
+        "description": "Enable or disable an existing CIDR block, update comments, IP address, or range in the CIDR block. Note that you can only update a CIDR block with IP allowlist enabled on the account. There are several CIDR blocks on the allowlist and your attempt to make changes to the CIDR block is from an IP address that's on the allowlist. You can't edit the last CIDR block in the allowlist or the CIDR block allowing access to the current user.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "enabled": true,
+                "comments": "EMEA Offices",
+                "cidrBlock": "128.10.46.60/24"
+              },
+              "schema": {
+                "type": "object",
+                "description": "Encapsulates all data sent while creating or updating a CIDR block.",
+                "x-akamai": {
+                  "file-path": "schemas/post-ip-acl.yaml"
+                },
+                "additionalProperties": false,
+                "required": [
+                  "enabled",
+                  "cidrBlock"
+                ],
+                "properties": {
+                  "cidrBlock": {
+                    "type": "string",
+                    "description": "The value of an IP address or IP address range.\n"
+                  },
+                  "comments": {
+                    "type": "string",
+                    "description": "Descriptive text for the CIDR block.\n"
+                  },
+                  "enabled": {
+                    "type": "boolean",
+                    "description": "If `false`, the allowlist ignores the CIDR block.\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The response returns the modified CIDR block.\n",
+            "content": {
+              "application/json": {
+                "example": {
+                  "cidrBlockId": 2567,
+                  "enabled": true,
+                  "comments": "APAC Region",
+                  "cidrBlock": "128.5.6.6/24",
+                  "createdDate": "2017-07-27T18:11:25.000Z",
+                  "createdBy": "hgildong",
+                  "modifiedDate": "2017-07-27T18:11:25.000Z",
+                  "modifiedBy": "szhang",
+                  "actions": {
+                    "delete": true,
+                    "edit": false
+                  }
+                },
+                "schema": {
+                  "type": "object",
+                  "description": "Encapsulates all members for a CIDR block in the IP allowlist data structure.",
+                  "x-akamai": {
+                    "file-path": "schemas/ip-acl-200.yaml"
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "cidrBlockId",
+                    "enabled",
+                    "cidrBlock",
+                    "createdDate",
+                    "createdBy",
+                    "modifiedDate",
+                    "modifiedBy"
+                  ],
+                  "properties": {
+                    "actions": {
+                      "type": "object",
+                      "description": "Encapsulates the actions you can perform against a CIDR block.\n",
+                      "additionalProperties": false,
+                      "properties": {
+                        "delete": {
+                          "type": "boolean",
+                          "description": "Indicates whether you can delete this CIDR block. You can't delete a CIDR block from an IP address not on the allowlist, or if the CIDR block is the only one on the allowlist.\n"
+                        },
+                        "edit": {
+                          "type": "boolean",
+                          "description": "Indicates whether you can edit this CIDR block. You can't edit  CIDR block from an IP address not on the allowlist, or if the CIDR block is the only one on the allowlist.\n"
+                        }
+                      }
+                    },
+                    "cidrBlock": {
+                      "type": "string",
+                      "description": "The value of an IP address or IP address range.\n"
+                    },
+                    "cidrBlockId": {
+                      "type": "integer",
+                      "description": "A unique identifier for each CIDR block.\n"
+                    },
+                    "comments": {
+                      "type": "string",
+                      "description": "Descriptive text for the CIDR block.\n"
+                    },
+                    "createdBy": {
+                      "type": "string",
+                      "description": "The user who created the CIDR block.\n"
+                    },
+                    "createdDate": {
+                      "type": "string",
+                      "description": "The ISO 8601 timestamp indicating when the CIDR block was created.\n",
+                      "format": "date-time"
+                    },
+                    "enabled": {
+                      "type": "boolean",
+                      "description": "Indicates IP allowlist is enabled on the account.\n"
+                    },
+                    "modifiedBy": {
+                      "type": "string",
+                      "description": "The user who last modified the CIDR block.\n"
+                    },
+                    "modifiedDate": {
+                      "type": "string",
+                      "description": "The ISO 8601 timestamp indicating when the CIDR block was last modified.\n",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "delete-allowlist-cidrblockid",
+        "summary": "Delete a CIDR block",
+        "tags": [
+          "CIDR blocks"
+        ],
+        "description": "After you delete a CIDR block from the allowlist, any requests from IP addresses you deleted fail the next time someone tries to log in from that address. Users accessing Control Center from an IP address you delete aren't automatically logged out of Control Center at the time you delete the IP address. With IP allowlist enabled for the account, you can't delete the last CIDR block in the allowlist or the CIDR block allowing access to the current user. There are no restrictions with IP allowlist disabled on the account.\n",
+        "responses": {
+          "204": {
+            "description": "CIDR block deleted.\n"
+          }
+        }
+      }
+    }
+  }
+}
