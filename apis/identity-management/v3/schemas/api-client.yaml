@@ -1,245 +1,242 @@
-type: object
-description: |-
+description: |
   This object encapsulates the response schema for creating API client.
-  
-x-akamai:
-  file-path: schemas/api-client.yaml
-additionalProperties: false
 properties:
   accessToken:
-    type: string
     description: |
       Part of the client secret that identifies your API client and lets you access applications and resources. Tokens are unique per client.
+    type: string
   actions:
-    type: object
     description: |
       Encapsulates actions the API client may perform.
-    additionalProperties: false
     properties:
-      delete:
-        type: boolean
-        description: |
-          When enabled, the API client can be deleted.
       deactivateAll:
-        type: boolean
         description: |
           When enabled, all credentials of the API client can be deactivated.
-      edit:
         type: boolean
+      delete:
+        description: |
+          When enabled, the API client can be deleted.
+        type: boolean
+      edit:
         description: |
           When enabled, the API client can be updated.
-      editApis:
         type: boolean
+      editApis:
         description: |
           When enabled, the `apis` of the API client can be updated.
-      editAuth:
         type: boolean
+      editAuth:
         description: |
           When enabled, the `groups` or `apis` of the API client can be updated.
-      editGroups:
         type: boolean
+      editGroups:
         description: |
           When enabled, the `groups` of the API client can be updated.
-      editSwitchAccount:
         type: boolean
+      editSwitchAccount:
         description: |
           When enabled, the API client option to manage many accounts can be updated.
-      lock:
         type: boolean
+      lock:
         description: |
           When enabled, the API client can be locked if it's currently unlocked.
-      transfer:
         type: boolean
+      transfer:
         description: |
           When enabled, the API client can be transferred to a new owner.
-      unlock:
         type: boolean
+      unlock:
         description: |
           When enabled, the API client can be unlocked if it's currently locked.
+        type: boolean
+    type: object
+    additionalProperties: false
   activeCredentialCount:
-    type: integer
     description: |
       Number of credentials active for the API client.
+    type: integer
   allAccessibleApis:
-    type: boolean
     description: |
       Indicates if the API client has access to a full set of available APIs. Note there's a limit of 99 API services for each client. Clients that make calls to URLs from the 100th service get a 403 error.
-  allowAccountSwitch:
     type: boolean
+  allowAccountSwitch:
     description: |
       If you can use the API client to manage more than one account.
+    type: boolean
   apis:
-    type: array
     description: |
       Lists APIs you'd like to use. It's a specific set of accessible APIs only when `allAccessibleApis` is disabled.
     items:
-      type: object
-      additionalProperties: false
       properties:
-        description:
-          type: string
-          description: |
-            Description of the API.
         apiId:
-          type: integer
           description: |
             A unique identifier for each API.
+          type: integer
         apiName:
-          type: string
           description: |
             The name of an API, like Diagnostic Tools, or Identity Management: API.
-        documentationUrl:
           type: string
+        description:
+          description: |
+            Description of the API.
+          type: string
+        documentationUrl:
           description: |
             Link to more information about the API.
-        endPoint:
           type: string
+        endPoint:
           description: |
             The endpoint to access a API.
-        grantScope:
           type: string
+        grantScope:
           description: |
             The level of access you give to an API client on a per API basis.
+          type: string
+      type: object
+      additionalProperties: false
+    type: array
   baseURL:
-    type: string
     description: |
       The base URL for the service.
+    type: string
   ccuParams:
-    type: object
     description: |
       Additional data needed to configure the client for access to CCU API in `apis`.
-    additionalProperties: false
     properties:
       purgeByCacheTag:
-        type: boolean
         description: |
           When enabled, the API client can purge content by cache tag.
-      purgeByCpcode:
         type: boolean
+      purgeByCpcode:
         description: |
           When enabled, the API client can purge content by CP code.
+        type: boolean
       purgeCpcodes:
-        type: array
         description: |
           Lists all CP codes that your API client is allowed to purge.
         items:
           type: integer
+        type: array
+    type: object
+    additionalProperties: false
   clientDescription:
-    type: string
     description: |
       Description of the API client.
-  clientId:
     type: string
+  clientId:
     description: |
       Unique identifier for an API client.
-  clientName:
     type: string
+  clientName:
     description: |
       The API client's human-readable name.
-  createdBy:
     type: string
+  createdBy:
     description: |
       The user who created the API client.
-  createdDate:
     type: string
+  createdDate:
     description: |
       ISO 8601 timestamp indicating when the API client was created.
     format: date-time
+    type: string
   credentials:
-    type: array
     description: |
       A collection of credentials.
     items:
-      type: object
       description: |
         Details of a credential.
-      additionalProperties: false
       properties:
-        description:
-          type: string
-          description: |
-            A descriptive label for the client.
         actions:
-          type: object
           description: |
             Encapsulates the different ways you can edit an API client, including changing its owner, accessing rights to Control Center, or deleting it.
-          additionalProperties: false
           properties:
-            delete:
-              type: boolean
-              description: |
-                When enabled, the credential can be deleted.
             activate:
-              type: boolean
               description: |
                 When enabled, the credential can be activated.
-            deactivate:
               type: boolean
+            deactivate:
               description: |
                 When enabled, the credential can be deactivated.
-            editDescription:
               type: boolean
+            delete:
+              description: |
+                When enabled, the credential can be deleted.
+              type: boolean
+            editDescription:
               description: |
                 When enabled, credential's description can be edited.
-            editExpiration:
               type: boolean
+            editExpiration:
               description: |
                 When enabled, credential's expiration date can be updated.
+              type: boolean
+          type: object
+          additionalProperties: false
         clientToken:
-          type: string
           description: |
             Identifies the API client.
-        createdOn:
           type: string
+        createdOn:
           description: |
             ISO 8601 timestamp indicating when credentials were created.
           format: date-time
+          type: string
         credentialId:
-          type: integer
           description: |
             A unique identifier for each credential.
-        expiresOn:
+          type: integer
+        description:
+          description: |
+            A descriptive label for the client.
           type: string
+        expiresOn:
           description: |
             ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.
           format: date-time
-        status:
           type: string
+        status:
           description: |
             Indicates whether the credential can be used. `ACTIVE` means the credential can be used. `INACTIVE` means the credential isn't active and can't be used, and `DELETED` means the credential no longer exists.
           enum:
           - ACTIVE
           - INACTIVE
           - DELETED
+          type: string
+      type: object
+      additionalProperties: false
+    type: array
   groups:
+    items:
+      $ref: groups.yaml#/definitions/groups
     type: array
     description: |
       The groups an API client can access.
-    items:
-      $ref: groups.yaml#/definitions/groups
   locked:
-    type: boolean
     description: |
       When enabled, you can lock the client to prevent anyone from using it to access services on Control Center.
+    type: boolean
   notificationList:
-    type: array
     description: |
       List of email addresses to notify of any expiring credentials.
     items:
       type: string
+    type: array
   serviceProviderId:
-    type: integer
     description: |
       A unique identifier for a service provider.
+    type: integer
   uiIdentityId:
-    type: string
     description: |
       The unique identifier of the user the API client is being created for.
-  uiUserName:
     type: string
+  uiUserName:
     description: |
       The human-readable username of the person who owns the API client.
+    type: string
   useOwnerGroups:
-    type: boolean
     description: |
       When enabled, grants the client the same group access as the owner. Otherwise access is limited to the groups specified in `groups`.
+    type: boolean
+type: object
+additionalProperties: false
