@@ -1,34 +1,20 @@
 {
-  "openapi": "3.0.0",
   "info": {
-    "title": "Common resources, for users",
-    "version": "2",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    },
+    "title": "Common resources, for users",
+    "version": "2"
   },
-  "servers": [
-    {
-      "url": "https://{hostname}/identity-management/v2"
-    }
-  ],
-  "x-akamai": {
-    "auth-type": "EDGE_GRID",
-    "file-path": "user-profile-common-api.yaml"
-  },
+  "openapi": "3.0.0",
   "paths": {
     "/user-profile/common/contact-types": {
       "get": {
-        "operationId": "get-user-contact-types",
-        "summary": "View contact types for a user profile",
-        "tags": [
-          "Contact types"
-        ],
         "description": "List all the possible contact types that Akamai supports. Use the values from this operation to add or update a user's `contactType`. Users can run this operation to modify their own profile's contact types.  Administrators who modify a user's profile should run the [View contact types](ref:get-common-contact-types) operation.\n",
+        "operationId": "get-user-contact-types",
         "responses": {
           "200": {
-            "description": "The response lists contact types.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -38,33 +24,33 @@
                   "Security"
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Lists available values.",
+                  "items": {
+                    "description": "Available value.\n",
+                    "type": "string"
+                  },
+                  "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/ListOfString.yaml"
-                  },
-                  "items": {
-                    "type": "string",
-                    "description": "Available value.\n"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists contact types.\n"
           }
-        }
+        },
+        "summary": "View contact types for a user profile",
+        "tags": [
+          "Contact types"
+        ]
       }
     },
     "/user-profile/common/countries": {
       "get": {
-        "operationId": "get-user-countries",
-        "summary": "View supported countries for a user profile",
-        "tags": [
-          "Locale"
-        ],
         "description": "Return all the possible countries that Akamai supports. Use the values from this operation to add or update a user's country information. Users can run this operation to set their country in their own profile. Administrators who modify a user's profile should run the [View supported countries](ref:get-common-countries) operation.\n",
+        "operationId": "get-user-countries",
         "responses": {
           "200": {
-            "description": "The response lists countries.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -329,48 +315,33 @@
                   "Greenland"
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Lists available values.",
+                  "items": {
+                    "description": "Available value.\n",
+                    "type": "string"
+                  },
+                  "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/ListOfString.yaml"
-                  },
-                  "items": {
-                    "type": "string",
-                    "description": "Available value.\n"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists countries.\n"
           }
-        }
+        },
+        "summary": "View supported countries for a user profile",
+        "tags": [
+          "Locale"
+        ]
       }
     },
     "/user-profile/common/countries/{country}/states": {
-      "parameters": [
-        {
-          "name": "country",
-          "in": "path",
-          "description": "Filters the results by country, but only returns lists of states and provinces for `USA` and `Canada`.",
-          "x-akamai": {
-            "file-path": "parameters/country-path.yaml"
-          },
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "Canada"
-          }
-        }
-      ],
       "get": {
-        "operationId": "get-user-states",
-        "summary": "View states for a user profile",
-        "tags": [
-          "Locale"
-        ],
         "description": "Returns country states. Users can run this operation to set their state in their own profile. Administrators who modify a user's profile should run the [View states](ref:get-common-states) operation.\n",
+        "operationId": "get-user-states",
         "responses": {
           "200": {
-            "description": "The response lists states.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -391,33 +362,48 @@
                   "ON"
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Lists available values.",
+                  "items": {
+                    "description": "Available value.\n",
+                    "type": "string"
+                  },
+                  "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/ListOfString.yaml"
-                  },
-                  "items": {
-                    "type": "string",
-                    "description": "Available value.\n"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists states.\n"
+          }
+        },
+        "summary": "View states for a user profile",
+        "tags": [
+          "Locale"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Filters the results by country, but only returns lists of states and provinces for `USA` and `Canada`.",
+          "in": "path",
+          "name": "country",
+          "required": true,
+          "schema": {
+            "example": "Canada",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/country-path.yaml"
           }
         }
-      }
+      ]
     },
     "/user-profile/common/notification-products": {
       "get": {
-        "operationId": "get-user-notification-products",
-        "summary": "View products for a user profile",
-        "tags": [
-          "Products"
-        ],
         "description": "Return all products a user can subscribe to and receive notifications for on the account. The account is determined by the tokens in your API client. Users can run this operation to modify the set of products for which they receive notifications.  Administrators who modify a user's profile should run the [View products](ref:get-common-notification-products) operation.\n",
+        "operationId": "get-user-notification-products",
         "responses": {
           "200": {
-            "description": "The response lists products.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -434,33 +420,33 @@
                   "NetStorage"
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Lists available values.",
+                  "items": {
+                    "description": "Available value.\n",
+                    "type": "string"
+                  },
+                  "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/ListOfString.yaml"
-                  },
-                  "items": {
-                    "type": "string",
-                    "description": "Available value.\n"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists products.\n"
           }
-        }
+        },
+        "summary": "View products for a user profile",
+        "tags": [
+          "Products"
+        ]
       }
     },
     "/user-profile/common/password-policy": {
       "get": {
-        "operationId": "get-user-password-policy",
-        "summary": "View password policy for a user profile",
-        "tags": [
-          "Policies"
-        ],
         "description": "Return the password policy for the current account. The current account is determined by the tokens in your API client. Users can run this operation to modify their own profile's password policy.  Administrators who modify a user's profile should run the [View password policy](ref:get-common-password-policy) operation.\n",
+        "operationId": "get-user-password-policy",
         "responses": {
           "200": {
-            "description": "The response returns the password policy.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -531,22 +517,22 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns the password policy.\n"
           }
-        }
+        },
+        "summary": "View password policy for a user profile",
+        "tags": [
+          "Policies"
+        ]
       }
     },
     "/user-profile/common/supported-languages": {
       "get": {
-        "operationId": "get-user-languages",
-        "summary": "View languages for a user profile",
-        "tags": [
-          "Locale"
-        ],
         "description": "List all the possible languages Akamai supports. Use the values from this API to set the preferred `language` for a user. Users should see Control Center in the language you set for them. Users can run this operation to set their own profile's preferred language.  Administrators who modify a user's profile should run the [View languages](ref:get-common-languages) operation.\n",
+        "operationId": "get-user-languages",
         "responses": {
           "200": {
-            "description": "The response lists languages.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -563,33 +549,33 @@
                   "한국어"
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Lists available values.",
+                  "items": {
+                    "description": "Available value.\n",
+                    "type": "string"
+                  },
+                  "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/ListOfString.yaml"
-                  },
-                  "items": {
-                    "type": "string",
-                    "description": "Available value.\n"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists languages.\n"
           }
-        }
+        },
+        "summary": "View languages for a user profile",
+        "tags": [
+          "Locale"
+        ]
       }
     },
     "/user-profile/common/timeout-policies": {
       "get": {
-        "operationId": "get-user-timeout-policies",
-        "summary": "View timeout policies for a user profile",
-        "tags": [
-          "Policies"
-        ],
         "description": "Lists all the possible session timeout policies that Akamai supports. Use the values from this operation to set the `sessionTimeout` for a user. The `name` for each timeout period is in minutes, and the time `value` is in seconds. Users can run this operation to modify their own profile's timeout policy.  Administrators who modify a user's profile should run the [View timeout policies](ref:get-common-timeout-policies) operation.\n",
+        "operationId": "get-user-timeout-policies",
         "responses": {
           "200": {
-            "description": "The response returns timeout policies.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -623,51 +609,51 @@
                   }
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Specifies session timeout policy options that can be assigned to each user.",
-                  "x-akamai": {
-                    "file-path": "schemas/ListOfSessionTimeoutPolicy.yaml"
-                  },
                   "items": {
-                    "type": "object",
-                    "description": "Specifies session timeout policy options that can be assigned to each user.",
-                    "x-akamai": {
-                      "file-path": "schemas/SessionTimeoutPolicy.yaml"
-                    },
                     "additionalProperties": false,
+                    "description": "Specifies session timeout policy options that can be assigned to each user.",
+                    "properties": {
+                      "name": {
+                        "description": "The unit of time in which the timeout is measured. The timeout is measured in seconds.\n",
+                        "type": "string"
+                      },
+                      "value": {
+                        "description": "The number of seconds until the timeout.\n",
+                        "type": "integer"
+                      }
+                    },
                     "required": [
                       "name",
                       "value"
                     ],
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "The unit of time in which the timeout is measured. The timeout is measured in seconds.\n"
-                      },
-                      "value": {
-                        "type": "integer",
-                        "description": "The number of seconds until the timeout.\n"
-                      }
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/SessionTimeoutPolicy.yaml"
                     }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/ListOfSessionTimeoutPolicy.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns timeout policies.\n"
           }
-        }
+        },
+        "summary": "View timeout policies for a user profile",
+        "tags": [
+          "Policies"
+        ]
       }
     },
     "/user-profile/common/timezones": {
       "get": {
-        "operationId": "get-user-timezones",
-        "summary": "View time zones for a user profile",
-        "tags": [
-          "Locale"
-        ],
         "description": "List all time zones Akamai supports. Time zones are in ISO 8601 format. Use the values from this operation to set the `timeZone` for a user. Users can run this operation to modify their own profile's time zone.  Administrators who modify a user's profile should run the [View time zones](ref:get-common-timezones) operation.\n",
+        "operationId": "get-user-timezones",
         "responses": {
           "200": {
-            "description": "The response lists time zones.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -728,10 +714,24 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists time zones.\n"
           }
-        }
+        },
+        "summary": "View time zones for a user profile",
+        "tags": [
+          "Locale"
+        ]
       }
     }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/identity-management/v2"
+    }
+  ],
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "user-profile-common-api.yaml"
   }
 }

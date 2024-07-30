@@ -15,16 +15,16 @@
         "operationId": "get-groups",
         "parameters": [
           {
-            "name": "actions",
-            "in": "query",
             "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
+            "in": "query",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
             "x-akamai": {
               "file-path": "parameters/rolesFilterParamsActions_actions.yaml"
-            },
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
             }
           }
         ],
@@ -78,11 +78,7 @@
                   }
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Encapsulates information about a group.",
-                  "x-akamai": {
-                    "file-path": "schemas/ListOfGroupResponse.yaml"
-                  },
                   "items": {
                     "additionalProperties": false,
                     "description": "Encapsulates information about a group.",
@@ -144,6 +140,10 @@
                     "x-akamai": {
                       "file-path": "schemas/GroupResponse.yaml"
                     }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/ListOfGroupResponse.yaml"
                   }
                 }
               }
@@ -169,25 +169,25 @@
                 "destinationGroupId": 54321
               },
               "schema": {
-                "type": "object",
-                "description": "Describes the request body to move one group under another group.",
-                "x-akamai": {
-                  "file-path": "schemas/MoveGroupRequest.yaml"
-                },
                 "additionalProperties": false,
+                "description": "Describes the request body to move one group under another group.",
+                "properties": {
+                  "destinationGroupId": {
+                    "description": "Identifies the group within account hierarchy where you want to move the `sourceGroupId`. It can't be a child or descendant of the current group.\n",
+                    "type": "integer"
+                  },
+                  "sourceGroupId": {
+                    "description": "Identifies the nested group you want to move to the `destinationGroupId`.\n",
+                    "type": "integer"
+                  }
+                },
                 "required": [
                   "sourceGroupId",
                   "destinationGroupId"
                 ],
-                "properties": {
-                  "destinationGroupId": {
-                    "type": "integer",
-                    "description": "Identifies the group within account hierarchy where you want to move the `sourceGroupId`. It can't be a child or descendant of the current group.\n"
-                  },
-                  "sourceGroupId": {
-                    "type": "integer",
-                    "description": "Identifies the nested group you want to move to the `destinationGroupId`.\n"
-                  }
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/MoveGroupRequest.yaml"
                 }
               }
             }
@@ -211,19 +211,19 @@
         "operationId": "get-move-affected-users",
         "parameters": [
           {
-            "name": "userType",
-            "in": "query",
             "description": "Indicates the type of users to get, either those who have `lostAccess` or the reverse `gainAccess`.",
-            "x-akamai": {
-              "file-path": "parameters/userType-query.yaml"
-            },
+            "in": "query",
+            "name": "userType",
             "schema": {
-              "type": "string",
-              "example": "lostAccess",
               "enum": [
                 "lostAccess",
                 "gainAccess"
-              ]
+              ],
+              "example": "lostAccess",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/userType-query.yaml"
             }
           }
         ],
@@ -307,29 +307,29 @@
       },
       "parameters": [
         {
-          "name": "destinationGroupId",
-          "in": "path",
           "description": "The `groupId` for the group you're putting the other group into.",
-          "x-akamai": {
-            "file-path": "parameters/destinationGroupId-path.yaml"
-          },
+          "in": "path",
+          "name": "destinationGroupId",
           "required": true,
           "schema": {
-            "type": "integer",
-            "example": 32145
+            "example": 32145,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/destinationGroupId-path.yaml"
           }
         },
         {
-          "name": "sourceGroupId",
-          "in": "path",
           "description": "The `groupId` for the group you want to move.",
-          "x-akamai": {
-            "file-path": "parameters/sourceGroupId-path.yaml"
-          },
+          "in": "path",
+          "name": "sourceGroupId",
           "required": true,
           "schema": {
-            "type": "integer",
-            "example": 12345
+            "example": 12345,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/sourceGroupId-path.yaml"
           }
         }
       ]
@@ -353,16 +353,16 @@
         "operationId": "get-group",
         "parameters": [
           {
-            "name": "actions",
-            "in": "query",
             "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
+            "in": "query",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
             "x-akamai": {
               "file-path": "parameters/rolesFilterParamsActions_actions.yaml"
-            },
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
             }
           }
         ],
@@ -487,16 +487,16 @@
       },
       "parameters": [
         {
-          "name": "groupId",
-          "in": "path",
           "description": "A unique identifier for each group.",
-          "x-akamai": {
-            "file-path": "parameters/groupId-path.yaml"
-          },
+          "in": "path",
+          "name": "groupId",
           "required": true,
           "schema": {
-            "type": "integer",
-            "example": 54321
+            "example": 54321,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/groupId-path.yaml"
           }
         }
       ],
@@ -510,22 +510,22 @@
                 "groupName": "New Sub Group"
               },
               "schema": {
-                "type": "object",
-                "description": "Specifies the name for a group.",
-                "x-akamai": {
-                  "file-path": "schemas/GroupRequest.yaml"
-                },
                 "additionalProperties": false,
+                "description": "Specifies the name for a group.",
+                "properties": {
+                  "groupName": {
+                    "description": "A group's name.\n",
+                    "maxLength": 50,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
                 "required": [
                   "groupName"
                 ],
-                "properties": {
-                  "groupName": {
-                    "type": "string",
-                    "description": "A group's name.\n",
-                    "minLength": 1,
-                    "maxLength": 50
-                  }
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/GroupRequest.yaml"
                 }
               }
             }
@@ -627,22 +627,22 @@
                 "groupName": "Change Group Name"
               },
               "schema": {
-                "type": "object",
-                "description": "Specifies the name for a group.",
-                "x-akamai": {
-                  "file-path": "schemas/GroupRequest.yaml"
-                },
                 "additionalProperties": false,
+                "description": "Specifies the name for a group.",
+                "properties": {
+                  "groupName": {
+                    "description": "A group's name.\n",
+                    "maxLength": 50,
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
                 "required": [
                   "groupName"
                 ],
-                "properties": {
-                  "groupName": {
-                    "type": "string",
-                    "description": "A group's name.\n",
-                    "minLength": 1,
-                    "maxLength": 50
-                  }
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/GroupRequest.yaml"
                 }
               }
             }

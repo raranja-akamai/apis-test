@@ -1,48 +1,34 @@
 {
-  "openapi": "3.0.0",
   "info": {
-    "title": "Properties",
-    "version": "2",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    },
+    "title": "Properties",
+    "version": "2"
   },
-  "servers": [
-    {
-      "url": "https://{hostname}/identity-management/v2"
-    }
-  ],
-  "x-akamai": {
-    "auth-type": "EDGE_GRID",
-    "file-path": "properties-api.yaml"
-  },
+  "openapi": "3.0.0",
   "paths": {
     "/user-admin/properties": {
       "get": {
-        "operationId": "get-properties",
-        "summary": "List properties",
-        "tags": [
-          "Properties"
-        ],
         "description": "Return a list of properties for an account. Include the `groupId` parameter in your request to filter the results by group.\n",
+        "operationId": "get-properties",
         "parameters": [
           {
-            "name": "groupId",
-            "in": "query",
             "description": "A unique identifier for each group.",
+            "in": "query",
+            "name": "groupId",
+            "schema": {
+              "example": 32145,
+              "type": "integer"
+            },
             "x-akamai": {
               "file-path": "parameters/groupIdopt_groupId.yaml"
-            },
-            "schema": {
-              "type": "integer",
-              "example": 32145
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The response lists properties.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -124,52 +110,37 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists properties.\n"
           }
-        }
+        },
+        "summary": "List properties",
+        "tags": [
+          "Properties"
+        ]
       }
     },
     "/user-admin/properties/{propertyId}": {
-      "parameters": [
-        {
-          "name": "propertyId",
-          "in": "path",
-          "description": "A unique identifier for each property.",
-          "x-akamai": {
-            "file-path": "parameters/propertyId-path.yaml"
-          },
-          "required": true,
-          "schema": {
-            "type": "integer",
-            "example": 9678999
-          }
-        }
-      ],
       "get": {
-        "operationId": "get-property",
-        "summary": "Get a property",
-        "tags": [
-          "Properties"
-        ],
         "description": "Get information about a property.\n",
+        "operationId": "get-property",
         "parameters": [
           {
-            "name": "groupId",
-            "in": "query",
             "description": "A unique identifier for each group.",
-            "x-akamai": {
-              "file-path": "parameters/groupIdreqQP_groupId.yaml"
-            },
+            "in": "query",
+            "name": "groupId",
             "required": true,
             "schema": {
-              "type": "integer",
-              "example": 32145
+              "example": 32145,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/groupIdreqQP_groupId.yaml"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The response returns the property.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -184,12 +155,48 @@
                   "propertyName": "abc-dn123-abcde.akamaiorigin.net"
                 },
                 "schema": {
-                  "type": "object",
-                  "description": "Encapsulates information about a property.",
-                  "x-akamai": {
-                    "file-path": "schemas/PropertyResponse.yaml"
-                  },
                   "additionalProperties": false,
+                  "description": "Encapsulates information about a property.",
+                  "properties": {
+                    "arlConfigFile": {
+                      "description": "The configuration file. The `arlConfigFile` is the same as the `propertyName` with an xml extension.\n",
+                      "type": "string"
+                    },
+                    "createdBy": {
+                      "description": "The username of the person who created the property.\n",
+                      "type": "string"
+                    },
+                    "createdDate": {
+                      "description": "ISO 8601 timestamp indicating when the property was originally created.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "groupId": {
+                      "description": "A unique identifier for each group.\n",
+                      "type": "integer"
+                    },
+                    "groupName": {
+                      "description": "A group's name.\n",
+                      "type": "string"
+                    },
+                    "modifiedBy": {
+                      "description": "The username of the last person to edit the property.\n",
+                      "type": "string"
+                    },
+                    "modifiedDate": {
+                      "description": "ISO 8601 timestamp indicating when the property was last updated.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "propertyId": {
+                      "description": "A unique identifier for each property.\n",
+                      "type": "integer"
+                    },
+                    "propertyName": {
+                      "description": "The name for a property.\n",
+                      "type": "string"
+                    }
+                  },
                   "required": [
                     "createdDate",
                     "createdBy",
@@ -201,61 +208,40 @@
                     "propertyId",
                     "propertyName"
                   ],
-                  "properties": {
-                    "arlConfigFile": {
-                      "type": "string",
-                      "description": "The configuration file. The `arlConfigFile` is the same as the `propertyName` with an xml extension.\n"
-                    },
-                    "createdBy": {
-                      "type": "string",
-                      "description": "The username of the person who created the property.\n"
-                    },
-                    "createdDate": {
-                      "type": "string",
-                      "description": "ISO 8601 timestamp indicating when the property was originally created.\n",
-                      "format": "date-time"
-                    },
-                    "groupId": {
-                      "type": "integer",
-                      "description": "A unique identifier for each group.\n"
-                    },
-                    "groupName": {
-                      "type": "string",
-                      "description": "A group's name.\n"
-                    },
-                    "modifiedBy": {
-                      "type": "string",
-                      "description": "The username of the last person to edit the property.\n"
-                    },
-                    "modifiedDate": {
-                      "type": "string",
-                      "description": "ISO 8601 timestamp indicating when the property was last updated.\n",
-                      "format": "date-time"
-                    },
-                    "propertyId": {
-                      "type": "integer",
-                      "description": "A unique identifier for each property.\n"
-                    },
-                    "propertyName": {
-                      "type": "string",
-                      "description": "The name for a property.\n"
-                    }
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/PropertyResponse.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns the property.\n"
           }
-        }
-      },
-      "put": {
-        "operationId": "put-property",
-        "summary": "Move a property",
+        },
+        "summary": "Get a property",
         "tags": [
           "Properties"
-        ],
-        "description": "Move a property from one group to another group. You can only move a property into another group within the same group hierarchy. Depending on your role in the destination group, you may lose access to resources the property uses.\n",
-        "requestBody": {
+        ]
+      },
+      "parameters": [
+        {
+          "description": "A unique identifier for each property.",
+          "in": "path",
+          "name": "propertyId",
           "required": true,
+          "schema": {
+            "example": 9678999,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/propertyId-path.yaml"
+          }
+        }
+      ],
+      "put": {
+        "description": "Move a property from one group to another group. You can only move a property into another group within the same group hierarchy. Depending on your role in the destination group, you may lose access to resources the property uses.\n",
+        "operationId": "put-property",
+        "requestBody": {
           "content": {
             "application/json": {
               "example": {
@@ -285,56 +271,41 @@
                 }
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "204": {
             "description": "Property moved.\n"
           }
-        }
+        },
+        "summary": "Move a property",
+        "tags": [
+          "Properties"
+        ]
       }
     },
     "/user-admin/properties/{propertyId}/resources": {
-      "parameters": [
-        {
-          "name": "propertyId",
-          "in": "path",
-          "description": "A unique identifier for each property.",
-          "x-akamai": {
-            "file-path": "parameters/propertyId-path.yaml"
-          },
-          "required": true,
-          "schema": {
-            "type": "integer",
-            "example": 9678999
-          }
-        }
-      ],
       "get": {
-        "operationId": "get-property-resources",
-        "summary": "Get a property's resources",
-        "tags": [
-          "Resources"
-        ],
         "description": "List of resources the property uses.\n",
+        "operationId": "get-property-resources",
         "parameters": [
           {
-            "name": "groupId",
-            "in": "query",
             "description": "A unique identifier for each group.",
-            "x-akamai": {
-              "file-path": "parameters/groupIdreqQP_groupId.yaml"
-            },
+            "in": "query",
+            "name": "groupId",
             "required": true,
             "schema": {
-              "type": "integer",
-              "example": 32145
+              "example": 32145,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/groupIdreqQP_groupId.yaml"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The response returns resources.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -352,11 +323,7 @@
                   }
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "Encapsulates information about resources.",
-                  "x-akamai": {
-                    "file-path": "schemas/ListOfResourceItem.yaml"
-                  },
                   "items": {
                     "additionalProperties": false,
                     "description": "Encapsulates information about resources.",
@@ -391,58 +358,62 @@
                     "x-akamai": {
                       "file-path": "schemas/ResourceItem.yaml"
                     }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/ListOfResourceItem.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns resources.\n"
           }
-        }
-      }
-    },
-    "/user-admin/properties/{propertyId}/users": {
+        },
+        "summary": "Get a property's resources",
+        "tags": [
+          "Resources"
+        ]
+      },
       "parameters": [
         {
-          "name": "propertyId",
-          "in": "path",
           "description": "A unique identifier for each property.",
-          "x-akamai": {
-            "file-path": "parameters/propertyId-path.yaml"
-          },
+          "in": "path",
+          "name": "propertyId",
           "required": true,
           "schema": {
-            "type": "integer",
-            "example": 9678999
+            "example": 9678999,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/propertyId-path.yaml"
           }
         }
-      ],
+      ]
+    },
+    "/user-admin/properties/{propertyId}/users": {
       "get": {
-        "operationId": "get-property-users",
-        "summary": "List users for property",
-        "tags": [
-          "Users"
-        ],
         "description": "List users who can access this property.\n",
+        "operationId": "get-property-users",
         "parameters": [
           {
-            "name": "userType",
-            "in": "query",
             "description": "Indicates the type of users to get, either those who have `lostAccess` or the reverse `gainAccess`.",
-            "x-akamai": {
-              "file-path": "parameters/userType-query.yaml"
-            },
+            "in": "query",
+            "name": "userType",
             "schema": {
-              "type": "string",
-              "example": "lostAccess",
               "enum": [
                 "lostAccess",
                 "gainAccess"
-              ]
+              ],
+              "example": "lostAccess",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/userType-query.yaml"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The response lists users.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -462,11 +433,7 @@
                   }
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "All the users of a property, by property ID.",
-                  "x-akamai": {
-                    "file-path": "schemas/UsersOfPropertyResponse.yaml"
-                  },
                   "items": {
                     "additionalProperties": false,
                     "description": "This object encapsulates all the users of a property by property ID.",
@@ -503,39 +470,58 @@
                     "x-akamai": {
                       "file-path": "schemas/UserPropertyId.yaml"
                     }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/UsersOfPropertyResponse.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists users.\n"
+          }
+        },
+        "summary": "List users for property",
+        "tags": [
+          "Users"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "A unique identifier for each property.",
+          "in": "path",
+          "name": "propertyId",
+          "required": true,
+          "schema": {
+            "example": 9678999,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/propertyId-path.yaml"
           }
         }
-      }
+      ]
     },
     "/user-admin/properties/{propertyId}/users/block": {
       "parameters": [
         {
-          "name": "propertyId",
-          "in": "path",
           "description": "A unique identifier for each property.",
-          "x-akamai": {
-            "file-path": "parameters/propertyId-path.yaml"
-          },
+          "in": "path",
+          "name": "propertyId",
           "required": true,
           "schema": {
-            "type": "integer",
-            "example": 9678999
+            "example": 9678999,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/propertyId-path.yaml"
           }
         }
       ],
       "put": {
-        "operationId": "put-property-users-block",
-        "summary": "Block users",
-        "tags": [
-          "Users"
-        ],
         "description": "Block the list of users on a property.\n",
+        "operationId": "put-property-users-block",
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "example": [
@@ -572,11 +558,11 @@
                 }
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "The response lists block users.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -596,11 +582,7 @@
                   }
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "All the users of a property, by property ID.",
-                  "x-akamai": {
-                    "file-path": "schemas/UsersOfPropertyResponse.yaml"
-                  },
                   "items": {
                     "additionalProperties": false,
                     "description": "This object encapsulates all the users of a property by property ID.",
@@ -637,13 +619,31 @@
                     "x-akamai": {
                       "file-path": "schemas/UserPropertyId.yaml"
                     }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/UsersOfPropertyResponse.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists block users.\n"
           }
-        }
+        },
+        "summary": "Block users",
+        "tags": [
+          "Users"
+        ]
       }
     }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/identity-management/v2"
+    }
+  ],
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "properties-api.yaml"
   }
 }

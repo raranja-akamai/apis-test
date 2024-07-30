@@ -1,64 +1,35 @@
 {
-  "openapi": "3.0.0",
   "info": {
-    "title": "Credentials",
-    "version": "1",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    },
+    "title": "Credentials",
+    "version": "1"
   },
-  "servers": [
-    {
-      "url": "https://{hostname}/identity-management/v1"
-    }
-  ],
-  "x-akamai": {
-    "auth-type": "EDGE_GRID",
-    "file-path": "open-identities.yaml"
-  },
+  "openapi": "3.0.0",
   "paths": {
     "/open-identities/tokens/{accessToken}": {
-      "parameters": [
-        {
-          "name": "accessToken",
-          "in": "path",
-          "description": "An access token identifies a collection of APIs belonging to an API client.",
-          "x-akamai": {
-            "file-path": "parameters/access-token-path.yaml"
-          },
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "akaa-onah2fsgph6i7sx2-j4vrsb3rbyqxuslo"
-          }
-        }
-      ],
       "get": {
-        "operationId": "get-identity-access-token",
-        "summary": "Get a client by its access token",
-        "tags": [
-          "Tokens"
-        ],
         "description": "View an API client's details. This operation lets you get a specific API client by passing the client's token in the request.\n",
+        "operationId": "get-identity-access-token",
         "parameters": [
           {
-            "name": "actions",
-            "in": "query",
             "description": "Includes actions you can perform on the object, `false` by default.",
+            "in": "query",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
             "x-akamai": {
               "file-path": "parameters/actions-query.yaml"
-            },
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The response provides API client's details.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -364,51 +335,51 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response provides API client's details.\n"
           }
-        }
-      }
-    },
-    "/open-identities/{openIdentityId}/account-switch-keys": {
+        },
+        "summary": "Get a client by its access token",
+        "tags": [
+          "Tokens"
+        ]
+      },
       "parameters": [
         {
-          "name": "openIdentityId",
+          "description": "An access token identifies a collection of APIs belonging to an API client.",
           "in": "path",
-          "description": "A unique identifier for each API client.",
-          "x-akamai": {
-            "file-path": "parameters/open-identity-id-path.yaml"
-          },
+          "name": "accessToken",
           "required": true,
           "schema": {
-            "type": "string",
-            "example": "pa444oyidwo6j4hy"
+            "example": "akaa-onah2fsgph6i7sx2-j4vrsb3rbyqxuslo",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/access-token-path.yaml"
           }
         }
-      ],
+      ]
+    },
+    "/open-identities/{openIdentityId}/account-switch-keys": {
       "get": {
-        "operationId": "get-account-switch-keys",
-        "summary": "List account switch keys",
-        "tags": [
-          "Account switch keys"
-        ],
         "description": "The response object contains the `accountSwitchKeys` and account names you can access based on the permissions of your API client. Once you have the `accountSwitchKeys` you need, [you can make an API call to another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client).\n",
+        "operationId": "get-account-switch-keys",
         "parameters": [
           {
-            "name": "search",
-            "in": "query",
             "description": "Optionally filter results by `accountId` or `accountName`. Enter at least three characters in the string to filter the results.",
+            "in": "query",
+            "name": "search",
+            "schema": {
+              "example": "1-2ABCD",
+              "type": "string"
+            },
             "x-akamai": {
               "file-path": "parameters/search-query.yaml"
-            },
-            "schema": {
-              "type": "string",
-              "example": "1-2ABCD"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The response lists account switch keys.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -426,151 +397,72 @@
                   }
                 ],
                 "schema": {
-                  "type": "array",
                   "description": "This object encapsulates a collection of contexts the open client can manage.",
-                  "x-akamai": {
-                    "file-path": "schemas/get-open-identities-openidentityid-account-switch-keys-response.yaml"
-                  },
                   "items": {
-                    "type": "object",
                     "properties": {
                       "accountName": {
-                        "type": "string",
-                        "description": "The name you supply for an account.\n"
+                        "description": "The name you supply for an account.\n",
+                        "type": "string"
                       },
                       "accountSwitchKey": {
-                        "type": "string",
-                        "description": "The identifier for an account other than your API client's default.\n"
+                        "description": "The identifier for an account other than your API client's default.\n",
+                        "type": "string"
                       }
-                    }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/get-open-identities-openidentityid-account-switch-keys-response.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists account switch keys.\n"
           }
-        }
-      }
-    },
-    "/open-identities/{openIdentityId}/credentials": {
+        },
+        "summary": "List account switch keys",
+        "tags": [
+          "Account switch keys"
+        ]
+      },
       "parameters": [
         {
-          "name": "openIdentityId",
-          "in": "path",
           "description": "A unique identifier for each API client.",
-          "x-akamai": {
-            "file-path": "parameters/open-identity-id-path.yaml"
-          },
+          "in": "path",
+          "name": "openIdentityId",
           "required": true,
           "schema": {
-            "type": "string",
-            "example": "pa444oyidwo6j4hy"
+            "example": "pa444oyidwo6j4hy",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/open-identity-id-path.yaml"
           }
         }
-      ],
-      "post": {
-        "operationId": "post-identity-credential",
-        "summary": "Create a credential",
-        "tags": [
-          "Credentials"
-        ],
-        "description": "Create a new credential for an API client. Only the owner of an identity can create credentials for it.  Credentials are in `active` status at creation, and by  default expire two years from their creation date.  However, credentials expire differently when the API client is based on Control Center user permissions, and follow the same rotation schedule  listed for user passwords on those accounts. Run the [Update a credential](ref:put-identity-credential) operation to change the expiration date, description or status.  Save information from the response information like the `credentialID` for future use.  This is the only time you see the client secret. If you don't save it at this time, you'll need to create a new credential.\n",
-        "responses": {
-          "200": {
-            "description": "The response provides created credentials.\n",
-            "content": {
-              "application/json": {
-                "example": {
-                  "credentialId": 14111,
-                  "clientToken": "akaa-abcdakjsdkfnanva-abcdakjsdkfnanv",
-                  "clientSecret": "aasd3adHRjBfroGqYC/rc/jDaZTZxssdaa/YjD6uA=",
-                  "createdOn": "2016-11-01T23:06:59.000Z",
-                  "expiresOn": "2018-11-01T23:06:59.000Z",
-                  "status": "ACTIVE",
-                  "description": "New credential for John."
-                },
-                "schema": {
-                  "additionalProperties": false,
-                  "description": "This object encapsulates all members for the credential data structure.",
-                  "properties": {
-                    "clientSecret": {
-                      "description": "The client secret.\n",
-                      "type": "string"
-                    },
-                    "clientToken": {
-                      "description": "Identifies the API client.\n",
-                      "type": "string"
-                    },
-                    "createdOn": {
-                      "description": "ISO 8601 timestamp indicating when credentials were created.\n",
-                      "format": "date-time",
-                      "type": "string"
-                    },
-                    "credentialId": {
-                      "description": "A unique identifier for each credential.\n",
-                      "type": "integer"
-                    },
-                    "description": {
-                      "description": "Lets you add your own notes or description for your credential.\n",
-                      "type": "string"
-                    },
-                    "expiresOn": {
-                      "description": "ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.\n",
-                      "format": "date-time",
-                      "type": "string"
-                    },
-                    "status": {
-                      "description": "Shows whether a credential is `ACTIVE`, `INACTIVE`, or `DELETED`. You can switch a credential's `status` between `ACTIVE` and `INACTIVE`. Note that once you change the status to `DELETED`, you've actually deleted it and it can't be reactivated.\n",
-                      "enum": [
-                        "ACTIVE",
-                        "INACTIVE",
-                        "DELETED"
-                      ],
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "credentialId",
-                    "clientToken",
-                    "createdOn",
-                    "expiresOn",
-                    "status",
-                    "description"
-                  ],
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/credential.yaml"
-                  }
-                }
-              }
-            }
-          }
-        }
-      },
+      ]
+    },
+    "/open-identities/{openIdentityId}/credentials": {
       "get": {
-        "operationId": "get-identity-credentials",
-        "summary": "List credentials",
-        "tags": [
-          "Credentials"
-        ],
         "description": "Get an API client's credentials.\n",
+        "operationId": "get-identity-credentials",
         "parameters": [
           {
-            "name": "actions",
-            "in": "query",
             "description": "Includes actions you can perform on the object, `false` by default.",
+            "in": "query",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
             "x-akamai": {
               "file-path": "parameters/actions-query.yaml"
-            },
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The response returns credentials.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -643,95 +535,174 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns credentials.\n"
+          }
+        },
+        "summary": "List credentials",
+        "tags": [
+          "Credentials"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "A unique identifier for each API client.",
+          "in": "path",
+          "name": "openIdentityId",
+          "required": true,
+          "schema": {
+            "example": "pa444oyidwo6j4hy",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/open-identity-id-path.yaml"
           }
         }
+      ],
+      "post": {
+        "description": "Create a new credential for an API client. Only the owner of an identity can create credentials for it.  Credentials are in `active` status at creation, and by  default expire two years from their creation date.  However, credentials expire differently when the API client is based on Control Center user permissions, and follow the same rotation schedule  listed for user passwords on those accounts. Run the [Update a credential](ref:put-identity-credential) operation to change the expiration date, description or status.  Save information from the response information like the `credentialID` for future use.  This is the only time you see the client secret. If you don't save it at this time, you'll need to create a new credential.\n",
+        "operationId": "post-identity-credential",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "credentialId": 14111,
+                  "clientToken": "akaa-abcdakjsdkfnanva-abcdakjsdkfnanv",
+                  "clientSecret": "aasd3adHRjBfroGqYC/rc/jDaZTZxssdaa/YjD6uA=",
+                  "createdOn": "2016-11-01T23:06:59.000Z",
+                  "expiresOn": "2018-11-01T23:06:59.000Z",
+                  "status": "ACTIVE",
+                  "description": "New credential for John."
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "This object encapsulates all members for the credential data structure.",
+                  "properties": {
+                    "clientSecret": {
+                      "description": "The client secret.\n",
+                      "type": "string"
+                    },
+                    "clientToken": {
+                      "description": "Identifies the API client.\n",
+                      "type": "string"
+                    },
+                    "createdOn": {
+                      "description": "ISO 8601 timestamp indicating when credentials were created.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "credentialId": {
+                      "description": "A unique identifier for each credential.\n",
+                      "type": "integer"
+                    },
+                    "description": {
+                      "description": "Lets you add your own notes or description for your credential.\n",
+                      "type": "string"
+                    },
+                    "expiresOn": {
+                      "description": "ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "Shows whether a credential is `ACTIVE`, `INACTIVE`, or `DELETED`. You can switch a credential's `status` between `ACTIVE` and `INACTIVE`. Note that once you change the status to `DELETED`, you've actually deleted it and it can't be reactivated.\n",
+                      "enum": [
+                        "ACTIVE",
+                        "INACTIVE",
+                        "DELETED"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "credentialId",
+                    "clientToken",
+                    "createdOn",
+                    "expiresOn",
+                    "status",
+                    "description"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/credential.yaml"
+                  }
+                }
+              }
+            },
+            "description": "The response provides created credentials.\n"
+          }
+        },
+        "summary": "Create a credential",
+        "tags": [
+          "Credentials"
+        ]
       }
     },
     "/open-identities/{openIdentityId}/credentials/deactivate": {
       "parameters": [
         {
-          "name": "openIdentityId",
-          "in": "path",
           "description": "A unique identifier for each API client.",
-          "x-akamai": {
-            "file-path": "parameters/open-identity-id-path.yaml"
-          },
+          "in": "path",
+          "name": "openIdentityId",
           "required": true,
           "schema": {
-            "type": "string",
-            "example": "pa444oyidwo6j4hy"
+            "example": "pa444oyidwo6j4hy",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/open-identity-id-path.yaml"
           }
         }
       ],
       "post": {
-        "operationId": "post-identity-credential-deactivate",
-        "summary": "Deactivate all credentials",
-        "tags": [
-          "Credentials"
-        ],
         "description": "Deactivate all credentials for an API client. This doesn't delete the API identity or the credentials. To deactivate a single credential, run the [Update a credential](ref:put-identity-credential) operation and set the status to `INACTIVE`.\n",
+        "operationId": "post-identity-credential-deactivate",
         "responses": {
           "200": {
             "description": "Credentials deactivated.\n"
           }
-        }
+        },
+        "summary": "Deactivate all credentials",
+        "tags": [
+          "Credentials"
+        ]
       }
     },
     "/open-identities/{openIdentityId}/credentials/{credentialId}": {
-      "parameters": [
-        {
-          "name": "credentialId",
-          "in": "path",
-          "description": "A credential's unique identifier.",
-          "x-akamai": {
-            "file-path": "parameters/credential-id-path.yaml"
-          },
-          "required": true,
-          "schema": {
-            "type": "integer",
-            "example": 345678
+      "delete": {
+        "description": "Delete a credential. You can only delete inactive credentials.\n",
+        "operationId": "delete-identity-credential",
+        "responses": {
+          "200": {
+            "description": "Credential removed.\n"
           }
         },
-        {
-          "name": "openIdentityId",
-          "in": "path",
-          "description": "A unique identifier for each API client.",
-          "x-akamai": {
-            "file-path": "parameters/open-identity-id-path.yaml"
-          },
-          "required": true,
-          "schema": {
-            "type": "string",
-            "example": "pa444oyidwo6j4hy"
-          }
-        }
-      ],
-      "get": {
-        "operationId": "get-identity-credential",
-        "summary": "Get a credential",
+        "summary": "Remove a credential",
         "tags": [
           "Credentials"
-        ],
+        ]
+      },
+      "get": {
         "description": "Get details for a single credential. Use [Update a credential](ref:put-identity-credential) to change the credential's expiration date, or toggle the credential's activation status.\n",
+        "operationId": "get-identity-credential",
         "parameters": [
           {
-            "name": "actions",
-            "in": "query",
             "description": "Includes actions you can perform on the object, `false` by default.",
+            "in": "query",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
             "x-akamai": {
               "file-path": "parameters/actions-query.yaml"
-            },
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The response returns credentials.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -787,19 +758,47 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns credentials.\n"
           }
-        }
-      },
-      "put": {
-        "operationId": "put-identity-credential",
-        "summary": "Update a credential",
+        },
+        "summary": "Get a credential",
         "tags": [
           "Credentials"
-        ],
-        "description": "Edit credential details. You can change the expiration date, description, or toggle the activation status. This isn't the same as rotating a credential. For credential rotation, see [Rotate credentials](ref:rotate-credentials).\n",
-        "requestBody": {
+        ]
+      },
+      "parameters": [
+        {
+          "description": "A credential's unique identifier.",
+          "in": "path",
+          "name": "credentialId",
           "required": true,
+          "schema": {
+            "example": 345678,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/credential-id-path.yaml"
+          }
+        },
+        {
+          "description": "A unique identifier for each API client.",
+          "in": "path",
+          "name": "openIdentityId",
+          "required": true,
+          "schema": {
+            "example": "pa444oyidwo6j4hy",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/open-identity-id-path.yaml"
+          }
+        }
+      ],
+      "put": {
+        "description": "Edit credential details. You can change the expiration date, description, or toggle the activation status. This isn't the same as rotating a credential. For credential rotation, see [Rotate credentials](ref:rotate-credentials).\n",
+        "operationId": "put-identity-credential",
+        "requestBody": {
           "content": {
             "application/json": {
               "example": {
@@ -857,11 +856,11 @@
                 }
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "The response provides updated credentials.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -917,23 +916,24 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response provides updated credentials.\n"
           }
-        }
-      },
-      "delete": {
-        "operationId": "delete-identity-credential",
-        "summary": "Remove a credential",
+        },
+        "summary": "Update a credential",
         "tags": [
           "Credentials"
-        ],
-        "description": "Delete a credential. You can only delete inactive credentials.\n",
-        "responses": {
-          "200": {
-            "description": "Credential removed.\n"
-          }
-        }
+        ]
       }
     }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/identity-management/v1"
+    }
+  ],
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "open-identities.yaml"
   }
 }
