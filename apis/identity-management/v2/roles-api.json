@@ -1,33 +1,242 @@
 {
-  "openapi": "3.0.0",
   "info": {
-    "title": "Roles",
-    "version": "2",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    },
+    "title": "Roles",
+    "version": "2"
   },
-  "servers": [
-    {
-      "url": "https://{hostname}/identity-management/v2"
-    }
-  ],
-  "x-akamai": {
-    "auth-type": "EDGE_GRID",
-    "file-path": "roles-api.yaml"
-  },
+  "openapi": "3.0.0",
   "paths": {
     "/user-admin/roles": {
-      "post": {
-        "operationId": "post-role",
-        "summary": "Create a role",
+      "get": {
+        "description": "List roles for the current account and contract type. The account and contract type are determined by the access tokens in your API client.\n",
+        "operationId": "get-roles",
+        "parameters": [
+          {
+            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
+            "in": "query",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/rolesFilterParamsActions_actions.yaml"
+            }
+          },
+          {
+            "description": "A unique identifier for each group.",
+            "in": "query",
+            "name": "groupId",
+            "required": false,
+            "schema": {
+              "example": 54321,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/rolesFilterParamsGroup_groupId.yaml"
+            }
+          },
+          {
+            "description": "Returns users assigned to the roles, `false` by default.",
+            "in": "query",
+            "name": "users",
+            "required": false,
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/rolesFilterParamsUsers_users.yaml"
+            }
+          },
+          {
+            "description": "Returns all the roles for the current account, ignoring your API client's contract type. By default, this is `false`.",
+            "in": "query",
+            "name": "ignoreContext",
+            "required": false,
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/rolesFilterParamsContext_ignoreContext.yaml"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "roleId": 123456,
+                    "roleName": "View Only",
+                    "roleDescription": "This role will allow you to view",
+                    "type": "custom",
+                    "createdDate": "2017-07-27T18:11:25.000Z",
+                    "createdBy": "asingh@mycompany.com",
+                    "modifiedDate": "2017-07-27T18:11:25.000Z",
+                    "modifiedBy": "jsmith@mycompany.com",
+                    "actions": {
+                      "edit": true,
+                      "delete": true
+                    }
+                  },
+                  {
+                    "roleId": 13,
+                    "roleName": "Accounting",
+                    "roleDescription": "This role allows for 'read only'",
+                    "type": "standard",
+                    "createdBy": "jdupont",
+                    "modifiedBy": "szhang",
+                    "numUsers": 2,
+                    "actions": {
+                      "edit": false,
+                      "delete": false
+                    },
+                    "users": [
+                      {
+                        "uiIdentityId": "A-B-1BCDEF",
+                        "firstName": "John",
+                        "lastName": "Smith",
+                        "accountId": "A-CCT3456",
+                        "email": "jsmith@mycompany.com",
+                        "lastLoginDate": "2017-08-03T21:15:27.000Z"
+                      },
+                      {
+                        "uiIdentityId": "1-ABCDE",
+                        "firstName": "Jan",
+                        "lastName": "Kowalski",
+                        "accountId": "A-CCT1234",
+                        "email": "jkowalski@mycompany.com",
+                        "lastLoginDate": "2016-09-07T00:00:00.000Z"
+                      }
+                    ]
+                  }
+                ],
+                "schema": {
+                  "description": "Lists available roles.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Specifies an available role.",
+                    "properties": {
+                      "actions": {
+                        "additionalProperties": {
+                          "description": "The actions you can take on this role. A value of `true`  for `edit` means the role can be edited. You can edit a role even if it's already assigned to users. Enabling `delete` means the role can be deleted. You can only delete a role that's not assigned to any users. Disabling `delete` indicates the role can't be deleted because it's assigned to at least one user.\n",
+                          "type": "boolean"
+                        },
+                        "description": "Encapsulates permissions available to the user for this group.\n",
+                        "type": "object"
+                      },
+                      "createdBy": {
+                        "description": "The username or email of the person who created the role.\n",
+                        "type": "string"
+                      },
+                      "createdDate": {
+                        "description": "ISO 8601 timestamp indicating when the role was originally created.\n",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "modifiedBy": {
+                        "description": "The username or email of the last person to edit the role.\n",
+                        "type": "string"
+                      },
+                      "modifiedDate": {
+                        "description": "ISO 8601 timestamp indicating when the role was last updated.\n",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "numUsers": {
+                        "description": "The number of users who use the role.\n",
+                        "type": "integer"
+                      },
+                      "roleDescription": {
+                        "description": "The description for a role. The description should be meaningful and convey what you use the role for.\n",
+                        "type": "string"
+                      },
+                      "roleId": {
+                        "description": "A unique identifier for each role.\n",
+                        "type": "integer"
+                      },
+                      "roleName": {
+                        "description": "The role's name.\n",
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Indicates whether it's a `standard` role provided by Akamai or a `custom` role for you to manage.\n",
+                        "enum": [
+                          "standard",
+                          "custom"
+                        ],
+                        "type": "string"
+                      },
+                      "users": {
+                        "description": "User details.\n",
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "accountId": {
+                              "description": "A unique identifier for each account.\n",
+                              "type": "string"
+                            },
+                            "email": {
+                              "description": "The user's email address.\n",
+                              "format": "email",
+                              "type": "string"
+                            },
+                            "firstName": {
+                              "description": "The user's first name.\n",
+                              "type": "string"
+                            },
+                            "lastLoginDate": {
+                              "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
+                              "format": "date-time",
+                              "type": "string"
+                            },
+                            "lastName": {
+                              "description": "The user's last name.\n",
+                              "type": "string"
+                            },
+                            "uiIdentityId": {
+                              "description": "A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.\n",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/RoleListItem.yaml"
+                    }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/ListOfRoleListItem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "The response list roles.\n"
+          }
+        },
+        "summary": "List roles",
         "tags": [
           "Roles"
-        ],
+        ]
+      },
+      "post": {
         "description": "Create a custom role. Roles exist at the account level regardless of group, but are constrained by contract type. If you create a role under one contract type, you can't apply that role to groups belonging to a different contract type, even if they're in the same account.\n",
+        "operationId": "post-role",
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -80,11 +289,11 @@
                 }
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "The response returns the created role.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -261,245 +470,22 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns the created role.\n"
           }
-        }
-      },
-      "get": {
-        "operationId": "get-roles",
-        "summary": "List roles",
+        },
+        "summary": "Create a role",
         "tags": [
           "Roles"
-        ],
-        "description": "List roles for the current account and contract type. The account and contract type are determined by the access tokens in your API client.\n",
-        "parameters": [
-          {
-            "name": "actions",
-            "in": "query",
-            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
-            "x-akamai": {
-              "file-path": "parameters/rolesFilterParamsActions_actions.yaml"
-            },
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
-            }
-          },
-          {
-            "name": "groupId",
-            "in": "query",
-            "description": "A unique identifier for each group.",
-            "x-akamai": {
-              "file-path": "parameters/rolesFilterParamsGroup_groupId.yaml"
-            },
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "example": 54321
-            }
-          },
-          {
-            "name": "users",
-            "in": "query",
-            "description": "Returns users assigned to the roles, `false` by default.",
-            "x-akamai": {
-              "file-path": "parameters/rolesFilterParamsUsers_users.yaml"
-            },
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
-            }
-          },
-          {
-            "name": "ignoreContext",
-            "in": "query",
-            "description": "Returns all the roles for the current account, ignoring your API client's contract type. By default, this is `false`.",
-            "x-akamai": {
-              "file-path": "parameters/rolesFilterParamsContext_ignoreContext.yaml"
-            },
-            "required": false,
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The response list roles.\n",
-            "content": {
-              "application/json": {
-                "example": [
-                  {
-                    "roleId": 123456,
-                    "roleName": "View Only",
-                    "roleDescription": "This role will allow you to view",
-                    "type": "custom",
-                    "createdDate": "2017-07-27T18:11:25.000Z",
-                    "createdBy": "asingh@mycompany.com",
-                    "modifiedDate": "2017-07-27T18:11:25.000Z",
-                    "modifiedBy": "jsmith@mycompany.com",
-                    "actions": {
-                      "edit": true,
-                      "delete": true
-                    }
-                  },
-                  {
-                    "roleId": 13,
-                    "roleName": "Accounting",
-                    "roleDescription": "This role allows for 'read only'",
-                    "type": "standard",
-                    "createdBy": "jdupont",
-                    "modifiedBy": "szhang",
-                    "numUsers": 2,
-                    "actions": {
-                      "edit": false,
-                      "delete": false
-                    },
-                    "users": [
-                      {
-                        "uiIdentityId": "A-B-1BCDEF",
-                        "firstName": "John",
-                        "lastName": "Smith",
-                        "accountId": "A-CCT3456",
-                        "email": "jsmith@mycompany.com",
-                        "lastLoginDate": "2017-08-03T21:15:27.000Z"
-                      },
-                      {
-                        "uiIdentityId": "1-ABCDE",
-                        "firstName": "Jan",
-                        "lastName": "Kowalski",
-                        "accountId": "A-CCT1234",
-                        "email": "jkowalski@mycompany.com",
-                        "lastLoginDate": "2016-09-07T00:00:00.000Z"
-                      }
-                    ]
-                  }
-                ],
-                "schema": {
-                  "description": "Lists available roles.",
-                  "items": {
-                    "type": "object",
-                    "description": "Specifies an available role.",
-                    "x-akamai": {
-                      "file-path": "schemas/RoleListItem.yaml"
-                    },
-                    "additionalProperties": false,
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "description": "Indicates whether it's a `standard` role provided by Akamai or a `custom` role for you to manage.\n",
-                        "enum": [
-                          "standard",
-                          "custom"
-                        ]
-                      },
-                      "actions": {
-                        "type": "object",
-                        "description": "Encapsulates permissions available to the user for this group.\n",
-                        "additionalProperties": {
-                          "type": "boolean",
-                          "description": "The actions you can take on this role. A value of `true`  for `edit` means the role can be edited. You can edit a role even if it's already assigned to users. Enabling `delete` means the role can be deleted. You can only delete a role that's not assigned to any users. Disabling `delete` indicates the role can't be deleted because it's assigned to at least one user.\n"
-                        }
-                      },
-                      "createdBy": {
-                        "type": "string",
-                        "description": "The username or email of the person who created the role.\n"
-                      },
-                      "createdDate": {
-                        "type": "string",
-                        "description": "ISO 8601 timestamp indicating when the role was originally created.\n",
-                        "format": "date-time"
-                      },
-                      "modifiedBy": {
-                        "type": "string",
-                        "description": "The username or email of the last person to edit the role.\n"
-                      },
-                      "modifiedDate": {
-                        "type": "string",
-                        "description": "ISO 8601 timestamp indicating when the role was last updated.\n",
-                        "format": "date-time"
-                      },
-                      "numUsers": {
-                        "type": "integer",
-                        "description": "The number of users who use the role.\n"
-                      },
-                      "roleDescription": {
-                        "type": "string",
-                        "description": "The description for a role. The description should be meaningful and convey what you use the role for.\n"
-                      },
-                      "roleId": {
-                        "type": "integer",
-                        "description": "A unique identifier for each role.\n"
-                      },
-                      "roleName": {
-                        "type": "string",
-                        "description": "The role's name.\n"
-                      },
-                      "users": {
-                        "type": "array",
-                        "description": "User details.\n",
-                        "items": {
-                          "type": "object",
-                          "additionalProperties": false,
-                          "properties": {
-                            "accountId": {
-                              "type": "string",
-                              "description": "A unique identifier for each account.\n"
-                            },
-                            "email": {
-                              "type": "string",
-                              "description": "The user's email address.\n",
-                              "format": "email"
-                            },
-                            "firstName": {
-                              "type": "string",
-                              "description": "The user's first name.\n"
-                            },
-                            "lastLoginDate": {
-                              "type": "string",
-                              "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
-                              "format": "date-time"
-                            },
-                            "lastName": {
-                              "type": "string",
-                              "description": "The user's last name.\n"
-                            },
-                            "uiIdentityId": {
-                              "type": "string",
-                              "description": "A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.\n"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  },
-                  "type": "array",
-                  "x-akamai": {
-                    "file-path": "schemas/ListOfRoleListItem.yaml"
-                  }
-                }
-              }
-            }
-          }
-        }
+        ]
       }
     },
     "/user-admin/roles/grantable-roles": {
       "get": {
-        "operationId": "get-grantable-roles",
-        "summary": "List grantable roles",
-        "tags": [
-          "Grantable roles"
-        ],
         "description": "List which grantable roles you can include in a new custom role or add to an existing custom role.\n",
+        "operationId": "get-grantable-roles",
         "responses": {
           "200": {
-            "description": "The response lists grantable roles.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -558,79 +544,77 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response lists grantable roles.\n"
           }
-        }
+        },
+        "summary": "List grantable roles",
+        "tags": [
+          "Grantable roles"
+        ]
       }
     },
     "/user-admin/roles/{roleId}": {
-      "parameters": [
-        {
-          "name": "roleId",
-          "in": "path",
-          "description": "A unique identifier for a role.",
-          "x-akamai": {
-            "file-path": "parameters/roleId-path.yaml"
-          },
-          "required": true,
-          "schema": {
-            "type": "integer",
-            "example": 45678
+      "delete": {
+        "description": "This operation is only allowed if the role isn't assigned to any users.\n",
+        "operationId": "delete-role",
+        "responses": {
+          "204": {
+            "description": "Role deleted.\n"
           }
-        }
-      ],
-      "get": {
-        "operationId": "get-role",
-        "summary": "Get a role",
+        },
+        "summary": "Delete a role",
         "tags": [
           "Roles"
-        ],
+        ]
+      },
+      "get": {
         "description": "Get details for a specific role.\n",
+        "operationId": "get-role",
         "parameters": [
           {
-            "name": "actions",
-            "in": "query",
             "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
+            "in": "query",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
             "x-akamai": {
               "file-path": "parameters/rolesFilterParamsActions_actions.yaml"
-            },
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
             }
           },
           {
-            "name": "grantedRoles",
-            "in": "query",
             "description": "Lists granted roles assigned for a role, `false` by default.",
+            "in": "query",
+            "name": "grantedRoles",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
             "x-akamai": {
               "file-path": "parameters/grantedRoles_grantedRoles.yaml"
-            },
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
             }
           },
           {
-            "name": "users",
-            "in": "query",
             "description": "Returns users assigned to the roles, `false` by default.",
-            "x-akamai": {
-              "file-path": "parameters/rolesFilterParamsUsers_users.yaml"
-            },
+            "in": "query",
+            "name": "users",
             "required": false,
             "schema": {
-              "type": "boolean",
+              "default": false,
               "example": true,
-              "default": false
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/rolesFilterParamsUsers_users.yaml"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The response returns the role.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -815,19 +799,34 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns the role.\n"
           }
-        }
-      },
-      "put": {
-        "operationId": "put-role",
-        "summary": "Edit a role",
+        },
+        "summary": "Get a role",
         "tags": [
           "Roles"
-        ],
-        "description": "Add or remove permissions from a role. Additionally, edit the name, description, and so on.\n",
-        "requestBody": {
+        ]
+      },
+      "parameters": [
+        {
+          "description": "A unique identifier for a role.",
+          "in": "path",
+          "name": "roleId",
           "required": true,
+          "schema": {
+            "example": 45678,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/roleId-path.yaml"
+          }
+        }
+      ],
+      "put": {
+        "description": "Add or remove permissions from a role. Additionally, edit the name, description, and so on.\n",
+        "operationId": "put-role",
+        "requestBody": {
           "content": {
             "application/json": {
               "example": {
@@ -840,50 +839,50 @@
                 ]
               },
               "schema": {
-                "type": "object",
-                "description": "Add or remove permissions from a role.",
-                "x-akamai": {
-                  "file-path": "schemas/RoleRequestPut.yaml"
-                },
                 "additionalProperties": false,
+                "description": "Add or remove permissions from a role.",
                 "properties": {
                   "grantedRoles": {
-                    "type": "array",
                     "description": "A list of grantable role IDs.\n",
                     "items": {
-                      "type": "object",
                       "additionalProperties": false,
+                      "properties": {
+                        "grantedRoleId": {
+                          "description": "A unique identifier for each granted role.\n",
+                          "type": "integer"
+                        }
+                      },
                       "required": [
                         "grantedRoleId"
                       ],
-                      "properties": {
-                        "grantedRoleId": {
-                          "type": "integer",
-                          "description": "A unique identifier for each granted role.\n"
-                        }
-                      }
-                    }
+                      "type": "object"
+                    },
+                    "type": "array"
                   },
                   "roleDescription": {
-                    "type": "string",
                     "description": "A meaningful description for the role.\n",
+                    "maxLength": 250,
                     "minLength": 1,
-                    "maxLength": 250
+                    "type": "string"
                   },
                   "roleName": {
-                    "type": "string",
                     "description": "The role's name.\n",
+                    "maxLength": 70,
                     "minLength": 1,
-                    "maxLength": 70
+                    "type": "string"
                   }
+                },
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/RoleRequestPut.yaml"
                 }
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "The response returns the updated role.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -909,7 +908,7 @@
                 },
                 "schema": {
                   "additionalProperties": false,
-                  "description": "A role that includes granted roles.\n",
+                  "description": "A role that includes granted roles.",
                   "properties": {
                     "actions": {
                       "additionalProperties": false,
@@ -1050,23 +1049,24 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns the updated role.\n"
           }
-        }
-      },
-      "delete": {
-        "operationId": "delete-role",
-        "summary": "Delete a role",
+        },
+        "summary": "Edit a role",
         "tags": [
           "Roles"
-        ],
-        "description": "This operation is only allowed if the role isn't assigned to any users.\n",
-        "responses": {
-          "204": {
-            "description": "Role deleted.\n"
-          }
-        }
+        ]
       }
     }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/identity-management/v2"
+    }
+  ],
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "roles-api.yaml"
   }
 }

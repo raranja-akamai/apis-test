@@ -15,10 +15,11 @@
         "operationId": "get-identity-access-token",
         "parameters": [
           {
-            "description": "Includes information about actions you can take for the object.\n",
+            "description": "Includes actions you can perform on the object, `false` by default.",
             "in": "query",
             "name": "actions",
             "schema": {
+              "default": false,
               "example": true,
               "type": "boolean"
             },
@@ -105,7 +106,7 @@
                 },
                 "schema": {
                   "additionalProperties": false,
-                  "description": "This object encapsulates the response schema for creating API client.\n",
+                  "description": "This object encapsulates the response schema for creating API client.",
                   "properties": {
                     "authorization": {
                       "description": "An API client's combination of services and grant scopes that allow you to make calls with that client.\n",
@@ -345,7 +346,7 @@
       },
       "parameters": [
         {
-          "description": "An access token identifies a collection of APIs belonging to an API client.\n",
+          "description": "An access token identifies a collection of APIs belonging to an API client.",
           "in": "path",
           "name": "accessToken",
           "required": true,
@@ -365,7 +366,7 @@
         "operationId": "get-account-switch-keys",
         "parameters": [
           {
-            "description": "Optionally filter results by `accountId` or `accountName`. Enter at least three characters in the string to filter the results.\n",
+            "description": "Optionally filter results by `accountId` or `accountName`. Enter at least three characters in the string to filter the results.",
             "in": "query",
             "name": "search",
             "schema": {
@@ -391,12 +392,12 @@
                     "accountSwitchKey": "1-ABCD:Z-XYZ"
                   },
                   {
-                    "accountName": "High Street Company",
+                    "accountName": "Main Street Corporation",
                     "accountSwitchKey": "1-ABCD:Z-PQR"
                   }
                 ],
                 "schema": {
-                  "description": "This object encapsulates a collection of contexts the open client can manage.\n",
+                  "description": "This object encapsulates a collection of contexts the open client can manage.",
                   "items": {
                     "properties": {
                       "accountName": {
@@ -427,7 +428,7 @@
       },
       "parameters": [
         {
-          "description": "A unique identifier for each API client.\n",
+          "description": "A unique identifier for each API client.",
           "in": "path",
           "name": "openIdentityId",
           "required": true,
@@ -447,10 +448,11 @@
         "operationId": "get-identity-credentials",
         "parameters": [
           {
-            "description": "Includes information about actions you can take for the object.\n",
+            "description": "Includes actions you can perform on the object, `false` by default.",
             "in": "query",
             "name": "actions",
             "schema": {
+              "default": false,
               "example": true,
               "type": "boolean"
             },
@@ -482,35 +484,35 @@
                   }
                 ],
                 "schema": {
-                  "description": "A collection of credentials.\n",
+                  "description": "A collection of credentials.",
                   "items": {
                     "additionalProperties": false,
-                    "description": "Specifies credentials.\n",
+                    "description": "Specifies credentials.",
                     "properties": {
                       "clientToken": {
-                        "description": "Part of the credential that identifies the API client.\n",
+                        "description": "Identifies the API client.\n",
                         "type": "string"
                       },
                       "createdOn": {
-                        "description": "ISO 8601 timestamp indicating when the credential was created.\n",
+                        "description": "ISO 8601 timestamp indicating when credentials were created.\n",
                         "format": "date-time",
                         "type": "string"
                       },
                       "credentialId": {
-                        "description": "Uniquely identifies each credential.\n",
+                        "description": "A unique identifier for each credential.\n",
                         "type": "integer"
                       },
                       "description": {
-                        "description": "A descriptive label for the API client.\n",
+                        "description": "Notes or description for credentials.\n",
                         "type": "string"
                       },
                       "expiresOn": {
-                        "description": "ISO 8601 timestamp indicating when the credential expires.\n",
+                        "description": "ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.\n",
                         "format": "date-time",
                         "type": "string"
                       },
                       "status": {
-                        "description": "The credential's status.\n",
+                        "description": "Indicates credentials' status.\n",
                         "type": "string"
                       }
                     },
@@ -544,7 +546,7 @@
       },
       "parameters": [
         {
-          "description": "A unique identifier for each API client.\n",
+          "description": "A unique identifier for each API client.",
           "in": "path",
           "name": "openIdentityId",
           "required": true,
@@ -575,23 +577,23 @@
                 },
                 "schema": {
                   "additionalProperties": false,
-                  "description": "This object encapsulates all members for the credential data structure.\n",
+                  "description": "This object encapsulates all members for the credential data structure.",
                   "properties": {
                     "clientSecret": {
                       "description": "The client secret.\n",
                       "type": "string"
                     },
                     "clientToken": {
-                      "description": "Part of the credential that identifies the API client.\n",
+                      "description": "Identifies the API client.\n",
                       "type": "string"
                     },
                     "createdOn": {
-                      "description": "ISO 8601 timestamp indicating when the credential was created.\n",
+                      "description": "ISO 8601 timestamp indicating when credentials were created.\n",
                       "format": "date-time",
                       "type": "string"
                     },
                     "credentialId": {
-                      "description": "Uniquely identifies each credential.\n",
+                      "description": "A unique identifier for each credential.\n",
                       "type": "integer"
                     },
                     "description": {
@@ -599,12 +601,12 @@
                       "type": "string"
                     },
                     "expiresOn": {
-                      "description": "The date the credential no longer provides access. The default expiration date is 2 years from the creation date.\n",
+                      "description": "ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.\n",
                       "format": "date-time",
                       "type": "string"
                     },
                     "status": {
-                      "description": "Shows whether a credential is `ACTIVE`, `INACTIVE`, or `DELETED`. You can switch a credential's `status` between `ACTIVE` and `INACTIVE`, but once you change the status to `DELETED`, you've actually deleted it and it cannot be reactivated.\n",
+                      "description": "Shows whether a credential is `ACTIVE`, `INACTIVE`, or `DELETED`. You can switch a credential's `status` between `ACTIVE` and `INACTIVE`. Note that once you change the status to `DELETED`, you've actually deleted it and it can't be reactivated.\n",
                       "enum": [
                         "ACTIVE",
                         "INACTIVE",
@@ -640,7 +642,7 @@
     "/open-identities/{openIdentityId}/credentials/deactivate": {
       "parameters": [
         {
-          "description": "A unique identifier for each API client.\n",
+          "description": "A unique identifier for each API client.",
           "in": "path",
           "name": "openIdentityId",
           "required": true,
@@ -686,10 +688,11 @@
         "operationId": "get-identity-credential",
         "parameters": [
           {
-            "description": "Includes information about actions you can take for the object.\n",
+            "description": "Includes actions you can perform on the object, `false` by default.",
             "in": "query",
             "name": "actions",
             "schema": {
+              "default": false,
               "example": true,
               "type": "boolean"
             },
@@ -712,32 +715,32 @@
                 },
                 "schema": {
                   "additionalProperties": false,
-                  "description": "Specifies credentials.\n",
+                  "description": "Specifies credentials.",
                   "properties": {
                     "clientToken": {
-                      "description": "Part of the credential that identifies the API client.\n",
+                      "description": "Identifies the API client.\n",
                       "type": "string"
                     },
                     "createdOn": {
-                      "description": "ISO 8601 timestamp indicating when the credential was created.\n",
+                      "description": "ISO 8601 timestamp indicating when credentials were created.\n",
                       "format": "date-time",
                       "type": "string"
                     },
                     "credentialId": {
-                      "description": "Uniquely identifies each credential.\n",
+                      "description": "A unique identifier for each credential.\n",
                       "type": "integer"
                     },
                     "description": {
-                      "description": "A descriptive label for the API client.\n",
+                      "description": "Notes or description for credentials.\n",
                       "type": "string"
                     },
                     "expiresOn": {
-                      "description": "ISO 8601 timestamp indicating when the credential expires.\n",
+                      "description": "ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.\n",
                       "format": "date-time",
                       "type": "string"
                     },
                     "status": {
-                      "description": "The credential's status.\n",
+                      "description": "Indicates credentials' status.\n",
                       "type": "string"
                     }
                   },
@@ -766,7 +769,7 @@
       },
       "parameters": [
         {
-          "description": "A credential's unique identifier.\n",
+          "description": "A credential's unique identifier.",
           "in": "path",
           "name": "credentialId",
           "required": true,
@@ -779,7 +782,7 @@
           }
         },
         {
-          "description": "A unique identifier for each API client.\n",
+          "description": "A unique identifier for each API client.",
           "in": "path",
           "name": "openIdentityId",
           "required": true,
@@ -808,38 +811,44 @@
               },
               "schema": {
                 "additionalProperties": false,
-                "description": "Specifies updated credentials.\n",
+                "description": "Specifies credentials.",
                 "properties": {
                   "clientToken": {
-                    "description": "Part of the credential that identifies the API client.\n",
+                    "description": "Identifies the API client.\n",
                     "type": "string"
                   },
                   "createdOn": {
-                    "description": "ISO 8601 timestamp indicating when the credential was created.\n",
+                    "description": "__Read-only__ __Read-only__ ISO 8601 timestamp indicating when credentials were created.\n",
                     "format": "date-time",
+                    "readOnly": true,
                     "type": "string"
                   },
                   "credentialId": {
-                    "description": "Uniquely identifies each credential.\n",
+                    "description": "A unique identifier for each credential.\n",
                     "type": "integer"
                   },
                   "description": {
-                    "description": "A descriptive label for the API client.\n",
+                    "description": "Notes or description for credentials.\n",
                     "type": "string"
                   },
                   "expiresOn": {
-                    "description": "ISO 8601 timestamp indicating when the credential expires.\n",
+                    "description": "__Read-only__ __Read-only__ ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.\n",
                     "format": "date-time",
+                    "readOnly": true,
                     "type": "string"
                   },
                   "status": {
-                    "description": "The credential's status.\n",
+                    "description": "Identifies the condition of the credential.\n",
                     "type": "string"
                   }
                 },
                 "required": [
                   "expiresOn",
-                  "status"
+                  "status",
+                  "credentialId",
+                  "clientToken",
+                  "createdOn",
+                  "description"
                 ],
                 "type": "object",
                 "x-akamai": {
@@ -864,32 +873,32 @@
                 },
                 "schema": {
                   "additionalProperties": false,
-                  "description": "Specifies credentials.\n",
+                  "description": "Specifies credentials.",
                   "properties": {
                     "clientToken": {
-                      "description": "Part of the credential that identifies the API client.\n",
+                      "description": "Identifies the API client.\n",
                       "type": "string"
                     },
                     "createdOn": {
-                      "description": "ISO 8601 timestamp indicating when the credential was created.\n",
+                      "description": "ISO 8601 timestamp indicating when credentials were created.\n",
                       "format": "date-time",
                       "type": "string"
                     },
                     "credentialId": {
-                      "description": "Uniquely identifies each credential.\n",
+                      "description": "A unique identifier for each credential.\n",
                       "type": "integer"
                     },
                     "description": {
-                      "description": "A descriptive label for the API client.\n",
+                      "description": "Notes or description for credentials.\n",
                       "type": "string"
                     },
                     "expiresOn": {
-                      "description": "ISO 8601 timestamp indicating when the credential expires.\n",
+                      "description": "ISO 8601 timestamp indicating when the credential expire. By default, two years from the creation date.\n",
                       "format": "date-time",
                       "type": "string"
                     },
                     "status": {
-                      "description": "The credential's status.\n",
+                      "description": "Indicates credentials' status.\n",
                       "type": "string"
                     }
                   },

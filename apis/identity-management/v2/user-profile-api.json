@@ -1,76 +1,62 @@
 {
-  "openapi": "3.0.0",
   "info": {
-    "title": "Your user profile",
-    "version": "2",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    },
+    "title": "Your user profile",
+    "version": "2"
   },
-  "servers": [
-    {
-      "url": "https://{hostname}/identity-management/v2"
-    }
-  ],
-  "x-akamai": {
-    "auth-type": "EDGE_GRID",
-    "file-path": "user-profile-api.yaml"
-  },
+  "openapi": "3.0.0",
   "paths": {
     "/user-profile": {
       "get": {
-        "operationId": "get-user-profile",
-        "summary": "View your profile",
-        "tags": [
-          "Profile"
-        ],
         "description": "Return your own profile information. To make changes to your profile, run the [Edit your profile](ref:put-user-profile-info) operation.\n",
+        "operationId": "get-user-profile",
         "parameters": [
           {
-            "name": "authGrants",
-            "in": "query",
             "description": "Includes the list of your group and role assignments, `false` by default.",
-            "x-akamai": {
-              "file-path": "parameters/authGrants-query.yaml"
-            },
+            "in": "query",
+            "name": "authGrants",
             "required": false,
             "schema": {
-              "type": "boolean",
+              "default": false,
               "example": true,
-              "default": false
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/authGrants-query.yaml"
             }
           },
           {
-            "name": "notifications",
-            "in": "query",
             "description": "Includes product notifications you subscribe to, `false` by default.",
+            "in": "query",
+            "name": "notifications",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
             "x-akamai": {
               "file-path": "parameters/notifications-query.yaml"
-            },
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
             }
           },
           {
-            "name": "actions",
-            "in": "query",
             "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
+            "in": "query",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
             "x-akamai": {
               "file-path": "parameters/QParamsActions_actions.yaml"
-            },
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The response returns the profile.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -213,8 +199,8 @@
                           "subGroups": {
                             "description": "Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
                             "items": {
-                              "type": "object",
                               "description": "A further-nested group.",
+                              "type": "object",
                               "x-akamai": {
                                 "file-path": "schemas/groups-nested.yaml"
                               }
@@ -373,21 +359,21 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns the profile.\n"
           }
-        }
+        },
+        "summary": "View your profile",
+        "tags": [
+          "Profile"
+        ]
       }
     },
     "/user-profile/basic-info": {
       "put": {
-        "operationId": "put-user-profile-info",
-        "summary": "Edit your profile",
-        "tags": [
-          "Profile"
-        ],
         "description": "Update your basic profile information. You can update simple items like your name or phone number, but you can't update your group or role assignments through this operation.\n",
+        "operationId": "put-user-profile-info",
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -495,11 +481,11 @@
                 }
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "The response returns the updated profile.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -606,8 +592,8 @@
                           "subGroups": {
                             "description": "Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
                             "items": {
-                              "type": "object",
                               "description": "A further-nested group.",
+                              "type": "object",
                               "x-akamai": {
                                 "file-path": "schemas/groups-nested.yaml"
                               }
@@ -766,21 +752,21 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns the updated profile.\n"
           }
-        }
+        },
+        "summary": "Edit your profile",
+        "tags": [
+          "Profile"
+        ]
       }
     },
     "/user-profile/change-password": {
       "post": {
-        "operationId": "post-profile-change-password",
-        "summary": "Rotate your password",
-        "tags": [
-          "Access"
-        ],
         "description": "To update or change your password, include your old password and your new password in the request body. Run the [View password policy](ref:get-common-password-policy) operation before you create your new password to ensure it adheres to your policy. If you pass your existing password incorrectly and make too many login attempts, your account locks.\n",
+        "operationId": "post-profile-change-password",
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -810,25 +796,25 @@
                 }
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "204": {
             "description": "Password rotated.\n"
           }
-        }
+        },
+        "summary": "Rotate your password",
+        "tags": [
+          "Access"
+        ]
       }
     },
     "/user-profile/notifications": {
       "put": {
-        "operationId": "put-user-profile-notifications",
-        "summary": "Update notifications",
-        "tags": [
-          "Notifications"
-        ],
         "description": "Subscribe to notifications emails for password expiration reminders, proactive maintenance emails, and upgrade notification emails. Make a PUT request with a notification object.\n",
+        "operationId": "put-user-profile-notifications",
         "requestBody": {
-          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -847,54 +833,54 @@
                 }
               },
               "schema": {
-                "type": "object",
-                "description": "Encapsulates the types of email notifications you can receive.",
-                "x-akamai": {
-                  "file-path": "schemas/NotificationsRequest.yaml"
-                },
                 "additionalProperties": false,
+                "description": "Encapsulates the types of email notifications you can receive.",
                 "properties": {
+                  "enableEmailNotifications": {
+                    "description": "Enables email notifications.\n",
+                    "type": "boolean"
+                  },
                   "options": {
-                    "type": "object",
-                    "description": "Specific notification types users can subscribe to.\n",
                     "additionalProperties": false,
+                    "description": "Specific notification types users can subscribe to.\n",
                     "properties": {
                       "newUserNotification": {
-                        "type": "boolean",
-                        "description": "If `true`, send emails to group admins. This notification informs the admin a new user was created and granted access to their group.\n"
+                        "description": "If `true`, send emails to group admins. This notification informs the admin a new user was created and granted access to their group.\n",
+                        "type": "boolean"
                       },
                       "passwordExpiry": {
-                        "type": "boolean",
-                        "description": "Send emails regarding password expiration.\n"
+                        "description": "Send emails regarding password expiration.\n",
+                        "type": "boolean"
                       },
                       "proactive": {
-                        "type": "array",
                         "description": "A list of products subscribed to for proactive notification emails.\n",
                         "items": {
                           "type": "string"
-                        }
+                        },
+                        "type": "array"
                       },
                       "upgrade": {
-                        "type": "array",
                         "description": "A list of products subscribed to for upgrade notification emails.\n",
                         "items": {
                           "type": "string"
-                        }
+                        },
+                        "type": "array"
                       }
-                    }
-                  },
-                  "enableEmailNotifications": {
-                    "type": "boolean",
-                    "description": "Enables email notifications.\n"
+                    },
+                    "type": "object"
                   }
+                },
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/NotificationsRequest.yaml"
                 }
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "200": {
-            "description": "The response returns updated notifications.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -913,79 +899,80 @@
                   }
                 },
                 "schema": {
-                  "type": "object",
-                  "description": "Encapsulates the types of email notifications you can receive.",
-                  "x-akamai": {
-                    "file-path": "schemas/NotificationsResponse.yaml"
-                  },
                   "additionalProperties": false,
+                  "description": "Encapsulates the types of email notifications you can receive.",
                   "properties": {
+                    "enableEmailNotifications": {
+                      "description": "Indicates if email notifications are enabled.\n",
+                      "type": "boolean"
+                    },
                     "options": {
-                      "type": "object",
-                      "description": "Specific notification types users can subscribe to.\n",
                       "additionalProperties": false,
+                      "description": "Specific notification types users can subscribe to.\n",
                       "properties": {
                         "newUserNotification": {
-                          "type": "boolean",
-                          "description": "Send emails to group admins regarding new user creation.\n"
+                          "description": "Send emails to group admins regarding new user creation.\n",
+                          "type": "boolean"
                         },
                         "passwordExpiry": {
-                          "type": "boolean",
-                          "description": "Send emails regarding password expiration.\n"
+                          "description": "Send emails regarding password expiration.\n",
+                          "type": "boolean"
                         },
                         "proactive": {
-                          "type": "array",
                           "description": "A list of products subscribed to for proactive notification emails.\n",
                           "items": {
                             "type": "string"
-                          }
+                          },
+                          "type": "array"
                         },
                         "upgrade": {
-                          "type": "array",
                           "description": "A list of products subscribed to for upgrade notification emails.\n",
                           "items": {
                             "type": "string"
-                          }
+                          },
+                          "type": "array"
                         }
-                      }
-                    },
-                    "enableEmailNotifications": {
-                      "type": "boolean",
-                      "description": "Indicates if email notifications are enabled.\n"
+                      },
+                      "type": "object"
                     }
+                  },
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/NotificationsResponse.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response returns updated notifications.\n"
           }
-        }
+        },
+        "summary": "Update notifications",
+        "tags": [
+          "Notifications"
+        ]
       }
     },
     "/user-profile/tfa": {
       "put": {
-        "operationId": "put-user-profile-tfa",
-        "summary": "Set two-factor authentication",
-        "tags": [
-          "Access"
-        ],
         "description": "Enable or disable TFA on your profile. An account administrator needs to disable TFA for you if the account is set to `enable`. If the account doesn't specify a TFA setting, you can `disable` TFA on your profile yourself. You can always set TFA to `enable` regardless of account-level settings. If you have TFA enabled, `reset` TFA clears your TFA settings and you'll be asked to set up TFA the next time you log in to Control Center.\n",
+        "operationId": "put-user-profile-tfa",
         "parameters": [
           {
-            "name": "action",
-            "in": "query",
             "description": "Includes the actions you can perform for TFA on your own profile, either `enable`, `disable`, or `reset`. Don't confuse this with the `actions` parameter, which applies to the various operations that get user data.",
-            "x-akamai": {
-              "file-path": "parameters/action-query.yaml"
-            },
+            "in": "query",
+            "name": "action",
             "required": true,
             "schema": {
-              "type": "string",
-              "example": "enable",
               "enum": [
                 "enable",
                 "disable",
                 "reset"
-              ]
+              ],
+              "example": "enable",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/action-query.yaml"
             }
           }
         ],
@@ -993,8 +980,21 @@
           "204": {
             "description": "Authentication updated.\n"
           }
-        }
+        },
+        "summary": "Set two-factor authentication",
+        "tags": [
+          "Access"
+        ]
       }
     }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/identity-management/v2"
+    }
+  ],
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "user-profile-api.yaml"
   }
 }
