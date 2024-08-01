@@ -1,4 +1,265 @@
 {
+  "components": {
+    "parameters": {
+      "propertyId-path": {
+        "description": "The unique identifier Akamai set for your Ion property.",
+        "in": "path",
+        "name": "propertyId",
+        "required": true,
+        "schema": {
+          "example": 175780,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/propertyId-path.yaml"
+        }
+      }
+    },
+    "schemas": {
+      "fontPreloads": {
+        "description": "List of your site or app's URLs where Adaptive Acceleration is actively preloading fonts.",
+        "items": {
+          "format": "uri",
+          "type": "string"
+        },
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/fontPreloads.yaml"
+        }
+      },
+      "preconnectHeader": {
+        "description": "As Adaptive Acceleration gathers real-user monitoring data, it identifies commonly loaded headers. These headers are targeted for preconnecting.",
+        "items": {
+          "type": "string"
+        },
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/preconnectHeader.yaml"
+        }
+      },
+      "problem": {
+        "additionalProperties": false,
+        "description": "Represents error data in the [RFC 7807](https://www.rfc-editor.org/rfc/rfc7807) Problem Details format.",
+        "properties": {
+          "detail": {
+            "description": "Diagnostic instructions to locate and fix the problem.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "httpStatus": {
+            "description": "The HTTP status code that categorizes this error case.",
+            "maximum": 600,
+            "minimum": 100,
+            "type": "integer"
+          },
+          "instance": {
+            "description": "Unique value generated with each API call.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "title": {
+            "description": "A summary of each error case.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "description": "Identifies each error case.",
+            "format": "uri",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "httpStatus",
+          "detail",
+          "instance"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/problem.yaml"
+        }
+      },
+      "property": {
+        "additionalProperties": false,
+        "description": "Encapsulates Adaptive Acceleration report that targets a specific Ion property.",
+        "properties": {
+          "commonPreconnectHeader": {
+            "description": "As Adaptive Acceleration gathers real-user monitoring data, it identifies commonly loaded headers. These headers are targeted for preconnecting.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "x-akamai": {
+              "file-path": "schemas/preconnectHeader.yaml"
+            }
+          },
+          "commonPushedResources": {
+            "description": "List of URLs for which Adaptive Acceleration currently performs a server push.",
+            "items": {
+              "format": "uri",
+              "type": "string"
+            },
+            "type": "array",
+            "x-akamai": {
+              "file-path": "schemas/pushedResources.yaml"
+            }
+          },
+          "creationDate": {
+            "description": "An ISO 8601 timestamp representing when the system created the Adaptive Acceleration report.",
+            "format": "date-time",
+            "type": "string"
+          },
+          "domainSpecificResources": {
+            "description": "Encapsulates Adaptive Acceleration report rules targeted to a specific domain.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "domain": {
+                  "description": "This is the domain name.",
+                  "format": "uri",
+                  "type": "string"
+                },
+                "domainSpecificCommonPushedResource": {
+                  "description": "List of URLs for which Adaptive Acceleration currently performs a server push.",
+                  "items": {
+                    "format": "uri",
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/pushedResources.yaml"
+                  }
+                },
+                "domainSpecificFontPreloads": {
+                  "description": "List of your site or app's URLs where Adaptive Acceleration is actively preloading fonts.",
+                  "items": {
+                    "format": "uri",
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/fontPreloads.yaml"
+                  }
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "isAbTesting": {
+            "description": "Indicates whether you've enabled [A/B testing](https://techdocs.akamai.com/ion/docs/set-up-adaptive-acceleration#5-optionally-enable-ab-testing) in your Ion property. A/B testing compares two versions of a webpage or app against each other to determine which one performs better.",
+            "type": "boolean"
+          },
+          "isActive": {
+            "description": "Indicates whether you've enabled Adaptive Acceleration in your Ion property.",
+            "type": "boolean"
+          },
+          "isHttp3Enabled": {
+            "description": "Indicates whether you've enabled HTTP/3 protocol in your Ion property. The [HTTP/3 behavior](https://techdocs.akamai.com/property-mgr/reference/ga-http3) is automatically included and enabled in the default rule.",
+            "type": "boolean"
+          },
+          "lastModifiedDate": {
+            "description": "An ISO 8601 timestamp representing when the system last modified the Adaptive Acceleration report.",
+            "format": "date-time",
+            "type": "string"
+          },
+          "lastReset": {
+            "description": "An ISO 8601 timestamp that shows when you [last reset](https://techdocs.akamai.com/adaptive-acceleration/reference/post-property-reset) the Adaptive Acceleration data-gathering report.",
+            "format": "date-time",
+            "type": "string"
+          },
+          "pageSpecificRules": {
+            "description": "Encapsulates Adaptive Acceleration property rules targeted to a specific page.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "basePageURL": {
+                  "description": "This is the URL in question.",
+                  "format": "uri",
+                  "type": "string"
+                },
+                "experience": {
+                  "description": "Data specific to A/B testing results.",
+                  "type": "string"
+                },
+                "isMobile": {
+                  "description": "Indicates the page view mode, `true` when the page URL is consumed in the mobile mode, `false` for the desktop mode.",
+                  "type": "boolean"
+                },
+                "pageSpecificFontPreloads": {
+                  "description": "List of your site or app's URLs where Adaptive Acceleration is actively preloading fonts.",
+                  "items": {
+                    "format": "uri",
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/fontPreloads.yaml"
+                  }
+                },
+                "pageSpecificPreconnectHeader": {
+                  "description": "As Adaptive Acceleration gathers real-user monitoring data, it identifies commonly loaded headers. These headers are targeted for preconnecting.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/preconnectHeader.yaml"
+                  }
+                },
+                "pageSpecificPushedResources": {
+                  "description": "List of URLs for which Adaptive Acceleration currently performs a server push.",
+                  "items": {
+                    "format": "uri",
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/pushedResources.yaml"
+                  }
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "version": {
+            "description": "Version of the Adaptive Acceleration rules.",
+            "type": "integer"
+          },
+          "zoneDeployDate": {
+            "description": "An ISO 8601 timestamp representing when the Adaptive Acceleration report were last updated.",
+            "format": "date-time",
+            "type": "string"
+          }
+        },
+        "required": [
+          "commonPreconnectHeader",
+          "commonPushedResources",
+          "isActive",
+          "pageSpecificRules",
+          "version",
+          "domainSpecificResources"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/property.yaml"
+        }
+      },
+      "pushedResources": {
+        "description": "List of URLs for which Adaptive Acceleration currently performs a server push.",
+        "items": {
+          "format": "uri",
+          "type": "string"
+        },
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/pushedResources.yaml"
+        }
+      }
+    }
+  },
   "externalDocs": {
     "description": "See documentation for Akamai's Adaptive Acceleration API",
     "url": "https://techdocs.akamai.com/adaptive-acceleration/reference"

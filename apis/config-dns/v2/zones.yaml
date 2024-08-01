@@ -7,6 +7,16 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
 - url: https://{hostname}/config-dns/v2
+tags:
+- description: Groups operations to manage zones.
+  name: Zones
+- description: Groups operations to get the current DNSSEC status for zones.
+  name: DNSSEC status
+- description: Groups operations to get results of the most recent zone transfer attempts.
+  name: Zone transfer status
+- description: Groups operations to get details about the contract that  zone belongs
+    to.
+  name: Zone contracts
 x-akamai:
   auth-type: EDGE_GRID
   file-path: zones.yaml
@@ -49,20 +59,20 @@ paths:
       tags:
       - Zones
       description: |
-        Get a list of all zones that the current user has access to manage. Includes the version identifier, propagation status, and SOA serial number for the most recently activated version. This operation is [paginated](ref:use-pagination).
+        All zones that the current user has access to manage. The response is [paginated](ref:use-pagination).
       parameters:
-      - $ref: parameters/contractIds-query-zones.yaml
-      - $ref: parameters/search-query-zones.yaml
-      - $ref: parameters/sortBy-query-zones.yaml
+      - $ref: parameters/contractIds-zones-query.yaml
+      - $ref: parameters/search-zones-query.yaml
+      - $ref: parameters/sortBy-zones-query.yaml
       - $ref: parameters/subzoneGrant-query.yaml
-      - $ref: parameters/types-query-zones.yaml
+      - $ref: parameters/types-zones-query.yaml
       - $ref: parameters/pageable_page.yaml
       - $ref: parameters/pageable_pageSize.yaml
       - $ref: parameters/pageable_showAll.yaml
       responses:
         200:
           description: |
-            List of zones that you own.
+            Zones that you own.
           content:
             application/json:
               example:
@@ -147,7 +157,7 @@ paths:
       tags:
       - Zones
       description: |
-        Modifies a zone. You can't change the zone `type` with this operation.
+        Modifies a zone's settings. You can't change the zone `type` with this operation.
       parameters:
       - $ref: parameters/skipSignAndServeSafetyCheck-query.yaml
       requestBody:

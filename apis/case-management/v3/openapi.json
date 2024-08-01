@@ -1,4 +1,98 @@
 {
+  "components": {
+    "schemas": {
+      "get-accounts-response": {
+        "description": "Lists accounts you can access and can create a support case for. The list also includes types of cases available for each account.",
+        "items": {
+          "additionalProperties": false,
+          "description": "Details about available accounts and types of cases you can create.",
+          "properties": {
+            "accountId": {
+              "description": "Identifier for the account.",
+              "type": "string"
+            },
+            "accountName": {
+              "description": "Name of the account.",
+              "type": "string"
+            },
+            "categories": {
+              "description": "Lists basic data about case categories you can use to create a case for the account.",
+              "items": {
+                "additionalProperties": false,
+                "description": "Categories of cases you can create a case for the particular account for.",
+                "properties": {
+                  "categoryId": {
+                    "description": "Identifier for the category. The possible options are `SECURITY`, `BUSINESS_SUPPORT`, `PROFESSIONAL_SERVICES`, `BILLING`, or `TECHNICAL`.",
+                    "enum": [
+                      "SECURITY",
+                      "BUSINESS_SUPPORT",
+                      "PROFESSIONAL_SERVICES",
+                      "BILLING",
+                      "TECHNICAL"
+                    ],
+                    "type": "string"
+                  },
+                  "categoryName": {
+                    "description": "Name of the case category.",
+                    "type": "string"
+                  },
+                  "links": {
+                    "description": "Lists [navigable hypermedia links](https://techdocs.akamai.com/case-mgmt/reference/hypermedia) to resources.",
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "href": {
+                          "description": "Relative path to the resource.",
+                          "type": "string"
+                        },
+                        "rel": {
+                          "description": "Type of resource you can GET.",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array",
+                    "x-akamai": {
+                      "file-path": "schemas/hypermedia.yaml"
+                    }
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/get-accounts-response.yaml"
+        }
+      },
+      "hypermedia": {
+        "description": "Lists [navigable hypermedia links](https://techdocs.akamai.com/case-mgmt/reference/hypermedia) to resources.",
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "href": {
+              "description": "Relative path to the resource.",
+              "type": "string"
+            },
+            "rel": {
+              "description": "Type of resource you can GET.",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/hypermedia.yaml"
+        }
+      }
+    }
+  },
   "externalDocs": {
     "description": "See documentation for Akamai's Case Management API",
     "url": "https://techdocs.akamai.com/case-mgmt/reference"
@@ -3382,7 +3476,28 @@
       "url": "https://{hostname}/case-management/v3"
     }
   ],
-  "tags": [],
+  "tags": [
+    {
+      "description": "List accounts you can create a case for.",
+      "name": "Accounts"
+    },
+    {
+      "description": "Manage cases.",
+      "name": "Cases"
+    },
+    {
+      "description": "Manage case comments.",
+      "name": "Case comments"
+    },
+    {
+      "description": "Manage case attachments.",
+      "name": "Case attachments"
+    },
+    {
+      "description": "List available case categories.",
+      "name": "Case categories"
+    }
+  ],
   "x-readme": {
     "samples-languages": [
       "curl",

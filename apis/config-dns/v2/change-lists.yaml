@@ -7,6 +7,16 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
 - url: https://{hostname}/config-dns/v2
+tags:
+- description: Groups operations that you can use to manage change lists.
+  name: Change lists
+- description: Groups operations that you can use to get details about record set
+    types.
+  name: Types
+- description: Groups operations that you can use to manage record sets.
+  name: Record sets
+- description: Groups operations that you can use to manage record Change list settings.
+  name: Change list settings
 x-akamai:
   auth-type: EDGE_GRID
   file-path: change-lists.yaml
@@ -59,7 +69,7 @@ paths:
       tags:
       - Change lists
       description: |
-        Given a list of zone names, this operation lists the change lists that you've created on those zones. If the input list is empty, the response doesn't return any change lists. Note that it's possible to own a change list on a zone that you're no longer allowed to access.
+        Retrieves the change lists that you've created for the specified zone names. If the input list is empty, the response doesn't return any change lists. Note that it's possible to own a change list on a zone that you're no longer allowed to access.
       requestBody:
         required: true
         content:
@@ -100,7 +110,7 @@ paths:
                 $ref: schemas/changelist-get.yaml
         304:
           description: |
-            Redirect.
+            Redirect - Not Modified.
     delete:
       operationId: delete-changelists-zone
       summary: Delete a change list
@@ -141,7 +151,7 @@ paths:
       tags:
       - Change lists
       description: |
-        Retrieves a list of record names that exist on this zone, based on the change list. If a record is deleted in the change list, it doesn't appear on the list of records returned. If no record sets exist within the change list, this operation returns an empty list.
+        Retrieves existing record names on this zone, based on the change list. If a record is deleted in the change list, it doesn't appear on the records returned. If no record sets exist within the change list, this operation returns an empty list.
       responses:
         200:
           description: |
@@ -162,7 +172,7 @@ paths:
       tags:
       - Types
       description: |
-        Retrieves a list of record set types that exist at a given name based on the selected change list. The list of record sets returned reflect the changes added to the change list. Records deleted in this change list don't appear. If the name doesn't exist within the change list, returns an empty list.
+        Retrieves existing record set types for a given name based on the selected change list. The record sets returned reflect the changes added to the change list. Records deleted in this change list don't appear. If the name doesn't exist within the change list, returns an empty list.
       responses:
         200:
           description: |
@@ -184,7 +194,7 @@ paths:
       tags:
       - Types
       description: |
-        Returns an individual record set based on the selected change list. The list of record sets returned reflects any changes added to this change list. Record sets are annotated with the related change as clean, modified, new, or deleted. This call works even if the change list is stale.
+        Returns an individual record set based on the selected change list. The record sets returned reflects any changes added to this change list. Record sets are annotated with the related change as clean, modified, new, or deleted. This call works even if the change list is stale.
       responses:
         200:
           description: |
@@ -223,11 +233,11 @@ paths:
       tags:
       - Record sets
       description: |
-        Retrieves the current list of record sets based on the selected change list. The record sets returned reflect any Changes added to this change list. This call works even if the change list is stale. This operation is (paginated](ref:use-pagination).
+        Retrieves the current record sets based on the selected change list. The record sets returned reflect any Changes added to this change list. This call works even if the change list is stale. This operation is (paginated](ref:use-pagination).
       parameters:
-      - $ref: parameters/sortBy-query-name-type.yaml
-      - $ref: parameters/types-query-record-sets.yaml
-      - $ref: parameters/search-query-name-rdata.yaml
+      - $ref: parameters/sortBy-name-type-query.yaml
+      - $ref: parameters/types-record-sets-query.yaml
+      - $ref: parameters/search-name-rdata-query.yaml
       - $ref: parameters/pageable_page.yaml
       - $ref: parameters/pageable_pageSize.yaml
       - $ref: parameters/pageable_showAll.yaml

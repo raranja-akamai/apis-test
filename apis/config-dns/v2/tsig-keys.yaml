@@ -7,6 +7,9 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
 - url: https://{hostname}/config-dns/v2
+tags:
+- description: Groups operations to manage TSIG keys.
+  name: TSIG keys
 x-akamai:
   auth-type: EDGE_GRID
   file-path: tsig-keys.yaml
@@ -18,11 +21,11 @@ paths:
       tags:
       - TSIG keys
       description: |
-        Get a list of the TSIG keys used by zones that you're allowed to manage.
+        Get the TSIG keys used by zones that you're allowed to manage.
       parameters:
-      - $ref: parameters/contractIds-query-keys.yaml
-      - $ref: parameters/search-query-keys.yaml
-      - $ref: parameters/sortBy-query-keys.yaml
+      - $ref: parameters/contractIds-keys-query.yaml
+      - $ref: parameters/search-keys-query.yaml
+      - $ref: parameters/sortBy-keys-query.yaml
       responses:
         200:
           description: |
@@ -60,7 +63,7 @@ paths:
       tags:
       - TSIG keys
       description: |
-        Returns a list of zone names that use the given TSIG key and for which the current user has READ access. If the list of zones returned is empty, it's possible that the given key is in use by other zones but the current user doesn't have permission to view those zones.
+        Returns zone names that use the given TSIG key and for which the current user has READ access. If the zones returned is empty, it's possible that the given key is in use by other zones but the current user doesn't have permission to view those zones.
       requestBody:
         required: true
         content:
@@ -79,6 +82,34 @@ paths:
                 $ref: examples/zone-name-list.json
               schema:
                 $ref: schemas/zone-name-list.yaml
+  /keys/used-by/zone-contract-map:
+    post:
+      operationId: post-keys-used-by-zone-contract-map
+      summary: Zones to contract using TSIG key
+      tags:
+      - TSIG keys
+      description: |
+        Zone names within a contract that use the given TSIG key for which the current user has READ access. If the list returned is empty, it's possible that the given key is in use by other zones but the current user doesn't have permission to view those zones.
+      parameters:
+      - $ref: parameters/keyType-keys-query.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/tsigkey-no-secret-post.json
+            schema:
+              $ref: schemas/tsigkey-no-secret-post.yaml
+      responses:
+        200:
+          description: |
+            Successful operation.
+          content:
+            application/json:
+              example:
+                $ref: examples/contract-zone-map-report.json
+              schema:
+                $ref: schemas/contract-zone-map-report-response.yaml
   /zones/{zone}/key:
     parameters:
     - $ref: parameters/zone-path.yaml

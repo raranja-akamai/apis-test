@@ -4,6 +4,10 @@ info:
   version: v3
 servers:
 - url: https://{hostname}/etp-config/v3
+tags:
+- name: Security connectors
+  description: |
+    Forwards suspicious or malicious traffic to identify machines that are infected with malware, attempt to download malware, or make requests to command and control servers. They can also be used as an HTTP or DNS forwarder.
 x-akamai:
   auth-type: EDGE_GRID
 paths:
@@ -162,14 +166,13 @@ paths:
       tags:
       - Security connectors
       description: |
-        Deletes the specified security connector.
+        Deletes the specified security connector. Add an `If-Match` header to prevent deleting any data another client has modified since you last accessed it.
+      parameters:
+      - $ref: headers/if-match-header.yaml
       responses:
         200:
           description: |
             Successful response.
-          headers:
-            ETag:
-              $ref: headers/ETag.yaml
         400:
           $ref: errors/validation-error-400.yaml
         401:
@@ -298,9 +301,6 @@ paths:
         200:
           description: |
             Successful response.
-          headers:
-            ETag:
-              $ref: headers/ETag.yaml
         400:
           $ref: errors/validation-error-400.yaml
         401:

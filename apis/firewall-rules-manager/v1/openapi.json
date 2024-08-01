@@ -1,4 +1,211 @@
 {
+  "components": {
+    "parameters": {
+      "effectiveDateGt-query": {
+        "description": "The ISO 8601 date the CIDR block starts serving traffic to your origin. Ensure your firewall rules are updated to allow this traffic to pass through before the effective date.",
+        "in": "query",
+        "name": "effectiveDateGt",
+        "schema": {
+          "example": "2021-02-21",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/effectiveDateGt-query.yaml"
+        }
+      },
+      "lastAction-query": {
+        "description": "Whether a CIDR block was added, updated, or removed from service. You can use this parameter as a sorting mechanism and return only CIDR blocks with a change status of `add`, `update`, or `delete`. Note that a status of `delete` means the CIDR block is no longer in service, and you can remove it from your firewall rules.",
+        "in": "query",
+        "name": "lastAction",
+        "schema": {
+          "default": "all",
+          "enum": [
+            "all",
+            "add",
+            "update",
+            "delete"
+          ],
+          "example": "add",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/lastAction-query.yaml"
+        }
+      }
+    },
+    "schemas": {
+      "cidr-blocks-200": {
+        "description": "Test Schema to use with `./examples/cidr-blocks-200.json`.",
+        "items": {
+          "additionalProperties": false,
+          "description": "Describes CIDR blocks and the services they belong to.",
+          "properties": {
+            "changeDate": {
+              "description": "The ISO 8601 date when a CIDR block was last updated.",
+              "type": "string"
+            },
+            "cidr": {
+              "description": "A list of IP addresses belonging to Akamai edge servers for a particular service.",
+              "type": "string"
+            },
+            "cidrId": {
+              "description": "A unique identifier for a CIDR block.",
+              "type": "integer"
+            },
+            "cidrMask": {
+              "description": "Indicates the range (start and end IP) of a CIDR block. `/32` and `/64` denote whether the IP addresses in the CIDR block are IPv4 or IPv6, respectively.",
+              "enum": [
+                "/32",
+                "/64"
+              ],
+              "type": "string"
+            },
+            "creationDate": {
+              "description": "The ISO 8601 date the CIDR block was created.",
+              "type": "string"
+            },
+            "effectiveDate": {
+              "description": "The ISO 8601 date the IP addresses start passing traffic. Make sure your firewall rules are updated to accept traffic before this date. The date is typically two weeks after the CIDR block's creation date.",
+              "type": "string"
+            },
+            "lastAction": {
+              "description": "The last Action, or change, made to a CIDR block. Either `add`, `update`, or `delete`.",
+              "enum": [
+                "add",
+                "update",
+                "delete"
+              ],
+              "type": "string"
+            },
+            "maxIp": {
+              "description": "The maximum IP is the top of the range for the CIDR block.",
+              "type": "string"
+            },
+            "minIp": {
+              "description": "The minimum IP is the base of the range for the CIDR block.",
+              "type": "string"
+            },
+            "port": {
+              "description": "The set of comma-delimited ports through which your server receives traffic from Akamai servers.",
+              "type": "string"
+            },
+            "serviceId": {
+              "description": "A unique identifier for a service.",
+              "type": "integer"
+            },
+            "serviceName": {
+              "description": "The name of a service. This is often the same as the product you purchased.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "cidrId",
+            "serviceId",
+            "serviceName",
+            "cidr",
+            "cidrMask",
+            "port",
+            "creationDate",
+            "effectiveDate",
+            "changeDate",
+            "minIp",
+            "maxIp",
+            "lastAction"
+          ],
+          "type": "object",
+          "x-akamai": {
+            "file-path": "schemas/cidrBlock.yaml"
+          }
+        },
+        "title": "cidrBlocks",
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/cidr-blocks-200.yaml"
+        }
+      },
+      "cidrBlock": {
+        "additionalProperties": false,
+        "description": "Describes CIDR blocks and the services they belong to.",
+        "properties": {
+          "changeDate": {
+            "description": "The ISO 8601 date when a CIDR block was last updated.",
+            "type": "string"
+          },
+          "cidr": {
+            "description": "A list of IP addresses belonging to Akamai edge servers for a particular service.",
+            "type": "string"
+          },
+          "cidrId": {
+            "description": "A unique identifier for a CIDR block.",
+            "type": "integer"
+          },
+          "cidrMask": {
+            "description": "Indicates the range (start and end IP) of a CIDR block. `/32` and `/64` denote whether the IP addresses in the CIDR block are IPv4 or IPv6, respectively.",
+            "enum": [
+              "/32",
+              "/64"
+            ],
+            "type": "string"
+          },
+          "creationDate": {
+            "description": "The ISO 8601 date the CIDR block was created.",
+            "type": "string"
+          },
+          "effectiveDate": {
+            "description": "The ISO 8601 date the IP addresses start passing traffic. Make sure your firewall rules are updated to accept traffic before this date. The date is typically two weeks after the CIDR block's creation date.",
+            "type": "string"
+          },
+          "lastAction": {
+            "description": "The last Action, or change, made to a CIDR block. Either `add`, `update`, or `delete`.",
+            "enum": [
+              "add",
+              "update",
+              "delete"
+            ],
+            "type": "string"
+          },
+          "maxIp": {
+            "description": "The maximum IP is the top of the range for the CIDR block.",
+            "type": "string"
+          },
+          "minIp": {
+            "description": "The minimum IP is the base of the range for the CIDR block.",
+            "type": "string"
+          },
+          "port": {
+            "description": "The set of comma-delimited ports through which your server receives traffic from Akamai servers.",
+            "type": "string"
+          },
+          "serviceId": {
+            "description": "A unique identifier for a service.",
+            "type": "integer"
+          },
+          "serviceName": {
+            "description": "The name of a service. This is often the same as the product you purchased.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "cidrId",
+          "serviceId",
+          "serviceName",
+          "cidr",
+          "cidrMask",
+          "port",
+          "creationDate",
+          "effectiveDate",
+          "changeDate",
+          "minIp",
+          "maxIp",
+          "lastAction"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/cidrBlock.yaml"
+        }
+      }
+    }
+  },
   "externalDocs": {
     "description": "See documentation for Akamai's Firewall Rules Notification API",
     "url": "https://techdocs.akamai.com/firewall-rules/reference"

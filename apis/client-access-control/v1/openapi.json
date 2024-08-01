@@ -1,4 +1,185 @@
 {
+  "components": {
+    "parameters": {
+      "configurationId-path": {
+        "description": "A unique identifier for a CAC configuration.",
+        "in": "path",
+        "name": "configurationId",
+        "required": true,
+        "schema": {
+          "example": 1234,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/configurationId-path.yaml"
+        }
+      },
+      "version-path": {
+        "description": "The version of proposed CIDR blocks that you are acknowledging.",
+        "in": "path",
+        "name": "version",
+        "required": true,
+        "schema": {
+          "example": 1,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/version-path.yaml"
+        }
+      }
+    },
+    "schemas": {
+      "configuration": {
+        "additionalProperties": false,
+        "description": "Encapsulates the Client Access Control (CAC) configurations that you have access to. These configurations let your origin communicate with the Akamai network.",
+        "properties": {
+          "configurationId": {
+            "description": "The unique ID for the CAC configuration.",
+            "type": "integer"
+          },
+          "currentCidrs": {
+            "additionalProperties": false,
+            "description": "Encapsulates the current set of CIDR blocks.",
+            "properties": {
+              "acknowledgeDate": {
+                "description": "An ISO 8601 timestamp for when your organization last acknowledged a proposed CIDR block version.",
+                "format": "date-time",
+                "type": "string"
+              },
+              "cidrs": {
+                "description": "CIDR blocks used to provide this CAC configuration with access to the Akamai portal.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "version": {
+                "description": "The current version of CIDR blocks serving the CAC configuration. The first version is always `0`.",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "description": {
+            "description": "A description of the CAC configuration.",
+            "type": "string"
+          },
+          "name": {
+            "description": "The name of the CAC configuration.",
+            "type": "string"
+          },
+          "proposedCidrs": {
+            "description": "Encapsulates the set of CIDR blocks proposed by Akamai.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "cidrs": {
+                  "description": "CIDR blocks used to provide this CAC configuration with access to the Akamai portal.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "proposedDate": {
+                  "description": "The time, in ISO 8601 format, that Akamai proposed the latest version of CIDR blocks.",
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "version": {
+                  "description": "The latest version of CIDR blocks proposed.",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/configuration.yaml"
+        }
+      },
+      "configurations": {
+        "description": "Configuration collection.",
+        "items": {
+          "additionalProperties": false,
+          "description": "Encapsulates the Client Access Control (CAC) configurations that you have access to. These configurations let your origin communicate with the Akamai network.",
+          "properties": {
+            "configurationId": {
+              "description": "The unique ID for the CAC configuration.",
+              "type": "integer"
+            },
+            "currentCidrs": {
+              "additionalProperties": false,
+              "description": "Encapsulates the current set of CIDR blocks.",
+              "properties": {
+                "acknowledgeDate": {
+                  "description": "An ISO 8601 timestamp for when your organization last acknowledged a proposed CIDR block version.",
+                  "format": "date-time",
+                  "type": "string"
+                },
+                "cidrs": {
+                  "description": "CIDR blocks used to provide this CAC configuration with access to the Akamai portal.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "version": {
+                  "description": "The current version of CIDR blocks serving the CAC configuration. The first version is always `0`.",
+                  "type": "integer"
+                }
+              },
+              "type": "object"
+            },
+            "description": {
+              "description": "A description of the CAC configuration.",
+              "type": "string"
+            },
+            "name": {
+              "description": "The name of the CAC configuration.",
+              "type": "string"
+            },
+            "proposedCidrs": {
+              "description": "Encapsulates the set of CIDR blocks proposed by Akamai.",
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "cidrs": {
+                    "description": "CIDR blocks used to provide this CAC configuration with access to the Akamai portal.",
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "proposedDate": {
+                    "description": "The time, in ISO 8601 format, that Akamai proposed the latest version of CIDR blocks.",
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  "version": {
+                    "description": "The latest version of CIDR blocks proposed.",
+                    "type": "integer"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object",
+          "x-akamai": {
+            "file-path": "schemas/configuration.yaml"
+          }
+        },
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/configurations.yaml"
+        }
+      }
+    }
+  },
   "externalDocs": {
     "description": "See documentation for Akamai's Client Access Control API",
     "url": "https://techdocs.akamai.com/client-access-control/reference"

@@ -4,6 +4,16 @@ info:
   version: v3
 servers:
 - url: https://{hostname}/etp-config/v3
+tags:
+- name: DLP dictionaries
+  description: |
+    Data loss prevention (DLP) allows SIA to identify and block sensitive or confidential data uploaded from a corporate network and transmitted to the public Internet over an HTTP or HTTPS connection. A DLP dictionary contains the regular expression patterns that are used to find this information.
+- name: DLP dictionary patterns
+  description: |
+    The patterns used by a DLP dictionary to detect data loss. 
+- name: DLP regexes
+  description: |
+    The regular expressions used by a DLP dictionary to detect data loss. 
 x-akamai:
   auth-type: EDGE_GRID
 paths:
@@ -46,11 +56,17 @@ paths:
       tags:
       - DLP dictionaries
       description: |
-        Returns a list of all DLP dictionaries for the configuration.
+        Lists all DLP dictionaries for the configuration.
       responses:
         200:
           description: |
             Successful response.
+          content:
+            application/json:
+              example:
+                $ref: examples/dlp-dictionaries-200.json
+              schema:
+                $ref: schemas/dlp-dictionaries.yaml
         400:
           $ref: errors/validation-error-400.yaml
         401:
@@ -70,13 +86,12 @@ paths:
       - DLP dictionaries
       description: |
         Returns details of a DLP dictionary.
+      parameters:
+      - $ref: headers/if-match-header.yaml
       responses:
         200:
           description: |
             Successful response.
-          headers:
-            ETag:
-              $ref: headers/ETag.yaml
           content:
             application/json:
               example:

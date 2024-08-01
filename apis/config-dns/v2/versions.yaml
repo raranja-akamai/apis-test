@@ -7,6 +7,11 @@ info:
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
 - url: https://{hostname}/config-dns/v2
+tags:
+- description: Groups operations to manage zone versions.
+  name: Versions
+- description: Groups operations to download the record sets from a prior zone version.
+  name: Zone file
 x-akamai:
   auth-type: EDGE_GRID
   file-path: versions.yaml
@@ -40,11 +45,11 @@ paths:
     - $ref: parameters/zone-path.yaml
     get:
       operationId: get-zone-versions-diff
-      summary: Show differences
+      summary: Show zone version differences
       tags:
-      - Differences
+      - Versions
       description: |
-        Displays the [difference](ref:get-zone-versions-diff) between any two versions of a zone, as specified in the query parameters.
+        Displays the difference between any two versions of a zone, as specified in the query parameters.
       parameters:
       - $ref: parameters/from-query.yaml
       - $ref: parameters/to-query.yaml
@@ -87,13 +92,13 @@ paths:
       operationId: get-zone-versions-recordsets
       summary: Get a version's record sets
       tags:
-      - Record sets
+      - Versions
       description: |
         Lists all record sets for this zone. It works only for `PRIMARY` and `SECONDARY` zones. This operation [paginates](ref:use-pagination).
       parameters:
-      - $ref: parameters/sortBy-query-name-type.yaml
-      - $ref: parameters/types-query-record-sets.yaml
-      - $ref: parameters/search-query-rdata.yaml
+      - $ref: parameters/sortBy-name-type-query.yaml
+      - $ref: parameters/types-record-sets-query.yaml
+      - $ref: parameters/search-rdata-query.yaml
       - $ref: parameters/pageable_page.yaml
       - $ref: parameters/pageable_pageSize.yaml
       - $ref: parameters/pageable_showAll.yaml
@@ -115,9 +120,9 @@ paths:
       operationId: post-zones-zone-versions-uuid-recordsets-activate
       summary: Reactivate a version
       tags:
-      - Activations
+      - Versions
       description: |
-        Create and activate a new version of the zone by copying the record sets from a prior version of this zone and reapplying them to the current version. The new version has a new, auto-incremented SOA serial number, and the zone's modification data is set to the current time and user. All other zone settings remain the same as the current version.
+        Creates and activates a new version of the zone by copying the record sets from a prior version of this zone and reapplying them to the current version. The new version has a new, auto-incremented SOA serial number, and the zone's modification data is set to the current time and user. All other zone settings remain the same as the current version.
       parameters:
       - $ref: parameters/comment-query.yaml
       responses:

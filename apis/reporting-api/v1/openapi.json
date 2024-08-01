@@ -1,4 +1,1295 @@
 {
+  "components": {
+    "parameters": {
+      "ListReport_showDeprecated": {
+        "description": "Specifies if deprecated reports should be shown.",
+        "in": "query",
+        "name": "showDeprecated",
+        "schema": {
+          "default": true,
+          "example": true,
+          "type": "boolean"
+        },
+        "x-akamai": {
+          "file-path": "parameters/ListReport_showDeprecated.yaml"
+        }
+      },
+      "ListReport_showUnavailable": {
+        "description": "Specifies if unavailable reports should be shown.",
+        "in": "query",
+        "name": "showUnavailable",
+        "schema": {
+          "default": true,
+          "example": true,
+          "type": "boolean"
+        },
+        "x-akamai": {
+          "file-path": "parameters/ListReport_showUnavailable.yaml"
+        }
+      },
+      "allObjectIds-query": {
+        "description": "As an alternative to `objectIds`, enabling this generates a report that includes all IDs available for the specified object type (each report supports only one specific object type). This parameter is ignored if the request also specifies a set of `objectIds`.",
+        "in": "query",
+        "name": "allObjectIds",
+        "schema": {
+          "example": true,
+          "type": "boolean"
+        },
+        "x-akamai": {
+          "file-path": "parameters/allObjectIds-query.yaml"
+        }
+      },
+      "dataWrapLabel-query": {
+        "description": "Label used as title for grouped record.",
+        "in": "query",
+        "name": "dataWrapLabel",
+        "schema": {
+          "example": "Other",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/dataWrapLabel-query.yaml"
+        }
+      },
+      "dataWrapNumberOfItems-query": {
+        "description": "For reports that allow non-top values to cluster, this specifies the number of top values to report on separately.",
+        "in": "query",
+        "name": "dataWrapNumberOfItems",
+        "schema": {
+          "example": 5,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/dataWrapNumberOfItems-query.yaml"
+        }
+      },
+      "end-query": {
+        "description": "Specifies the end of the reported period as an ISO 8601 date with timezone. Any data that matches the `end` value's timestamp is excluded from the report.",
+        "in": "query",
+        "name": "end",
+        "required": true,
+        "schema": {
+          "example": "2021-07-02T00:00:00Z",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/end-query.yaml"
+        }
+      },
+      "filters-query": {
+        "description": "Specifies criteria to filter the report's data.  The set of available filters depends on the type of report.  Separate each filter name and value with an equals (`=`) character, and separate various name/value pairs with commas (`,`). To specify more than one filter value, repeat the filter name. See the accompanying example for guidance. URL-encode the entire value in the GET request.",
+        "in": "query",
+        "name": "filters",
+        "schema": {
+          "example": "ip_version=ipv4,ip_version=ipv6, traffic_type=standard_secure",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/filters-query.yaml"
+        }
+      },
+      "interval-query": {
+        "description": "The duration of each data record, either `FIVE_MINUTES`, `HOUR`, `DAY`, `WEEK`, or `MONTH`. Support for specific interval values may vary by report type.",
+        "in": "query",
+        "name": "interval",
+        "required": true,
+        "schema": {
+          "enum": [
+            "FIVE_MINUTES",
+            "HOUR",
+            "DAY",
+            "WEEK",
+            "MONTH"
+          ],
+          "example": "DAY",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/interval-query.yaml"
+        }
+      },
+      "metrics-query": {
+        "description": "Specifies a comma-separated list of metrics to include in the report, otherwise all metrics if omitted.  The set of available metrics depends on the type of report.",
+        "in": "query",
+        "name": "metrics",
+        "schema": {
+          "example": "top_urls,browser_hits, edgres_hits_success",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/metrics-query.yaml"
+        }
+      },
+      "name-path": {
+        "description": "Identifies the type of report.",
+        "in": "path",
+        "name": "name",
+        "required": true,
+        "schema": {
+          "example": "opresponses-by-time",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/name-path.yaml"
+        }
+      },
+      "objectIds-query": {
+        "description": "As an alternative to `allObjectIds`, specifies the set of unique IDs for the given object type you want to report on, formatted as a comma-delimited list.",
+        "in": "query",
+        "name": "objectIds",
+        "schema": {
+          "example": "55232,23433,32433",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/objectIds-query.yaml"
+        }
+      },
+      "start-query": {
+        "description": "Specifies the start of the reported period as an ISO 8601 date with timezone.",
+        "in": "query",
+        "name": "start",
+        "required": true,
+        "schema": {
+          "example": "2021-07-01T00:00:00Z",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/start-query.yaml"
+        }
+      },
+      "version-path": {
+        "description": "The version of the report type.",
+        "in": "path",
+        "name": "version",
+        "required": true,
+        "schema": {
+          "example": 1,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/version-path.yaml"
+        }
+      }
+    },
+    "schemas": {
+      "ReportList": {
+        "description": "This schema describes array of immutable list of Metrics.",
+        "items": {
+          "additionalProperties": false,
+          "description": "Describes the range of query options available for each report.",
+          "properties": {
+            "available": {
+              "description": "When enabled, indicates the report can be executed by the current user.",
+              "type": "boolean"
+            },
+            "dataRetentionDays": {
+              "description": "The number of days for which this report's data is available.",
+              "type": "integer"
+            },
+            "deprecated": {
+              "description": "When enabled, indicates that this is an older version of the report.",
+              "type": "boolean"
+            },
+            "filters": {
+              "description": "The set of available filters available for this report.",
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "fullDescription": {
+                    "description": "Provides documentation describing the available filter.",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "The name of the available filter.",
+                    "type": "string"
+                  },
+                  "required": {
+                    "description": "When enabled, you need to specify this filter when executing the report.",
+                    "type": "boolean"
+                  },
+                  "type": {
+                    "description": "The type of data this filter expects, either arbitrary `int` or `string`, or a fixed `enum` specified by `values`.",
+                    "enum": [
+                      "string",
+                      "int",
+                      "enum"
+                    ],
+                    "type": "string"
+                  },
+                  "values": {
+                    "description": "When the `type` of filter is `enum`, this lists available values.",
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "fullDescription": {
+                          "description": "Where necessary, provides documentation describing the enumerated value.",
+                          "type": "string"
+                        },
+                        "value": {
+                          "description": "Specifies each enumerated string value.",
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "value"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "fullDescription": {
+              "description": "Documentation that describes this report.",
+              "type": "string"
+            },
+            "groupBy": {
+              "description": "This indicates names of columns by which reported data is grouped. It's reflected in the generated report's metadata.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "groupOutlyingValues": {
+              "additionalProperties": false,
+              "description": "Specifies this report's support for grouping outlying values under a single category.",
+              "properties": {
+                "enabled": {
+                  "description": "Indicates whether this report allows you to group outlying values.",
+                  "type": "boolean"
+                },
+                "groupName": {
+                  "default": "Other",
+                  "description": "Indicates the default category name under which outlying values group within a single category. You can provide your own name to override this default.",
+                  "type": "string"
+                },
+                "groupThreshold": {
+                  "default": 9,
+                  "description": "Indicates the default number of categories to report on separately before grouping under a single category. You can provide your own threshold value to override this default.",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "enabled"
+              ],
+              "type": "object"
+            },
+            "intervals": {
+              "description": "Specifies the set of available spans of time to aggregate data by. Use one of these values as the `interval` query parameter when executing the report.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "limit": {
+              "description": "The default number of data rows included for this report.",
+              "type": "integer"
+            },
+            "links": {
+              "description": "Specifies dynamic hypermedia links to report-generating operations.",
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "href": {
+                    "description": "The hypermedia URL linking the API resource.",
+                    "type": "string"
+                  },
+                  "method": {
+                    "default": "GET",
+                    "description": "The HTTP method to call the `href` link with. If unspecified, uses the GET method.",
+                    "type": "string"
+                  },
+                  "rel": {
+                    "description": "Identifies the type of resource.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "rel",
+                  "href"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "maxLimit": {
+              "description": "The maximum number of data rows permitted for this report.",
+              "type": "integer"
+            },
+            "metrics": {
+              "description": "The set of available metrics available for this report.",
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "fullDescription": {
+                    "description": "Provides documentation describing the available metric.",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "The name of the available metric.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "description"
+                ],
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "name": {
+              "description": "Specifies the name of the report.",
+              "type": "string"
+            },
+            "outputType": {
+              "description": "The report type. Either `HIERARCHICAL` with two columns you can group data by, with the first being Time, or `FLAT`.",
+              "enum": [
+                "FLAT",
+                "HIERARCHICAL"
+              ],
+              "type": "string"
+            },
+            "requiredProducts": {
+              "description": "If specified, this lists any product you need to execute the report.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "requiredRoles": {
+              "description": "Information about required role to run this report.",
+              "items": {
+                "description": "A set of permissions, any of which you need to execute the report. Some permissions may correspond to specific `requiredProducts`.",
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "status": {
+              "description": "Whether this version of the report is `PUBLISHED` or `DEPRECATED`. Selecting `DEPRECATED` enables the `deprecated` JSON member.",
+              "enum": [
+                "PUBLISHED",
+                "DEPRECATED"
+              ],
+              "type": "string"
+            },
+            "version": {
+              "description": "The version of this report.",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "name",
+            "version",
+            "deprecated",
+            "status",
+            "available",
+            "dataRetentionDays",
+            "intervals",
+            "requiredRoles"
+          ],
+          "type": "object",
+          "x-akamai": {
+            "file-path": "schemas/report-list-row-schema.yaml"
+          }
+        },
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/ReportList.yaml"
+        }
+      },
+      "ReportListRow": {
+        "additionalProperties": false,
+        "description": "Describes the range of query options available for each report.",
+        "properties": {
+          "available": {
+            "description": "When enabled, indicates the report can be executed by the current user.",
+            "type": "boolean"
+          },
+          "businessObjectName": {
+            "description": "The name of the object by which data is queried.",
+            "type": "string"
+          },
+          "dataRetentionDays": {
+            "description": "The number of days for which this report's data is available.",
+            "type": "integer"
+          },
+          "deprecated": {
+            "description": "When enabled, indicates that this is an older version of the report.",
+            "type": "boolean"
+          },
+          "filters": {
+            "description": "The set of available filters available for this report.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "fullDescription": {
+                  "description": "Provides documentation describing the available filter.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "The name of the available filter.",
+                  "type": "string"
+                },
+                "required": {
+                  "description": "When enabled, you need to specify this filter when executing the report.",
+                  "type": "boolean"
+                },
+                "type": {
+                  "description": "The type of data this filter expects, either arbitrary `int` or `string`, or a fixed `enum` specified by `values`.",
+                  "enum": [
+                    "string",
+                    "int",
+                    "enum"
+                  ],
+                  "type": "string"
+                },
+                "values": {
+                  "description": "When the `type` of filter is `enum`, this lists available values.",
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "fullDescription": {
+                        "description": "Where necessary, provides documentation describing the enumerated value.",
+                        "type": "string"
+                      },
+                      "value": {
+                        "description": "Specifies each enumerated string value.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "fullDescription": {
+            "description": "Documentation that describes this report.",
+            "type": "string"
+          },
+          "groupBy": {
+            "description": "This indicates names of columns by which reported data is grouped. It's reflected in the generated report's metadata.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "groupOutlyingValues": {
+            "additionalProperties": false,
+            "description": "Specifies this report's support for grouping outlying values under a single category.",
+            "properties": {
+              "enabled": {
+                "description": "Indicates whether this report allows you to group outlying values.",
+                "type": "boolean"
+              },
+              "groupName": {
+                "default": "Other",
+                "description": "Indicates the default category name under which outlying values group within a single category. You can provide your own name to override this default.",
+                "type": "string"
+              },
+              "groupThreshold": {
+                "default": 9,
+                "description": "Indicates the default number of categories to report on separately before grouping under a single category. You can provide your own threshold value to override this default.",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "enabled"
+            ],
+            "type": "object"
+          },
+          "intervals": {
+            "description": "Specifies the set of available spans of time to aggregate data by. Use one of these values as the `interval` query parameter when executing the report.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "description": "The default number of data rows included for this report.",
+            "type": "integer"
+          },
+          "links": {
+            "description": "Specifies dynamic hypermedia links to report-generating operations.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "href": {
+                  "description": "The hypermedia URL linking the API resource.",
+                  "type": "string"
+                },
+                "method": {
+                  "default": "GET",
+                  "description": "The HTTP method to call the `href` link with. If unspecified, uses the GET method.",
+                  "type": "string"
+                },
+                "rel": {
+                  "description": "Identifies the type of resource.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "href",
+                "rel"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "maxLimit": {
+            "description": "The maximum number of data rows permitted for this report.",
+            "type": "integer"
+          },
+          "metrics": {
+            "description": "The set of available metrics available for this report.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "fullDescription": {
+                  "description": "Provides documentation describing the available metric.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "The name of the available metric.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "name": {
+            "description": "Specifies the name of the report.",
+            "type": "string"
+          },
+          "outputType": {
+            "description": "The report type. Either `HIERARCHICAL` with two columns you can group data by, with the first being Time, or `FLAT`.",
+            "enum": [
+              "FLAT",
+              "HIERARCHICAL"
+            ],
+            "type": "string"
+          },
+          "requiredProducts": {
+            "description": "If specified, this lists any product you need to execute the report.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "requiredRoles": {
+            "description": "Information about required role to run this report.",
+            "items": {
+              "description": "A set of permissions, any of which you need to execute the report. Some permissions may correspond to specific `requiredProducts`.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "status": {
+            "description": "Whether this version of the report is `PUBLISHED` or `DEPRECATED`. Selecting `DEPRECATED` enables the `deprecated` JSON member.",
+            "enum": [
+              "PUBLISHED",
+              "DEPRECATED"
+            ],
+            "type": "string"
+          },
+          "supportsPagination": {
+            "description": "Allows to use `page` and `pageSize` parameters to retrieve non aggregated data.",
+            "type": "boolean"
+          },
+          "timeBased": {
+            "description": "Groups report results by time.",
+            "type": "boolean"
+          },
+          "version": {
+            "description": "The version of this report.",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "available",
+          "dataRetentionDays",
+          "deprecated",
+          "intervals",
+          "name",
+          "requiredRoles",
+          "status",
+          "version"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/ReportListRow.yaml"
+        }
+      },
+      "ReportRequest": {
+        "additionalProperties": false,
+        "description": "Specifies available metrics for the report type, filters to reduce the data, and a set of objects to report on.",
+        "properties": {
+          "filters": {
+            "description": "Specifies a set of custom filters, with each filter's name keying an array with each filter's set of values. The set of available filters depends on the type of report.",
+            "type": "object"
+          },
+          "metrics": {
+            "description": "The set of desired metrics. The set of available metrics depends on the type of report. If omitted, the report includes all available metrics.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "objectIds": {
+            "description": "Unique IDs for the given object type you want to report on.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "objectIds"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/ReportRequest.yaml"
+        }
+      },
+      "ReportResponse": {
+        "additionalProperties": false,
+        "description": "Encapsulates the response report, including aggregated data and reflecting details on the request.",
+        "properties": {
+          "data": {
+            "description": "Array of objects representing data rows suitable for aggregation. The value of the `groupBy` array always appears as a key for each row to indicate by which metric it is grouped and sorted.",
+            "items": {
+              "additionalProperties": true,
+              "description": "Array of objects representing data rows suitable for aggregation. The value of the `groupBy` array always appears as a key for each row to indicate by which metric it is grouped and sorted.",
+              "properties": {
+                "startdatetime": {
+                  "description": "For certain time series reports, an ISO 8601 timestamp marking the start of each record.",
+                  "type": "string"
+                },
+                "timestamp": {
+                  "description": "For certain time series reports, an ISO 8601 timestamp marking the start of each record.",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/data-row-schema.yaml"
+              }
+            },
+            "type": "array"
+          },
+          "metadata": {
+            "additionalProperties": false,
+            "description": "Collects context about the requested data set based on the request's parameters and contents of the query request object, and supplies presentational information for use in report output.",
+            "properties": {
+              "_links": {
+                "description": "Links to self/previous/next pages of data.",
+                "type": "object"
+              },
+              "availableDataEnds": {
+                "description": "If data has not been finalized, this ISO 8601 timestamp indicates for when data is no longer available. Otherwise the value is `null` for finalized data.",
+                "nullable": true,
+                "type": "string"
+              },
+              "columns": {
+                "description": "Provides interface labels for `data` and `summaryStatistics` items.",
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "label": {
+                      "description": "The interface label to assign to the corresponding `name`.",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "The name of the `data` or `summaryStatistics` member.",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "end": {
+                "description": "The end range of the requested data in ISO 8601 format. This reflects the value of the [Generate a report](https://techdocs.akamai.com/reporting/reference/post-report-version-data) operation's `end` parameter.",
+                "type": "string"
+              },
+              "filters": {
+                "description": "List of all filters (explicitly provided by user as well as implicitly resolved) used when retrieving data for this report.",
+                "items": {
+                  "additionalProperties": false,
+                  "description": "Reflects the set of `filters` from the query request.",
+                  "properties": {
+                    "name": {
+                      "description": "Reflects the name of the filter specified in the request, or included in the default set for the report type.",
+                      "type": "string"
+                    },
+                    "value": {
+                      "description": "Reflects the set of requested filter values.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "groupBy": {
+                "description": "Specifies the set of fields by which `data` is grouped and sorted. The `groupBy` field is specified along with the request `metrics` in each `data` row.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "interval": {
+                "description": "The duration of each record in the report, either `FIVE_MINUTES`, `HOUR`, `DAY`, `WEEK`, or `MONTH`. This reflects the value of the [Generate a report](https://techdocs.akamai.com/reporting/reference/post-report-version-data) operation's `interval` parameter.",
+                "enum": [
+                  "FIVE_MINUTES",
+                  "HOUR",
+                  "DAY",
+                  "WEEK",
+                  "MONTH"
+                ],
+                "type": "string"
+              },
+              "name": {
+                "description": "The name of the current report type.",
+                "type": "string"
+              },
+              "objectIds": {
+                "description": "Reflects the set of `objectIds` from the query request.",
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "page": {
+                "description": "Current page of the data.",
+                "type": "integer"
+              },
+              "pageSize": {
+                "description": "Size of the current page.",
+                "type": "integer"
+              },
+              "rowCount": {
+                "description": "The total number of `data` records included in the report.",
+                "minimum": 0,
+                "multipleOf": 1,
+                "type": "integer"
+              },
+              "start": {
+                "description": "The start range of the requested data in ISO 8601 format. This reflects the value of the [operation's](https://techdocs.akamai.com/reporting/reference/post-report-version-data) `start` parameter.",
+                "type": "string"
+              },
+              "suggestedRetryTime": {
+                "description": "If data has not been finalized, this ISO 8601 timestamp indicates when it is estimated to complete. Otherwise the value is `null` for finalized data.",
+                "nullable": true,
+                "type": "string"
+              },
+              "uri": {
+                "description": "Reflects the URL called to retrieve this data.",
+                "type": "string"
+              },
+              "version": {
+                "description": "The version of the current report type.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "columns",
+              "filters",
+              "rowCount",
+              "interval",
+              "groupBy",
+              "end",
+              "availableDataEnds",
+              "suggestedRetryTime",
+              "start",
+              "objectIds"
+            ],
+            "type": "object",
+            "x-akamai": {
+              "file-path": "schemas/metadata-schema.yaml"
+            }
+          },
+          "summaryStatistics": {
+            "additionalProperties": false,
+            "description": "Collects Key Performance Indicator data. The name of each KPI metric serves as the object key.",
+            "properties": {
+              "keyPerformanceIndicator": {
+                "additionalProperties": false,
+                "description": "Encapsulates information for each Key Performance Indicator. The name of each KPI metric is the object key within the `summaryStatistics` object.",
+                "properties": {
+                  "details": {
+                    "additionalProperties": true,
+                    "description": "Collects additional context for each reported KPI. Otherwise the object is empty.",
+                    "minProperties": 0,
+                    "properties": {
+                      "startdatetime": {
+                        "description": "ISO 8601 timestamp indicating when this metric reached this value, for example when a desired minimum or maximum threshold was fulfilled.",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "value": {
+                    "description": "The value that qualifies a fulfilling the KPI. Numeric values are represented as strings.",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "details",
+                  "value"
+                ],
+                "type": "object"
+              }
+            },
+            "type": "object",
+            "x-akamai": {
+              "file-path": "schemas/kpi-result-schema.yaml"
+            }
+          }
+        },
+        "required": [
+          "data",
+          "metadata",
+          "summaryStatistics"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/ReportResponse.yaml"
+        }
+      },
+      "data-row-schema": {
+        "additionalProperties": true,
+        "description": "Array of objects representing data rows suitable for aggregation. The value of the `groupBy` array always appears as a key for each row to indicate by which metric it is grouped and sorted.",
+        "properties": {
+          "startdatetime": {
+            "description": "For certain time series reports, an ISO 8601 timestamp marking the start of each record.",
+            "type": "string"
+          },
+          "timestamp": {
+            "description": "For certain time series reports, an ISO 8601 timestamp marking the start of each record.",
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/data-row-schema.yaml"
+        }
+      },
+      "kpi-result-schema": {
+        "additionalProperties": false,
+        "description": "Collects Key Performance Indicator data. The name of each KPI metric serves as the object key.",
+        "properties": {
+          "keyPerformanceIndicator": {
+            "additionalProperties": false,
+            "description": "Encapsulates information for each Key Performance Indicator. The name of each KPI metric is the object key within the `summaryStatistics` object.",
+            "properties": {
+              "details": {
+                "additionalProperties": true,
+                "description": "Collects additional context for each reported KPI. Otherwise the object is empty.",
+                "minProperties": 0,
+                "properties": {
+                  "startdatetime": {
+                    "description": "ISO 8601 timestamp indicating when this metric reached this value, for example when a desired minimum or maximum threshold was fulfilled.",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              },
+              "value": {
+                "description": "The value that qualifies a fulfilling the KPI. Numeric values are represented as strings.",
+                "type": "string"
+              }
+            },
+            "required": [
+              "details",
+              "value"
+            ],
+            "type": "object"
+          }
+        },
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/kpi-result-schema.yaml"
+        }
+      },
+      "metadata-schema": {
+        "additionalProperties": false,
+        "description": "Collects context about the requested data set based on the request's parameters and contents of the query request object, and supplies presentational information for use in report output.",
+        "properties": {
+          "_links": {
+            "description": "Links to self/previous/next pages of data.",
+            "type": "object"
+          },
+          "availableDataEnds": {
+            "description": "If data has not been finalized, this ISO 8601 timestamp indicates for when data is no longer available. Otherwise the value is `null` for finalized data.",
+            "nullable": true,
+            "type": "string"
+          },
+          "columns": {
+            "description": "Provides interface labels for `data` and `summaryStatistics` items.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "label": {
+                  "description": "The interface label to assign to the corresponding `name`.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "The name of the `data` or `summaryStatistics` member.",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "end": {
+            "description": "The end range of the requested data in ISO 8601 format. This reflects the value of the [Generate a report](https://techdocs.akamai.com/reporting/reference/post-report-version-data) operation's `end` parameter.",
+            "type": "string"
+          },
+          "filters": {
+            "description": "List of all filters (explicitly provided by user as well as implicitly resolved) used when retrieving data for this report.",
+            "items": {
+              "additionalProperties": false,
+              "description": "Reflects the set of `filters` from the query request.",
+              "properties": {
+                "name": {
+                  "description": "Reflects the name of the filter specified in the request, or included in the default set for the report type.",
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Reflects the set of requested filter values.",
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "groupBy": {
+            "description": "Specifies the set of fields by which `data` is grouped and sorted. The `groupBy` field is specified along with the request `metrics` in each `data` row.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "interval": {
+            "description": "The duration of each record in the report, either `FIVE_MINUTES`, `HOUR`, `DAY`, `WEEK`, or `MONTH`. This reflects the value of the [Generate a report](https://techdocs.akamai.com/reporting/reference/post-report-version-data) operation's `interval` parameter.",
+            "enum": [
+              "FIVE_MINUTES",
+              "HOUR",
+              "DAY",
+              "WEEK",
+              "MONTH"
+            ],
+            "type": "string"
+          },
+          "name": {
+            "description": "The name of the current report type.",
+            "type": "string"
+          },
+          "objectIds": {
+            "description": "Reflects the set of `objectIds` from the query request.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "page": {
+            "description": "Current page of the data.",
+            "type": "integer"
+          },
+          "pageSize": {
+            "description": "Size of the current page.",
+            "type": "integer"
+          },
+          "rowCount": {
+            "description": "The total number of `data` records included in the report.",
+            "minimum": 0,
+            "multipleOf": 1,
+            "type": "integer"
+          },
+          "start": {
+            "description": "The start range of the requested data in ISO 8601 format. This reflects the value of the [operation's](https://techdocs.akamai.com/reporting/reference/post-report-version-data) `start` parameter.",
+            "type": "string"
+          },
+          "suggestedRetryTime": {
+            "description": "If data has not been finalized, this ISO 8601 timestamp indicates when it is estimated to complete. Otherwise the value is `null` for finalized data.",
+            "nullable": true,
+            "type": "string"
+          },
+          "uri": {
+            "description": "Reflects the URL called to retrieve this data.",
+            "type": "string"
+          },
+          "version": {
+            "description": "The version of the current report type.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "columns",
+          "filters",
+          "rowCount",
+          "interval",
+          "groupBy",
+          "end",
+          "availableDataEnds",
+          "suggestedRetryTime",
+          "start",
+          "objectIds"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/metadata-schema.yaml"
+        }
+      },
+      "report-list-row-schema": {
+        "additionalProperties": false,
+        "description": "Describes the range of query options available for each report.",
+        "properties": {
+          "available": {
+            "description": "When enabled, indicates the report can be executed by the current user.",
+            "type": "boolean"
+          },
+          "dataRetentionDays": {
+            "description": "The number of days for which this report's data is available.",
+            "type": "integer"
+          },
+          "deprecated": {
+            "description": "When enabled, indicates that this is an older version of the report.",
+            "type": "boolean"
+          },
+          "filters": {
+            "description": "The set of available filters available for this report.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "fullDescription": {
+                  "description": "Provides documentation describing the available filter.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "The name of the available filter.",
+                  "type": "string"
+                },
+                "required": {
+                  "description": "When enabled, you need to specify this filter when executing the report.",
+                  "type": "boolean"
+                },
+                "type": {
+                  "description": "The type of data this filter expects, either arbitrary `int` or `string`, or a fixed `enum` specified by `values`.",
+                  "enum": [
+                    "string",
+                    "int",
+                    "enum"
+                  ],
+                  "type": "string"
+                },
+                "values": {
+                  "description": "When the `type` of filter is `enum`, this lists available values.",
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "fullDescription": {
+                        "description": "Where necessary, provides documentation describing the enumerated value.",
+                        "type": "string"
+                      },
+                      "value": {
+                        "description": "Specifies each enumerated string value.",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "value"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "fullDescription": {
+            "description": "Documentation that describes this report.",
+            "type": "string"
+          },
+          "groupBy": {
+            "description": "This indicates names of columns by which reported data is grouped. It's reflected in the generated report's metadata.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "groupOutlyingValues": {
+            "additionalProperties": false,
+            "description": "Specifies this report's support for grouping outlying values under a single category.",
+            "properties": {
+              "enabled": {
+                "description": "Indicates whether this report allows you to group outlying values.",
+                "type": "boolean"
+              },
+              "groupName": {
+                "default": "Other",
+                "description": "Indicates the default category name under which outlying values group within a single category. You can provide your own name to override this default.",
+                "type": "string"
+              },
+              "groupThreshold": {
+                "default": 9,
+                "description": "Indicates the default number of categories to report on separately before grouping under a single category. You can provide your own threshold value to override this default.",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "enabled"
+            ],
+            "type": "object"
+          },
+          "intervals": {
+            "description": "Specifies the set of available spans of time to aggregate data by. Use one of these values as the `interval` query parameter when executing the report.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "description": "The default number of data rows included for this report.",
+            "type": "integer"
+          },
+          "links": {
+            "description": "Specifies dynamic hypermedia links to report-generating operations.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "href": {
+                  "description": "The hypermedia URL linking the API resource.",
+                  "type": "string"
+                },
+                "method": {
+                  "default": "GET",
+                  "description": "The HTTP method to call the `href` link with. If unspecified, uses the GET method.",
+                  "type": "string"
+                },
+                "rel": {
+                  "description": "Identifies the type of resource.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "rel",
+                "href"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "maxLimit": {
+            "description": "The maximum number of data rows permitted for this report.",
+            "type": "integer"
+          },
+          "metrics": {
+            "description": "The set of available metrics available for this report.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "fullDescription": {
+                  "description": "Provides documentation describing the available metric.",
+                  "type": "string"
+                },
+                "name": {
+                  "description": "The name of the available metric.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name",
+                "description"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "name": {
+            "description": "Specifies the name of the report.",
+            "type": "string"
+          },
+          "outputType": {
+            "description": "The report type. Either `HIERARCHICAL` with two columns you can group data by, with the first being Time, or `FLAT`.",
+            "enum": [
+              "FLAT",
+              "HIERARCHICAL"
+            ],
+            "type": "string"
+          },
+          "requiredProducts": {
+            "description": "If specified, this lists any product you need to execute the report.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "requiredRoles": {
+            "description": "Information about required role to run this report.",
+            "items": {
+              "description": "A set of permissions, any of which you need to execute the report. Some permissions may correspond to specific `requiredProducts`.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "status": {
+            "description": "Whether this version of the report is `PUBLISHED` or `DEPRECATED`. Selecting `DEPRECATED` enables the `deprecated` JSON member.",
+            "enum": [
+              "PUBLISHED",
+              "DEPRECATED"
+            ],
+            "type": "string"
+          },
+          "version": {
+            "description": "The version of this report.",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "version",
+          "deprecated",
+          "status",
+          "available",
+          "dataRetentionDays",
+          "intervals",
+          "requiredRoles"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/report-list-row-schema.yaml"
+        }
+      }
+    }
+  },
   "externalDocs": {
     "description": "See documentation for Akamai's Reporting API",
     "url": "https://techdocs.akamai.com/reporting/reference"

@@ -4,6 +4,23 @@ info:
   version: v3
 servers:
 - url: https://{hostname}/etp-config/v3
+tags:
+- name: Configurations
+  description: |
+    When you sign up for SIA, you receive a configuration and associated ID. This configuration contains settings for all of your sites, such as locations, policies, and quick lists. You can configure network configurations, global settings, and add or remove connectors to your base SIA configuration.
+- name: Acknowledgments
+  description: |
+    Acknowledgements contain a list of SIA keys and the customer's original account configuration agreement.
+- name: Custom error pages
+  description: |
+    "Custom error pages allow the SIA admin to customize the error page displayed in a user's browser based on the configuration
+    policy. \n"
+- name: Configuration wizard
+  description: |
+    These operations control the state of the configuration wizard process when the admin uses the wizard.
+- name: Bulk log export
+  description: |
+    These operations control the bulk log export destination and schedule configurations. 
 x-akamai:
   auth-type: EDGE_GRID
 paths:
@@ -14,7 +31,7 @@ paths:
       tags:
       - Configurations
       description: |
-        Returns a list of  configuration IDs. Use this value for a `configId` parameter in subsequent operations.
+        Returns a list of configuration IDs. Use this value for a `configId` parameter in subsequent operations.
       responses:
         200:
           description: |
@@ -69,7 +86,7 @@ paths:
     - $ref: parameters/configId-path.yaml
     post:
       operationId: post-config-acknowledgment
-      summary: Create acknowledgment info
+      summary: Create acknowledgment
       tags:
       - Acknowledgments
       description: |
@@ -96,7 +113,7 @@ paths:
           $ref: errors/not-found-404.yaml
     get:
       operationId: get-config-acknowledgment
-      summary: Get acknowledgment info
+      summary: Get acknowledgment
       tags:
       - Acknowledgments
       description: |
@@ -129,13 +146,12 @@ paths:
       - Custom error pages
       description: |
         Gets the custom error page for the configuration.
+      parameters:
+      - $ref: headers/if-match-header.yaml
       responses:
         200:
           description: |
             Successful response.
-          headers:
-            ETag:
-              $ref: headers/ETag.yaml
           content:
             application/json:
               example:
@@ -189,13 +205,12 @@ paths:
       - Configuration wizard
       description: |
         Provides the first time wizard status.
+      parameters:
+      - $ref: headers/if-match-header.yaml
       responses:
         200:
           description: |
             Successful response.
-          headers:
-            ETag:
-              $ref: headers/ETag.yaml
           content:
             application/json:
               example:
@@ -245,3 +260,211 @@ paths:
           $ref: errors/InsufficientPermissions-403.yaml
         412:
           $ref: errors/precondition-failed-412.yaml
+  /configs/{etpConfigId}/log-export:
+    parameters:
+    - $ref: parameters/etpConfigId-path.yaml
+    post:
+      operationId: post-log-export-destination
+      summary: Create a bulk log export destination config
+      tags:
+      - Bulk log export
+      description: |
+        Creates a bulk log export destination configuration, which includes three default export schedules. Supports Linode and Azure storage destinations.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              ex-create-destination-azure:
+                summary: Azure
+                value:
+                  $ref: examples/post-request-azure-export-destination-200.json
+              ex-create-destination-linode:
+                summary: Linode
+                value:
+                  $ref: examples/post-request-linode-export-destination-200.json
+            schema:
+              $ref: schemas/post-request-bulkLogExportDestination.yaml
+      responses:
+        200:
+          description: |
+            Successfully created.
+          content:
+            application/json:
+              examples:
+                ex-create-linode-destination-response:
+                  summary: Linode
+                  value:
+                    $ref: examples/postResponse-linode-export-destination-200.json
+                ex-create-azuree-destination-response:
+                  summary: Azure
+                  value:
+                    $ref: examples/postResponse-azure-export-destination-200.json
+              schema:
+                $ref: schemas/postResponse-bulkLogExportDestination-200.yaml
+        400:
+          $ref: errors/validation-error-400.yaml
+        401:
+          $ref: errors/unauthorized-401.yaml
+        403:
+          $ref: errors/InsufficientPermissions-403.yaml
+        404:
+          $ref: errors/not-found-404.yaml
+    get:
+      operationId: get-log-export-destination
+      summary: Get a bulk log export destination config
+      tags:
+      - Bulk log export
+      description: |
+        Retrieves the bulk log export destination configuration. 
+      responses:
+        200:
+          description: |
+            Successful response.
+          content:
+            application/json:
+              examples:
+                ex-get-destination-linode-response:
+                  summary: Linode
+                  value:
+                    $ref: examples/get-bulk-log-export-destination-linode-200.json
+                ex-get-destination-azure-response:
+                  summary: Azure
+                  value:
+                    $ref: examples/get-bulk-log-export-destination-azure-200.json
+              schema:
+                $ref: schemas/getResponse-bulk-log-export-destination-200.yaml
+        400:
+          $ref: errors/validation-error-400.yaml
+        401:
+          $ref: errors/unauthorized-401.yaml
+        403:
+          $ref: errors/InsufficientPermissions-403.yaml
+        412:
+          $ref: errors/precondition-failed-412.yaml
+  /configs/{etpConfigId}/log-export/{id}:
+    parameters:
+    - $ref: parameters/etpConfigId-path.yaml
+    - $ref: parameters/destinationId-path.yaml
+    - $ref: headers/if-match-header.yaml
+    post:
+      operationId: post-update-log-export-destination
+      summary: Update a bulk log export destination config
+      tags:
+      - Bulk log export
+      description: |
+        Updates the bulk log export destination configuration.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              ex-azure-update-request:
+                summary: Azure
+                value:
+                  $ref: examples/post-request-azure-export-destination-200.json
+              ex-linode-update-request:
+                summary: Linode
+                value:
+                  $ref: examples/post-request-linode-export-destination-200.json
+            schema:
+              $ref: schemas/post-request-bulkLogExportDestination.yaml
+      responses:
+        202:
+          description: |
+            Successful response.
+          content:
+            application/json:
+              examples:
+                ex-azure-response:
+                  summary: Azure
+                  value:
+                    $ref: examples/postResponse-azure-export-destination-200.json
+                ex-linode-response:
+                  summary: Linode
+                  value:
+                    $ref: examples/postResponse-linode-export-destination-200.json
+              schema:
+                $ref: schemas/post-request-bulkLogExportDestination.yaml
+        400:
+          $ref: errors/validation-error-400.yaml
+        401:
+          $ref: errors/unauthorized-401.yaml
+        403:
+          $ref: errors/InsufficientPermissions-403.yaml
+        404:
+          $ref: errors/not-found-404.yaml
+  /configs/{etpConfigId}/log-export/schedule:
+    parameters:
+    - $ref: parameters/etpConfigId-path.yaml
+    get:
+      operationId: get-log-export-schedules
+      summary: List bulk log export schedule configurations
+      tags:
+      - Bulk log export
+      description: |
+        Retrieves all bulk log export schedule configurations. 
+      responses:
+        200:
+          description: |
+            Successful response.
+          content:
+            application/json:
+              example:
+                $ref: examples/bulk-log-export-schedules-200.json
+              schema:
+                $ref: schemas/get-bulkLogExportSchedules-200.yaml
+        400:
+          $ref: errors/validation-error-400.yaml
+        401:
+          $ref: errors/unauthorized-401.yaml
+        403:
+          $ref: errors/InsufficientPermissions-403.yaml
+        412:
+          $ref: errors/precondition-failed-412.yaml
+  /configs/{etpConfigId}/log-export/schedule/{logExportScheduleId}/op/enable:
+    parameters:
+    - $ref: parameters/etpConfigId-path.yaml
+    - $ref: parameters/logExportScheduleId-path.yaml
+    post:
+      operationId: post-enable-log-export-schedule
+      summary: Enable a bulk log export schedule
+      tags:
+      - Bulk log export
+      description: |
+        Enables a bulk log export schedule. Schedules are disabled by default.
+      responses:
+        202:
+          description: |
+            Successful response.
+        400:
+          $ref: errors/validation-error-400.yaml
+        401:
+          $ref: errors/unauthorized-401.yaml
+        403:
+          $ref: errors/InsufficientPermissions-403.yaml
+        404:
+          $ref: errors/not-found-404.yaml
+  /configs/{etpConfigId}/log-export/schedule/{logExportScheduleId}/op/disable:
+    parameters:
+    - $ref: parameters/etpConfigId-path.yaml
+    - $ref: parameters/logExportScheduleId-path.yaml
+    post:
+      operationId: post-disable-log-export-schedule
+      summary: Disable a bulk log export schedule
+      tags:
+      - Bulk log export
+      description: |
+        Disables a bulk log export schedule. Schedules are disabled by default.
+      responses:
+        202:
+          description: |
+            Successful response.
+        400:
+          $ref: errors/validation-error-400.yaml
+        401:
+          $ref: errors/unauthorized-401.yaml
+        403:
+          $ref: errors/InsufficientPermissions-403.yaml
+        404:
+          $ref: errors/not-found-404.yaml

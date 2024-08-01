@@ -4,6 +4,19 @@ info:
   version: v3
 servers:
 - url: https://{hostname}/etp-config/v3
+tags:
+- name: DNS VIPs
+  description: |
+    DNS VIPs are virtual IP addresses assigned to allow DNS to resolve the internal IP addresses to the hostnames. 
+- name: Global settings
+  description: |
+    A collection of application settings applied to each of your properties by default.
+- name: Sites
+  description: |
+    A site is a named collection of public IP addresses that belong to a region or geographic area in your network, such as a CIDR block for an office branch or company headquarters. Use sites to compare the query's source IP with the IPs of configured sites. A site configuration must include the IP address of your Active Directory or other local DNS server used to communicate with SIA.
+- name: Sub-locations
+  description: |
+    A sub-location represents different virtual local area networks (VLANs) in your network that are routed to the Internet with the same IP address as a parent location.
 x-akamai:
   auth-type: EDGE_GRID
 paths:
@@ -12,11 +25,11 @@ paths:
     - $ref: parameters/configId-path.yaml
     get:
       operationId: get-dns-vips
-      summary: List DNS-VIPs
+      summary: List DNS VIPs
       tags:
       - DNS VIPs
       description: |
-        Provides DNS-VIPs details.
+        Provides DNS virtual IP details.
       responses:
         200:
           description: |
@@ -48,13 +61,11 @@ paths:
       parameters:
       - $ref: parameters/include-sourceipbind.yaml
       - $ref: parameters/contract-id.yaml
+      - $ref: headers/if-match-header.yaml
       responses:
         200:
           description: |
             Successful response.
-          headers:
-            ETag:
-              $ref: headers/ETag.yaml
           content:
             application/json:
               example:
@@ -138,7 +149,7 @@ paths:
       tags:
       - Sites
       description: |
-        Returns a list of all Sites for a configuration.
+        Returns a list of all sites for a configuration.
       responses:
         200:
           description: |
@@ -196,13 +207,12 @@ paths:
       - Sites
       description: |
         Returns the details of a specific Site.
+      parameters:
+      - $ref: headers/if-match-header.yaml
       responses:
         200:
           description: |
             Successful response.
-          headers:
-            ETag:
-              $ref: headers/ETag.yaml
           content:
             application/json:
               example:
@@ -256,7 +266,9 @@ paths:
       tags:
       - Sites
       description: |
-        Deletes a specific site.
+        Deletes a specific site. Add an `If-Match` header to prevent deleting any data another client has modified since you last accessed it.
+      parameters:
+      - $ref: headers/if-match-header.yaml
       responses:
         200:
           description: |
@@ -279,7 +291,7 @@ paths:
       operationId: post-site-sublocation
       summary: Create a sublocation
       tags:
-      - Sublocations
+      - Sub-locations
       description: |
         Creates a sublocation.
       requestBody:
@@ -307,11 +319,11 @@ paths:
           $ref: errors/not-found-404.yaml
     get:
       operationId: get-site-sublocations
-      summary: List sublocations
+      summary: List sub-locations
       tags:
       - Sublocations
       description: |
-        Returns the list of sublocations for the site.
+        Returns the list of sub-locations for the site.
       responses:
         200:
           description: |
@@ -339,16 +351,15 @@ paths:
       operationId: get-site-sublocation
       summary: Get a sublocation
       tags:
-      - Sublocations
+      - Sub-locations
       description: |
         Returns a sublocation detail.
+      parameters:
+      - $ref: headers/if-match-header.yaml
       responses:
         200:
           description: |
             Successful response.
-          headers:
-            ETag:
-              $ref: headers/ETag.yaml
           content:
             application/json:
               example:
@@ -367,7 +378,7 @@ paths:
       operationId: put-site-sublocation
       summary: Update a sublocation
       tags:
-      - Sublocations
+      - Sub-locations
       description: |
         Updates the sublocation.
       parameters:
@@ -398,9 +409,11 @@ paths:
       operationId: delete-site-sublocation
       summary: Remove a sublocation
       tags:
-      - Sublocations
+      - Sub-locations
       description: |
-        Deletes a specific sublocation.
+        Deletes a specific sublocation. Add an `If-Match` header to prevent deleting any data another client has modified since you last accessed it.
+      parameters:
+      - $ref: headers/if-match-header.yaml
       responses:
         200:
           description: |
@@ -424,7 +437,7 @@ paths:
       operationId: post-sublocation-policy
       summary: Assign a policy to a sublocation
       tags:
-      - Sublocations
+      - Sub-locations
       description: |
         Assigns a policy to the sublocation.
       requestBody:

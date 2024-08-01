@@ -1,4 +1,273 @@
 {
+  "components": {
+    "parameters": {
+      "id-path": {
+        "description": "A unique identifier for a map.",
+        "in": "path",
+        "name": "id",
+        "required": true,
+        "schema": {
+          "example": 1,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/id-path.yaml"
+        }
+      }
+    },
+    "schemas": {
+      "httpProblemDetails": {
+        "additionalProperties": true,
+        "description": "Collects data for errors.",
+        "properties": {
+          "detail": {
+            "description": "Detail error message.",
+            "type": "string"
+          },
+          "errors": {
+            "description": "A nested problem object.",
+            "items": {
+              "description": "A nested problem object.",
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/httpProblemDetails-nested.yaml"
+              }
+            },
+            "type": "array"
+          },
+          "instance": {
+            "description": "The non-referencable URI that indicates the error instance.",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP status code.",
+            "example": 404,
+            "type": "integer"
+          },
+          "title": {
+            "description": "The name of the error.",
+            "example": "Not found.",
+            "type": "string"
+          },
+          "type": {
+            "description": "The URL for the error type.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/httpProblemDetails.yaml"
+        }
+      },
+      "httpProblemDetails-nested": {
+        "description": "A nested problem object.",
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/httpProblemDetails-nested.yaml"
+        }
+      },
+      "siteShieldMap": {
+        "additionalProperties": false,
+        "description": "Collects data for a single Site Shield request map.",
+        "properties": {
+          "acknowledgeRequiredBy": {
+            "description": "Specifies the due date and time for when the proposed firewall addresses should be acknowledged.",
+            "type": "integer"
+          },
+          "acknowledged": {
+            "description": "Whether the given set of proposed firewall addresses are acknowledged.",
+            "type": "boolean"
+          },
+          "acknowledgedBy": {
+            "description": "Specifies the email of the user who acknowledged the previous proposed firewall addresses.",
+            "type": "string"
+          },
+          "acknowledgedOn": {
+            "description": "Specifies the date and time when proposed CIDR blocks were acknowledged.",
+            "type": "integer"
+          },
+          "contacts": {
+            "description": "A list of subscribed user email addresses.",
+            "items": {
+              "description": "An email address of a subscribed user.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "currentCidrs": {
+            "description": "A list of current CIDR blocks of firewall addresses.",
+            "items": {
+              "description": "A current CIDR block of firewall addresses.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "id": {
+            "description": "Identifies the request map.",
+            "type": "integer"
+          },
+          "latestTicketId": {
+            "description": "Identifies the most recent map request ticket.",
+            "type": "integer"
+          },
+          "mapAlias": {
+            "description": "A unique, recognizable name for the map.",
+            "type": "string"
+          },
+          "mcmMapRuleId": {
+            "description": "Identifies the Map Configuration Management (MCM) map rule.",
+            "type": "integer"
+          },
+          "proposedCidrs": {
+            "description": "CIDR blocks containing the Akamai-proposed firewall addresses.",
+            "items": {
+              "description": "A CIDR block of the Akamai-proposed firewall addresses.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "ruleName": {
+            "description": "Identifies the hostname for the Site Shield map, available from your Akamai representative. Use the `ruleName` to configure the [Site Shield behavior in PAPI](https://techdocs.akamai.com/property-mgr/reference/latest-site-shield).",
+            "type": "string"
+          },
+          "service": {
+            "description": "Indicates the network, either `C` for `script`, `S` for `ESSL`, or `W` for `FreeFlow`.",
+            "enum": [
+              "C",
+              "S",
+              "W"
+            ],
+            "type": "string"
+          },
+          "shared": {
+            "description": "Indicates whether the map is active in shared.",
+            "type": "boolean"
+          },
+          "sureRouteName": {
+            "description": "The name of the SureRoute map.",
+            "type": "string"
+          },
+          "type": {
+            "description": "Specifies the map type.",
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/siteShieldMap.yaml"
+        }
+      },
+      "siteShieldMaps": {
+        "additionalProperties": false,
+        "description": "Collects data for Site Shield maps.",
+        "properties": {
+          "siteShieldMaps": {
+            "description": "A list of Site Shield maps.",
+            "items": {
+              "additionalProperties": false,
+              "description": "Collects data for a single Site Shield request map.",
+              "properties": {
+                "acknowledgeRequiredBy": {
+                  "description": "Specifies the due date and time for when the proposed firewall addresses should be acknowledged.",
+                  "type": "integer"
+                },
+                "acknowledged": {
+                  "description": "Whether the given set of proposed firewall addresses are acknowledged.",
+                  "type": "boolean"
+                },
+                "acknowledgedBy": {
+                  "description": "Specifies the email of the user who acknowledged the previous proposed firewall addresses.",
+                  "type": "string"
+                },
+                "acknowledgedOn": {
+                  "description": "Specifies the date and time when proposed CIDR blocks were acknowledged.",
+                  "type": "integer"
+                },
+                "contacts": {
+                  "description": "A list of subscribed user email addresses.",
+                  "items": {
+                    "description": "An email address of a subscribed user.",
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "currentCidrs": {
+                  "description": "A list of current CIDR blocks of firewall addresses.",
+                  "items": {
+                    "description": "A current CIDR block of firewall addresses.",
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "id": {
+                  "description": "Identifies the request map.",
+                  "type": "integer"
+                },
+                "latestTicketId": {
+                  "description": "Identifies the most recent map request ticket.",
+                  "type": "integer"
+                },
+                "mapAlias": {
+                  "description": "A unique, recognizable name for the map.",
+                  "type": "string"
+                },
+                "mcmMapRuleId": {
+                  "description": "Identifies the Map Configuration Management (MCM) map rule.",
+                  "type": "integer"
+                },
+                "proposedCidrs": {
+                  "description": "CIDR blocks containing the Akamai-proposed firewall addresses.",
+                  "items": {
+                    "description": "A CIDR block of the Akamai-proposed firewall addresses.",
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                "ruleName": {
+                  "description": "Identifies the hostname for the Site Shield map, available from your Akamai representative. Use the `ruleName` to configure the [Site Shield behavior in PAPI](https://techdocs.akamai.com/property-mgr/reference/latest-site-shield).",
+                  "type": "string"
+                },
+                "service": {
+                  "description": "Indicates the network, either `C` for `script`, `S` for `ESSL`, or `W` for `FreeFlow`.",
+                  "enum": [
+                    "C",
+                    "S",
+                    "W"
+                  ],
+                  "type": "string"
+                },
+                "shared": {
+                  "description": "Indicates whether the map is active in shared.",
+                  "type": "boolean"
+                },
+                "sureRouteName": {
+                  "description": "The name of the SureRoute map.",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Specifies the map type.",
+                  "type": "string"
+                }
+              },
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/siteShieldMap.yaml"
+              }
+            },
+            "type": "array"
+          }
+        },
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/siteShieldMaps.yaml"
+        }
+      }
+    }
+  },
   "externalDocs": {
     "description": "See documentation for Akamai's Site Shield API",
     "url": "https://techdocs.akamai.com/site-shield/reference"

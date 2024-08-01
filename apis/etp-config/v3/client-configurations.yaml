@@ -4,6 +4,19 @@ info:
   version: v3
 servers:
 - url: https://{hostname}/etp-config/v3
+tags:
+- name: Client configuration
+  description: |
+    Enables managing client configurations. The operations include the SIA clients and network configuration along with version management and ability to activate and deactivate on demand.
+- name: Client versions
+  description: |
+    Tracks the client software versions deployed.
+- name: Client devices
+  description: |
+    Tracks the devices the SIA client is installed on.
+- name: Client network configurations
+  description: |
+    Configures network access settings for client devices. 
 x-akamai:
   auth-type: EDGE_GRID
 paths:
@@ -17,13 +30,12 @@ paths:
       - Client configuration
       description: |
         Provides client configuration details.
+      parameters:
+      - $ref: headers/if-match-header.yaml
       responses:
         200:
           description: |
             Successful response.
-          headers:
-            ETag:
-              $ref: headers/ETag.yaml
           content:
             application/json:
               example:
@@ -328,13 +340,12 @@ paths:
       - Client network configurations
       description: |
         Provides network configuration details.
+      parameters:
+      - $ref: headers/if-match-header.yaml
       responses:
         200:
           description: |
             Successful response.
-          headers:
-            ETag:
-              $ref: headers/ETag.yaml
           content:
             application/json:
               example:

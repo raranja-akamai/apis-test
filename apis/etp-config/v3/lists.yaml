@@ -4,6 +4,16 @@ info:
   version: v3
 servers:
 - url: https://{hostname}/etp-config/v3
+tags:
+- name: Lists
+  description: |
+    A list is a set of domain and IP addresses, URLs, and file hashes that are known or suspected to be malicious for a specific category of threat.
+- name: Akamai built-in security lists
+  description: |
+    By default, each policy is configured with Akamai security lists. These security lists contain domains and IP addresses identified by Akamai as threats in the category assigned to the list. Various network security resources are used to maintain and update these lists.
+- name: DNS cache
+  description: |
+    A collection of known DNS hosts that have already been resolved by a domain.
 x-akamai:
   auth-type: EDGE_GRID
 paths:
@@ -233,13 +243,12 @@ paths:
       - Lists
       description: |
         Returns the details of a specific list.
+      parameters:
+      - $ref: headers/if-match-header.yaml
       responses:
         200:
           description: |
             Successful response.
-          headers:
-            ETag:
-              $ref: headers/ETag.yaml
           content:
             application/json:
               example:
