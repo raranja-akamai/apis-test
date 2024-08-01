@@ -1,0 +1,58 @@
+type: object
+description: |
+  DLP file scan details.
+additionalProperties: false
+required:
+- fileName
+- fileHash
+- fileSize
+- fileType
+- scanStatus
+properties:
+  fileName:
+    type: string
+    description: |
+      Name of the scanned file.
+    minLength: 1
+  fileHash:
+    type: string
+    description: |
+      SHA-256 file hash of the scanned file.
+    minLength: 1
+  fileSize:
+    type: integer
+    description: |
+      File size of the scanned file in bytes.
+    minimum: 1
+  fileType:
+    type: string
+    description: |
+      MIME file extension of the scanned file.
+    minLength: 1
+  dictionaryId:
+    type: array
+    description: |
+      Unique ID of the dictionary matched during scan.
+    minItems: 0
+    items:
+      type: integer
+      minimum: 0
+  patternId:
+    type: array
+    description: |
+      Lists IDs of the patterns matched during scan.
+    minItems: 0
+    items:
+      type: integer
+      minimum: 0
+  isUpload:
+    type: boolean
+    description: |
+      Includes this data in the upload flow.
+  scanStatus:
+    type: string
+    description: |
+      'Scan status of this record. Values include `Scan Error: Scan Timeout`, `Scan Error`, `Scan Complete: Monitor`,
+      `Scan Complete: Block`, `Scan Complete`, `Unscannable: Encrypted File`, `Unscannable:
+      Super-compressed File`, `Unscannable: Regex Scan Error` or `Scan Error`.'
+    readOnly: true

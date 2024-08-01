@@ -1,0 +1,477 @@
+openapi: 3.0.0
+info:
+  title: Shield NS53
+  version: v2
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://{hostname}/config-dns/v2
+tags:
+- description: Groups operations to manage proxies.
+  name: DNS proxies
+- description: Groups operations to manage proxy zones.
+  name: Proxy zones
+- description: Groups operations to manage proxy zone filter conversions.
+  name: Proxy zones filter mode conversion
+x-akamai:
+  auth-type: EDGE_GRID
+  file-path: dns-shield.yaml
+paths:
+  /proxies:
+    post:
+      operationId: post-proxy
+      summary: Create a proxy
+      tags:
+      - DNS proxies
+      description: |
+        Creates a new proxy.
+      parameters:
+      - $ref: parameters/contractId-proxy-query.yaml
+      - $ref: parameters/groupAware_gid.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/proxy-post-request.json
+            schema:
+              $ref: schemas/proxy-post.yaml
+      responses:
+        201:
+          description: |
+            Successful response.
+          headers:
+            Location:
+              $ref: headers/Location.yaml
+          content:
+            application/json:
+              example:
+                $ref: examples/proxy-get.json
+              schema:
+                $ref: schemas/proxy-get.yaml
+    get:
+      operationId: get-proxy
+      summary: List proxies
+      tags:
+      - DNS proxies
+      description: |
+        Get all proxies that the current user has access to manage.
+      parameters:
+      - $ref: parameters/nameserver-proxy-query.yaml
+      responses:
+        200:
+          description: |
+            Proxies that you own.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-proxies-response-example.json
+              schema:
+                $ref: schemas/get-proxies-response.yaml
+  /proxies/healthcheck-recordset-types:
+    get:
+      operationId: get-proxy-healthcheck-recordset-types
+      summary: List valid proxy health check record set types
+      tags:
+      - DNS proxies
+      description: |
+        Lists the valid proxy health check record set types.
+      responses:
+        200:
+          description: |
+            The health check record set types allowed for proxies.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-healthcheck-record-types-200.json
+              schema:
+                $ref: schemas/get-healthcheck-record-types-response.yaml
+  /proxies/{proxyId}:
+    get:
+      operationId: get-proxy-id
+      summary: Get a proxy
+      tags:
+      - DNS proxies
+      description: |
+        Get the proxy that the current user has access to manage.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      responses:
+        200:
+          description: |
+            Proxy details.
+          content:
+            application/json:
+              example:
+                $ref: examples/proxy-get.json
+              schema:
+                $ref: schemas/proxy-get.yaml
+    put:
+      operationId: put-proxy
+      summary: Update a proxy
+      tags:
+      - DNS proxies
+      description: |
+        Updates the proxy.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/proxy-put-request.json
+            schema:
+              $ref: schemas/proxy-put.yaml
+      responses:
+        200:
+          description: |
+            Successful response.
+          headers:
+            Location:
+              $ref: headers/Location.yaml
+          content:
+            application/json:
+              example:
+                $ref: examples/proxy-get.json
+              schema:
+                $ref: schemas/proxy-get.yaml
+  /proxies/{proxyId}/zones:
+    get:
+      operationId: get-proxy-zones
+      summary: List proxy zones
+      tags:
+      - Proxy zones
+      description: |
+        Get all proxy zones that the current user has access to manage.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      - $ref: parameters/search-proxy-zone-query.yaml
+      - $ref: parameters/filtermode-proxy-zone-query.yaml
+      - $ref: parameters/pageable_page.yaml
+      - $ref: parameters/pageable_pageSize.yaml
+      - $ref: parameters/sortBy-keys-query.yaml
+      responses:
+        200:
+          description: |
+            Proxies that you own.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-proxy-zones-request-paginated.json
+              schema:
+                $ref: schemas/get-proxies-response-paginated.yaml
+  /proxies/{proxyId}/zones/filter-mode-convert/to-all:
+    post:
+      operationId: post-proxy-zone-manual-filter-mode-convert-all
+      summary: Convert a proxy zone filter mode to all
+      tags:
+      - Proxy zones filter mode conversion
+      description: |
+        Converts a proxy zone filter mode to all.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/proxy-zone-convert-list.json
+            schema:
+              $ref: schemas/proxy-zone-convert-list.yaml
+      responses:
+        204:
+          description: |
+            Successful operation.
+          content: {}
+  /proxies/{proxyId}/zones/filter-mode-convert/to-automatic:
+    post:
+      operationId: post-proxy-zone-manual-filter-mode-convert-automatic
+      summary: Convert a proxy zone filter mode to automatic
+      tags:
+      - Proxy zones filter mode conversion
+      description: |
+        Converts a proxy zone filter mode to automatic.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/proxy-zone-convert-list.json
+            schema:
+              $ref: schemas/proxy-zone-convert-list.yaml
+      responses:
+        204:
+          description: |
+            Successful operation.
+          content: {}
+  /proxies/{proxyId}/zones/filter-mode-convert/to-manual:
+    post:
+      operationId: post-proxy-zone-manual-filter-mode-convert-manual
+      summary: Convert a proxy zone filter mode to manual
+      tags:
+      - Proxy zones filter mode conversion
+      description: |
+        Converts a proxy zone filter mode to manual.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/proxy-zone-convert-list.json
+            schema:
+              $ref: schemas/proxy-zone-convert-list.yaml
+      responses:
+        204:
+          description: |
+            Successful operation.
+          content: {}
+  /proxies/{proxyId}/zones/filter-mode-convert/to-none:
+    post:
+      operationId: post-proxy-zone-manual-filter-mode-convert-none
+      summary: Convert a proxy zone filter mode to none
+      tags:
+      - Proxy zones filter mode conversion
+      description: |
+        Converts a proxy zone filter mode to none.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/proxy-zone-convert-list.json
+            schema:
+              $ref: schemas/proxy-zone-convert-list.yaml
+      responses:
+        204:
+          description: |
+            Successful operation.
+          content: {}
+  /proxies/{proxyId}/zones/keys:
+    get:
+      operationId: get-proxy-zone-keys
+      summary: List proxy zone keys
+      tags:
+      - Proxy zones
+      description: |
+        Get all proxy zones keys that the current user has access to manage.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      - $ref: parameters/pageable_page.yaml
+      - $ref: parameters/pageable_pageSize.yaml
+      responses:
+        200:
+          description: |
+            Proxy zones for the key that you own.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-proxy-zone-key-request.json
+              schema:
+                $ref: schemas/get-proxy-zone-key-response.yaml
+  /proxies/{proxyId}/zones/{name}:
+    get:
+      operationId: get-proxy-zones-name
+      summary: Get a proxy zone by name
+      tags:
+      - Proxy zones
+      description: |
+        Get a proxy zone that the current user has access to manage by proxy zone name.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      - $ref: parameters/proxy-zone-name-path.yaml
+      responses:
+        200:
+          description: |
+            A proxy zone that you own.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-proxy-zone-request.json
+              schema:
+                $ref: schemas/proxy-zone-post.yaml
+  /proxies/{proxyId}/zones/{name}/key:
+    get:
+      operationId: get-proxy-zones-name-key
+      summary: Get a proxy zone TSIG key by name
+      tags:
+      - Proxy zones
+      description: |
+        Get a TSIG key for a proxy zone that the current user has access to manage by proxy zone name.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      - $ref: parameters/proxy-zone-name-path.yaml
+      responses:
+        200:
+          description: |
+            A proxy zone TSIG key that you own.
+          content:
+            application/json:
+              example:
+                $ref: examples/tsigkey-post.json
+              schema:
+                $ref: schemas/tsigkey-post.yaml
+    put:
+      operationId: put-proxy-zones-name-key
+      summary: Update a proxy zone TSIG key by name
+      tags:
+      - Proxy zones
+      description: |
+        Update the proxy zone.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      - $ref: parameters/proxy-zone-name-path.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/tsigkey-post.json
+            schema:
+              $ref: schemas/tsigkey-post.yaml
+      responses:
+        204:
+          description: |
+            Successful operation.
+          content: {}
+    delete:
+      operationId: delete-proxy-zones-name-key
+      summary: Delete a proxy zone TSIG key by name
+      tags:
+      - Proxy zones
+      description: |
+        Delete a TSIG key for a proxy zone that the current user has access to manage by proxy zone name.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      - $ref: parameters/proxy-zone-name-path.yaml
+      responses:
+        204:
+          description: |
+            Successful operation.
+          content: {}
+  /proxies/{proxyId}/zones/{name}/key/used-by:
+    get:
+      operationId: get-proxy-zones-name-key-used-by
+      summary: Get proxy zones for a TSIG key
+      tags:
+      - Proxy zones
+      description: |
+        Get the proxy zones for a TSIG key.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      - $ref: parameters/proxy-zone-name-path.yaml
+      responses:
+        200:
+          description: |
+            Proxy zones for a TSIG key.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-proxies-response-example.json
+              schema:
+                $ref: schemas/get-proxies-response.yaml
+  /proxies/{proxyId}/zones/{name}/manual-filter-names:
+    get:
+      operationId: get-proxy-zone-manual-filter-report
+      summary: Get a manual filter report
+      tags:
+      - Proxy zones
+      description: |
+        Get manual filter report for a  proxy zone that the current user has access to manage.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      - $ref: parameters/proxy-zone-name-path.yaml
+      responses:
+        200:
+          description: |
+            A proxy zone manual config entries that you own.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-proxy-zone-manual-filter-report-200.json
+              schema:
+                $ref: schemas/proxy-zone-manual-filter-report.yaml
+  /proxies/{proxyId}/zones/{name}/manual-filter-names/manage:
+    post:
+      operationId: post-proxy-zone-manual-filter-names
+      summary: Manage manual filter names
+      tags:
+      - Proxy zones
+      description: |
+        Manage manual filter entries for a proxy zone that the current user has access to manage.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      - $ref: parameters/proxy-zone-name-path.yaml
+      - $ref: parameters/add-skip-query.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/post-proxy-zone-manual-filter-list.json
+            schema:
+              $ref: schemas/proxy-zone-manual-filter-list.yaml
+      responses:
+        200:
+          description: |
+            A proxy zone's manual config entry data on what was added, removed or skipped from being added as they already exist.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-proxy-zone-manual-filter-list-report-200.json
+              schema:
+                $ref: schemas/proxy-zone-manual-filter-list-report.yaml
+        400:
+          description: |
+            The submitted proxy zone's manual config entry data that was added or removed increased passed the limit allowed for the proxy zone.
+          content:
+            application/problem+json:
+              example:
+                $ref: examples/filter-list-report-too-many-400.json
+              schema:
+                $ref: schemas/filter-list-report-too-many-400.yaml
+        409:
+          description: |
+            A proxy zone's manual config entry data on what was added conflicts with one that already exists.
+          content:
+            application/problem+json:
+              example:
+                $ref: examples/filter-list-409.json
+              schema:
+                $ref: schemas/filter-list-report-conflicts-409.yaml
+  /proxies/{proxyId}/zones/{name}/manual-filter-names/zone-file:
+    post:
+      operationId: post-proxy-zone-manual-filter-names-file
+      summary: Initialize manual filter names with a zone file
+      tags:
+      - Proxy zones
+      description: |
+        Initializes manual filter names for a proxy zone. Use [Manage manual filter names operation](ref:post-proxy-zone-manual-filter-names) to update a proxy zone.
+      parameters:
+      - $ref: parameters/proxyId-path.yaml
+      - $ref: parameters/proxy-zone-name-path.yaml
+      requestBody:
+        required: true
+        content:
+          text/dns:
+            example:
+              $ref: examples/db.example.com
+            schema:
+              type: string
+      responses:
+        200:
+          description: |
+            A proxy zone's manual config entry data on what was added, removed or skipped from being added as they already exist.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-proxy-zone-manual-filter-list-report-200.json
+              schema:
+                $ref: schemas/proxy-zone-manual-filter-list-report.yaml
