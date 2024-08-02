@@ -1,99 +1,89 @@
 type: object
 description: |-
-  Returns details of a policy.
+  Contains information about a shared policy.
   
 x-akamai:
   file-path: schemas/policy.yaml
 additionalProperties: false
 required:
-- policyId
-- cloudletId
-- cloudletCode
-- groupId
-- name
-- description
+- cloudletType
 - createdBy
 - createdDate
-- lastModifiedBy
-- lastModifiedDate
-- activations
-- location
+- currentActivations
+- groupId
+- id
+- modifiedBy
+- modifiedDate
+- name
+- policyType
 properties:
+  id:
+    type: integer
+    description: |
+      Identifies the policy.
   name:
     type: string
     description: |
-      Name of the policy.
+      The name of the policy. You use this value to refer to a shared policy in Property Manager.
   description:
     type: string
     description: |
-      The description of the policy.
-  activations:
-    type: array
-    description: |
-      List of activations associated with the policy.
-    items:
-      $ref: policy-activation.yaml
-  apiVersion:
+      A human-readable label for the policy.
+  cloudletType:
     type: string
     description: |
-      The specific version of this API.
-  cloudletCode:
-    $ref: cloudlet-code-enum.yaml
-  cloudletId:
-    type: integer
-    description: |
-      The ID of cloudlet that this policy is for. The `cloudletId` for Edge Redirector is `0`, Visitor Prioritization is `1`, Forward Rewrite is `3`, Request Control is `4`, API Prioritization is `5`, Audience Segmentation is `6`, Phased Release is `7`, and Application Load Balancer is `9`. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation.
+      The two-letter code of the Cloudlet that the shared policy is for. Shared policies are available for API Prioritization (`AP`), Edge Redirector (`ER`), Forward Rewrite (`FR`), Audience Segmentation (`AS`), Request Control (`IG`), and Phased Release (`CD`).
     enum:
-    - 0
-    - 1
-    - 3
-    - 4
-    - 5
-    - 6
-    - 7
-    - 9
-  createDate:
-    type: integer
-    description: |
-      Date of the policy creation in milliseconds.
+    - AP
+    - ER
+    - FR
+    - AS
+    - IG
+    - CD
   createdBy:
     type: string
     description: |
-      User name who created the policy.
-  deleted:
-    type: boolean
+      The username who created the policy.
+  createdDate:
+    type: string
     description: |
-      Flag determining whether the policy is deleted or not.
+      ISO 8601 timestamp indicating when the policy was created.
+    format: date-time
+  currentActivations:
+    type: object
+    description: |
+      Information about the active policy version that's currently in use and the status of the most recent activation or deactivation operation on the policy's versions for the production and staging networks.
+    additionalProperties: false
+    required:
+    - production
+    - staging
+    properties:
+      production:
+        description: |
+          The policy version number that's currently in use on this network and the status of the most recent activation or deactivation operation for this policy's versions.
+        $ref: network-status.yaml
+      staging:
+        description: |
+          The policy version number that's currently in use on this network and the status of the most recent activation or deactivation operation for this policy's versions.
+        $ref: network-status.yaml
   groupId:
     type: integer
     description: |
-      The ID of the group this policy is associated with.
-  lastModifiedBy:
+      Identifies the group. See [About group IDs](ref:about-group-ids).
+  links:
+    $ref: links.yaml
+  modifiedBy:
     type: string
     description: |
-      User name who recently modified the policy.
-  lastModifiedDate:
-    type: integer
-    description: |
-      Date of the recent policy modification in milliseconds.
-  location:
+      The username who last modified the policy.
+  modifiedDate:
     type: string
     description: |
-      The navigable endpoint used for the object referred to in the operation.
-  policyId:
-    type: integer
-    description: |
-      ID of the policy.
-  propertyName:
+      ISO 8601 timestamp indicating when the policy was last modified.
+    format: date-time
+  policyType:
     type: string
     description: |
-      This field now only returns `null`. It does not reflect the properties currently associated with this Cloudlets policy.
-    nullable: true
-    deprecated: true
-  serviceVersion:
-    type: string
-    description: |
-      __Deprecated__ The build of the software running on the server. The value can be `null`.
-    x-akamai:
-      status: DEPRECATED
-    nullable: true
+      The type of policy. This API lets you create only `SHARED` policies.
+    enum:
+    - SHARED
