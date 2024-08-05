@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info:
+  title: ARL translator
+  version: v1
+servers:
+- url: https://{hostname}/edge-diagnostics/v1
+tags:
+- name: ARL translator
+  description: |
+    Get details about an [Akamai Resource Locator](https://techdocs.akamai.com/edge-diagnostics/docs/arl-syntax) (ARL),
+    which identifies URL content on each Akamai edge server.
+x-akamai:
+  auth-type: EDGE_GRID
+paths:
+  /translated-url:
+    post:
+      operationId: post-translated-url
+      summary: Translate an Akamaized URL
+      tags:
+      - ARL translator
+      description: |
+        Provides basic information about a specific hostname or domain name, such as typecode, origin server, CP code, serial number, and TTL. A URL becomes an [Akamaized URL (ARL)](doc:arl-syntax) once it's on an edge server.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/ArlRequest.json
+            schema:
+              $ref: schemas/ArlRequest.yaml
+      responses:
+        400:
+          $ref: errors/400.yaml
+        401:
+          $ref: errors/401.yaml
+        403:
+          $ref: errors/403.yaml
+        405:
+          $ref: errors/405.yaml
+        429:
+          $ref: errors/429.yaml
+        200:
+          description: |
+            The response provides details for the ARL.
+          headers:
+            X-RateLimit-Limit:
+              $ref: headers/X-RateLimit-Limit.yaml
+            X-RateLimit-Remaining:
+              $ref: headers/X-RateLimit-Remaining.yaml
+          content:
+            application/json:
+              example:
+                $ref: examples/ArlContainer.json
+              schema:
+                $ref: schemas/ArlContainer.yaml

@@ -1,0 +1,1581 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Active properties",
+    "version": "v3"
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/cloudlets/v3"
+    }
+  ],
+  "paths": {
+    "/policies/{policyId}/properties": {
+      "get": {
+        "description": "Returns all active properties that are assigned to the policy.\n",
+        "operationId": "get-policy-properties",
+        "parameters": [
+          {
+            "description": "Specifies a page number for batched results, starting at zero.\n",
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "example": 3,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/page-query.yaml"
+            }
+          },
+          {
+            "description": "Specifies the number of objects on a page, at least `10` objects.\n",
+            "in": "query",
+            "name": "size",
+            "required": true,
+            "schema": {
+              "example": 100,
+              "minimum": 10,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/size-query.yaml"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "page": {
+                    "number": 0,
+                    "size": 1000,
+                    "totalElements": 2,
+                    "totalPages": 1
+                  },
+                  "content": [
+                    {
+                      "groupId": 12345,
+                      "id": 1234,
+                      "name": "property",
+                      "network": "PRODUCTION",
+                      "version": 1,
+                      "links": []
+                    },
+                    {
+                      "groupId": 54321,
+                      "id": 1233,
+                      "name": "property",
+                      "network": "STAGING",
+                      "version": 1,
+                      "links": []
+                    }
+                  ],
+                  "links": [
+                    {
+                      "href": "/cloudlets/v3/policies/101/properties?page=0&size=1000",
+                      "rel": "self"
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Contains information about the newest property version and the property’s current configuration on the production and staging networks.\n",
+                  "properties": {
+                    "groupId": {
+                      "description": "The group association for the property.\n",
+                      "type": "integer"
+                    },
+                    "id": {
+                      "description": "Unique identifier for the property.\n",
+                      "type": "integer"
+                    },
+                    "name": {
+                      "description": "The name of the property. This value also appears at the start of each separate property object.\n",
+                      "type": "string"
+                    },
+                    "newestVersion": {
+                      "description": "Contains information about the newest property version.\n",
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Contains information about the newest property version and the property’s current configuration on the production and staging networks for a specific `policyId`.\n",
+                        "properties": {
+                          "activatedBy": {
+                            "description": "The name of the user who activated property.\n",
+                            "type": "string"
+                          },
+                          "activationDate": {
+                            "description": "The date, in ISO 8601 format indicating when the property was activated.\n",
+                            "format": "date",
+                            "type": "string"
+                          },
+                          "cloudletsOrigins": {
+                            "description": "Contains information about each conditional origin.\n",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "checksum": {
+                                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                                      "type": "string"
+                                    },
+                                    "description": {
+                                      "description": "The description of the load balancing configuration provided by a user.\n",
+                                      "type": "string"
+                                    },
+                                    "originId": {
+                                      "description": "The conditional origin's unique identifier.\n",
+                                      "maxLength": 63,
+                                      "minLength": 2,
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
+                                      "enum": [
+                                        "APPLICATION_LOAD_BALANCER"
+                                      ],
+                                      "type": "string"
+                                    }
+                                  },
+                                  "title": "APPLICATION_LOAD_BALANCER"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "checksum": {
+                                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                                      "type": "string"
+                                    },
+                                    "hostname": {
+                                      "description": "The name of the host that can be used as a conditional origin.\n",
+                                      "type": "string"
+                                    },
+                                    "originId": {
+                                      "description": "The conditional origin's unique identifier.\n",
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "description": "The type of origin this conditional origin is set up as, in this case `CUSTOMER`.\n",
+                                      "enum": [
+                                        "CUSTOMER"
+                                      ],
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "hostname",
+                                    "originId",
+                                    "type"
+                                  ],
+                                  "title": "CUSTOMER"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "checksum": {
+                                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                                      "type": "string"
+                                    },
+                                    "hostname": {
+                                      "description": "The name of the host that can be used as a conditional origin.\n",
+                                      "type": "string"
+                                    },
+                                    "originId": {
+                                      "description": "The conditional origin's unique identifier.\n",
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "description": "The type of origin this conditional origin is set up as, in this case `NETSTORAGE`.\n",
+                                      "enum": [
+                                        "NETSTORAGE"
+                                      ],
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "hostname",
+                                    "originId",
+                                    "type"
+                                  ],
+                                  "title": "NETSTORAGE"
+                                }
+                              ],
+                              "description": "Schema for a Cloudlets Origin.\n",
+                              "x-akamai": {
+                                "file-path": "schemas/origin.yaml"
+                              }
+                            },
+                            "type": "array"
+                          },
+                          "referencedPolicies": {
+                            "description": "The names of Cloudlets policies for this version of the property.\n",
+                            "type": "string"
+                          },
+                          "version": {
+                            "description": "The version number of the property.\n",
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/property.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "production": {
+                      "description": "Contains information about the property’s current configuration on the `production` network.\n",
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Contains information about the newest property version and the property’s current configuration on the production and staging networks for a specific `policyId`.\n",
+                        "properties": {
+                          "activatedBy": {
+                            "description": "The name of the user who activated property.\n",
+                            "type": "string"
+                          },
+                          "activationDate": {
+                            "description": "The date, in ISO 8601 format indicating when the property was activated.\n",
+                            "format": "date",
+                            "type": "string"
+                          },
+                          "cloudletsOrigins": {
+                            "description": "Contains information about each conditional origin.\n",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "checksum": {
+                                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                                      "type": "string"
+                                    },
+                                    "description": {
+                                      "description": "The description of the load balancing configuration provided by a user.\n",
+                                      "type": "string"
+                                    },
+                                    "originId": {
+                                      "description": "The conditional origin's unique identifier.\n",
+                                      "maxLength": 63,
+                                      "minLength": 2,
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
+                                      "enum": [
+                                        "APPLICATION_LOAD_BALANCER"
+                                      ],
+                                      "type": "string"
+                                    }
+                                  },
+                                  "title": "APPLICATION_LOAD_BALANCER"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "checksum": {
+                                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                                      "type": "string"
+                                    },
+                                    "hostname": {
+                                      "description": "The name of the host that can be used as a conditional origin.\n",
+                                      "type": "string"
+                                    },
+                                    "originId": {
+                                      "description": "The conditional origin's unique identifier.\n",
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "description": "The type of origin this conditional origin is set up as, in this case `CUSTOMER`.\n",
+                                      "enum": [
+                                        "CUSTOMER"
+                                      ],
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "hostname",
+                                    "originId",
+                                    "type"
+                                  ],
+                                  "title": "CUSTOMER"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "checksum": {
+                                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                                      "type": "string"
+                                    },
+                                    "hostname": {
+                                      "description": "The name of the host that can be used as a conditional origin.\n",
+                                      "type": "string"
+                                    },
+                                    "originId": {
+                                      "description": "The conditional origin's unique identifier.\n",
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "description": "The type of origin this conditional origin is set up as, in this case `NETSTORAGE`.\n",
+                                      "enum": [
+                                        "NETSTORAGE"
+                                      ],
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "hostname",
+                                    "originId",
+                                    "type"
+                                  ],
+                                  "title": "NETSTORAGE"
+                                }
+                              ],
+                              "description": "Schema for a Cloudlets Origin.\n",
+                              "x-akamai": {
+                                "file-path": "schemas/origin.yaml"
+                              }
+                            },
+                            "type": "array"
+                          },
+                          "referencedPolicies": {
+                            "description": "The names of Cloudlets policies for this version of the property.\n",
+                            "type": "string"
+                          },
+                          "version": {
+                            "description": "The version number of the property.\n",
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/property.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "staging": {
+                      "description": "Contains information about the property’s current configuration on the `staging` network.\n",
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Contains information about the newest property version and the property’s current configuration on the production and staging networks for a specific `policyId`.\n",
+                        "properties": {
+                          "activatedBy": {
+                            "description": "The name of the user who activated property.\n",
+                            "type": "string"
+                          },
+                          "activationDate": {
+                            "description": "The date, in ISO 8601 format indicating when the property was activated.\n",
+                            "format": "date",
+                            "type": "string"
+                          },
+                          "cloudletsOrigins": {
+                            "description": "Contains information about each conditional origin.\n",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "checksum": {
+                                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                                      "type": "string"
+                                    },
+                                    "description": {
+                                      "description": "The description of the load balancing configuration provided by a user.\n",
+                                      "type": "string"
+                                    },
+                                    "originId": {
+                                      "description": "The conditional origin's unique identifier.\n",
+                                      "maxLength": 63,
+                                      "minLength": 2,
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
+                                      "enum": [
+                                        "APPLICATION_LOAD_BALANCER"
+                                      ],
+                                      "type": "string"
+                                    }
+                                  },
+                                  "title": "APPLICATION_LOAD_BALANCER"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "checksum": {
+                                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                                      "type": "string"
+                                    },
+                                    "hostname": {
+                                      "description": "The name of the host that can be used as a conditional origin.\n",
+                                      "type": "string"
+                                    },
+                                    "originId": {
+                                      "description": "The conditional origin's unique identifier.\n",
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "description": "The type of origin this conditional origin is set up as, in this case `CUSTOMER`.\n",
+                                      "enum": [
+                                        "CUSTOMER"
+                                      ],
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "hostname",
+                                    "originId",
+                                    "type"
+                                  ],
+                                  "title": "CUSTOMER"
+                                },
+                                {
+                                  "additionalProperties": false,
+                                  "properties": {
+                                    "checksum": {
+                                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                                      "type": "string"
+                                    },
+                                    "hostname": {
+                                      "description": "The name of the host that can be used as a conditional origin.\n",
+                                      "type": "string"
+                                    },
+                                    "originId": {
+                                      "description": "The conditional origin's unique identifier.\n",
+                                      "type": "string"
+                                    },
+                                    "type": {
+                                      "description": "The type of origin this conditional origin is set up as, in this case `NETSTORAGE`.\n",
+                                      "enum": [
+                                        "NETSTORAGE"
+                                      ],
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "hostname",
+                                    "originId",
+                                    "type"
+                                  ],
+                                  "title": "NETSTORAGE"
+                                }
+                              ],
+                              "description": "Schema for a Cloudlets Origin.\n",
+                              "x-akamai": {
+                                "file-path": "schemas/origin.yaml"
+                              }
+                            },
+                            "type": "array"
+                          },
+                          "referencedPolicies": {
+                            "description": "The names of Cloudlets policies for this version of the property.\n",
+                            "type": "string"
+                          },
+                          "version": {
+                            "description": "The version number of the property.\n",
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/property.yaml"
+                        }
+                      },
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "groupId",
+                    "name",
+                    "newestVersion"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/get-properties-response.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Contains detailed information about all active properties that are assigned to the policy.\n"
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "instance": "cc6e9850-c426-4e17-8e33-cab96beccad8",
+                  "status": 403,
+                  "title": "Access Denied",
+                  "type": "/cloudlets/v3/error-types/access-denied",
+                  "errors": [
+                    {
+                      "title": "Access Denied",
+                      "detail": "User does not have view capability for Edge Redirector Cloudlet in group 120."
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "properties": {
+                    "errors": {
+                      "description": "A nested error object.\n",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "properties": {
+                          "instance": {
+                            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                            "type": "string"
+                          },
+                          "status": {
+                            "description": "HTTP response status code.\n",
+                            "type": "integer"
+                          },
+                          "title": {
+                            "description": "Short descriptive title of the problem response.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "A URI path that identifies the problem type.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "instance",
+                          "status",
+                          "title",
+                          "type",
+                          "errors"
+                        ],
+                        "x-akamai": {
+                          "file-path": "schemas/error-nested.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "HTTP response status code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Short descriptive title of the problem response.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI path that identifies the problem type.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "instance",
+                    "status",
+                    "title",
+                    "type",
+                    "errors"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[No permission to access this resource.](ref:403)\n"
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "instance": "a38da5f6-457c-4189-b4ae-9142623a7d41",
+                  "status": 404,
+                  "title": "Not found",
+                  "type": "/cloudlets/v3/error-types/not-found",
+                  "errors": [
+                    {
+                      "title": "Not found",
+                      "detail": "Policy with id `300001` not found."
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "properties": {
+                    "errors": {
+                      "description": "A nested error object.\n",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "properties": {
+                          "instance": {
+                            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                            "type": "string"
+                          },
+                          "status": {
+                            "description": "HTTP response status code.\n",
+                            "type": "integer"
+                          },
+                          "title": {
+                            "description": "Short descriptive title of the problem response.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "A URI path that identifies the problem type.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "instance",
+                          "status",
+                          "title",
+                          "type",
+                          "errors"
+                        ],
+                        "x-akamai": {
+                          "file-path": "schemas/error-nested.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "HTTP response status code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Short descriptive title of the problem response.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI path that identifies the problem type.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "instance",
+                    "status",
+                    "title",
+                    "type",
+                    "errors"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Resource not found.](ref:404)\n"
+          }
+        },
+        "summary": "Get active properties",
+        "tags": [
+          "Properties"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "The ID of the policy.\n",
+          "in": "path",
+          "name": "policyId",
+          "required": true,
+          "schema": {
+            "example": 1001,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/policyId-path.yaml"
+          }
+        }
+      ]
+    }
+  },
+  "components": {
+    "parameters": {
+      "policyId-path": {
+        "description": "The ID of the policy.\n",
+        "in": "path",
+        "name": "policyId",
+        "required": true,
+        "schema": {
+          "example": 1001,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/policyId-path.yaml"
+        }
+      },
+      "page-query": {
+        "description": "Specifies a page number for batched results, starting at zero.\n",
+        "in": "query",
+        "name": "page",
+        "required": true,
+        "schema": {
+          "example": 3,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/page-query.yaml"
+        }
+      },
+      "size-query": {
+        "description": "Specifies the number of objects on a page, at least `10` objects.\n",
+        "in": "query",
+        "name": "size",
+        "required": true,
+        "schema": {
+          "example": 100,
+          "minimum": 10,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/size-query.yaml"
+        }
+      }
+    },
+    "schemas": {
+      "albOrigin": {
+        "additionalProperties": false,
+        "properties": {
+          "checksum": {
+            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+            "type": "string"
+          },
+          "description": {
+            "description": "The description of the load balancing configuration provided by a user.\n",
+            "type": "string"
+          },
+          "originId": {
+            "description": "The conditional origin's unique identifier.\n",
+            "maxLength": 63,
+            "minLength": 2,
+            "type": "string"
+          },
+          "type": {
+            "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
+            "enum": [
+              "APPLICATION_LOAD_BALANCER"
+            ],
+            "type": "string"
+          }
+        },
+        "title": "APPLICATION_LOAD_BALANCER"
+      },
+      "customerOrigin": {
+        "additionalProperties": false,
+        "properties": {
+          "checksum": {
+            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+            "type": "string"
+          },
+          "hostname": {
+            "description": "The name of the host that can be used as a conditional origin.\n",
+            "type": "string"
+          },
+          "originId": {
+            "description": "The conditional origin's unique identifier.\n",
+            "type": "string"
+          },
+          "type": {
+            "description": "The type of origin this conditional origin is set up as, in this case `CUSTOMER`.\n",
+            "enum": [
+              "CUSTOMER"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "hostname",
+          "originId",
+          "type"
+        ],
+        "title": "CUSTOMER"
+      },
+      "netStorageOrigin": {
+        "additionalProperties": false,
+        "properties": {
+          "checksum": {
+            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+            "type": "string"
+          },
+          "hostname": {
+            "description": "The name of the host that can be used as a conditional origin.\n",
+            "type": "string"
+          },
+          "originId": {
+            "description": "The conditional origin's unique identifier.\n",
+            "type": "string"
+          },
+          "type": {
+            "description": "The type of origin this conditional origin is set up as, in this case `NETSTORAGE`.\n",
+            "enum": [
+              "NETSTORAGE"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "hostname",
+          "originId",
+          "type"
+        ],
+        "title": "NETSTORAGE"
+      },
+      "origin": {
+        "anyOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "checksum": {
+                "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                "type": "string"
+              },
+              "description": {
+                "description": "The description of the load balancing configuration provided by a user.\n",
+                "type": "string"
+              },
+              "originId": {
+                "description": "The conditional origin's unique identifier.\n",
+                "maxLength": 63,
+                "minLength": 2,
+                "type": "string"
+              },
+              "type": {
+                "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
+                "enum": [
+                  "APPLICATION_LOAD_BALANCER"
+                ],
+                "type": "string"
+              }
+            },
+            "title": "APPLICATION_LOAD_BALANCER"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "checksum": {
+                "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                "type": "string"
+              },
+              "hostname": {
+                "description": "The name of the host that can be used as a conditional origin.\n",
+                "type": "string"
+              },
+              "originId": {
+                "description": "The conditional origin's unique identifier.\n",
+                "type": "string"
+              },
+              "type": {
+                "description": "The type of origin this conditional origin is set up as, in this case `CUSTOMER`.\n",
+                "enum": [
+                  "CUSTOMER"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "hostname",
+              "originId",
+              "type"
+            ],
+            "title": "CUSTOMER"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "checksum": {
+                "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                "type": "string"
+              },
+              "hostname": {
+                "description": "The name of the host that can be used as a conditional origin.\n",
+                "type": "string"
+              },
+              "originId": {
+                "description": "The conditional origin's unique identifier.\n",
+                "type": "string"
+              },
+              "type": {
+                "description": "The type of origin this conditional origin is set up as, in this case `NETSTORAGE`.\n",
+                "enum": [
+                  "NETSTORAGE"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "hostname",
+              "originId",
+              "type"
+            ],
+            "title": "NETSTORAGE"
+          }
+        ],
+        "description": "Schema for a Cloudlets Origin.\n",
+        "x-akamai": {
+          "file-path": "schemas/origin.yaml"
+        }
+      },
+      "property": {
+        "additionalProperties": false,
+        "description": "Contains information about the newest property version and the property’s current configuration on the production and staging networks for a specific `policyId`.\n",
+        "properties": {
+          "activatedBy": {
+            "description": "The name of the user who activated property.\n",
+            "type": "string"
+          },
+          "activationDate": {
+            "description": "The date, in ISO 8601 format indicating when the property was activated.\n",
+            "format": "date",
+            "type": "string"
+          },
+          "cloudletsOrigins": {
+            "description": "Contains information about each conditional origin.\n",
+            "items": {
+              "anyOf": [
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "checksum": {
+                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                      "type": "string"
+                    },
+                    "description": {
+                      "description": "The description of the load balancing configuration provided by a user.\n",
+                      "type": "string"
+                    },
+                    "originId": {
+                      "description": "The conditional origin's unique identifier.\n",
+                      "maxLength": 63,
+                      "minLength": 2,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
+                      "enum": [
+                        "APPLICATION_LOAD_BALANCER"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "title": "APPLICATION_LOAD_BALANCER"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "checksum": {
+                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                      "type": "string"
+                    },
+                    "hostname": {
+                      "description": "The name of the host that can be used as a conditional origin.\n",
+                      "type": "string"
+                    },
+                    "originId": {
+                      "description": "The conditional origin's unique identifier.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "The type of origin this conditional origin is set up as, in this case `CUSTOMER`.\n",
+                      "enum": [
+                        "CUSTOMER"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "hostname",
+                    "originId",
+                    "type"
+                  ],
+                  "title": "CUSTOMER"
+                },
+                {
+                  "additionalProperties": false,
+                  "properties": {
+                    "checksum": {
+                      "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                      "type": "string"
+                    },
+                    "hostname": {
+                      "description": "The name of the host that can be used as a conditional origin.\n",
+                      "type": "string"
+                    },
+                    "originId": {
+                      "description": "The conditional origin's unique identifier.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "The type of origin this conditional origin is set up as, in this case `NETSTORAGE`.\n",
+                      "enum": [
+                        "NETSTORAGE"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "hostname",
+                    "originId",
+                    "type"
+                  ],
+                  "title": "NETSTORAGE"
+                }
+              ],
+              "description": "Schema for a Cloudlets Origin.\n",
+              "x-akamai": {
+                "file-path": "schemas/origin.yaml"
+              }
+            },
+            "type": "array"
+          },
+          "referencedPolicies": {
+            "description": "The names of Cloudlets policies for this version of the property.\n",
+            "type": "string"
+          },
+          "version": {
+            "description": "The version number of the property.\n",
+            "type": "integer"
+          }
+        },
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/property.yaml"
+        }
+      },
+      "get-properties-response": {
+        "additionalProperties": false,
+        "description": "Contains information about the newest property version and the property’s current configuration on the production and staging networks.\n",
+        "properties": {
+          "groupId": {
+            "description": "The group association for the property.\n",
+            "type": "integer"
+          },
+          "id": {
+            "description": "Unique identifier for the property.\n",
+            "type": "integer"
+          },
+          "name": {
+            "description": "The name of the property. This value also appears at the start of each separate property object.\n",
+            "type": "string"
+          },
+          "newestVersion": {
+            "description": "Contains information about the newest property version.\n",
+            "items": {
+              "additionalProperties": false,
+              "description": "Contains information about the newest property version and the property’s current configuration on the production and staging networks for a specific `policyId`.\n",
+              "properties": {
+                "activatedBy": {
+                  "description": "The name of the user who activated property.\n",
+                  "type": "string"
+                },
+                "activationDate": {
+                  "description": "The date, in ISO 8601 format indicating when the property was activated.\n",
+                  "format": "date",
+                  "type": "string"
+                },
+                "cloudletsOrigins": {
+                  "description": "Contains information about each conditional origin.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "checksum": {
+                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                            "type": "string"
+                          },
+                          "description": {
+                            "description": "The description of the load balancing configuration provided by a user.\n",
+                            "type": "string"
+                          },
+                          "originId": {
+                            "description": "The conditional origin's unique identifier.\n",
+                            "maxLength": 63,
+                            "minLength": 2,
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
+                            "enum": [
+                              "APPLICATION_LOAD_BALANCER"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "title": "APPLICATION_LOAD_BALANCER"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "checksum": {
+                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                            "type": "string"
+                          },
+                          "hostname": {
+                            "description": "The name of the host that can be used as a conditional origin.\n",
+                            "type": "string"
+                          },
+                          "originId": {
+                            "description": "The conditional origin's unique identifier.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "The type of origin this conditional origin is set up as, in this case `CUSTOMER`.\n",
+                            "enum": [
+                              "CUSTOMER"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "hostname",
+                          "originId",
+                          "type"
+                        ],
+                        "title": "CUSTOMER"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "checksum": {
+                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                            "type": "string"
+                          },
+                          "hostname": {
+                            "description": "The name of the host that can be used as a conditional origin.\n",
+                            "type": "string"
+                          },
+                          "originId": {
+                            "description": "The conditional origin's unique identifier.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "The type of origin this conditional origin is set up as, in this case `NETSTORAGE`.\n",
+                            "enum": [
+                              "NETSTORAGE"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "hostname",
+                          "originId",
+                          "type"
+                        ],
+                        "title": "NETSTORAGE"
+                      }
+                    ],
+                    "description": "Schema for a Cloudlets Origin.\n",
+                    "x-akamai": {
+                      "file-path": "schemas/origin.yaml"
+                    }
+                  },
+                  "type": "array"
+                },
+                "referencedPolicies": {
+                  "description": "The names of Cloudlets policies for this version of the property.\n",
+                  "type": "string"
+                },
+                "version": {
+                  "description": "The version number of the property.\n",
+                  "type": "integer"
+                }
+              },
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/property.yaml"
+              }
+            },
+            "type": "array"
+          },
+          "production": {
+            "description": "Contains information about the property’s current configuration on the `production` network.\n",
+            "items": {
+              "additionalProperties": false,
+              "description": "Contains information about the newest property version and the property’s current configuration on the production and staging networks for a specific `policyId`.\n",
+              "properties": {
+                "activatedBy": {
+                  "description": "The name of the user who activated property.\n",
+                  "type": "string"
+                },
+                "activationDate": {
+                  "description": "The date, in ISO 8601 format indicating when the property was activated.\n",
+                  "format": "date",
+                  "type": "string"
+                },
+                "cloudletsOrigins": {
+                  "description": "Contains information about each conditional origin.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "checksum": {
+                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                            "type": "string"
+                          },
+                          "description": {
+                            "description": "The description of the load balancing configuration provided by a user.\n",
+                            "type": "string"
+                          },
+                          "originId": {
+                            "description": "The conditional origin's unique identifier.\n",
+                            "maxLength": 63,
+                            "minLength": 2,
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
+                            "enum": [
+                              "APPLICATION_LOAD_BALANCER"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "title": "APPLICATION_LOAD_BALANCER"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "checksum": {
+                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                            "type": "string"
+                          },
+                          "hostname": {
+                            "description": "The name of the host that can be used as a conditional origin.\n",
+                            "type": "string"
+                          },
+                          "originId": {
+                            "description": "The conditional origin's unique identifier.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "The type of origin this conditional origin is set up as, in this case `CUSTOMER`.\n",
+                            "enum": [
+                              "CUSTOMER"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "hostname",
+                          "originId",
+                          "type"
+                        ],
+                        "title": "CUSTOMER"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "checksum": {
+                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                            "type": "string"
+                          },
+                          "hostname": {
+                            "description": "The name of the host that can be used as a conditional origin.\n",
+                            "type": "string"
+                          },
+                          "originId": {
+                            "description": "The conditional origin's unique identifier.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "The type of origin this conditional origin is set up as, in this case `NETSTORAGE`.\n",
+                            "enum": [
+                              "NETSTORAGE"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "hostname",
+                          "originId",
+                          "type"
+                        ],
+                        "title": "NETSTORAGE"
+                      }
+                    ],
+                    "description": "Schema for a Cloudlets Origin.\n",
+                    "x-akamai": {
+                      "file-path": "schemas/origin.yaml"
+                    }
+                  },
+                  "type": "array"
+                },
+                "referencedPolicies": {
+                  "description": "The names of Cloudlets policies for this version of the property.\n",
+                  "type": "string"
+                },
+                "version": {
+                  "description": "The version number of the property.\n",
+                  "type": "integer"
+                }
+              },
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/property.yaml"
+              }
+            },
+            "type": "array"
+          },
+          "staging": {
+            "description": "Contains information about the property’s current configuration on the `staging` network.\n",
+            "items": {
+              "additionalProperties": false,
+              "description": "Contains information about the newest property version and the property’s current configuration on the production and staging networks for a specific `policyId`.\n",
+              "properties": {
+                "activatedBy": {
+                  "description": "The name of the user who activated property.\n",
+                  "type": "string"
+                },
+                "activationDate": {
+                  "description": "The date, in ISO 8601 format indicating when the property was activated.\n",
+                  "format": "date",
+                  "type": "string"
+                },
+                "cloudletsOrigins": {
+                  "description": "Contains information about each conditional origin.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "checksum": {
+                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                            "type": "string"
+                          },
+                          "description": {
+                            "description": "The description of the load balancing configuration provided by a user.\n",
+                            "type": "string"
+                          },
+                          "originId": {
+                            "description": "The conditional origin's unique identifier.\n",
+                            "maxLength": 63,
+                            "minLength": 2,
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "The type of origin this conditional origin is set up as. In this response the conditonal origin `type` is `APPLICATION_LOAD_BALANCER`.\n",
+                            "enum": [
+                              "APPLICATION_LOAD_BALANCER"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "title": "APPLICATION_LOAD_BALANCER"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "checksum": {
+                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                            "type": "string"
+                          },
+                          "hostname": {
+                            "description": "The name of the host that can be used as a conditional origin.\n",
+                            "type": "string"
+                          },
+                          "originId": {
+                            "description": "The conditional origin's unique identifier.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "The type of origin this conditional origin is set up as, in this case `CUSTOMER`.\n",
+                            "enum": [
+                              "CUSTOMER"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "hostname",
+                          "originId",
+                          "type"
+                        ],
+                        "title": "CUSTOMER"
+                      },
+                      {
+                        "additionalProperties": false,
+                        "properties": {
+                          "checksum": {
+                            "description": "The checksum that distinguishes this conditional origin from any others that might share the same name.\n",
+                            "type": "string"
+                          },
+                          "hostname": {
+                            "description": "The name of the host that can be used as a conditional origin.\n",
+                            "type": "string"
+                          },
+                          "originId": {
+                            "description": "The conditional origin's unique identifier.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "The type of origin this conditional origin is set up as, in this case `NETSTORAGE`.\n",
+                            "enum": [
+                              "NETSTORAGE"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "hostname",
+                          "originId",
+                          "type"
+                        ],
+                        "title": "NETSTORAGE"
+                      }
+                    ],
+                    "description": "Schema for a Cloudlets Origin.\n",
+                    "x-akamai": {
+                      "file-path": "schemas/origin.yaml"
+                    }
+                  },
+                  "type": "array"
+                },
+                "referencedPolicies": {
+                  "description": "The names of Cloudlets policies for this version of the property.\n",
+                  "type": "string"
+                },
+                "version": {
+                  "description": "The version number of the property.\n",
+                  "type": "integer"
+                }
+              },
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/property.yaml"
+              }
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "groupId",
+          "name",
+          "newestVersion"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/get-properties-response.yaml"
+        }
+      },
+      "error-nested": {
+        "additionalProperties": true,
+        "properties": {
+          "instance": {
+            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+            "type": "string"
+          },
+          "status": {
+            "description": "HTTP response status code.\n",
+            "type": "integer"
+          },
+          "title": {
+            "description": "Short descriptive title of the problem response.\n",
+            "type": "string"
+          },
+          "type": {
+            "description": "A URI path that identifies the problem type.\n",
+            "type": "string"
+          }
+        },
+        "required": [
+          "instance",
+          "status",
+          "title",
+          "type",
+          "errors"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/error-nested.yaml"
+        }
+      },
+      "error": {
+        "additionalProperties": true,
+        "properties": {
+          "errors": {
+            "description": "A nested error object.\n",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "instance": {
+                  "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "HTTP response status code.\n",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Short descriptive title of the problem response.\n",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "A URI path that identifies the problem type.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "instance",
+                "status",
+                "title",
+                "type",
+                "errors"
+              ],
+              "x-akamai": {
+                "file-path": "schemas/error-nested.yaml"
+              }
+            },
+            "type": "array"
+          },
+          "instance": {
+            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+            "type": "string"
+          },
+          "status": {
+            "description": "HTTP response status code.\n",
+            "type": "integer"
+          },
+          "title": {
+            "description": "Short descriptive title of the problem response.\n",
+            "type": "string"
+          },
+          "type": {
+            "description": "A URI path that identifies the problem type.\n",
+            "type": "string"
+          }
+        },
+        "required": [
+          "instance",
+          "status",
+          "title",
+          "type",
+          "errors"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/error.yaml"
+        }
+      }
+    }
+  },
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "policy-propertyinfo.yaml"
+  }
+}

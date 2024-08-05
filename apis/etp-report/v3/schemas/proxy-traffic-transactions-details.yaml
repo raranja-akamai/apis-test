@@ -1,0 +1,42 @@
+type: object
+description: |
+  Proxy traffic transaction event details and a list of matching events.
+additionalProperties: false
+required:
+- id
+properties:
+  id:
+    type: string
+    description: |
+      Unique ID of the network connections.
+    minLength: 1
+  configId:
+    type: string
+    description: |
+      The contract ID for the request.
+    minLength: 1
+  l7Protocol:
+    type: string
+    description: |
+      The layer 7 protocol used to make the DNS query or web request. Either `DNS`, `HTTP`, or `HTTPS`.
+    enum:
+    - DNS
+    - HTTP
+    - HTTPS
+  request:
+    $ref: request.yaml
+  response:
+    $ref: response.yaml
+  event:
+    $ref: events.yaml
+  userIdentity:
+    $ref: user-identity.yaml
+  isEvent:
+    type: boolean
+    description: |
+      Whether the traffic creates an event.
+  startTimeSec:
+    type: integer
+    description: |
+      The start time for report data, in epoch seconds.
+    minimum: 1

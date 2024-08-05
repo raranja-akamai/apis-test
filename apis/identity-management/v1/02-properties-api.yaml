@@ -1,0 +1,149 @@
+openapi: 3.0.0
+info:
+  title: Properties
+  version: '3'
+servers:
+- url: https://{hostname}/identity-management/v3
+tags:
+- name: Properties
+  description: |
+    Fetch properties used by an account with their details, including their users.
+- name: Resources
+  description: |
+    Fetch resources used by a property.
+x-akamai:
+  auth-type: EDGE_GRID
+paths:
+  /user-admin/properties:
+    get:
+      operationId: get-properties
+      summary: List properties
+      tags:
+      - Properties
+      description: |
+        This operation lists the properties for the current account or other managed accounts using the `accountSwitchKey` parameter. Include the `groupId` parameter in your request to filter the results by group.
+      parameters:
+      - $ref: parameters/group-id-opt-group-id.yaml
+      responses:
+        200:
+          description: |
+            The response provides the properties.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-response-properties.json
+              schema:
+                $ref: schemas/list-of-property-list-item.yaml
+  /user-admin/properties/{propertyId}:
+    parameters:
+    - $ref: parameters/property-id-path.yaml
+    get:
+      operationId: get-property
+      summary: Get a property
+      tags:
+      - Properties
+      description: |
+        This operation lists a property's details.
+      parameters:
+      - $ref: parameters/group-id-req-qp-group-id.yaml
+      responses:
+        200:
+          description: |
+            The response provides the property's details.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-response-property-details.json
+              schema:
+                $ref: schemas/property-response.yaml
+    put:
+      operationId: put-property
+      summary: Move a property
+      tags:
+      - Properties
+      description: |
+        This operation moves a property from one group to another group. You can only move a property into another group within the same group hierarchy. Depending on your role in the destination group, you may lose access to resources the property uses. After moving a property, run the [List users affected by moving a group](ref:get-move-affected-users) operation to determine which users gained or lost access.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/put-request-property-move.json
+            schema:
+              $ref: schemas/move-property-request.yaml
+      responses:
+        204:
+          description: |
+            Property successfully moved.
+  /user-admin/properties/{propertyId}/resources:
+    parameters:
+    - $ref: parameters/property-id-path.yaml
+    get:
+      operationId: get-property-resources
+      summary: Get property resources
+      tags:
+      - Resources
+      description: |
+        This operation lists resources a property uses to deliver your web content across Akamai's edge network. You can think of these resources as objects, like CP codes and configuration files. For example, an ARL (Akamai resource locator) configuration file specifies how Akamai purges versions of an object that you can’t purge using just the URL.
+      parameters:
+      - $ref: parameters/group-id-req-qp-group-id.yaml
+      responses:
+        200:
+          description: |
+            The response provides the resources.
+          content:
+            application/json:
+              example:
+                $ref: examples/get-response-property-resources.json
+              schema:
+                $ref: schemas/list-of-resource-item.yaml
+  /user-admin/properties/{propertyId}/users:
+    parameters:
+    - $ref: parameters/property-id-path.yaml
+    get:
+      operationId: get-property-users
+      summary: List users for property
+      tags:
+      - Properties
+      description: |
+        This operation lists users who can access a property.
+      parameters:
+      - $ref: parameters/user-type-query.yaml
+      responses:
+        200:
+          description: |
+            The response provides the users accessing the property.
+          content:
+            application/json:
+              example:
+                $ref: examples/put-response-block-uiidentities.json
+              schema:
+                $ref: schemas/users-of-property-response.yaml
+  /user-admin/properties/{propertyId}/users/block:
+    parameters:
+    - $ref: parameters/property-id-path.yaml
+    put:
+      operationId: put-property-users-block
+      summary: Block users
+      tags:
+      - Properties
+      description: |
+        This operation blocks the users on a property.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              $ref: examples/put-request-block-uiidentities.json
+            schema:
+              $ref: schemas/users-block-uiidentities.yaml
+      responses:
+        200:
+          description: |
+            The response provides the users blocked from the property.
+          content:
+            application/json:
+              example:
+                $ref: examples/put-response-block-uiidentities.json
+              schema:
+                $ref: schemas/users-of-property-response.yaml

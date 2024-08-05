@@ -1,0 +1,45 @@
+openapi: 3.0.0
+info:
+  title: Admin events reports
+  version: '1'
+servers:
+- url: https://{hostname}/crux/v1
+x-akamai:
+  auth-type: EDGE_GRID
+paths:
+  /mgmt-pop/adminevents-reports/ops/reports:
+    get:
+      operationId: get-adminevents-reports
+      summary: List admin event reports
+      tags:
+      - Admin events reports
+      description: |
+        Lists admin event reports with optional custom filters.
+      parameters:
+      - $ref: parameters/contractId-query.yaml
+      - $ref: parameters/sts-query.yaml
+      - $ref: parameters/ets-query.yaml
+      - $ref: parameters/event_type-query.yaml
+      - $ref: parameters/res_type-query.yaml
+      responses:
+        400:
+          $ref: errors/400.yaml
+        401:
+          $ref: errors/401.yaml
+        403:
+          $ref: errors/403.yaml
+        404:
+          $ref: errors/404.yaml
+        405:
+          $ref: errors/405.yaml
+        415:
+          $ref: errors/415.yaml
+        200:
+          description: |
+            Successful response.
+          content:
+            application/json:
+              example:
+                $ref: examples/admin-events-get-body-200.json
+              schema:
+                $ref: schemas/admin-events.yaml

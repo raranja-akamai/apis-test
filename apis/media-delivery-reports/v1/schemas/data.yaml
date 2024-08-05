@@ -1,0 +1,156 @@
+type: object
+description: |-
+  TBD Add description.
+  
+x-akamai:
+  file-path: schemas/data.yaml
+additionalProperties: false
+required:
+- columns
+- rows
+- metaData
+properties:
+  columns:
+    type: array
+    description: |
+      Encapsulates context for each element listed within corresponding `rows`.
+    minItems: 1
+    uniqueItems: true
+    items:
+      type: object
+      additionalProperties: false
+      required:
+      - type
+      - id
+      - name
+      - index
+      properties:
+        id:
+          type: integer
+          description: |
+            TBD Add description.
+          minimum: 0
+        name:
+          type: string
+          description: |
+            Depending on the `type`, provides the name of the relevant dimension or metric.
+          minLength: 1
+        type:
+          type: string
+          description: |
+            Type of data: `DIMENSION` or `METRIC`.
+          enum:
+          - DIMENSION
+          - METRIC
+        description:
+          type: string
+          description: |
+            TBD Add description.
+          minLength: 1
+        aggregate:
+          type: string
+          description: |
+            TBD Add description.
+          minLength: 1
+        dataType:
+          type: string
+          description: |
+            Type of data: `STRING`, `NUMBER`, `ENCODED`, `DATE`, `COUNT`, `TIME`, `BIT_FLAG`, `VOLUME`, `BANDWIDTH`, `PERCENT`, `CONTINENT`, `COUNTRY`, `REGION`, `CPCODE`, `ACGID`, `DOMAIN` or `STREAM`.
+          enum:
+            $ref: dataType-enum.yaml
+        index:
+          type: integer
+          description: |
+            Positions each column within the table.
+          minimum: 0
+        unit:
+          type: string
+          description: |
+            Unit of column: `TIME`, `SECONDS`, `MINUTES`, `COUNT`, `HITS`, `BYTES`, `MS`, `MBPS`, `KBPS`, `MB`, `GB`, `NUMBER`, `MBIT/SEC`, `HITS/SEC` or `%`.
+          enum:
+            $ref: unit-enum.yaml
+  metaData:
+    type: object
+    description: |
+      Reflects the set of parameter values included in the request that determines this report's results.
+    additionalProperties: false
+    required:
+    - startTimeInEpoch
+    - endTimeInEpoch
+    - aggregation
+    - timeZone
+    - limit
+    - offset
+    - hasMoreData
+    properties:
+      aggregation:
+        type: integer
+        description: |
+          The time span included in each record, expressed in seconds.
+        minimum: 0
+      dasTable:
+        type: string
+        description: |
+          TBD Add description.
+        minLength: 1
+      endTimeInEpoch:
+        type: integer
+        description: |
+          The end of the requested time range, in epoch seconds.
+        minimum: 0
+      hasMoreData:
+        type: boolean
+        description: |
+          Indicates that a constrained set of requested data doesn't represent the entire set.
+      limit:
+        type: integer
+        description: |
+          The maximum number of requested data `rows`.
+        default: 300
+        minimum: 0
+      messages:
+        type: array
+        description: |
+          TBD Add description.
+        minItems: 1
+        items:
+          type: string
+          minLength: 1
+      offset:
+        type: integer
+        description: |
+          The offset of the row from which the data should start. Used with overall `limit`, it reflects where a batch of data starts. For example, setting both `offset` and `limit` to `100` selects rows 101-200 from the overall results.
+        minimum: 0
+      reportPack:
+        type: string
+        description: |
+          TBD Add description.
+        minLength: 1
+      rtWindow:
+        type: integer
+        description: |
+          TBD Add description.
+        minimum: 0
+      startTimeInEpoch:
+        type: integer
+        description: |
+          The start of the requested time range, in epoch seconds.
+        minimum: 0
+      timeZone:
+        type: string
+        description: |
+          Identifies the time zone from which the request was made.
+        minLength: 1
+  rows:
+    type: array
+    description: |
+      Encapsulates the report's two-dimensional table data. If there's no data to report, the array is empty.
+    minItems: 0
+    uniqueItems: true
+    items:
+      type: array
+      minItems: 1
+      uniqueItems: true
+      items:
+        type: string
+        minLength: 1
