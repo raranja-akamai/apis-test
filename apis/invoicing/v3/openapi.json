@@ -14,6 +14,24 @@
           "file-path": "parameters/contractId-path.yaml"
         }
       },
+      "fileFormat-query": {
+        "description": "File format of the invoice. These are the available values: `PDF`, `CSV`, and `JSON`.",
+        "in": "query",
+        "name": "fileFormat",
+        "required": true,
+        "schema": {
+          "enum": [
+            "PDF",
+            "CSV",
+            "JSON"
+          ],
+          "example": "PDF",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/fileFormat-query.yaml"
+        }
+      },
       "invoiceId-path": {
         "description": "Identifies the invoice or credit memo that you want to download.",
         "in": "path",
@@ -34,28 +52,10 @@
         "required": true,
         "schema": {
           "example": "2020-07",
-          "format": "date",
           "type": "string"
         },
         "x-akamai": {
           "file-path": "parameters/monthQueryParam_month.yaml"
-        }
-      },
-      "sourceType-query": {
-        "description": "Source type of the invoice, either `REGULAR` for Control Center services, or `COMPUTE` for the Cloud Computing usage data. For the `COMPUTE` source type, data is available in the CSV format only, for invoices from February 2024 onwards. ",
-        "in": "query",
-        "name": "sourceType",
-        "schema": {
-          "default": "COMPUTE",
-          "enum": [
-            "REGULAR",
-            "COMPUTE"
-          ],
-          "example": "REGULAR",
-          "type": "string"
-        },
-        "x-akamai": {
-          "file-path": "parameters/sourceType-query.yaml"
         }
       }
     },
@@ -129,7 +129,7 @@
             }
           }
         },
-        "description": "[Bad request](https://techdocs.akamai.com/invoice-api/reference/400).",
+        "description": "[Bad request](https://techdocs.akamai.com/invoice/reference/400).",
         "x-akamai": {
           "file-path": "errors/400.yaml"
         }
@@ -202,7 +202,7 @@
             }
           }
         },
-        "description": "[Authorization error](https://techdocs.akamai.com/invoice-api/reference/401).",
+        "description": "[Authorization error](https://techdocs.akamai.com/invoice/reference/401).",
         "x-akamai": {
           "file-path": "errors/401.yaml"
         }
@@ -276,7 +276,7 @@
             }
           }
         },
-        "description": "[Access is forbidden](https://techdocs.akamai.com/invoice-api/reference/403).",
+        "description": "[Access is forbidden](https://techdocs.akamai.com/invoice/reference/403).",
         "x-akamai": {
           "file-path": "errors/403.yaml"
         }
@@ -287,7 +287,7 @@
             "example": {
               "errors": [
                 {
-                  "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                  "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                   "type": "/billing/error-types/3"
                 }
               ],
@@ -350,7 +350,7 @@
             }
           }
         },
-        "description": "[Resource not found](https://techdocs.akamai.com/invoice-api/reference/404).",
+        "description": "[Resource not found](https://techdocs.akamai.com/invoice/reference/404).",
         "x-akamai": {
           "file-path": "errors/404.yaml"
         }
@@ -424,7 +424,7 @@
             }
           }
         },
-        "description": "[Method not allowed](https://techdocs.akamai.com/invoice-api/reference/405).",
+        "description": "[Method not allowed](https://techdocs.akamai.com/invoice/reference/405).",
         "x-akamai": {
           "file-path": "errors/405.yaml"
         }
@@ -492,7 +492,7 @@
             }
           }
         },
-        "description": "[Server error](https://techdocs.akamai.com/invoice-api/reference/500).",
+        "description": "[Server error](https://techdocs.akamai.com/invoice/reference/500).",
         "x-akamai": {
           "file-path": "errors/500.yaml"
         }
@@ -518,23 +518,13 @@
             "items": {
               "additionalProperties": false,
               "properties": {
-                "contentType": {
-                  "description": "The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.",
+                "fileFormat": {
+                  "description": "The format of the file, either `PDF`, `CSV`, or `JSON`.",
                   "enum": [
-                    "application/json",
-                    "application/pdf",
-                    "text/csv"
+                    "PDF",
+                    "CSV",
+                    "JSON"
                   ],
-                  "type": "string"
-                },
-                "fileCreationDate": {
-                  "description": "The date when the file was created.",
-                  "format": "date",
-                  "type": "string"
-                },
-                "fileLink": {
-                  "description": "The link to download the file.",
-                  "format": "uri-reference",
                   "type": "string"
                 },
                 "fileName": {
@@ -546,23 +536,12 @@
                   "description": "The version of the file.",
                   "minimum": 1,
                   "type": "integer"
-                },
-                "sourceType": {
-                  "description": "The source type of the file, either `REGULAR` or `COMPUTE`.",
-                  "enum": [
-                    "REGULAR",
-                    "COMPUTE"
-                  ],
-                  "type": "string"
                 }
               },
               "required": [
                 "fileName",
-                "fileVersion",
-                "fileCreationDate",
-                "sourceType",
-                "fileLink",
-                "contentType"
+                "fileFormat",
+                "fileVersion"
               ],
               "type": "object"
             },
@@ -638,23 +617,13 @@
               "items": {
                 "additionalProperties": false,
                 "properties": {
-                  "contentType": {
-                    "description": "The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.",
+                  "fileFormat": {
+                    "description": "The format of the file, either `PDF`, `CSV`, or `JSON`.",
                     "enum": [
-                      "application/json",
-                      "application/pdf",
-                      "text/csv"
+                      "PDF",
+                      "CSV",
+                      "JSON"
                     ],
-                    "type": "string"
-                  },
-                  "fileCreationDate": {
-                    "description": "The date when the file was created.",
-                    "format": "date",
-                    "type": "string"
-                  },
-                  "fileLink": {
-                    "description": "The link to download the file.",
-                    "format": "uri-reference",
                     "type": "string"
                   },
                   "fileName": {
@@ -666,23 +635,12 @@
                     "description": "The version of the file.",
                     "minimum": 1,
                     "type": "integer"
-                  },
-                  "sourceType": {
-                    "description": "The source type of the file, either `REGULAR` or `COMPUTE`.",
-                    "enum": [
-                      "REGULAR",
-                      "COMPUTE"
-                    ],
-                    "type": "string"
                   }
                 },
                 "required": [
                   "fileName",
-                  "fileVersion",
-                  "fileCreationDate",
-                  "sourceType",
-                  "fileLink",
-                  "contentType"
+                  "fileFormat",
+                  "fileVersion"
                 ],
                 "type": "object"
               },
@@ -873,7 +831,7 @@
   },
   "externalDocs": {
     "description": "See documentation for Akamai's Invoicing API",
-    "url": "https://techdocs.akamai.com/invoice-api/reference"
+    "url": "https://techdocs.akamai.com/invoice/reference"
   },
   "info": {
     "description": "Develop your own tools to track invoice files, and keep others updated about their status.\n",
@@ -882,7 +840,7 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "title": "Akamai: Invoicing API",
-    "version": "v4"
+    "version": "v1"
   },
   "openapi": "3.0.0",
   "paths": {
@@ -891,7 +849,7 @@
         "description": "Returns invoices and credit memos for the specified contract and the selected month.",
         "externalDocs": {
           "description": "See documentation for this operation in Akamai's Invoicing API",
-          "url": "https://techdocs.akamai.com/invoice-api/reference/get-contracts-invoices"
+          "url": "https://techdocs.akamai.com/invoice/reference/get-contracts-invoices"
         },
         "operationId": "get-contracts-invoices",
         "parameters": [
@@ -903,7 +861,6 @@
             "required": true,
             "schema": {
               "example": "2020-07",
-              "format": "date",
               "type": "string"
             },
             "x-akamai": {
@@ -932,20 +889,14 @@
                     "contractId": "C-0N7RAC7",
                     "files": [
                       {
-                        "contentType": "application/pdf",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "fileFormat": "PDF",
                         "fileName": "InvoiceName_1-XYZ_1-ABCD_1234567890_FINAL_1.pdf",
-                        "fileVersion": 1,
-                        "sourceType": "REGULAR"
+                        "fileVersion": 1
                       },
                       {
-                        "contentType": "text/csv",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "fileFormat": "CSV",
                         "fileName": "1234567890_1.csv",
-                        "fileVersion": 1,
-                        "sourceType": "REGULAR"
+                        "fileVersion": 1
                       }
                     ],
                     "invoiceCurrency": "USD",
@@ -960,20 +911,14 @@
                     "contractId": "K-0N7RAK71",
                     "files": [
                       {
-                        "contentType": "application/pdf",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
-                        "fileName": "CreditMemoName_1-XYZ_1-ABCD_8234567890_FINAL_COMPUTE_1.pdf",
-                        "fileVersion": 2,
-                        "sourceType": "COMPUTE"
+                        "fileFormat": "PDF",
+                        "fileName": "CreditMemoName_1-XYZ_1-ABCD_8234567890_FINAL_1.pdf",
+                        "fileVersion": 2
                       },
                       {
-                        "contentType": "text/csv",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
-                        "fileName": "8234567890_COMPUTE_1.csv",
-                        "fileVersion": 2,
-                        "sourceType": "COMPUTE"
+                        "fileFormat": "CSV",
+                        "fileName": "8234567890_1.csv",
+                        "fileVersion": 2
                       }
                     ],
                     "invoiceCurrency": "USD",
@@ -1005,23 +950,13 @@
                         "items": {
                           "additionalProperties": false,
                           "properties": {
-                            "contentType": {
-                              "description": "The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.",
+                            "fileFormat": {
+                              "description": "The format of the file, either `PDF`, `CSV`, or `JSON`.",
                               "enum": [
-                                "application/json",
-                                "application/pdf",
-                                "text/csv"
+                                "PDF",
+                                "CSV",
+                                "JSON"
                               ],
-                              "type": "string"
-                            },
-                            "fileCreationDate": {
-                              "description": "The date when the file was created.",
-                              "format": "date",
-                              "type": "string"
-                            },
-                            "fileLink": {
-                              "description": "The link to download the file.",
-                              "format": "uri-reference",
                               "type": "string"
                             },
                             "fileName": {
@@ -1033,23 +968,12 @@
                               "description": "The version of the file.",
                               "minimum": 1,
                               "type": "integer"
-                            },
-                            "sourceType": {
-                              "description": "The source type of the file, either `REGULAR` or `COMPUTE`.",
-                              "enum": [
-                                "REGULAR",
-                                "COMPUTE"
-                              ],
-                              "type": "string"
                             }
                           },
                           "required": [
                             "fileName",
-                            "fileVersion",
-                            "fileCreationDate",
-                            "sourceType",
-                            "fileLink",
-                            "contentType"
+                            "fileFormat",
+                            "fileVersion"
                           ],
                           "type": "object"
                         },
@@ -1187,7 +1111,7 @@
                 }
               }
             },
-            "description": "[Bad request](https://techdocs.akamai.com/invoice-api/reference/400).",
+            "description": "[Bad request](https://techdocs.akamai.com/invoice/reference/400).",
             "x-akamai": {
               "file-path": "errors/400.yaml"
             }
@@ -1260,7 +1184,7 @@
                 }
               }
             },
-            "description": "[Authorization error](https://techdocs.akamai.com/invoice-api/reference/401).",
+            "description": "[Authorization error](https://techdocs.akamai.com/invoice/reference/401).",
             "x-akamai": {
               "file-path": "errors/401.yaml"
             }
@@ -1334,7 +1258,7 @@
                 }
               }
             },
-            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice-api/reference/403).",
+            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice/reference/403).",
             "x-akamai": {
               "file-path": "errors/403.yaml"
             }
@@ -1345,7 +1269,7 @@
                 "example": {
                   "errors": [
                     {
-                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                       "type": "/billing/error-types/3"
                     }
                   ],
@@ -1408,7 +1332,7 @@
                 }
               }
             },
-            "description": "[Resource not found](https://techdocs.akamai.com/invoice-api/reference/404).",
+            "description": "[Resource not found](https://techdocs.akamai.com/invoice/reference/404).",
             "x-akamai": {
               "file-path": "errors/404.yaml"
             }
@@ -1482,7 +1406,7 @@
                 }
               }
             },
-            "description": "[Method not allowed](https://techdocs.akamai.com/invoice-api/reference/405).",
+            "description": "[Method not allowed](https://techdocs.akamai.com/invoice/reference/405).",
             "x-akamai": {
               "file-path": "errors/405.yaml"
             }
@@ -1550,7 +1474,7 @@
                 }
               }
             },
-            "description": "[Server error](https://techdocs.akamai.com/invoice-api/reference/500).",
+            "description": "[Server error](https://techdocs.akamai.com/invoice/reference/500).",
             "x-akamai": {
               "file-path": "errors/500.yaml"
             }
@@ -1580,29 +1504,30 @@
     },
     "/contracts/{contractId}/invoices/{invoiceId}/download": {
       "get": {
-        "description": "Returns the content of the selected contract's invoice, credit memo file, or usage data for Cloud Computing services. The downloadable file is available in the response body. The format of the file depends on the value of the `Accept` header. Available formats are `CSV`, `PDF`, and `JSON`. ",
+        "description": "Returns the content of the selected contract's invoice or credit memo file. The downloadable file is available in the response body. The `Content-Type` depends on the format of the file you're downloading.",
         "externalDocs": {
           "description": "See documentation for this operation in Akamai's Invoicing API",
-          "url": "https://techdocs.akamai.com/invoice-api/reference/get-contract-invoice-download"
+          "url": "https://techdocs.akamai.com/invoice/reference/get-contract-invoice-download"
         },
         "operationId": "get-contract-invoice-download",
         "parameters": [
           {
-            "description": "__Enum__ Source type of the invoice, either `REGULAR` for Control Center services, or `COMPUTE` for the Cloud Computing usage data. For the `COMPUTE` source type, data is available in the CSV format only, for invoices from February 2024 onwards. ",
-            "example": "{{sourceType}}",
+            "description": "__Enum__ File format of the invoice. These are the available values: `PDF`, `CSV`, and `JSON`.",
+            "example": "{{fileFormat}}",
             "in": "query",
-            "name": "sourceType",
+            "name": "fileFormat",
+            "required": true,
             "schema": {
-              "default": "COMPUTE",
               "enum": [
-                "REGULAR",
-                "COMPUTE"
+                "PDF",
+                "CSV",
+                "JSON"
               ],
-              "example": "REGULAR",
+              "example": "PDF",
               "type": "string"
             },
             "x-akamai": {
-              "file-path": "parameters/sourceType-query.yaml"
+              "file-path": "parameters/fileFormat-query.yaml"
             }
           },
           {
@@ -1619,68 +1544,7 @@
         ],
         "responses": {
           "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "additionalProperties": true,
-                  "example": {
-                    "INVOICE": {
-                      "ACCOUNT_ID": "A-CCT7890",
-                      "ACCOUNT_NAME": "Main Street Corporation",
-                      "END_CUSTOMER": [
-                        {
-                          "END_CUSTOMER_ACCOUNT_ID": "A-CCT7890",
-                          "END_CUSTOMER_ACCOUNT_NAME": "Main Street Corporation",
-                          "END_CUSTOMER_EXTERNAL_REFERENCE": "1234567890",
-                          "END_CUSTOMER_ORDER_ID": "1-23ABC4",
-                          "INVOICE_LINE": [
-                            {
-                              "CREDITED_INVOICE_LINE_NUMBER": null,
-                              "CREDITED_INVOICE_NUMBER": null,
-                              "EFFECTIVE_END_DATE": "2022-01-31",
-                              "ITEM_DESC": "1 GB of Access Control Usage ",
-                              "ITEM_END_DATE": "2021-01-31",
-                              "ITEM_START_DATE": "2021-01-01",
-                              "ITEM_TOTAL": 0.03,
-                              "ITEM_TOTAL_SERVICES": 0.02,
-                              "ITEM_TOTAL_TAXES": 0,
-                              "ITEM_TYPE": "U",
-                              "ITEM_UNITS": 1,
-                              "ITEM_UNIT_PRICE": 0.01,
-                              "PO_NUMBER": "1234567890",
-                              "PRODUCT": "Access Control",
-                              "PRODUCT_ID": "9-8ZYX76",
-                              "UNIT_MEASURE": "GB"
-                            }
-                          ]
-                        }
-                      ],
-                      "FINALIZED_DATE": "2021-02-01",
-                      "INVOICE_CURRENCY": "USD",
-                      "INVOICE_DATE": "2021-02-01",
-                      "INVOICE_ID": 1234567890,
-                      "INVOICE_ORDER_ID": "1-23ABC4",
-                      "INVOICE_TYPE": "Standard Invoice",
-                      "INVOICE_VERSION": 1,
-                      "PO_NUMBER": "1234567890"
-                    }
-                  },
-                  "type": "object"
-                }
-              },
-              "application/pdf": {
-                "schema": {
-                  "format": "binary",
-                  "type": "string"
-                }
-              },
-              "text/csv": {
-                "schema": {
-                  "example": "ACCOUNT_ID,ACCOUNT_NAME,INVOICE_START_DATE,INVOICE_ID,ITEM_START_DATE,ITEM_END_DATE,UNIT_MEASURE,PRODUCT_LINE,PRODUCT,PRODUCT_ID,ITEMTYPE,ITEM_DESC,ITEM_SPEC,CUST_CURRENCY,ITEM_CURRENCY,ITEM_UNITS,CUST_UNIT_PRICE,ITEM_UNIT_PRICE,CUST_TOTAL_SERVICES,ITEM_TOTAL_SERVICES,CUST_TAXES,CUST_TOTAL,ITEM_TOTAL,ORDER_ID,EFFECTIVE_END_DATE,PARTNER_PROVIDED_IDENTIFIER\nA-CCT7890,Main Street Corporation,02/01/2021,1234567890,01/01/2021,01/31/2021,GB,Cache,Cache control,9-8ZYX76,U,Advanced Cache Control,Committed,,USD,1,,0.01,,0.02,0,,0.03,1-23ABC4,01/31/2022,1234567890",
-                  "type": "string"
-                }
-              }
-            },
+            "content": {},
             "description": "The response provides requested file."
           },
           "204": {
@@ -1756,7 +1620,7 @@
                 }
               }
             },
-            "description": "[Bad request](https://techdocs.akamai.com/invoice-api/reference/400).",
+            "description": "[Bad request](https://techdocs.akamai.com/invoice/reference/400).",
             "x-akamai": {
               "file-path": "errors/400.yaml"
             }
@@ -1829,7 +1693,7 @@
                 }
               }
             },
-            "description": "[Authorization error](https://techdocs.akamai.com/invoice-api/reference/401).",
+            "description": "[Authorization error](https://techdocs.akamai.com/invoice/reference/401).",
             "x-akamai": {
               "file-path": "errors/401.yaml"
             }
@@ -1903,7 +1767,7 @@
                 }
               }
             },
-            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice-api/reference/403).",
+            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice/reference/403).",
             "x-akamai": {
               "file-path": "errors/403.yaml"
             }
@@ -1914,7 +1778,7 @@
                 "example": {
                   "errors": [
                     {
-                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                       "type": "/billing/error-types/3"
                     }
                   ],
@@ -1977,7 +1841,7 @@
                 }
               }
             },
-            "description": "[Resource not found](https://techdocs.akamai.com/invoice-api/reference/404).",
+            "description": "[Resource not found](https://techdocs.akamai.com/invoice/reference/404).",
             "x-akamai": {
               "file-path": "errors/404.yaml"
             }
@@ -2051,7 +1915,7 @@
                 }
               }
             },
-            "description": "[Method not allowed](https://techdocs.akamai.com/invoice-api/reference/405).",
+            "description": "[Method not allowed](https://techdocs.akamai.com/invoice/reference/405).",
             "x-akamai": {
               "file-path": "errors/405.yaml"
             }
@@ -2119,7 +1983,7 @@
                 }
               }
             },
-            "description": "[Server error](https://techdocs.akamai.com/invoice-api/reference/500).",
+            "description": "[Server error](https://techdocs.akamai.com/invoice/reference/500).",
             "x-akamai": {
               "file-path": "errors/500.yaml"
             }
@@ -2166,7 +2030,7 @@
         "description": "Returns invoices and credit memos for the current account and the selected month.",
         "externalDocs": {
           "description": "See documentation for this operation in Akamai's Invoicing API",
-          "url": "https://techdocs.akamai.com/invoice-api/reference/get-invoices"
+          "url": "https://techdocs.akamai.com/invoice/reference/get-invoices"
         },
         "operationId": "get-invoices",
         "parameters": [
@@ -2178,7 +2042,6 @@
             "required": true,
             "schema": {
               "example": "2020-07",
-              "format": "date",
               "type": "string"
             },
             "x-akamai": {
@@ -2207,20 +2070,14 @@
                     "contractId": "C-0N7RAC7",
                     "files": [
                       {
-                        "contentType": "application/pdf",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "fileFormat": "PDF",
                         "fileName": "InvoiceName_1-XYZ_1-ABCD_1234567890_FINAL_1.pdf",
-                        "fileVersion": 1,
-                        "sourceType": "REGULAR"
+                        "fileVersion": 1
                       },
                       {
-                        "contentType": "text/csv",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "fileFormat": "CSV",
                         "fileName": "1234567890_1.csv",
-                        "fileVersion": 1,
-                        "sourceType": "REGULAR"
+                        "fileVersion": 1
                       }
                     ],
                     "invoiceCurrency": "USD",
@@ -2235,20 +2092,14 @@
                     "contractId": "K-0N7RAK71",
                     "files": [
                       {
-                        "contentType": "application/pdf",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
-                        "fileName": "CreditMemoName_1-XYZ_1-ABCD_8234567890_FINAL_COMPUTE_1.pdf",
-                        "fileVersion": 2,
-                        "sourceType": "COMPUTE"
+                        "fileFormat": "PDF",
+                        "fileName": "CreditMemoName_1-XYZ_1-ABCD_8234567890_FINAL_1.pdf",
+                        "fileVersion": 2
                       },
                       {
-                        "contentType": "text/csv",
-                        "fileCreationDate": "2021-01-01",
-                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
-                        "fileName": "8234567890_COMPUTE_1.csv",
-                        "fileVersion": 2,
-                        "sourceType": "COMPUTE"
+                        "fileFormat": "CSV",
+                        "fileName": "8234567890_1.csv",
+                        "fileVersion": 2
                       }
                     ],
                     "invoiceCurrency": "USD",
@@ -2280,23 +2131,13 @@
                         "items": {
                           "additionalProperties": false,
                           "properties": {
-                            "contentType": {
-                              "description": "The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.",
+                            "fileFormat": {
+                              "description": "The format of the file, either `PDF`, `CSV`, or `JSON`.",
                               "enum": [
-                                "application/json",
-                                "application/pdf",
-                                "text/csv"
+                                "PDF",
+                                "CSV",
+                                "JSON"
                               ],
-                              "type": "string"
-                            },
-                            "fileCreationDate": {
-                              "description": "The date when the file was created.",
-                              "format": "date",
-                              "type": "string"
-                            },
-                            "fileLink": {
-                              "description": "The link to download the file.",
-                              "format": "uri-reference",
                               "type": "string"
                             },
                             "fileName": {
@@ -2308,23 +2149,12 @@
                               "description": "The version of the file.",
                               "minimum": 1,
                               "type": "integer"
-                            },
-                            "sourceType": {
-                              "description": "The source type of the file, either `REGULAR` or `COMPUTE`.",
-                              "enum": [
-                                "REGULAR",
-                                "COMPUTE"
-                              ],
-                              "type": "string"
                             }
                           },
                           "required": [
                             "fileName",
-                            "fileVersion",
-                            "fileCreationDate",
-                            "sourceType",
-                            "fileLink",
-                            "contentType"
+                            "fileFormat",
+                            "fileVersion"
                           ],
                           "type": "object"
                         },
@@ -2462,7 +2292,7 @@
                 }
               }
             },
-            "description": "[Bad request](https://techdocs.akamai.com/invoice-api/reference/400).",
+            "description": "[Bad request](https://techdocs.akamai.com/invoice/reference/400).",
             "x-akamai": {
               "file-path": "errors/400.yaml"
             }
@@ -2535,7 +2365,7 @@
                 }
               }
             },
-            "description": "[Authorization error](https://techdocs.akamai.com/invoice-api/reference/401).",
+            "description": "[Authorization error](https://techdocs.akamai.com/invoice/reference/401).",
             "x-akamai": {
               "file-path": "errors/401.yaml"
             }
@@ -2609,7 +2439,7 @@
                 }
               }
             },
-            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice-api/reference/403).",
+            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice/reference/403).",
             "x-akamai": {
               "file-path": "errors/403.yaml"
             }
@@ -2620,7 +2450,7 @@
                 "example": {
                   "errors": [
                     {
-                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                       "type": "/billing/error-types/3"
                     }
                   ],
@@ -2683,7 +2513,7 @@
                 }
               }
             },
-            "description": "[Resource not found](https://techdocs.akamai.com/invoice-api/reference/404).",
+            "description": "[Resource not found](https://techdocs.akamai.com/invoice/reference/404).",
             "x-akamai": {
               "file-path": "errors/404.yaml"
             }
@@ -2757,7 +2587,7 @@
                 }
               }
             },
-            "description": "[Method not allowed](https://techdocs.akamai.com/invoice-api/reference/405).",
+            "description": "[Method not allowed](https://techdocs.akamai.com/invoice/reference/405).",
             "x-akamai": {
               "file-path": "errors/405.yaml"
             }
@@ -2825,7 +2655,7 @@
                 }
               }
             },
-            "description": "[Server error](https://techdocs.akamai.com/invoice-api/reference/500).",
+            "description": "[Server error](https://techdocs.akamai.com/invoice/reference/500).",
             "x-akamai": {
               "file-path": "errors/500.yaml"
             }
@@ -2842,7 +2672,7 @@
         "description": "Creates a notification informing a set of users about new invoices or credit memos for a set of contracts. Each notification needs to specify a unique set of contracts. The request yields an error if the set of `contractId` values matches that of another notification.",
         "externalDocs": {
           "description": "See documentation for this operation in Akamai's Invoicing API",
-          "url": "https://techdocs.akamai.com/invoice-api/reference/post-notification"
+          "url": "https://techdocs.akamai.com/invoice/reference/post-notification"
         },
         "operationId": "post-notification",
         "parameters": [
@@ -2863,13 +2693,13 @@
             "application/json": {
               "example": {
                 "contracts": [
-                  "C-0N7RAC7"
+                  "1-ABCDEF"
                 ],
                 "emails": [
                   "user@example.com"
                 ],
                 "notificationStatus": "ACTIVE",
-                "notificationTitle": "Notification for C-0N7RAC7"
+                "notificationTitle": "Notification for 1-ABCDEF"
               },
               "schema": {
                 "additionalProperties": false,
@@ -2930,7 +2760,7 @@
               "application/json": {
                 "example": {
                   "contracts": [
-                    "C-0N7RAC7"
+                    "1-ABCDEF"
                   ],
                   "creationDate": "2020-12-09T08:30:14Z",
                   "emails": [
@@ -2939,7 +2769,7 @@
                   "modificationDate": "2020-12-09T08:30:14Z",
                   "notificationId": 25056,
                   "notificationStatus": "ACTIVE",
-                  "notificationTitle": "Notification for C-0N7RAC7"
+                  "notificationTitle": "Notification for 1-ABCDEF"
                 },
                 "schema": {
                   "additionalProperties": false,
@@ -3011,9 +2841,9 @@
             "description": "The response shows the data resulting from the request.",
             "headers": {
               "Location": {
-                "description": "Location of the created resource.",
+                "description": "Location of created resource.",
                 "schema": {
-                  "example": "/invoicing-api/v4/notifications/123",
+                  "example": "/invoicing-api/v3/notifications/123",
                   "type": "string"
                 },
                 "x-akamai": {
@@ -3091,7 +2921,7 @@
                 }
               }
             },
-            "description": "[Bad request](https://techdocs.akamai.com/invoice-api/reference/400).",
+            "description": "[Bad request](https://techdocs.akamai.com/invoice/reference/400).",
             "x-akamai": {
               "file-path": "errors/400.yaml"
             }
@@ -3164,7 +2994,7 @@
                 }
               }
             },
-            "description": "[Authorization error](https://techdocs.akamai.com/invoice-api/reference/401).",
+            "description": "[Authorization error](https://techdocs.akamai.com/invoice/reference/401).",
             "x-akamai": {
               "file-path": "errors/401.yaml"
             }
@@ -3238,7 +3068,7 @@
                 }
               }
             },
-            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice-api/reference/403).",
+            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice/reference/403).",
             "x-akamai": {
               "file-path": "errors/403.yaml"
             }
@@ -3312,7 +3142,7 @@
                 }
               }
             },
-            "description": "[Method not allowed](https://techdocs.akamai.com/invoice-api/reference/405).",
+            "description": "[Method not allowed](https://techdocs.akamai.com/invoice/reference/405).",
             "x-akamai": {
               "file-path": "errors/405.yaml"
             }
@@ -3380,7 +3210,7 @@
                 }
               }
             },
-            "description": "[Server error](https://techdocs.akamai.com/invoice-api/reference/500).",
+            "description": "[Server error](https://techdocs.akamai.com/invoice/reference/500).",
             "x-akamai": {
               "file-path": "errors/500.yaml"
             }
@@ -3395,7 +3225,7 @@
         "description": "Returns notifications for the current account. Notifications inform a set of users whenever there are changes to an invoice or credit memo.",
         "externalDocs": {
           "description": "See documentation for this operation in Akamai's Invoicing API",
-          "url": "https://techdocs.akamai.com/invoice-api/reference/get-notifications"
+          "url": "https://techdocs.akamai.com/invoice/reference/get-notifications"
         },
         "operationId": "get-notifications",
         "parameters": [
@@ -3418,7 +3248,7 @@
                 "example": [
                   {
                     "contracts": [
-                      "C-0N7RAC7"
+                      "1-ABCDEF"
                     ],
                     "creationDate": "2020-12-09T08:30:14Z",
                     "emails": [
@@ -3427,7 +3257,7 @@
                     "modificationDate": "2020-12-09T08:30:14Z",
                     "notificationId": 25056,
                     "notificationStatus": "ACTIVE",
-                    "notificationTitle": "Notification for C-0N7RAC7"
+                    "notificationTitle": "Notification for 1-ABCDEF"
                   },
                   {
                     "contracts": [
@@ -3593,7 +3423,7 @@
                 }
               }
             },
-            "description": "[Bad request](https://techdocs.akamai.com/invoice-api/reference/400).",
+            "description": "[Bad request](https://techdocs.akamai.com/invoice/reference/400).",
             "x-akamai": {
               "file-path": "errors/400.yaml"
             }
@@ -3666,7 +3496,7 @@
                 }
               }
             },
-            "description": "[Authorization error](https://techdocs.akamai.com/invoice-api/reference/401).",
+            "description": "[Authorization error](https://techdocs.akamai.com/invoice/reference/401).",
             "x-akamai": {
               "file-path": "errors/401.yaml"
             }
@@ -3740,7 +3570,7 @@
                 }
               }
             },
-            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice-api/reference/403).",
+            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice/reference/403).",
             "x-akamai": {
               "file-path": "errors/403.yaml"
             }
@@ -3814,7 +3644,7 @@
                 }
               }
             },
-            "description": "[Method not allowed](https://techdocs.akamai.com/invoice-api/reference/405).",
+            "description": "[Method not allowed](https://techdocs.akamai.com/invoice/reference/405).",
             "x-akamai": {
               "file-path": "errors/405.yaml"
             }
@@ -3882,7 +3712,7 @@
                 }
               }
             },
-            "description": "[Server error](https://techdocs.akamai.com/invoice-api/reference/500).",
+            "description": "[Server error](https://techdocs.akamai.com/invoice/reference/500).",
             "x-akamai": {
               "file-path": "errors/500.yaml"
             }
@@ -3899,7 +3729,7 @@
         "description": "Accesses a specific notification, for example when making modifications to a specific notification.",
         "externalDocs": {
           "description": "See documentation for this operation in Akamai's Invoicing API",
-          "url": "https://techdocs.akamai.com/invoice-api/reference/get-notification"
+          "url": "https://techdocs.akamai.com/invoice/reference/get-notification"
         },
         "operationId": "get-notification",
         "parameters": [
@@ -3921,7 +3751,7 @@
               "application/json": {
                 "example": {
                   "contracts": [
-                    "C-0N7RAC7"
+                    "1-ABCDEF"
                   ],
                   "creationDate": "2020-12-09T08:30:14Z",
                   "emails": [
@@ -3930,7 +3760,7 @@
                   "modificationDate": "2020-12-09T08:30:14Z",
                   "notificationId": 25056,
                   "notificationStatus": "ACTIVE",
-                  "notificationTitle": "Notification for C-0N7RAC7"
+                  "notificationTitle": "Notification for 1-ABCDEF"
                 },
                 "schema": {
                   "additionalProperties": false,
@@ -4070,7 +3900,7 @@
                 }
               }
             },
-            "description": "[Bad request](https://techdocs.akamai.com/invoice-api/reference/400).",
+            "description": "[Bad request](https://techdocs.akamai.com/invoice/reference/400).",
             "x-akamai": {
               "file-path": "errors/400.yaml"
             }
@@ -4143,7 +3973,7 @@
                 }
               }
             },
-            "description": "[Authorization error](https://techdocs.akamai.com/invoice-api/reference/401).",
+            "description": "[Authorization error](https://techdocs.akamai.com/invoice/reference/401).",
             "x-akamai": {
               "file-path": "errors/401.yaml"
             }
@@ -4217,7 +4047,7 @@
                 }
               }
             },
-            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice-api/reference/403).",
+            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice/reference/403).",
             "x-akamai": {
               "file-path": "errors/403.yaml"
             }
@@ -4228,7 +4058,7 @@
                 "example": {
                   "errors": [
                     {
-                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                       "type": "/billing/error-types/3"
                     }
                   ],
@@ -4291,7 +4121,7 @@
                 }
               }
             },
-            "description": "[Resource not found](https://techdocs.akamai.com/invoice-api/reference/404).",
+            "description": "[Resource not found](https://techdocs.akamai.com/invoice/reference/404).",
             "x-akamai": {
               "file-path": "errors/404.yaml"
             }
@@ -4365,7 +4195,7 @@
                 }
               }
             },
-            "description": "[Method not allowed](https://techdocs.akamai.com/invoice-api/reference/405).",
+            "description": "[Method not allowed](https://techdocs.akamai.com/invoice/reference/405).",
             "x-akamai": {
               "file-path": "errors/405.yaml"
             }
@@ -4433,7 +4263,7 @@
                 }
               }
             },
-            "description": "[Server error](https://techdocs.akamai.com/invoice-api/reference/500).",
+            "description": "[Server error](https://techdocs.akamai.com/invoice/reference/500).",
             "x-akamai": {
               "file-path": "errors/500.yaml"
             }
@@ -4448,7 +4278,7 @@
         "description": "Updates a notification. Any read-only members retained from a GET operation are ignored on subsequent PUTs.",
         "externalDocs": {
           "description": "See documentation for this operation in Akamai's Invoicing API",
-          "url": "https://techdocs.akamai.com/invoice-api/reference/put-notification"
+          "url": "https://techdocs.akamai.com/invoice/reference/put-notification"
         },
         "operationId": "put-notification",
         "parameters": [
@@ -4469,13 +4299,13 @@
             "application/json": {
               "example": {
                 "contracts": [
-                  "C-0N7RAC7"
+                  "1-ABCDEF"
                 ],
                 "emails": [
                   "user@example.com"
                 ],
                 "notificationStatus": "ACTIVE",
-                "notificationTitle": "Notification for C-0N7RAC7"
+                "notificationTitle": "Notification for 1-ABCDEF"
               },
               "schema": {
                 "additionalProperties": false,
@@ -4536,7 +4366,7 @@
               "application/json": {
                 "example": {
                   "contracts": [
-                    "C-0N7RAC7"
+                    "1-ABCDEF"
                   ],
                   "creationDate": "2020-12-09T08:30:14Z",
                   "emails": [
@@ -4545,7 +4375,7 @@
                   "modificationDate": "2020-12-09T08:30:14Z",
                   "notificationId": 25056,
                   "notificationStatus": "ACTIVE",
-                  "notificationTitle": "Notification for C-0N7RAC7"
+                  "notificationTitle": "Notification for 1-ABCDEF"
                 },
                 "schema": {
                   "additionalProperties": false,
@@ -4685,7 +4515,7 @@
                 }
               }
             },
-            "description": "[Bad request](https://techdocs.akamai.com/invoice-api/reference/400).",
+            "description": "[Bad request](https://techdocs.akamai.com/invoice/reference/400).",
             "x-akamai": {
               "file-path": "errors/400.yaml"
             }
@@ -4758,7 +4588,7 @@
                 }
               }
             },
-            "description": "[Authorization error](https://techdocs.akamai.com/invoice-api/reference/401).",
+            "description": "[Authorization error](https://techdocs.akamai.com/invoice/reference/401).",
             "x-akamai": {
               "file-path": "errors/401.yaml"
             }
@@ -4832,7 +4662,7 @@
                 }
               }
             },
-            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice-api/reference/403).",
+            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice/reference/403).",
             "x-akamai": {
               "file-path": "errors/403.yaml"
             }
@@ -4843,7 +4673,7 @@
                 "example": {
                   "errors": [
                     {
-                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                       "type": "/billing/error-types/3"
                     }
                   ],
@@ -4906,7 +4736,7 @@
                 }
               }
             },
-            "description": "[Resource not found](https://techdocs.akamai.com/invoice-api/reference/404).",
+            "description": "[Resource not found](https://techdocs.akamai.com/invoice/reference/404).",
             "x-akamai": {
               "file-path": "errors/404.yaml"
             }
@@ -4974,7 +4804,7 @@
                 }
               }
             },
-            "description": "[Server error](https://techdocs.akamai.com/invoice-api/reference/500).",
+            "description": "[Server error](https://techdocs.akamai.com/invoice/reference/500).",
             "x-akamai": {
               "file-path": "errors/500.yaml"
             }
@@ -4989,7 +4819,7 @@
         "description": "Deletes a notification.",
         "externalDocs": {
           "description": "See documentation for this operation in Akamai's Invoicing API",
-          "url": "https://techdocs.akamai.com/invoice-api/reference/delete-notification"
+          "url": "https://techdocs.akamai.com/invoice/reference/delete-notification"
         },
         "operationId": "delete-notification",
         "parameters": [
@@ -5079,7 +4909,7 @@
                 }
               }
             },
-            "description": "[Bad request](https://techdocs.akamai.com/invoice-api/reference/400).",
+            "description": "[Bad request](https://techdocs.akamai.com/invoice/reference/400).",
             "x-akamai": {
               "file-path": "errors/400.yaml"
             }
@@ -5152,7 +4982,7 @@
                 }
               }
             },
-            "description": "[Authorization error](https://techdocs.akamai.com/invoice-api/reference/401).",
+            "description": "[Authorization error](https://techdocs.akamai.com/invoice/reference/401).",
             "x-akamai": {
               "file-path": "errors/401.yaml"
             }
@@ -5226,7 +5056,7 @@
                 }
               }
             },
-            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice-api/reference/403).",
+            "description": "[Access is forbidden](https://techdocs.akamai.com/invoice/reference/403).",
             "x-akamai": {
               "file-path": "errors/403.yaml"
             }
@@ -5237,7 +5067,7 @@
                 "example": {
                   "errors": [
                     {
-                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc",
+                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc",
                       "type": "/billing/error-types/3"
                     }
                   ],
@@ -5300,7 +5130,7 @@
                 }
               }
             },
-            "description": "[Resource not found](https://techdocs.akamai.com/invoice-api/reference/404).",
+            "description": "[Resource not found](https://techdocs.akamai.com/invoice/reference/404).",
             "x-akamai": {
               "file-path": "errors/404.yaml"
             }
@@ -5374,7 +5204,7 @@
                 }
               }
             },
-            "description": "[Method not allowed](https://techdocs.akamai.com/invoice-api/reference/405).",
+            "description": "[Method not allowed](https://techdocs.akamai.com/invoice/reference/405).",
             "x-akamai": {
               "file-path": "errors/405.yaml"
             }
@@ -5442,7 +5272,7 @@
                 }
               }
             },
-            "description": "[Server error](https://techdocs.akamai.com/invoice-api/reference/500).",
+            "description": "[Server error](https://techdocs.akamai.com/invoice/reference/500).",
             "x-akamai": {
               "file-path": "errors/500.yaml"
             }
@@ -5473,7 +5303,7 @@
   },
   "servers": [
     {
-      "url": "https://{hostname}/invoicing-api/v4"
+      "url": "https://{hostname}/invoicing-api/v3"
     }
   ],
   "tags": [
