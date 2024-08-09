@@ -1,12 +1,12 @@
 {
   "openapi": "3.0.0",
   "info": {
+    "title": "Cloudlets",
+    "version": "v3",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    },
-    "title": "Cloudlets",
-    "version": "v3"
+    }
   },
   "servers": [
     {
@@ -16,10 +16,15 @@
   "paths": {
     "/cloudlet-info": {
       "get": {
-        "description": "Returns details for Cloudlets that you can [create a shared policy](ref:post-policy) for, including a Cloudlet name and Cloudlet type.\n",
         "operationId": "get-cloudlets",
+        "summary": "List Cloudlets",
+        "tags": [
+          "Cloudlets"
+        ],
+        "description": "Returns details for Cloudlets that you can [create a shared policy](ref:post-policy) for, including a Cloudlet name and Cloudlet type.\n",
         "responses": {
           "200": {
+            "description": "Returns details of a Cloudlet that you can [create a shared policy](ref:post-policy) for, including a Cloudlet name and Cloudlet type.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -49,17 +54,34 @@
                   }
                 ],
                 "schema": {
-                  "description": "Returns name, code, and ID information for a specific type of Cloudlet. You need the `cloudletId` when creating a new policy.\n",
+                  "type": "array",
+                  "description": "Returns name, code, and ID information for a specific type of Cloudlet. You need the `cloudletId` when creating a new policy.",
+                  "x-akamai": {
+                    "file-path": "schemas/get-cloudlet-info-response.yaml"
+                  },
                   "items": {
+                    "type": "object",
+                    "description": "Returns details of a Cloudlet that you can [create a policy for](ref:post-policy), including a Cloudlet name and Cloudlet code.",
+                    "x-akamai": {
+                      "file-path": "schemas/cloudlets-info-object.yaml"
+                    },
                     "additionalProperties": false,
-                    "description": "Returns details of a Cloudlet that you can [create a policy for](ref:post-policy), including a Cloudlet name and Cloudlet code.\n",
+                    "required": [
+                      "cloudletName",
+                      "cloudletId",
+                      "location"
+                    ],
                     "properties": {
                       "apiVersion": {
-                        "description": "The specific version of this API.\n",
-                        "type": "string"
+                        "type": "string",
+                        "description": "The specific version of this API.\n"
                       },
                       "cloudletCode": {
-                        "description": "The type of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Possible values include: `ALB` for Application Load Balancer, `AP` for API Prioritization, `AS` for Audience Segmentation, `CD` for Phased Release, `ER` for Edge Redirector, `FR` for Forward Rewrite, `IG` for Request Control, and `VP` for Visitor Prioritization.\n",
+                        "type": "string",
+                        "description": "The type of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Possible values include: `ALB` for Application Load Balancer, `AP` for API Prioritization, `AS` for Audience Segmentation, `CD` for Phased Release, `ER` for Edge Redirector, `FR` for Forward Rewrite, `IG` for Request Control, and `VP` for Visitor Prioritization.",
+                        "x-akamai": {
+                          "file-path": "schemas/cloudlet-code-enum.yaml"
+                        },
                         "enum": [
                           "ALB",
                           "AP",
@@ -69,13 +91,10 @@
                           "FR",
                           "IG",
                           "VP"
-                        ],
-                        "type": "string",
-                        "x-akamai": {
-                          "file-path": "schemas/cloudlet-code-enum.yaml"
-                        }
+                        ]
                       },
                       "cloudletId": {
+                        "type": "integer",
                         "description": "The ID of cloudlet that this policy is for. The `cloudletId` for Edge Redirector is `0`, Visitor Prioritization is `1`, Forward Rewrite is `3`, Request Control is `4`, API Prioritization is `5`, Audience Segmentation is `6`, Phased Release is `7`, and Application Load Balancer is `9`. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation.\n",
                         "enum": [
                           0,
@@ -86,11 +105,14 @@
                           6,
                           7,
                           9
-                        ],
-                        "type": "integer"
+                        ]
                       },
                       "cloudletName": {
-                        "description": "The name of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Available options are `APPLICATIONLOADBALANCER`, `ASSETPRIORITIZATION` for API Prioritization, `AUDIENCESEGMENTATION`, `CONTINUOUSDEPLOYMENT` for Phased Release, `EDGEREDIRECTOR`, `FORWARDREWRITE`, `IPGEOACCESS` for Request Control, and `VISITORPRIORITIZATION`.\n",
+                        "type": "string",
+                        "description": "The name of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Available options are `APPLICATIONLOADBALANCER`, `ASSETPRIORITIZATION` for API Prioritization, `AUDIENCESEGMENTATION`, `CONTINUOUSDEPLOYMENT` for Phased Release, `EDGEREDIRECTOR`, `FORWARDREWRITE`, `IPGEOACCESS` for Request Control, and `VISITORPRIORITIZATION`.",
+                        "x-akamai": {
+                          "file-path": "schemas/cloudlet-name-enum.yaml"
+                        },
                         "enum": [
                           "APPLICATIONLOADBALANCER",
                           "ASSETPRIORITIZATION",
@@ -100,54 +122,36 @@
                           "FORWARDREWRITE",
                           "IPGEOACCESS",
                           "VISITORPRIORITIZATION"
-                        ],
-                        "type": "string",
-                        "x-akamai": {
-                          "file-path": "schemas/cloudlet-name-enum.yaml"
-                        }
+                        ]
                       },
                       "location": {
-                        "description": "The navigable endpoint used for the object referred to in the operation.\n",
-                        "type": "string"
+                        "type": "string",
+                        "description": "The navigable endpoint used for the object referred to in the operation.\n"
                       },
                       "serviceVersion": {
-                        "deprecated": true,
+                        "type": "string",
                         "description": "The build of the software running on the server.\n",
                         "nullable": true,
-                        "type": "string"
+                        "deprecated": true
                       }
-                    },
-                    "required": [
-                      "cloudletName",
-                      "cloudletId",
-                      "location"
-                    ],
-                    "type": "object",
-                    "x-akamai": {
-                      "file-path": "schemas/cloudlets-info-object.yaml"
                     }
-                  },
-                  "type": "array",
-                  "x-akamai": {
-                    "file-path": "schemas/get-cloudlet-info-response.yaml"
                   }
                 }
               }
-            },
-            "description": "Returns details of a Cloudlet that you can [create a shared policy](ref:post-policy) for, including a Cloudlet name and Cloudlet type.\n"
+            }
           }
-        },
-        "summary": "List Cloudlets",
-        "tags": [
-          "Cloudlets"
-        ]
+        }
       }
     }
   },
   "components": {
     "schemas": {
       "cloudlet-code-enum": {
-        "description": "The type of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Possible values include: `ALB` for Application Load Balancer, `AP` for API Prioritization, `AS` for Audience Segmentation, `CD` for Phased Release, `ER` for Edge Redirector, `FR` for Forward Rewrite, `IG` for Request Control, and `VP` for Visitor Prioritization.\n",
+        "type": "string",
+        "description": "The type of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Possible values include: `ALB` for Application Load Balancer, `AP` for API Prioritization, `AS` for Audience Segmentation, `CD` for Phased Release, `ER` for Edge Redirector, `FR` for Forward Rewrite, `IG` for Request Control, and `VP` for Visitor Prioritization.",
+        "x-akamai": {
+          "file-path": "schemas/cloudlet-code-enum.yaml"
+        },
         "enum": [
           "ALB",
           "AP",
@@ -157,14 +161,14 @@
           "FR",
           "IG",
           "VP"
-        ],
-        "type": "string",
-        "x-akamai": {
-          "file-path": "schemas/cloudlet-code-enum.yaml"
-        }
+        ]
       },
       "cloudlet-name-enum": {
-        "description": "The name of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Available options are `APPLICATIONLOADBALANCER`, `ASSETPRIORITIZATION` for API Prioritization, `AUDIENCESEGMENTATION`, `CONTINUOUSDEPLOYMENT` for Phased Release, `EDGEREDIRECTOR`, `FORWARDREWRITE`, `IPGEOACCESS` for Request Control, and `VISITORPRIORITIZATION`.\n",
+        "type": "string",
+        "description": "The name of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Available options are `APPLICATIONLOADBALANCER`, `ASSETPRIORITIZATION` for API Prioritization, `AUDIENCESEGMENTATION`, `CONTINUOUSDEPLOYMENT` for Phased Release, `EDGEREDIRECTOR`, `FORWARDREWRITE`, `IPGEOACCESS` for Request Control, and `VISITORPRIORITIZATION`.",
+        "x-akamai": {
+          "file-path": "schemas/cloudlet-name-enum.yaml"
+        },
         "enum": [
           "APPLICATIONLOADBALANCER",
           "ASSETPRIORITIZATION",
@@ -174,22 +178,31 @@
           "FORWARDREWRITE",
           "IPGEOACCESS",
           "VISITORPRIORITIZATION"
-        ],
-        "type": "string",
-        "x-akamai": {
-          "file-path": "schemas/cloudlet-name-enum.yaml"
-        }
+        ]
       },
       "cloudlets-info-object": {
+        "type": "object",
+        "description": "Returns details of a Cloudlet that you can [create a policy for](ref:post-policy), including a Cloudlet name and Cloudlet code.",
+        "x-akamai": {
+          "file-path": "schemas/cloudlets-info-object.yaml"
+        },
         "additionalProperties": false,
-        "description": "Returns details of a Cloudlet that you can [create a policy for](ref:post-policy), including a Cloudlet name and Cloudlet code.\n",
+        "required": [
+          "cloudletName",
+          "cloudletId",
+          "location"
+        ],
         "properties": {
           "apiVersion": {
-            "description": "The specific version of this API.\n",
-            "type": "string"
+            "type": "string",
+            "description": "The specific version of this API.\n"
           },
           "cloudletCode": {
-            "description": "The type of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Possible values include: `ALB` for Application Load Balancer, `AP` for API Prioritization, `AS` for Audience Segmentation, `CD` for Phased Release, `ER` for Edge Redirector, `FR` for Forward Rewrite, `IG` for Request Control, and `VP` for Visitor Prioritization.\n",
+            "type": "string",
+            "description": "The type of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Possible values include: `ALB` for Application Load Balancer, `AP` for API Prioritization, `AS` for Audience Segmentation, `CD` for Phased Release, `ER` for Edge Redirector, `FR` for Forward Rewrite, `IG` for Request Control, and `VP` for Visitor Prioritization.",
+            "x-akamai": {
+              "file-path": "schemas/cloudlet-code-enum.yaml"
+            },
             "enum": [
               "ALB",
               "AP",
@@ -199,13 +212,10 @@
               "FR",
               "IG",
               "VP"
-            ],
-            "type": "string",
-            "x-akamai": {
-              "file-path": "schemas/cloudlet-code-enum.yaml"
-            }
+            ]
           },
           "cloudletId": {
+            "type": "integer",
             "description": "The ID of cloudlet that this policy is for. The `cloudletId` for Edge Redirector is `0`, Visitor Prioritization is `1`, Forward Rewrite is `3`, Request Control is `4`, API Prioritization is `5`, Audience Segmentation is `6`, Phased Release is `7`, and Application Load Balancer is `9`. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation.\n",
             "enum": [
               0,
@@ -216,11 +226,14 @@
               6,
               7,
               9
-            ],
-            "type": "integer"
+            ]
           },
           "cloudletName": {
-            "description": "The name of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Available options are `APPLICATIONLOADBALANCER`, `ASSETPRIORITIZATION` for API Prioritization, `AUDIENCESEGMENTATION`, `CONTINUOUSDEPLOYMENT` for Phased Release, `EDGEREDIRECTOR`, `FORWARDREWRITE`, `IPGEOACCESS` for Request Control, and `VISITORPRIORITIZATION`.\n",
+            "type": "string",
+            "description": "The name of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Available options are `APPLICATIONLOADBALANCER`, `ASSETPRIORITIZATION` for API Prioritization, `AUDIENCESEGMENTATION`, `CONTINUOUSDEPLOYMENT` for Phased Release, `EDGEREDIRECTOR`, `FORWARDREWRITE`, `IPGEOACCESS` for Request Control, and `VISITORPRIORITIZATION`.",
+            "x-akamai": {
+              "file-path": "schemas/cloudlet-name-enum.yaml"
+            },
             "enum": [
               "APPLICATIONLOADBALANCER",
               "ASSETPRIORITIZATION",
@@ -230,45 +243,49 @@
               "FORWARDREWRITE",
               "IPGEOACCESS",
               "VISITORPRIORITIZATION"
-            ],
-            "type": "string",
-            "x-akamai": {
-              "file-path": "schemas/cloudlet-name-enum.yaml"
-            }
+            ]
           },
           "location": {
-            "description": "The navigable endpoint used for the object referred to in the operation.\n",
-            "type": "string"
+            "type": "string",
+            "description": "The navigable endpoint used for the object referred to in the operation.\n"
           },
           "serviceVersion": {
-            "deprecated": true,
+            "type": "string",
             "description": "The build of the software running on the server.\n",
             "nullable": true,
-            "type": "string"
+            "deprecated": true
           }
-        },
-        "required": [
-          "cloudletName",
-          "cloudletId",
-          "location"
-        ],
-        "type": "object",
-        "x-akamai": {
-          "file-path": "schemas/cloudlets-info-object.yaml"
         }
       },
       "get-cloudlet-info-response": {
-        "description": "Returns name, code, and ID information for a specific type of Cloudlet. You need the `cloudletId` when creating a new policy.\n",
+        "type": "array",
+        "description": "Returns name, code, and ID information for a specific type of Cloudlet. You need the `cloudletId` when creating a new policy.",
+        "x-akamai": {
+          "file-path": "schemas/get-cloudlet-info-response.yaml"
+        },
         "items": {
+          "type": "object",
+          "description": "Returns details of a Cloudlet that you can [create a policy for](ref:post-policy), including a Cloudlet name and Cloudlet code.",
+          "x-akamai": {
+            "file-path": "schemas/cloudlets-info-object.yaml"
+          },
           "additionalProperties": false,
-          "description": "Returns details of a Cloudlet that you can [create a policy for](ref:post-policy), including a Cloudlet name and Cloudlet code.\n",
+          "required": [
+            "cloudletName",
+            "cloudletId",
+            "location"
+          ],
           "properties": {
             "apiVersion": {
-              "description": "The specific version of this API.\n",
-              "type": "string"
+              "type": "string",
+              "description": "The specific version of this API.\n"
             },
             "cloudletCode": {
-              "description": "The type of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Possible values include: `ALB` for Application Load Balancer, `AP` for API Prioritization, `AS` for Audience Segmentation, `CD` for Phased Release, `ER` for Edge Redirector, `FR` for Forward Rewrite, `IG` for Request Control, and `VP` for Visitor Prioritization.\n",
+              "type": "string",
+              "description": "The type of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Possible values include: `ALB` for Application Load Balancer, `AP` for API Prioritization, `AS` for Audience Segmentation, `CD` for Phased Release, `ER` for Edge Redirector, `FR` for Forward Rewrite, `IG` for Request Control, and `VP` for Visitor Prioritization.",
+              "x-akamai": {
+                "file-path": "schemas/cloudlet-code-enum.yaml"
+              },
               "enum": [
                 "ALB",
                 "AP",
@@ -278,13 +295,10 @@
                 "FR",
                 "IG",
                 "VP"
-              ],
-              "type": "string",
-              "x-akamai": {
-                "file-path": "schemas/cloudlet-code-enum.yaml"
-              }
+              ]
             },
             "cloudletId": {
+              "type": "integer",
               "description": "The ID of cloudlet that this policy is for. The `cloudletId` for Edge Redirector is `0`, Visitor Prioritization is `1`, Forward Rewrite is `3`, Request Control is `4`, API Prioritization is `5`, Audience Segmentation is `6`, Phased Release is `7`, and Application Load Balancer is `9`. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation.\n",
               "enum": [
                 0,
@@ -295,11 +309,14 @@
                 6,
                 7,
                 9
-              ],
-              "type": "integer"
+              ]
             },
             "cloudletName": {
-              "description": "The name of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Available options are `APPLICATIONLOADBALANCER`, `ASSETPRIORITIZATION` for API Prioritization, `AUDIENCESEGMENTATION`, `CONTINUOUSDEPLOYMENT` for Phased Release, `EDGEREDIRECTOR`, `FORWARDREWRITE`, `IPGEOACCESS` for Request Control, and `VISITORPRIORITIZATION`.\n",
+              "type": "string",
+              "description": "The name of Cloudlet that this policy is for. To see the available Cloudlets, run the [List Cloudlets](ref:get-cloudlets) operation. Available options are `APPLICATIONLOADBALANCER`, `ASSETPRIORITIZATION` for API Prioritization, `AUDIENCESEGMENTATION`, `CONTINUOUSDEPLOYMENT` for Phased Release, `EDGEREDIRECTOR`, `FORWARDREWRITE`, `IPGEOACCESS` for Request Control, and `VISITORPRIORITIZATION`.",
+              "x-akamai": {
+                "file-path": "schemas/cloudlet-name-enum.yaml"
+              },
               "enum": [
                 "APPLICATIONLOADBALANCER",
                 "ASSETPRIORITIZATION",
@@ -309,36 +326,19 @@
                 "FORWARDREWRITE",
                 "IPGEOACCESS",
                 "VISITORPRIORITIZATION"
-              ],
-              "type": "string",
-              "x-akamai": {
-                "file-path": "schemas/cloudlet-name-enum.yaml"
-              }
+              ]
             },
             "location": {
-              "description": "The navigable endpoint used for the object referred to in the operation.\n",
-              "type": "string"
+              "type": "string",
+              "description": "The navigable endpoint used for the object referred to in the operation.\n"
             },
             "serviceVersion": {
-              "deprecated": true,
+              "type": "string",
               "description": "The build of the software running on the server.\n",
               "nullable": true,
-              "type": "string"
+              "deprecated": true
             }
-          },
-          "required": [
-            "cloudletName",
-            "cloudletId",
-            "location"
-          ],
-          "type": "object",
-          "x-akamai": {
-            "file-path": "schemas/cloudlets-info-object.yaml"
           }
-        },
-        "type": "array",
-        "x-akamai": {
-          "file-path": "schemas/get-cloudlet-info-response.yaml"
         }
       }
     }
