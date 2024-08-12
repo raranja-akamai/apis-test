@@ -1,0 +1,1030 @@
+openapi: 3.0.0
+info:
+  title: DataStream 2 configuration
+  version: v3
+servers:
+- url: https://{hostname}/datastream-config-api/v3
+x-akamai:
+  auth-type: EDGE_GRID
+paths:
+  /log/{logType}/datasets-fields:
+    parameters:
+    - $ref: parameters/logType-path.yaml
+    get:
+      operationId: get-dataset-fields
+      summary: List data set fields
+      tags:
+      - Data sets
+      description: |
+        Returns the list of available data set fields you can choose to monitor in your logs in a stream configuration. Use the `logType` and `productId` parameters to get data sets available for a specific log type or product. Run this operation to get the `datasetFieldId` and `datasetFieldName` values you need to create or edit a stream.
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/productId-query.yaml
+      responses:
+        200:
+          description: |
+            The response lists data set fields.
+          content:
+            application/json:
+              examples:
+                datasets-cdn:
+                  summary: Delivery (CDN) fields
+                  value:
+                    $ref: examples/DataSetsExample.json
+                datasets-edns:
+                  summary: Edge DNS fields
+                  value:
+                    $ref: examples/EDNSDataSetsExample.json
+                datasets-ew:
+                  summary: EdgeWorkers fields
+                  value:
+                    $ref: examples/EWDataSetsExample.json
+                datasets-gtm:
+                  summary: Global Traffic Management fields
+                  value:
+                    $ref: examples/GTMDataSetsExample.json
+              schema:
+                $ref: schemas/Datasets.yaml
+  /log/{logType}/groups:
+    parameters:
+    - $ref: parameters/logType-path.yaml
+    get:
+      operationId: get-groups
+      summary: List groups
+      tags:
+      - Groups
+      description: |
+        Returns access groups with contracts on your account. You can later use the `groupId` and `contractId` values to create and view streams or list properties by group. Set the `contractId` query parameter to get groups for a specific contract.
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/contractId-query.yaml
+      responses:
+        200:
+          description: |
+            The response lists groups with contracts on your account.
+          content:
+            application/json:
+              example:
+                $ref: examples/GroupsExample.json
+              schema:
+                $ref: schemas/Groups.yaml
+  /log/cdn/groups/{groupId}/properties:
+    parameters:
+    - $ref: parameters/groupId-path.yaml
+    get:
+      operationId: get-properties-cdn
+      summary: List CDN properties by group
+      tags:
+      - Properties
+      description: |
+        Returns delivery properties (also referred to as _objects_) active on the production and staging network within a specific group. Run this operation to get the `objectId` values you need to provide as `propertyId` to [Create a delivery stream](ref:post-stream-cdn) or [Edit a delivery stream](ref:put-stream-cdn).
+      x-akamai:
+        supports-account-switch-key: false
+      responses:
+        200:
+          description: |
+            The response lists active delivery properties or zones by group.
+          content:
+            application/json:
+              example:
+                $ref: examples/PropertiesExample.json
+              schema:
+                $ref: schemas/Properties.yaml
+  /log/edns/contracts/{contractId}/zones:
+    parameters:
+    - $ref: parameters/contractId-path.yaml
+    get:
+      operationId: get-properties-edns
+      summary: List Edge DNS zones by contract
+      tags:
+      - Properties
+      description: |
+        Returns Edge DNS zones on your contract. Run this operation to get the `zoneName` values you need to [Create an Edge DNS stream](ref:post-stream-edns) or [Edit an Edge DNS stream](ref:put-stream-edns).
+      x-akamai:
+        supports-account-switch-key: false
+      responses:
+        200:
+          description: |
+            The response lists active Edge DNS zones.
+          content:
+            application/json:
+              example:
+                $ref: examples/ZonesExample.json
+              schema:
+                $ref: schemas/Zones.yaml
+  /log/gtm/contracts/{contractId}/properties:
+    parameters:
+    - $ref: parameters/contractId-path.yaml
+    get:
+      operationId: get-properties-gtm
+      summary: List GTM properties by contract
+      tags:
+      - Properties
+      description: |
+        Returns Global Traffic Management (GTM) domain properties on your contract. Run this operation to get the `propertyName` values you need to [Create a GTM stream](ref:post-stream-gtm) or [Edit a GTM stream](ref:put-stream-gtm).
+      x-akamai:
+        supports-account-switch-key: false
+      responses:
+        200:
+          description: |
+            The response lists active domain properties by group.
+          content:
+            application/json:
+              example:
+                $ref: examples/GTMPropertiesExample.json
+              schema:
+                $ref: schemas/GTMProperties.yaml
+  /log/{logType}/streams:
+    get:
+      operationId: get-streams
+      summary: List streams
+      tags:
+      - Streams
+      description: |
+        Returns the stream configurations' latest versions for all groups on your account within a specific `logType`. Use the `groupId` query parameter to view the latest versions of all configurations in a specific group, and up to five property names as the `objectName` parameter to get streams for specific properties.
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/logType-path.yaml
+      - $ref: parameters/groupId-query.yaml
+      - $ref: parameters/objectName-query.yaml
+      responses:
+        200:
+          description: |
+            The response lists latest stream versions on your account.
+          content:
+            application/json:
+              examples:
+                ex-cdn:
+                  summary: Delivery (CDN) streams
+                  value:
+                    $ref: examples/StreamsExample.json
+                ex-edns:
+                  summary: Edge DNS streams
+                  value:
+                    $ref: examples/StreamsExampleEDNS.json
+                ex-ew:
+                  summary: EdgeWorkers streams
+                  value:
+                    $ref: examples/StreamsExampleEW.json
+                ex-gtm:
+                  summary: Global Traffic Management streams
+                  value:
+                    $ref: examples/StreamsExampleGTM.json
+              schema:
+                $ref: schemas/StreamsList.yaml
+  /log/cdn/streams:
+    post:
+      operationId: post-stream-cdn
+      summary: Create a delivery stream
+      tags:
+      - Streams
+      description: |
+        Creates a stream configuration for delivery products. You can choose delivery properties to monitor in the stream, data set fields to collect in logs, and a destination to send these log files to. Get the `streamId` value from the response to [Get a stream](ref:get-stream) Apart from the log and delivery frequency configurations, you can decide whether to `activate` the stream on making the request, or later. Note that only active streams collect and send logs to their destinations. See [Activate a stream](ref:post-stream-activate).
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/activate-query.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              google-cloud-storage:
+                summary: Google Cloud Storage
+                value:
+                  $ref: examples/PostBodyGCS.json
+              oracle-cloud:
+                summary: Oracle Cloud
+                value:
+                  $ref: examples/PostBodyOracle.json
+              sumo-logic:
+                summary: Sumo Logic
+                value:
+                  $ref: examples/PostBodySumologic.json
+              https:
+                summary: HTTPS
+                value:
+                  $ref: examples/PostBodyHttps.json
+              trafficpeak:
+                summary: TrafficPeak
+                value:
+                  $ref: examples/PostBodyTrafficPeak.json
+              azure:
+                summary: Azure
+                value:
+                  $ref: examples/PostBodyAzure.json
+              datadog:
+                summary: Datadog
+                value:
+                  $ref: examples/PostBodyDatadog.json
+              splunk:
+                summary: Splunk
+                value:
+                  $ref: examples/PostBodySplunk.json
+              loggly:
+                summary: Loggly
+                value:
+                  $ref: examples/PostBodyLoggly.json
+              elasticsearch:
+                summary: Elasticsearch
+                value:
+                  $ref: examples/PostBodyElasticsearch.json
+              new-relic:
+                summary: New Relic
+                value:
+                  $ref: examples/PostBodyNewrelic.json
+              s3:
+                summary: S3
+                value:
+                  $ref: examples/PostBodyS3.json
+              s3-compatible:
+                summary: S3-compatible
+                value:
+                  $ref: examples/PostBodyS3Compatible.json
+            schema:
+              $ref: schemas/SaveStreamRequest.yaml
+      responses:
+        201:
+          description: |
+            The response confirms the stream has been created and returns its details.
+          content:
+            application/json:
+              example:
+                $ref: examples/StreamDetailExample.json
+              schema:
+                $ref: schemas/StreamDetailCDN.yaml
+  /log/edgeworkers/streams:
+    post:
+      operationId: post-stream-ew
+      summary: Create an EdgeWorkers stream
+      tags:
+      - Streams
+      description: |
+        Creates a stream configuration for [EdgeWorkers](https://techdocs.akamai.com/edgeworkers/docs/welcome-to-edgeworkers). Get the `streamId` value from the response to [Get an EdgeWorkers stream](ref:get-stream-ew). Apart from the log and delivery frequency configurations, you can decide whether to `activate` the stream on making the request, or later. Note that only active streams collect and send logs to their destinations. See [Activate a stream](ref:post-stream-activate).
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/activate-query.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              google-cloud-storage:
+                summary: Google Cloud Storage
+                value:
+                  $ref: examples/EWPostBodyGCS.json
+              oracle-cloud:
+                summary: Oracle Cloud
+                value:
+                  $ref: examples/EWPostBodyOracle.json
+              sumo-logic:
+                summary: Sumo Logic
+                value:
+                  $ref: examples/EWPostBodySumoLogic.json
+              https:
+                summary: HTTPS
+                value:
+                  $ref: examples/EWPostBodyHTTPS.json
+              trafficpeak:
+                summary: TrafficPeak
+                value:
+                  $ref: examples/EWPostBodyTrafficPeak.json
+              azure:
+                summary: Azure
+                value:
+                  $ref: examples/EWPostBodyAzure.json
+              datadog:
+                summary: Datadog
+                value:
+                  $ref: examples/EWPostBodyDatadog.json
+              splunk:
+                summary: Splunk
+                value:
+                  $ref: examples/EWPostBodySplunk.json
+              loggly:
+                summary: Loggly
+                value:
+                  $ref: examples/EWPostBodyLoggly.json
+              s3:
+                summary: S3
+                value:
+                  $ref: examples/EWPostBodyS3.json
+              s3-compatible:
+                summary: S3-compatible
+                value:
+                  $ref: examples/EWPostBodyS3Compatible.json
+            schema:
+              $ref: schemas/SaveStreamRequestEW.yaml
+      responses:
+        201:
+          description: |
+            The response confirms the stream has been created and returns its details.
+          content:
+            application/json:
+              example:
+                $ref: examples/StreamDetailExampleEW.json
+              schema:
+                $ref: schemas/StreamDetailEW.yaml
+  /log/edns/streams:
+    post:
+      operationId: post-stream-edns
+      summary: Create an Edge DNS stream
+      tags:
+      - Streams
+      description: |
+        Creates a stream configuration for [Edge DNS](https://techdocs.akamai.com/edge-dns/docs/welcome-edge-dns). You can choose the zones to monitor in the stream, data set fields to collect in logs, and a destination to send these log files to. Get the `streamId` value from the response to [Get a stream](ref:get-stream). Apart from the log and delivery frequency configurations, you can decide whether to `activate` the stream on making the request, or later. Note that only active streams collect and send logs to their destinations. See [Activate a stream](ref:post-stream-activate).
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/activate-query.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              google-cloud-storage:
+                summary: Google Cloud Storage
+                value:
+                  $ref: examples/EdgePostBodyGCS.json
+              oracle-cloud:
+                summary: Oracle Cloud
+                value:
+                  $ref: examples/EdgePostBodyOracle.json
+              sumo-logic:
+                summary: Sumo Logic
+                value:
+                  $ref: examples/EdgePostBodySumoLogic.json
+              https:
+                summary: HTTPS
+                value:
+                  $ref: examples/EdgePostBodyHTTPS.json
+              trafficpeak:
+                summary: TrafficPeak
+                value:
+                  $ref: examples/EdgePostBodyTrafficPeak.json
+              azure:
+                summary: Azure
+                value:
+                  $ref: examples/EdgePostBodyAzure.json
+              datadog:
+                summary: Datadog
+                value:
+                  $ref: examples/EdgePostBodyDatadog.json
+              splunk:
+                summary: Splunk
+                value:
+                  $ref: examples/EdgePostBodySplunk.json
+              loggly:
+                summary: Loggly
+                value:
+                  $ref: examples/EdgePostBodyLoggly.json
+              s3:
+                summary: S3
+                value:
+                  $ref: examples/EdgePostBodyS3.json
+              s3-compatible:
+                summary: S3-compatible
+                value:
+                  $ref: examples/EdgePostBodyS3Compatible.json
+            schema:
+              $ref: schemas/SaveStreamRequestEDNS.yaml
+      responses:
+        201:
+          description: |
+            The response confirms the stream has been created and returns its details.
+          content:
+            application/json:
+              example:
+                $ref: examples/StreamDetailExampleEDNS.json
+              schema:
+                $ref: schemas/StreamDetailEDNS.yaml
+  /log/gtm/streams:
+    post:
+      operationId: post-stream-gtm
+      summary: Create a GTM stream
+      tags:
+      - Streams
+      description: |
+        Creates a stream configuration for [Global Traffic Management](https://techdocs.akamai.com/gtm/docs/welcome-to-global-traffic-management). You can choose the properties to monitor in the stream, data set fields to collect in logs, and a destination to send these log files to. Get the `streamId` value from the response to [Get a stream](ref:get-stream). Apart from the log and delivery frequency configurations, you can decide whether to `activate` the stream on making the request, or later. Note that only active streams collect and send logs to their destinations. See [Activate a stream](ref:post-stream-activate).
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/activate-query.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              google-cloud-storage:
+                summary: Google Cloud Storage
+                value:
+                  $ref: examples/GTMPostBodyGCS.json
+              oracle-cloud:
+                summary: Oracle Cloud
+                value:
+                  $ref: examples/GTMPostBodyOracle.json
+              sumo-logic:
+                summary: Sumo Logic
+                value:
+                  $ref: examples/GTMPostBodySumoLogic.json
+              https:
+                summary: HTTPS
+                value:
+                  $ref: examples/GTMPostBodyHTTPS.json
+              trafficpeak:
+                summary: TrafficPeak
+                value:
+                  $ref: examples/GTMPostBodyTrafficPeak.json
+              azure:
+                summary: Azure
+                value:
+                  $ref: examples/GTMPostBodyAzure.json
+              datadog:
+                summary: Datadog
+                value:
+                  $ref: examples/GTMPostBodyDatadog.json
+              splunk:
+                summary: Splunk
+                value:
+                  $ref: examples/GTMPostBodySplunk.json
+              loggly:
+                summary: Loggly
+                value:
+                  $ref: examples/GTMPostBodyLoggly.json
+              s3:
+                summary: S3
+                value:
+                  $ref: examples/GTMPostBodyS3.json
+              s3-compatible:
+                summary: S3-compatible
+                value:
+                  $ref: examples/GTMPostBodyS3Compatible.json
+            schema:
+              $ref: schemas/SaveStreamRequestGTM.yaml
+      responses:
+        201:
+          description: |
+            The response confirms the stream has been created and returns its details.
+          content:
+            application/json:
+              example:
+                $ref: examples/StreamDetailExampleGTM.json
+              schema:
+                $ref: schemas/StreamDetailGTM.yaml
+  /log/streams/metrics:
+    get:
+      operationId: get-streams-metrics
+      summary: View upload metrics
+      tags:
+      - Streams
+      description: |
+        Returns aggregated metrics for log file uploads, including success or failure upload counts, upload latency, and the volume of data uploaded in the stream. Set the `start` and `end` dates to get metrics from a specific time range, and `aggregationInterval` to group data by time intervals.
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/metrics-start-query.yaml
+      - $ref: parameters/metrics-end-query.yaml
+      - $ref: parameters/metrics-streamId-query.yaml
+      - $ref: parameters/metrics-groupId-query.yaml
+      - $ref: parameters/metrics-aggregationInterval-query.yaml
+      - $ref: parameters/metrics-includeDetails-query.yaml
+      responses:
+        200:
+          description: |
+            The response returns aggregated upload metrics.
+          content:
+            application/json:
+              example:
+                $ref: examples/StreamsMetricsExample.json
+              schema:
+                $ref: schemas/StreamsMetrics.yaml
+  /log/{logType}/streams/{streamId}:
+    parameters:
+    - $ref: parameters/logType-path.yaml
+    - $ref: parameters/streamId-path.yaml
+    get:
+      operationId: get-stream
+      summary: Get a stream
+      tags:
+      - Streams
+      description: |
+        Returns details about any version of a stream, including the monitored properties or zones, logged data set fields, and log delivery destination. If you omit the `version` query parameter, this operation returns the stream's last version.
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/version-query.yaml
+      responses:
+        200:
+          description: |
+            The response returns stream version details.
+          content:
+            application/json:
+              examples:
+                stream-cdn:
+                  summary: Delivery (CDN) streams
+                  value:
+                    $ref: examples/StreamDetailExample.json
+                stream-edns:
+                  summary: Edge DNS streams
+                  value:
+                    $ref: examples/StreamDetailExampleEDNS.json
+                stream-ew:
+                  summary: EdgeWorkers streams
+                  value:
+                    $ref: examples/StreamDetailExampleEW.json
+                stream-gtm:
+                  summary: Global Traffic Management streams
+                  value:
+                    $ref: examples/StreamDetailExampleGTM.json
+              schema:
+                $ref: schemas/StreamDetail.yaml
+  /log/cdn/streams/{streamId}:
+    parameters:
+    - $ref: parameters/streamId-path.yaml
+    put:
+      operationId: put-stream-cdn
+      summary: Edit a delivery (CDN) stream
+      tags:
+      - Streams
+      description: |
+        Updates the latest version of a delivery stream. When you edit a stream, you create a new configuration version with a higher number. Note that only active streams collect and send logs to their destinations. You need to set the `activate` parameter to `true` while patching active streams, and optionally for inactive streams if you want to activate them upon request. See [Version management](ref:version-management) and [Activate a stream](ref:post-stream-activate).
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/activate-query.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              google-cloud-storage:
+                summary: Google Cloud Storage
+                value:
+                  $ref: examples/PutBodyGCS.json
+              oracle-cloud:
+                summary: Oracle Cloud
+                value:
+                  $ref: examples/PutBodyOracle.json
+              sumo-logic:
+                summary: Sumo Logic
+                value:
+                  $ref: examples/PutBodySumologic.json
+              https:
+                summary: HTTPS
+                value:
+                  $ref: examples/PutBodyHttps.json
+              trafficpeak:
+                summary: TrafficPeak
+                value:
+                  $ref: examples/PutBodyTrafficPeak.json
+              azure:
+                summary: Azure
+                value:
+                  $ref: examples/PutBodyAzure.json
+              datadog:
+                summary: Datadog
+                value:
+                  $ref: examples/PutBodyDatadog.json
+              splunk:
+                summary: Splunk
+                value:
+                  $ref: examples/PutBodySplunk.json
+              loggly:
+                summary: Loggly
+                value:
+                  $ref: examples/PutBodyLoggly.json
+              elasticsearch:
+                summary: Elasticsearch
+                value:
+                  $ref: examples/PutBodyElasticsearch.json
+              new-relic:
+                summary: New Relic
+                value:
+                  $ref: examples/PutBodyNewrelic.json
+              s3:
+                summary: S3
+                value:
+                  $ref: examples/PutBodyS3.json
+              s3-compatible:
+                summary: S3-compatible
+                value:
+                  $ref: examples/PutBodyS3Compatible.json
+            schema:
+              $ref: schemas/EditStreamRequest.yaml
+      responses:
+        200:
+          description: |
+            The response shows the updated stream.
+          content:
+            application/json:
+              example:
+                $ref: examples/StreamDetailExample.json
+              schema:
+                $ref: schemas/StreamDetailCDN.yaml
+  /log/edns/streams/{streamId}:
+    parameters:
+    - $ref: parameters/streamId-path.yaml
+    put:
+      operationId: put-stream-edns
+      summary: Edit an Edge DNS stream
+      tags:
+      - Streams
+      description: |
+        Updates the latest version of an [Edge DNS](https://techdocs.akamai.com/edge-dns/docs/welcome-edge-dns) stream. When you edit a stream, you create a new configuration version with a higher number. Note that only active streams collect and send logs to their destinations. You need to set the `activate` parameter to `true` while patching active streams, and optionally for inactive streams if you want to activate them upon request. See [Version management](ref:version-management) and [Activate a stream](ref:post-stream-activate).
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/activate-query.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              google-cloud-storage:
+                summary: Google Cloud Storage
+                value:
+                  $ref: examples/EdgePutBodyGCS.json
+              oracle-cloud:
+                summary: Oracle Cloud
+                value:
+                  $ref: examples/EdgePutBodyOracle.json
+              sumo-logic:
+                summary: Sumo Logic
+                value:
+                  $ref: examples/EdgePutBodySumologic.json
+              https:
+                summary: HTTPS
+                value:
+                  $ref: examples/EdgePutBodyHttps.json
+              trafficpeak:
+                summary: TrafficPeak
+                value:
+                  $ref: examples/EdgePutBodyTrafficPeak.json
+              azure:
+                summary: Azure
+                value:
+                  $ref: examples/EdgePutBodyAzure.json
+              datadog:
+                summary: Datadog
+                value:
+                  $ref: examples/EdgePutBodyDatadog.json
+              splunk:
+                summary: Splunk
+                value:
+                  $ref: examples/EdgePutBodySplunk.json
+              loggly:
+                summary: Loggly
+                value:
+                  $ref: examples/EdgePutBodyLoggly.json
+              s3:
+                summary: S3
+                value:
+                  $ref: examples/EdgePutBodyS3.json
+              s3-compatible:
+                summary: S3-compatible
+                value:
+                  $ref: examples/EdgePutBodyS3Compatible.json
+            schema:
+              $ref: schemas/EditStreamRequestEDNS.yaml
+      responses:
+        200:
+          description: |
+            The response shows the updated stream.
+          content:
+            application/json:
+              example:
+                $ref: examples/StreamDetailExampleEDNS.json
+              schema:
+                $ref: schemas/StreamDetailEDNS.yaml
+  /log/ew/streams/{streamId}:
+    parameters:
+    - $ref: parameters/streamId-path.yaml
+    put:
+      operationId: put-stream-ew
+      summary: Edit an EdgeWorkers stream
+      tags:
+      - Streams
+      description: |
+        Updates the latest version of an [EdgeWorkers](https://techdocs.akamai.com/edgeworkers/docs/welcome-to-edgeworkers) stream. When you edit a stream, you create a new configuration version with a higher number. Note that only active streams collect and send logs to their destinations. You need to set the `activate` parameter to `true` while patching active streams, and optionally for inactive streams if you want to activate them upon request. See [Version management](ref:version-management) and [Activate a stream](ref:post-stream-activate).
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/activate-query.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              google-cloud-storage:
+                summary: Google Cloud Storage
+                value:
+                  $ref: examples/EWPutBodyGCS.json
+              oracle-cloud:
+                summary: Oracle Cloud
+                value:
+                  $ref: examples/EWPutBodyOracle.json
+              sumo-logic:
+                summary: Sumo Logic
+                value:
+                  $ref: examples/EWPutBodySumologic.json
+              https:
+                summary: HTTPS
+                value:
+                  $ref: examples/EWPutBodyHttps.json
+              trafficpeak:
+                summary: TrafficPeak
+                value:
+                  $ref: examples/EWPutBodyTrafficPeak.json
+              azure:
+                summary: Azure
+                value:
+                  $ref: examples/EWPutBodyAzure.json
+              datadog:
+                summary: Datadog
+                value:
+                  $ref: examples/EWPutBodyDatadog.json
+              splunk:
+                summary: Splunk
+                value:
+                  $ref: examples/EWPutBodySplunk.json
+              loggly:
+                summary: Loggly
+                value:
+                  $ref: examples/EWPutBodyLoggly.json
+              s3:
+                summary: S3
+                value:
+                  $ref: examples/EWPutBodyS3.json
+              s3-compatible:
+                summary: S3-compatible
+                value:
+                  $ref: examples/EWPutBodyS3Compatible.json
+            schema:
+              $ref: schemas/EditStreamRequestEW.yaml
+      responses:
+        200:
+          description: |
+            The response shows the updated stream.
+          content:
+            application/json:
+              example:
+                $ref: examples/StreamDetailExampleEW.json
+              schema:
+                $ref: schemas/StreamDetailEW.yaml
+  /log/gtm/streams/{streamId}:
+    parameters:
+    - $ref: parameters/streamId-path.yaml
+    put:
+      operationId: put-stream-gtm
+      summary: Edit a GTM stream
+      tags:
+      - Streams
+      description: |
+        Updates the latest version of a [Global Traffic Management](https://techdocs.akamai.com/gtm/docs/welcome-to-global-traffic-management) stream. When you edit a stream, you create a new configuration version with a higher number. Note that only active streams collect and send logs to their destinations. You need to set the `activate` parameter to `true` while patching active streams, and optionally for inactive streams if you want to activate them upon request. See [Version management](ref:version-management) and [Activate a stream](ref:post-stream-activate).
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/activate-query.yaml
+      requestBody:
+        required: true
+        content:
+          application/json:
+            examples:
+              google-cloud-storage:
+                summary: Google Cloud Storage
+                value:
+                  $ref: examples/GTMPutBodyGCS.json
+              oracle-cloud:
+                summary: Oracle Cloud
+                value:
+                  $ref: examples/GTMPutBodyOracle.json
+              sumo-logic:
+                summary: Sumo Logic
+                value:
+                  $ref: examples/GTMPutBodySumologic.json
+              https:
+                summary: HTTPS
+                value:
+                  $ref: examples/GTMPutBodyHttps.json
+              trafficpeak:
+                summary: TrafficPeak
+                value:
+                  $ref: examples/GTMPutBodyTrafficPeak.json
+              azure:
+                summary: Azure
+                value:
+                  $ref: examples/GTMPutBodyAzure.json
+              datadog:
+                summary: Datadog
+                value:
+                  $ref: examples/GTMPutBodyDatadog.json
+              splunk:
+                summary: Splunk
+                value:
+                  $ref: examples/GTMPutBodySplunk.json
+              loggly:
+                summary: Loggly
+                value:
+                  $ref: examples/GTMPutBodyLoggly.json
+              s3:
+                summary: S3
+                value:
+                  $ref: examples/GTMPutBodyS3.json
+              s3-compatible:
+                summary: S3-compatible
+                value:
+                  $ref: examples/GTMPutBodyS3Compatible.json
+            schema:
+              $ref: schemas/EditStreamRequestGTM.yaml
+      responses:
+        200:
+          description: |
+            The response shows the updated stream.
+          content:
+            application/json:
+              example:
+                $ref: examples/StreamDetailExampleGTM.json
+              schema:
+                $ref: schemas/StreamDetailGTM.yaml
+    patch:
+      operationId: patch-stream
+      summary: Patch a stream
+      tags:
+      - Streams
+      description: |
+        Updates selected details of an existing stream. Running this operation using [JSON Patch](http://jsonpatch.com) syntax creates a stream version that replaces the current one. Currently you can patch a stream using only the `REPLACE` operation. When updating configuration objects such as `destination` or `deliveryConfiguration`, pass a complete object to avoid overwriting current details with default values for omitted members such as `tags`, `uploadFilePrefix`, and `uploadFileSuffix`. Note that only active streams collect and send logs to their destinations. You need to set the `activate` parameter to `true` while patching active streams, and optionally for inactive streams if you want to activate them upon request. See [Patching streams](ref:patching-streams) for details.
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/activate-query.yaml
+      requestBody:
+        required: true
+        content:
+          application/json-patch+json:
+            examples:
+              Update data set fields and stream name:
+                value:
+                  $ref: examples/PatchDatasetExample.json
+              Update delivery configuration:
+                value:
+                  $ref: examples/PatchDeliveryConfigExample.json
+              Update destination:
+                value:
+                  $ref: examples/PatchDestinationExample.json
+              Update properties and notification e-mails:
+                value:
+                  $ref: examples/PatchPropertiesExample.json
+            schema:
+              $ref: schemas/PatchStreamRequest.yaml
+      responses:
+        200:
+          description: |
+            The response confirms the stream has been patched and returns its details.
+          content:
+            application/json:
+              examples:
+                stream-cdn:
+                  summary: Delivery (CDN) streams
+                  value:
+                    $ref: examples/StreamDetailExample.json
+                stream-edns:
+                  summary: Edge DNS streams
+                  value:
+                    $ref: examples/StreamDetailExampleEDNS.json
+                stream-ew:
+                  summary: EdgeWorkers streams
+                  value:
+                    $ref: examples/StreamDetailExampleEW.json
+                stream-gtm:
+                  summary: Global Traffic Management streams
+                  value:
+                    $ref: examples/StreamDetailExampleGTM.json
+              schema:
+                $ref: schemas/StreamDetail.yaml
+    delete:
+      operationId: delete-stream
+      summary: Delete a stream
+      tags:
+      - Streams
+      description: |
+        Deletes a deactivated stream. Deleting a stream means you can't activate this stream again, and you stop receiving logs for the properties this stream monitors. Before deleting any stream, you need to deactivate it first. See [Deactivate a stream](ref:post-stream-activate).
+      x-akamai:
+        supports-account-switch-key: false
+      responses:
+        204:
+          description: |
+            The response confirms the stream has been deleted.
+  /log/{logType}/streams/{streamId}/activate:
+    parameters:
+    - $ref: parameters/logType-path.yaml
+    - $ref: parameters/streamId-path.yaml
+    post:
+      operationId: post-stream-activate
+      summary: Activate a stream
+      tags:
+      - Activations
+      description: |
+        Activates the latest version of a stream. Activating a stream takes approximately an hour. Once a stream is active, and the [DataStream behavior](https://techdocs.akamai.com/property-mgr/docs/datastream-beh) is enabled in Property Manager, it replaces and deactivates the previous version, then starts collecting data and sending log files to a destination. If you want to stop receiving the logs, you can [Deactivate a stream](ref:post-stream-activate) at any time. Run [List streams](ref:get-streams) to check your stream's activation status.
+      x-akamai:
+        supports-account-switch-key: false
+      responses:
+        200:
+          description: |
+            The response confirms the stream has been activated and returns its details.
+          content:
+            application/json:
+              examples:
+                stream-cdn:
+                  summary: Delivery (CDN) streams
+                  value:
+                    $ref: examples/StreamDetailExample.json
+                stream-edns:
+                  summary: Edge DNS streams
+                  value:
+                    $ref: examples/StreamDetailExampleEDNS.json
+                stream-ew:
+                  summary: EdgeWorkers streams
+                  value:
+                    $ref: examples/StreamDetailExampleEW.json
+                stream-gtm:
+                  summary: Global Traffic Management streams
+                  value:
+                    $ref: examples/StreamDetailExampleGTM.json
+              schema:
+                $ref: schemas/StreamDetail.yaml
+  /log/{logType}/streams/{streamId}/activation-history:
+    parameters:
+    - $ref: parameters/logType-path.yaml
+    - $ref: parameters/streamId-path.yaml
+    get:
+      operationId: get-stream-activation-history
+      summary: View activation history
+      tags:
+      - Activations
+      description: |
+        Returns the details of activation status changes for all versions of a given stream within a specific `logType`.
+      x-akamai:
+        supports-account-switch-key: false
+      responses:
+        200:
+          description: |
+            The response lists changes in stream activation status.
+          content:
+            application/json:
+              example:
+                $ref: examples/ActivationHistoriesExample.json
+              schema:
+                $ref: schemas/ActivationHistories.yaml
+  /log/{logType}/streams/{streamId}/deactivate:
+    parameters:
+    - $ref: parameters/logType-path.yaml
+    - $ref: parameters/streamId-path.yaml
+    post:
+      operationId: post-stream-deactivate
+      summary: Deactivate a stream
+      tags:
+      - Activations
+      description: |
+        Deactivates the latest version of a stream. Deactivating a stream means that you stop receiving logs for properties this stream monitors, and changes status to `DEACTIVATED` in approximately an hour. If you want to start receiving log files again, you can activate the stream at any time using the [Activate a stream](ref:post-stream-activate) operation.
+      x-akamai:
+        supports-account-switch-key: false
+      responses:
+        200:
+          description: |
+            The response confirms the stream has been deactivated and returns its details.
+          content:
+            application/json:
+              example:
+                $ref: examples/StreamDetailExample.json
+              schema:
+                $ref: schemas/StreamDetail.yaml
+  /log/{logType}/streams/{streamId}/history:
+    parameters:
+    - $ref: parameters/logType-path.yaml
+    - $ref: parameters/streamId-path.yaml
+    get:
+      operationId: get-stream-history
+      summary: View history
+      tags:
+      - History
+      description: |
+        Returns details about all versions of a given stream. It helps you track changes between the stream's versions, including monitored properties, logged data set fields, and log delivery destinations. Optionally, set both the `startVersion` and `endVersion` parameters to get details on all stream versions for a given range. For example, setting `startVersion` to `1` and `endVersion` to `3` returns details on the stream's `1`, `2`, and `3` versions.
+      x-akamai:
+        supports-account-switch-key: false
+      parameters:
+      - $ref: parameters/history-startVersion-query.yaml
+      - $ref: parameters/history-endVersion-query.yaml
+      responses:
+        200:
+          description: |
+            The response returns details of all stream's versions.
+          content:
+            application/json:
+              example:
+                $ref: examples/ExampleStreamHistories.json
+              schema:
+                $ref: schemas/StreamHistories.yaml
