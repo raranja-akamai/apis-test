@@ -8,9 +8,9 @@ tags:
 - name: Users
   description: |
     If you're an administrator, use these operations to create and manage users on your account.
-- name: Blocked properties
+- name: Blocked assets
   description: |
-    If you're an administrator, use these operations to manage the list of properties blocked for a user.
+    If you're an administrator, use these operations to manage the list of properties and includes blocked for a user.
 - name: User authentication settings
   description: |
     Use these operations to manage your or, if you're an administrator, other users' authentication settings.
@@ -175,15 +175,15 @@ paths:
     - $ref: parameters/ui-identity-id-path.yaml
     get:
       operationId: get-blocked-properties
-      summary: List blocked properties
+      summary: List blocked properties and includes
       tags:
-      - Blocked properties
+      - Blocked assets
       description: |
-        This operation lists all properties a user doesn't have access to in a group.
+        This operation lists all properties and includes a user doesn't have access to in a group. Note the responses's set of IDs refer to either properties or includes. To find out which each refers to, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).
       responses:
         200:
           description: |
-            The response provides the blocked properties.
+            The response provides the blocked assets.
           content:
             application/json:
               example:
@@ -192,15 +192,11 @@ paths:
                 $ref: schemas/list-of-integer.yaml
     put:
       operationId: put-blocked-properties
-      summary: Update blocked properties
+      summary: Update blocked properties and includes
       tags:
-      - Blocked properties
+      - Blocked assets
       description: |
-        "This operation updates the list of blocked properties. By default, users have access to all properties in
-        a group. To get the list of already blocked properties run the [List blocked
-        properties](ref:get-blocked-properties) operation. In this request, include
-        the whole list of properties you want to block. By not including a blocked
-        property, you're unlocking it. \n"
+        This operation updates the list of blocked properties and includes. By default, users can access all properties and includes in a group, and this operation specifies IDs for any to block. To find out which each refers to, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes). To get the list of already blocked properties run the [List blocked properties and includes](ref:get-blocked-properties) operation. In this request, include the whole list of properties you want to block. By not including a blocked property, you're unlocking it.
       requestBody:
         required: true
         content:
