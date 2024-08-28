@@ -1,41 +1,29 @@
 type: object
 description: |
-  Provides basic information about the latest version of a stream. Apart from contextual information and the activation status, it provides names of the properties the stream monitors.
+  Provides basic information about the latest version of a stream. Apart from contextual information and the activation status, it provides names of the properties the stream monitors and the destinations where it sends logs.
 additionalProperties: false
 required:
-- contractId
+- streamId
+- streamVersionId
+- streamName
 - createdBy
 - createdDate
+- currentVersionId
+- archived
+- activationStatus
 - groupId
-- latestVersion
-- modifiedBy
-- modifiedDate
-- productId
+- groupName
+- contractId
 - properties
-- streamId
-- streamName
-- streamStatus
-- streamVersion
+- connectors
+- streamTypeName
 properties:
   properties:
     type: array
-    description: |
-      Identifies the properties that you monitor in the stream.
     items:
-      type: object
-      additionalProperties: false
-      required:
-      - propertyId
-      - propertyName
-      properties:
-        propertyId:
-          type: integer
-          description: |
-            The property's unique identifier.
-        propertyName:
-          type: string
-          description: |
-            The descriptive label for the property.
+      description: |
+        Identifies the properties that you monitor in the stream.
+      "$ref": Property.yaml
   streamId:
     type: integer
     description: |
@@ -43,37 +31,11 @@ properties:
   streamName:
     type: string
     description: |
-      The stream's name.
-  streamVersion:
+      The name of the stream.
+  streamVersionId:
     type: integer
     description: |
-      Identifies the stream's version.
-  groupId:
-    type: integer
-    description: |
-      Identifies the group where the stream is created.
-  contractId:
-    type: string
-    description: |
-      Identifies the contract the stream belongs to.
-  latestVersion:
-    type: integer
-    description: |
-      Identifies the latest version of the stream.
-  productId:
-    type: string
-    description: |
-      Identifies the product you created the stream for.
-  streamStatus:
-    type: string
-    description: |
-      Indicates if the stream version is `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`.
-    enum:
-    - INACTIVE
-    - ACTIVATING
-    - ACTIVATED
-    - DEACTIVATING
-    - DEACTIVATED
+      Identifies the version of the stream.
   createdBy:
     type: string
     description: |
@@ -83,12 +45,47 @@ properties:
     description: |
       An ISO 8601 timestamp marking when the stream was created.
     format: date-time
-  modifiedBy:
+  currentVersionId:
+    type: integer
+    description: |
+      Identifies the current version of the stream.
+  archived:
+    type: boolean
+    description: |
+      Whether the stream is archived.
+  activationStatus:
     type: string
     description: |
-      The username who modified the stream.
-  modifiedDate:
+      The activation status of the stream. These are possible values: `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`.
+    enum:
+    - INACTIVE
+    - ACTIVATING
+    - ACTIVATED
+    - DEACTIVATING
+    - DEACTIVATED
+  groupId:
+    type: integer
+    description: |
+      Identifies the group where the stream is created.
+  groupName:
     type: string
     description: |
-      An ISO 8601 timestamp marking when the stream was modified.
-    format: date-time
+      The group name where the stream is created.
+  contractId:
+    type: string
+    description: |
+      Identifies the contract that the stream is associated with.
+  connectors:
+    type: string
+    description: |
+      The connector where the stream sends logs. At this time, you can configure one connector per stream as the destination to send logs.
+  streamTypeName:
+    type: string
+    description: |
+      Specifies the type of the data stream. `Logs - Raw` is the only stream type name currently available.
+  errors:
+    type: array
+    items:
+      description: |
+        Errors associated to the stream.
+      "$ref": Error.yaml

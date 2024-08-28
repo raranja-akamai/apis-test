@@ -1,12 +1,12 @@
 openapi: 3.0.0
 info:
   title: Invoices
-  version: v1
+  version: v4
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-- url: https://{hostname}/invoicing-api/v3
+- url: https://{hostname}/invoicing-api/v4
 tags:
 - description: Get invoice and credit memo data for a contract.
   name: Invoices
@@ -61,13 +61,32 @@ paths:
       tags:
       - Invoices
       description: |
-        Returns the content of the selected contract's invoice or credit memo file. The downloadable file is available in the response body. The `Content-Type` depends on the format of the file you're downloading.
+        "Returns the content of the selected contract's invoice, credit memo file, or usage data for Cloud Computing services.
+        The downloadable file is available in the response body. The format of the
+        file depends on the value of the `Accept` header. Available formats are `CSV`,
+        `PDF`, and `JSON`. \n"
       parameters:
-      - $ref: parameters/fileFormat-query.yaml
+      - $ref: parameters/sourceType-query.yaml
       responses:
         200:
           description: |
             The response provides requested file.
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  $ref: examples/invoice-download-200.json
+                additionalProperties: true
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            text/csv:
+              schema:
+                type: string
+                example:
+                  $ref: examples/invoice-download-200.csv
         204:
           description: |
             This response indicates there were no results based on the requested parameters.
