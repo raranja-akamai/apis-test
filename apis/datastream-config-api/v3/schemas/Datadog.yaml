@@ -1,32 +1,32 @@
 type: object
 description: |
-  Provides detailed information about the Datadog connector that you can use in your stream. If you choose this destination, the stream pushes a sample POST request to the endpoint to validate write access. You can see the `validate connector test` data only if the destination validates, and you can access the destination storage.
+  Details the Datadog destination that you can use in your stream. If you choose this destination, the stream pushes a sample POST request to the endpoint to validate write access. You can see the `validate connector test` data only if the destination validates, and you can access the destination storage.
 title: DATADOG
 additionalProperties: false
 required:
-- connectorType
-- connectorName
-- url
+- destinationType
+- displayName
+- endpoint
 - authToken
 properties:
   tags:
     type: string
     description: |
       The tags you can use to filter and group metrics in your Datadog account. Enter a comma-delimited list for more than one tag. This field also supports `<key>:<value>` combinations. See [Getting Started with Tags](https://docs.datadoghq.com/getting_started/tagging/) in the Datadog documentation.
-  url:
+  destinationType:
     type: string
     description: |
-      The Datadog endpoint where you want to store your logs. You can use Akamaized property hostnames as endpoint URLs. See [Stream logs to Datadog](https://techdocs.akamai.com/datastream2/docs/stream-datadog#akamaized-hostname-as-endpoint), and [View Datadog logs endpoint](https://docs.datadoghq.com/logs/log_collection/?tab=http#logging-endpoints) in the Datadog documentation.
-  connectorType:
-    type: string
-    description: |
-      The name of the connector type. Set this value to `DATADOG` for this connector type.
+      The destination type's name. Set this value to `DATADOG` for this destination type.
     enum:
     - DATADOG
-  connectorName:
+  displayName:
     type: string
     description: |
-      The name of the connector.
+      The destination's name.
+  endpoint:
+    type: string
+    description: |
+      The Datadog v1 endpoint URL where you want to send and store logs. You can use hostnames served over the Akamai network as endpoint URLs. See [Stream logs to Datadog](doc:stream-datadog#akamaized-hostname-as-endpoint), and [View Datadog logs endpoint](https://docs.datadoghq.com/logs/log_collection/?tab=http#logging-endpoints) in the Datadog documentation.
   authToken:
     type: string
     description: |
@@ -42,5 +42,5 @@ properties:
   compressLogs:
     type: boolean
     description: |
-      Enables gzip compression for a log file sent to a destination. If not set, this member's value is `false` by default.
+      Enables gzip compression for a log file sent to a destination. The value is `false` by default.
     default: false

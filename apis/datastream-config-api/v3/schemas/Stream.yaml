@@ -1,29 +1,41 @@
 type: object
 description: |
-  Provides basic information about the latest version of a stream. Apart from contextual information and the activation status, it provides names of the properties the stream monitors and the destinations where it sends logs.
+  Provides basic information about the latest version of a stream. Apart from contextual information and the activation status, it provides names of the properties the stream monitors.
 additionalProperties: false
 required:
-- streamId
-- streamVersionId
-- streamName
+- contractId
 - createdBy
 - createdDate
-- currentVersionId
-- archived
-- activationStatus
 - groupId
-- groupName
-- contractId
+- latestVersion
+- modifiedBy
+- modifiedDate
+- productId
 - properties
-- connectors
-- streamTypeName
+- streamId
+- streamName
+- streamStatus
+- streamVersion
 properties:
   properties:
     type: array
+    description: |
+      Identifies the properties that you monitor in the stream.
     items:
-      description: |
-        Identifies the properties that you monitor in the stream.
-      "$ref": Property.yaml
+      type: object
+      additionalProperties: false
+      required:
+      - propertyId
+      - propertyName
+      properties:
+        propertyId:
+          type: integer
+          description: |
+            The property's unique identifier.
+        propertyName:
+          type: string
+          description: |
+            The descriptive label for the property.
   streamId:
     type: integer
     description: |
@@ -31,11 +43,37 @@ properties:
   streamName:
     type: string
     description: |
-      The name of the stream.
-  streamVersionId:
+      The stream's name.
+  streamVersion:
     type: integer
     description: |
-      Identifies the version of the stream.
+      Identifies the stream's version.
+  groupId:
+    type: integer
+    description: |
+      Identifies the group where the stream is created.
+  contractId:
+    type: string
+    description: |
+      Identifies the contract the stream belongs to.
+  latestVersion:
+    type: integer
+    description: |
+      Identifies the latest version of the stream.
+  productId:
+    type: string
+    description: |
+      Identifies the product you created the stream for.
+  streamStatus:
+    type: string
+    description: |
+      Indicates if the stream version is `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`.
+    enum:
+    - INACTIVE
+    - ACTIVATING
+    - ACTIVATED
+    - DEACTIVATING
+    - DEACTIVATED
   createdBy:
     type: string
     description: |
@@ -45,47 +83,12 @@ properties:
     description: |
       An ISO 8601 timestamp marking when the stream was created.
     format: date-time
-  currentVersionId:
-    type: integer
-    description: |
-      Identifies the current version of the stream.
-  archived:
-    type: boolean
-    description: |
-      Whether the stream is archived.
-  activationStatus:
+  modifiedBy:
     type: string
     description: |
-      The activation status of the stream. These are possible values: `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`.
-    enum:
-    - INACTIVE
-    - ACTIVATING
-    - ACTIVATED
-    - DEACTIVATING
-    - DEACTIVATED
-  groupId:
-    type: integer
-    description: |
-      Identifies the group where the stream is created.
-  groupName:
+      The username who modified the stream.
+  modifiedDate:
     type: string
     description: |
-      The group name where the stream is created.
-  contractId:
-    type: string
-    description: |
-      Identifies the contract that the stream is associated with.
-  connectors:
-    type: string
-    description: |
-      The connector where the stream sends logs. At this time, you can configure one connector per stream as the destination to send logs.
-  streamTypeName:
-    type: string
-    description: |
-      Specifies the type of the data stream. `Logs - Raw` is the only stream type name currently available.
-  errors:
-    type: array
-    items:
-      description: |
-        Errors associated to the stream.
-      "$ref": Error.yaml
+      An ISO 8601 timestamp marking when the stream was modified.
+    format: date-time
