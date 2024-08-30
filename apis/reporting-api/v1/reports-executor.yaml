@@ -1,183 +1,200 @@
 openapi: 3.0.0
 info:
   title: Reports
-  version: v1
-  license:
-    name: Apache 2.0
-    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: v2
 servers:
-- url: https://{hostname}/reporting-api/v1
+- url: https://{hostname}/reporting-api/v2
 tags:
-- description: Get information about the different kinds of reports available.
-  name: Report types
-- description: Run reports to determine how your Akamai service is performing.
-  name: Reports
+- name: Report list
+  description: |
+    Get information about the different kinds of reports available.
+- name: Report metadata
+  description: |
+    Get available options to generate a report.
+- name: Report data
+  description: |
+    Run reports to get data about your Akamai services.
 x-akamai:
   auth-type: EDGE_GRID
-  file-path: reports-executor.yaml
 paths:
   /reports:
     get:
       operationId: get-reports
-      summary: List report types
+      summary: List reports
       tags:
-      - Report types
+      - Report list
       description: |
-        List all versions of all report types, optionally filtering out older deprecated versions.
-      parameters:
-      - $ref: parameters/ListReport_showDeprecated.yaml
-      - $ref: parameters/ListReport_showUnavailable.yaml
+        Returns all available reports.
       responses:
         200:
           description: |
-            Success.
+            The response shows all available reports.
           content:
             application/json:
               example:
-                $ref: examples/report-list-response-example.json
+                $ref: examples/reports-200.json
               schema:
-                $ref: schemas/ReportList.yaml
-  /reports/{name}/versions:
+                $ref: schemas/report-list-response.yaml
+  /reports/{productFamily}:
     parameters:
-    - $ref: parameters/name-path.yaml
+    - $ref: parameters/productFamily-path.yaml
     get:
-      operationId: get-report-versions
-      summary: List versions
+      operationId: get-reports-per-product-family
+      summary: List reports per product family
       tags:
-      - Report types
+      - Report list
       description: |
-        List all versions for a specific report type.
-      parameters:
-      - $ref: parameters/ListReport_showDeprecated.yaml
-      - $ref: parameters/ListReport_showUnavailable.yaml
+        Returns all available reports for a product family.
       responses:
         200:
           description: |
-            Success.
+            The response shows available reports per product family.
           content:
             application/json:
               example:
-                $ref: examples/report-list-response-example.json
+                $ref: examples/product-families-200.json
               schema:
-                $ref: schemas/ReportList.yaml
-  /reports/{name}/versions/{version}:
+                $ref: schemas/report-list-response.yaml
+        404:
+          $ref: responses/404.yaml
+  /reports/{productFamily}/{reportingArea}:
     parameters:
-    - $ref: parameters/version-path.yaml
-    - $ref: parameters/name-path.yaml
+    - $ref: parameters/productFamily-path.yaml
+    - $ref: parameters/reportingArea-path.yaml
     get:
-      operationId: get-report-version
-      summary: Get a report type
+      operationId: get-reports-per-reporting-area
+      summary: List reports per reporting area
       tags:
-      - Report types
+      - Report list
       description: |
-        Get a specific version of a report type.
+        Returns all available reports for a product family and reporting area.
       responses:
         200:
           description: |
-            Success.
+            The response shows available reports per product family and reporting area.
           content:
             application/json:
               example:
-                $ref: examples/report-list-row-example.json
+                $ref: examples/reporting-areas-200.json
               schema:
-                $ref: schemas/ReportListRow.yaml
-  /reports/{name}/versions/{version}/report-data:
+                $ref: schemas/report-list-response.yaml
+        404:
+          $ref: responses/404.yaml
+  /reports/{productFamily}/{reportingArea}/{report}:
     parameters:
-    - $ref: parameters/version-path.yaml
-    - $ref: parameters/name-path.yaml
+    - $ref: parameters/productFamily-path.yaml
+    - $ref: parameters/reportingArea-path.yaml
+    - $ref: parameters/report-path.yaml
+    get:
+      operationId: get-report-options
+      summary: Get report options
+      tags:
+      - Report metadata
+      description: |
+        Returns available options to generate the report.
+      responses:
+        200:
+          description: |
+            The response shows available options to generate the report.
+          content:
+            application/json:
+              example:
+                $ref: examples/report-metadata-200.json
+              schema:
+                $ref: schemas/report-metadata-response.yaml
+        404:
+          $ref: responses/404.yaml
+        403:
+          $ref: responses/403.yaml
+  /reports/{productFamily}/{reportingArea}/{report}/data:
+    parameters:
+    - $ref: parameters/productFamily-path.yaml
+    - $ref: parameters/reportingArea-path.yaml
+    - $ref: parameters/report-path.yaml
     post:
-      operationId: post-report-version-data
+      operationId: post-report-data
       summary: Generate a report
       tags:
-      - Reports
+      - Report data
       description: |
-        Produce a report in either JSON or CSV format for a specific version of a type of report. In CSV data, values with commas or space characters are quoted. Query parameters specify the range of data and the aggregation interval for each record.
+        Produces a report in either JSON or CSV format.
       parameters:
       - $ref: parameters/start-query.yaml
       - $ref: parameters/end-query.yaml
-      - $ref: parameters/interval-query.yaml
-      - $ref: parameters/dataWrapNumberOfItems-query.yaml
-      - $ref: parameters/dataWrapLabel-query.yaml
+      - $ref: parameters/timeRange-query.yaml
+      - $ref: parameters/async-query.yaml
       requestBody:
-        required: true
+        required: false
         content:
           application/json:
             example:
-              $ref: examples/report-request-example.json
+              $ref: examples/report-data-request.json
             schema:
-              $ref: schemas/ReportRequest.yaml
+              $ref: schemas/report-data-request.yaml
       responses:
         200:
           description: |
-            Success.
+            The request is processed. The response body contains the requested data.
           content:
-            application/json:
-              example:
-                $ref: examples/report-response-example.json
-              schema:
-                $ref: schemas/ReportResponse.yaml
             text/csv:
               example:
-                $ref: examples/report-response-example.csv
+                $ref: examples/report-data-200.csv
               schema:
                 type: string
+            application/json:
+              example:
+                $ref: examples/report-data-200.json
+              schema:
+                $ref: schemas/report-data-response.yaml
+        302:
+          $ref: responses/302.yaml
+        303:
+          $ref: responses/303.yaml
         400:
-          description: |
-            Invalid report request. Appropriate message is returned.
-          content:
-            application/json:
-              example:
-                $ref: examples/generate-report-400.json
+          $ref: responses/400.yaml
         403:
-          description: |
-            Access is forbidden for requested object IDs.
-          content:
-            application/json:
-              example:
-                $ref: examples/generate-report-403.json
+          $ref: responses/403.yaml
+        404:
+          $ref: responses/404.yaml
+        422:
+          $ref: responses/422.yaml
+        429:
+          $ref: responses/429.yaml
+  /reports/{productFamily}/{reportingArea}/{report}/queries/{queryId}:
+    parameters:
+    - $ref: parameters/productFamily-path.yaml
+    - $ref: parameters/reportingArea-path.yaml
+    - $ref: parameters/report-path.yaml
+    - $ref: parameters/queryId-path.yaml
     get:
-      operationId: get-report-version-data
-      summary: Get a cacheable report
+      operationId: get-report-data-async
+      summary: Get asynchronous report results
       tags:
-      - Reports
+      - Report data
       description: |
-        Produce a report in either JSON or CSV format for a specific version of a type of report.  While functionally identical to [Generate a report](ref:post-report-version-data), this alternative GET operation specifies all request data as query parameters.
-      parameters:
-      - $ref: parameters/start-query.yaml
-      - $ref: parameters/end-query.yaml
-      - $ref: parameters/interval-query.yaml
-      - $ref: parameters/objectIds-query.yaml
-      - $ref: parameters/allObjectIds-query.yaml
-      - $ref: parameters/metrics-query.yaml
-      - $ref: parameters/filters-query.yaml
-      - $ref: parameters/dataWrapNumberOfItems-query.yaml
-      - $ref: parameters/dataWrapLabel-query.yaml
+        Produces a report for an asynchronous request in either JSON or CSV format.
       responses:
         200:
           description: |
-            Success.
+            The request is processed. The response body contains the requested data.
           content:
-            application/json:
-              example:
-                $ref: examples/report-response-example.json
-              schema:
-                $ref: schemas/ReportResponse.yaml
             text/csv:
               example:
-                $ref: examples/report-response-example.csv
+                $ref: examples/async-report-data-200.csv
               schema:
                 type: string
-        400:
-          description: |
-            Invalid report request. Appropriate message is returned.
-          content:
             application/json:
               example:
-                $ref: examples/get-cachebale-report-400.json
+                $ref: examples/async-report-data-200.json
+              schema:
+                $ref: schemas/async-report-data-response.yaml
+        303:
+          $ref: responses/303.yaml
         403:
-          description: |
-            Access is forbidden for requested object IDs.
-          content:
-            application/json:
-              example:
-                $ref: examples/generate-report-403.json
+          $ref: responses/403.yaml
+        404:
+          $ref: responses/404.yaml
+        422:
+          $ref: responses/422.yaml
+        429:
+          $ref: responses/429.yaml
