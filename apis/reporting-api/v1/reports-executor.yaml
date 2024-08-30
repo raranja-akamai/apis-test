@@ -2,20 +2,21 @@ openapi: 3.0.0
 info:
   title: Reports
   version: v2
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
 - url: https://{hostname}/reporting-api/v2
 tags:
-- name: Report list
-  description: |
-    Get information about the different kinds of reports available.
-- name: Report metadata
-  description: |
-    Get available options to generate a report.
-- name: Report data
-  description: |
-    Run reports to get data about your Akamai services.
+- description: Get information about the different kinds of reports available.
+  name: Report list
+- description: Get available options to generate a report.
+  name: Report metadata
+- description: Run reports to get data about your Akamai services.
+  name: Report data
 x-akamai:
   auth-type: EDGE_GRID
+  file-path: reports-executor.yaml
 paths:
   /reports:
     get:
@@ -102,10 +103,10 @@ paths:
                 $ref: examples/report-metadata-200.json
               schema:
                 $ref: schemas/report-metadata-response.yaml
-        404:
-          $ref: responses/404.yaml
         403:
           $ref: responses/403.yaml
+        404:
+          $ref: responses/404.yaml
   /reports/{productFamily}/{reportingArea}/{report}/data:
     parameters:
     - $ref: parameters/productFamily-path.yaml
@@ -136,16 +137,16 @@ paths:
           description: |
             The request is processed. The response body contains the requested data.
           content:
-            text/csv:
-              example:
-                $ref: examples/report-data-200.csv
-              schema:
-                type: string
             application/json:
               example:
                 $ref: examples/report-data-200.json
               schema:
                 $ref: schemas/report-data-response.yaml
+            text/csv:
+              example:
+                $ref: examples/report-data-200.csv
+              schema:
+                type: string
         302:
           $ref: responses/302.yaml
         303:
@@ -178,16 +179,16 @@ paths:
           description: |
             The request is processed. The response body contains the requested data.
           content:
-            text/csv:
-              example:
-                $ref: examples/async-report-data-200.csv
-              schema:
-                type: string
             application/json:
               example:
                 $ref: examples/async-report-data-200.json
               schema:
                 $ref: schemas/async-report-data-response.yaml
+            text/csv:
+              example:
+                $ref: examples/async-report-data-200.csv
+              schema:
+                type: string
         303:
           $ref: responses/303.yaml
         403:
