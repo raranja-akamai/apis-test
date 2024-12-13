@@ -1,0 +1,33 @@
+type: object
+description: |-
+  Describes a key collection, including all its versions as well as those active in the staging and production environments. It also shows the type of public keys these versions use to validate JWT signatures.
+  
+x-akamai:
+  file-path: schemas/key-collection-with-versions-response.yaml
+additionalProperties: false
+required:
+- id
+- name
+- versions
+properties:
+  id:
+    type: integer
+    description: |
+      The identifier of the key collection.
+    minimum: 1
+  name:
+    type: string
+    description: |
+      A descriptive label for the key collection.
+    minLength: 1
+  production:
+    $ref: current-version-response.yaml
+  staging:
+    $ref: current-version-response.yaml
+  versions:
+    type: array
+    description: |
+      Information about key collection versions. Includes the type of public keys they use to validate JWT signatures, and whether they're active in the staging and production environments.
+    minItems: 0
+    items:
+      $ref: key-collection-version-response.yaml

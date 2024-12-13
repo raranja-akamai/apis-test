@@ -1,0 +1,4003 @@
+{
+  "components": {
+    "parameters": {
+      "agg-no-keyword-param-op-aggregation": {
+        "description": "The time period in which to group each data record, expressed as number of seconds.",
+        "in": "query",
+        "name": "aggregation",
+        "schema": {
+          "example": 1440,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/agg-no-keyword-param-op-aggregation.yaml"
+        }
+      },
+      "batch-param-op-limit": {
+        "description": "The number of rows to return from `1` to `10000`. The default value is `300`.",
+        "in": "query",
+        "name": "limit",
+        "schema": {
+          "default": 300,
+          "example": 300,
+          "maximum": 10000,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/batch-param-op-limit.yaml"
+        }
+      },
+      "batch-param-op-offset": {
+        "description": "The offset of the row for the start of data, `0` by default. Use this to request progressive batches of data. For example, you can make `10` requests for  `1000` records by setting the overall `limit` to `100`, then setting the `offset` to `0`, `100`, `200`, and so on for each request.",
+        "in": "query",
+        "name": "offset",
+        "schema": {
+          "default": 0,
+          "example": 0,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/batch-param-op-offset.yaml"
+        }
+      },
+      "cpcodes-param-op-cpcodes": {
+        "description": "Use to limit report data to specific CP codes. Comma-separate several values.",
+        "in": "query",
+        "name": "cpcodes",
+        "schema": {
+          "example": "12345,67890",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/cpcodes-param-op-cpcodes.yaml"
+        }
+      },
+      "data-store-id-path": {
+        "description": "The unique `dataStoreId` value for the data store.",
+        "in": "path",
+        "name": "dataStoreId",
+        "required": true,
+        "schema": {
+          "example": 10021,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/data-store-id-path.yaml"
+        }
+      },
+      "dim-param-op-dimensions": {
+        "description": "Identifies dimensions with comma-separated IDs.",
+        "in": "query",
+        "name": "dimensions",
+        "required": true,
+        "schema": {
+          "example": "1,2,3",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/dim-param-op-dimensions.yaml"
+        }
+      },
+      "dim-param-op-metrics": {
+        "description": "Identifies metrics with comma-separated IDs.",
+        "in": "query",
+        "name": "metrics",
+        "required": true,
+        "schema": {
+          "example": "1,2,3",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/dim-param-op-metrics.yaml"
+        }
+      },
+      "json-filters-param-op-filter-params": {
+        "description": "A UTF-8, URL-encoded JSON object representing filter parameters that limit reported data. See the [FilterParams](https://techdocs.akamai.com/media-services-rpts/reference/filter-params) object for details on its structure.",
+        "in": "query",
+        "name": "filterParams",
+        "schema": {
+          "example": "[{\"type\":\"dimension\",\"values\":[\"GB\"],\"id\":4,\"condition\":\"in\"},{\"type\":\"metric\",\"values\":[16],\"id\":155,\"condition\":\"gt\"}]",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/json-filters-param-op-filter-params.yaml"
+        }
+      },
+      "json-filters-param-op-sort-params": {
+        "description": "A UTF-8, URL-encoded JSON object representing sort parameters that rearrange reported data. See the [SortParams](https://techdocs.akamai.com/media-services-rpts/reference/sort-params) object for details on its structure.",
+        "in": "query",
+        "name": "sortParams",
+        "schema": {
+          "example": "[{\"type\":\"metric\", \"order\":\"asc\", \"id\":40}]",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/json-filters-param-op-sort-params.yaml"
+        }
+      },
+      "range-param-op-end-date": {
+        "description": "Specifies the end of the reported time range, expressed in `mm/dd/yyyy:HH:MM` format. The trailing `:HH:MM` 24-hour time segment is optional.",
+        "in": "query",
+        "name": "endDate",
+        "required": true,
+        "schema": {
+          "example": "02/15/2023",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/range-param-op-end-date.yaml"
+        }
+      },
+      "range-param-op-start-date": {
+        "description": "Specifies the start of the reported time range, expressed in `mm/dd/yyyy:HH:MM` format. The trailing `:HH:MM` 24-hour time segment is optional.",
+        "in": "query",
+        "name": "startDate",
+        "required": true,
+        "schema": {
+          "example": "01/15/2023",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/range-param-op-start-date.yaml"
+        }
+      },
+      "start-date-end-date": {
+        "description": "The timestamp string in ISO 8601 format `yyyy-MM-ddTHH:mmZ` or `yyyy-MM-ddTHH:mm+HH:mm`.",
+        "in": "query",
+        "name": "endDate",
+        "required": true,
+        "schema": {
+          "example": "2021-04-23T15:30Z",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/start-date-end-date.yaml"
+        }
+      },
+      "start-date-start-date": {
+        "description": "The timestamp string in ISO 8601 format `yyyy-MM-ddTHH:mmZ` or `yyyy-MM-ddTHH:mm+HH:mm`.",
+        "in": "query",
+        "name": "startDate",
+        "required": true,
+        "schema": {
+          "example": "2021-03-22T15:30Z",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/start-date-start-date.yaml"
+        }
+      },
+      "streams-param-op-streams": {
+        "description": "Identifies a set of reported streams as comma-separated ID values.",
+        "in": "query",
+        "name": "streams",
+        "schema": {
+          "example": "12345,67890",
+          "type": "string"
+        },
+        "x-akamai": {
+          "file-path": "parameters/streams-param-op-streams.yaml"
+        }
+      }
+    },
+    "schemas": {
+      "data": {
+        "additionalProperties": false,
+        "description": "TBD Add description.",
+        "properties": {
+          "columns": {
+            "description": "Encapsulates context for each element listed within corresponding `rows`.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "aggregate": {
+                  "description": "TBD Add description.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "dataType": {
+                  "description": "Type of data: `STRING`, `NUMBER`, `ENCODED`, `DATE`, `COUNT`, `TIME`, `BIT_FLAG`, `VOLUME`, `BANDWIDTH`, `PERCENT`, `CONTINENT`, `COUNTRY`, `REGION`, `CPCODE`, `ACGID`, `DOMAIN` or `STREAM`.",
+                  "enum": [
+                    "STRING",
+                    "NUMBER",
+                    "ENCODED",
+                    "DATE",
+                    "COUNT",
+                    "TIME",
+                    "BIT_FLAG",
+                    "VOLUME",
+                    "BANDWIDTH",
+                    "PERCENT",
+                    "CONTINENT",
+                    "COUNTRY",
+                    "REGION",
+                    "CPCODE",
+                    "ACGID",
+                    "DOMAIN",
+                    "STREAM"
+                  ],
+                  "type": "string"
+                },
+                "description": {
+                  "description": "TBD Add description.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "id": {
+                  "description": "TBD Add description.",
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "index": {
+                  "description": "Positions each column within the table.",
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "Depending on the `type`, provides the name of the relevant dimension or metric.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of data: `DIMENSION` or `METRIC`.",
+                  "enum": [
+                    "DIMENSION",
+                    "METRIC"
+                  ],
+                  "type": "string"
+                },
+                "unit": {
+                  "description": "Unit of column: `TIME`, `SECONDS`, `MINUTES`, `COUNT`, `HITS`, `BYTES`, `MS`, `MBPS`, `KBPS`, `MB`, `GB`, `NUMBER`, `MBIT/SEC`, `HITS/SEC` or `%`.",
+                  "enum": [
+                    "TIME",
+                    "SECONDS",
+                    "COUNT",
+                    "BYTES",
+                    "MS",
+                    "MBPS",
+                    "KBPS",
+                    "MB",
+                    "GB",
+                    "HITS",
+                    "MINUTES",
+                    "NUMBER",
+                    "MBIT/SEC",
+                    "HITS/SEC",
+                    "%"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "id",
+                "name",
+                "index"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array",
+            "uniqueItems": true
+          },
+          "metaData": {
+            "additionalProperties": false,
+            "description": "Reflects the set of parameter values included in the request that determines this report's results.",
+            "properties": {
+              "aggregation": {
+                "description": "The time span included in each record, expressed in seconds.",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "dasTable": {
+                "description": "TBD Add description.",
+                "minLength": 1,
+                "type": "string"
+              },
+              "endTimeInEpoch": {
+                "description": "The end of the requested time range, in epoch seconds.",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "hasMoreData": {
+                "description": "Indicates that a constrained set of requested data doesn't represent the entire set.",
+                "type": "boolean"
+              },
+              "limit": {
+                "default": 300,
+                "description": "The maximum number of requested data `rows`.",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "messages": {
+                "description": "TBD Add description.",
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "minItems": 1,
+                "type": "array"
+              },
+              "offset": {
+                "description": "The offset of the row from which the data should start. Used with overall `limit`, it reflects where a batch of data starts. For example, setting both `offset` and `limit` to `100` selects rows 101-200 from the overall results.",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "startTimeInEpoch": {
+                "description": "The start of the requested time range, in epoch seconds.",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "timeZone": {
+                "description": "Identifies the time zone from which the request was made.",
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "startTimeInEpoch",
+              "endTimeInEpoch",
+              "aggregation",
+              "timeZone",
+              "limit",
+              "offset",
+              "hasMoreData"
+            ],
+            "type": "object"
+          },
+          "rows": {
+            "description": "Encapsulates the report's two-dimensional table data. If there's no data to report, the array is empty.",
+            "items": {
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 1,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "minItems": 0,
+            "type": "array",
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "columns",
+          "rows",
+          "metaData"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/data.yaml"
+        }
+      },
+      "data-store": {
+        "additionalProperties": false,
+        "description": "TBD Add description.",
+        "properties": {
+          "aggregationInSeconds": {
+            "description": "Number of seconds for which data aggregates.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "description": {
+            "description": "Text describing the data store.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "dimensions": {
+            "description": "Encapsulates dimensions for the data store. A dimension acts like a key in data exploration and answers questions such as who, what, where, and which. Each dimension object provides information on the ID, name, type, and description of the dimension.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "dataType": {
+                  "description": "Type of data: `STRING`, `NUMBER`, `ENCODED`, `DATE`, `COUNT`, `TIME`, `BIT_FLAG`, `VOLUME`, `BANDWIDTH`, `PERCENT`, `CONTINENT`, `COUNTRY`, `REGION`, `CPCODE`, `ACGID`, `DOMAIN` or `STREAM`.",
+                  "enum": [
+                    "STRING",
+                    "NUMBER",
+                    "ENCODED",
+                    "DATE",
+                    "COUNT",
+                    "TIME",
+                    "BIT_FLAG",
+                    "VOLUME",
+                    "BANDWIDTH",
+                    "PERCENT",
+                    "CONTINENT",
+                    "COUNTRY",
+                    "REGION",
+                    "CPCODE",
+                    "ACGID",
+                    "DOMAIN",
+                    "STREAM"
+                  ],
+                  "type": "string"
+                },
+                "description": {
+                  "description": "A description of the dimension.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "group": {
+                  "description": "TBD Add description.",
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "description": {
+                        "description": "TBD Add description.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "TBD Add description.",
+                        "minimum": -1,
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "TBD Add description.",
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "description"
+                    ],
+                    "type": "object"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "helpText": {
+                  "description": "TBD Add description.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "id": {
+                  "description": "A unique identifier for each dimension.",
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "The name of the dimension.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "description": "The type of dimension, either `STANDARD` or `CUSTOM`.",
+                  "enum": [
+                    "STANDARD",
+                    "CUSTOM"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "id": {
+            "description": "Unique identifier for each data store.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxQueryDurationInMinutes": {
+            "description": "Maximum number of minutes when you can query a data store. This system-imposed limit leads to better performance.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "metrics": {
+            "description": "Encapsulates metrics for the data store. A metric is a numeric aggregation against one or more dimensions and answers questions on volume of activity or attack. Each metric object provides information on the name, description, and ID of the metric.",
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "description": {
+                  "description": "A description of the metric.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "group": {
+                  "description": "TBD Add description.",
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "description": {
+                        "description": "TBD Add description.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "TBD Add description.",
+                        "minimum": -1,
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "TBD Add description.",
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "description"
+                    ],
+                    "type": "object"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "id": {
+                  "description": "A unique identifier for each metric.",
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "The name of the metric.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of metric: `TIME`, `NUMBER`, `COUNT`, `BANDWIDTH`, `VOLUME`, `PERCENT`, `PERCENTAGE` or `%`.",
+                  "enum": [
+                    "TIME",
+                    "NUMBER",
+                    "COUNT",
+                    "BANDWIDTH",
+                    "VOLUME",
+                    "PERCENT",
+                    "PERCENTAGE",
+                    "%"
+                  ],
+                  "type": "string"
+                },
+                "unit": {
+                  "description": "Unit of metric: `TIME`, `SECONDS`, `MINUTES`, `COUNT`, `HITS`, `BYTES`, `MS`, `MBPS`, `KBPS`, `MB`, `GB`, `NUMBER`, `MBIT/SEC`, `HITS/SEC` or `%`.",
+                  "enum": [
+                    "TIME",
+                    "SECONDS",
+                    "COUNT",
+                    "BYTES",
+                    "MS",
+                    "MBPS",
+                    "KBPS",
+                    "MB",
+                    "GB",
+                    "HITS",
+                    "MINUTES",
+                    "NUMBER",
+                    "MBIT/SEC",
+                    "HITS/SEC",
+                    "%"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description"
+              ],
+              "type": "object"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "name": {
+            "description": "The name of the data store.",
+            "minLength": 1,
+            "type": "string"
+          },
+          "purgeIntervalInDays": {
+            "description": "Number of days for which the data store keeps data.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "reportType": {
+            "description": "TBD Add description.",
+            "minLength": 0,
+            "type": "string"
+          },
+          "type": {
+            "description": "The type of data store, either `STANDARD` or `CUSTOM`.",
+            "enum": [
+              "STANDARD",
+              "CUSTOM"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "type",
+          "dimensions",
+          "metrics",
+          "aggregationInSeconds",
+          "purgeIntervalInDays",
+          "maxQueryDurationInMinutes",
+          "description"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/data-store.yaml"
+        }
+      },
+      "data-stores": {
+        "description": "TBD Add description.",
+        "items": {
+          "additionalProperties": false,
+          "description": "TBD Add description.",
+          "properties": {
+            "aggregationInSeconds": {
+              "description": "Number of seconds for which data aggregates.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "description": {
+              "description": "Text describing the data store.",
+              "minLength": 1,
+              "type": "string"
+            },
+            "dimensions": {
+              "description": "Encapsulates dimensions for the data store. A dimension acts like a key in data exploration and answers questions such as who, what, where, and which. Each dimension object provides information on the ID, name, type, and description of the dimension.",
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "dataType": {
+                    "description": "Type of data: `STRING`, `NUMBER`, `ENCODED`, `DATE`, `COUNT`, `TIME`, `BIT_FLAG`, `VOLUME`, `BANDWIDTH`, `PERCENT`, `CONTINENT`, `COUNTRY`, `REGION`, `CPCODE`, `ACGID`, `DOMAIN` or `STREAM`.",
+                    "enum": [
+                      "STRING",
+                      "NUMBER",
+                      "ENCODED",
+                      "DATE",
+                      "COUNT",
+                      "TIME",
+                      "BIT_FLAG",
+                      "VOLUME",
+                      "BANDWIDTH",
+                      "PERCENT",
+                      "CONTINENT",
+                      "COUNTRY",
+                      "REGION",
+                      "CPCODE",
+                      "ACGID",
+                      "DOMAIN",
+                      "STREAM"
+                    ],
+                    "type": "string"
+                  },
+                  "description": {
+                    "description": "A description of the dimension.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "group": {
+                    "description": "TBD Add description.",
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "description": {
+                          "description": "TBD Add description.",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "id": {
+                          "description": "TBD Add description.",
+                          "minimum": -1,
+                          "type": "integer"
+                        },
+                        "name": {
+                          "description": "TBD Add description.",
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "description"
+                      ],
+                      "type": "object"
+                    },
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "helpText": {
+                    "description": "TBD Add description.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "id": {
+                    "description": "A unique identifier for each dimension.",
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "name": {
+                    "description": "The name of the dimension.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "type": {
+                    "description": "The type of dimension, either `STANDARD` or `CUSTOM`.",
+                    "enum": [
+                      "STANDARD",
+                      "CUSTOM"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "description"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "id": {
+              "description": "Unique identifier for each data store.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "maxQueryDurationInMinutes": {
+              "description": "Maximum number of minutes when you can query a data store. This system-imposed limit leads to better performance.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "metrics": {
+              "description": "Encapsulates metrics for the data store. A metric is a numeric aggregation against one or more dimensions and answers questions on volume of activity or attack. Each metric object provides information on the name, description, and ID of the metric.",
+              "items": {
+                "additionalProperties": false,
+                "properties": {
+                  "description": {
+                    "description": "A description of the metric.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "group": {
+                    "description": "TBD Add description.",
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "description": {
+                          "description": "TBD Add description.",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "id": {
+                          "description": "TBD Add description.",
+                          "minimum": -1,
+                          "type": "integer"
+                        },
+                        "name": {
+                          "description": "TBD Add description.",
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "description"
+                      ],
+                      "type": "object"
+                    },
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "id": {
+                    "description": "A unique identifier for each metric.",
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "name": {
+                    "description": "The name of the metric.",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "type": {
+                    "description": "Type of metric: `TIME`, `NUMBER`, `COUNT`, `BANDWIDTH`, `VOLUME`, `PERCENT`, `PERCENTAGE` or `%`.",
+                    "enum": [
+                      "TIME",
+                      "NUMBER",
+                      "COUNT",
+                      "BANDWIDTH",
+                      "VOLUME",
+                      "PERCENT",
+                      "PERCENTAGE",
+                      "%"
+                    ],
+                    "type": "string"
+                  },
+                  "unit": {
+                    "description": "Unit of metric: `TIME`, `SECONDS`, `MINUTES`, `COUNT`, `HITS`, `BYTES`, `MS`, `MBPS`, `KBPS`, `MB`, `GB`, `NUMBER`, `MBIT/SEC`, `HITS/SEC` or `%`.",
+                    "enum": [
+                      "TIME",
+                      "SECONDS",
+                      "COUNT",
+                      "BYTES",
+                      "MS",
+                      "MBPS",
+                      "KBPS",
+                      "MB",
+                      "GB",
+                      "HITS",
+                      "MINUTES",
+                      "NUMBER",
+                      "MBIT/SEC",
+                      "HITS/SEC",
+                      "%"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "description"
+                ],
+                "type": "object"
+              },
+              "minItems": 1,
+              "type": "array"
+            },
+            "name": {
+              "description": "The name of the data store.",
+              "minLength": 1,
+              "type": "string"
+            },
+            "purgeIntervalInDays": {
+              "description": "Number of days for which the data store keeps data.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "reportType": {
+              "description": "TBD Add description.",
+              "minLength": 0,
+              "type": "string"
+            },
+            "type": {
+              "description": "The type of data store, either `STANDARD` or `CUSTOM`.",
+              "enum": [
+                "STANDARD",
+                "CUSTOM"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "type",
+            "dimensions",
+            "metrics",
+            "aggregationInSeconds",
+            "purgeIntervalInDays",
+            "maxQueryDurationInMinutes",
+            "description"
+          ],
+          "type": "object",
+          "x-akamai": {
+            "file-path": "schemas/data-store.yaml"
+          }
+        },
+        "minItems": 1,
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/data-stores.yaml"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "See documentation for Akamai's Media Services Live Reports API",
+    "url": "https://techdocs.akamai.com/media-services-rpts/reference"
+  },
+  "info": {
+    "description": "Monitor traffic for Media Services Live solutions.\n",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Akamai: Media Services Live Reports API",
+    "version": "v1"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/media-services-live/http-ingest/data": {
+      "get": {
+        "description": "Retrieves Media Services Live 4 data for the given parameters.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Media Services Live Reports API",
+          "url": "https://techdocs.akamai.com/media-services-rpts/reference/get-http-ingest-data"
+        },
+        "operationId": "get-http-ingest-data",
+        "parameters": [
+          {
+            "description": "Use to limit report data to specific CP codes. Comma-separate several values.",
+            "example": "{{cpcodes}}",
+            "in": "query",
+            "name": "cpcodes",
+            "schema": {
+              "example": "12345,67890",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/cpcodes-param-op-cpcodes.yaml"
+            }
+          },
+          {
+            "description": "Identifies dimensions with comma-separated IDs.",
+            "example": "{{dimensions}}",
+            "in": "query",
+            "name": "dimensions",
+            "required": true,
+            "schema": {
+              "example": "1,2,3",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/dim-param-op-dimensions.yaml"
+            }
+          },
+          {
+            "description": "Identifies metrics with comma-separated IDs.",
+            "example": "{{metrics}}",
+            "in": "query",
+            "name": "metrics",
+            "required": true,
+            "schema": {
+              "example": "1,2,3",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/dim-param-op-metrics.yaml"
+            }
+          },
+          {
+            "description": "Specifies the end of the reported time range, expressed in `mm/dd/yyyy:HH:MM` format. The trailing `:HH:MM` 24-hour time segment is optional.",
+            "example": "{{endDate}}",
+            "in": "query",
+            "name": "endDate",
+            "required": true,
+            "schema": {
+              "example": "02/15/2023",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/range-param-op-end-date.yaml"
+            }
+          },
+          {
+            "description": "Specifies the start of the reported time range, expressed in `mm/dd/yyyy:HH:MM` format. The trailing `:HH:MM` 24-hour time segment is optional.",
+            "example": "{{startDate}}",
+            "in": "query",
+            "name": "startDate",
+            "required": true,
+            "schema": {
+              "example": "01/15/2023",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/range-param-op-start-date.yaml"
+            }
+          },
+          {
+            "description": "The offset of the row for the start of data, `0` by default. Use this to request progressive batches of data. For example, you can make `10` requests for  `1000` records by setting the overall `limit` to `100`, then setting the `offset` to `0`, `100`, `200`, and so on for each request.",
+            "example": "{{offset}}",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "example": 0,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/batch-param-op-offset.yaml"
+            }
+          },
+          {
+            "description": "The number of rows to return from `1` to `10000`. The default value is `300`.",
+            "example": "{{limit}}",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 300,
+              "example": 300,
+              "maximum": 10000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/batch-param-op-limit.yaml"
+            }
+          },
+          {
+            "description": "A UTF-8, URL-encoded JSON object representing filter parameters that limit reported data. See the [FilterParams](https://techdocs.akamai.com/media-services-rpts/reference/filter-params) object for details on its structure.",
+            "example": "{{filterParams}}",
+            "in": "query",
+            "name": "filterParams",
+            "schema": {
+              "example": "[{\"type\":\"dimension\",\"values\":[\"GB\"],\"id\":4,\"condition\":\"in\"},{\"type\":\"metric\",\"values\":[16],\"id\":155,\"condition\":\"gt\"}]",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/json-filters-param-op-filter-params.yaml"
+            }
+          },
+          {
+            "description": "A UTF-8, URL-encoded JSON object representing sort parameters that rearrange reported data. See the [SortParams](https://techdocs.akamai.com/media-services-rpts/reference/sort-params) object for details on its structure.",
+            "example": "{{sortParams}}",
+            "in": "query",
+            "name": "sortParams",
+            "schema": {
+              "example": "[{\"type\":\"metric\", \"order\":\"asc\", \"id\":40}]",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/json-filters-param-op-sort-params.yaml"
+            }
+          },
+          {
+            "description": "Identifies a set of reported streams as comma-separated ID values.",
+            "example": "{{streams}}",
+            "in": "query",
+            "name": "streams",
+            "schema": {
+              "example": "12345,67890",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/streams-param-op-streams.yaml"
+            }
+          },
+          {
+            "description": "The time period in which to group each data record, expressed as number of seconds.",
+            "example": "{{aggregation}}",
+            "in": "query",
+            "name": "aggregation",
+            "schema": {
+              "example": 1440,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/agg-no-keyword-param-op-aggregation.yaml"
+            }
+          },
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "columns": [
+                    {
+                      "description": "Indicates the time at which content was consumed. This dimension is set automatically.",
+                      "id": 5002,
+                      "index": 0,
+                      "name": "Time",
+                      "type": "DIMENSION"
+                    },
+                    {
+                      "dataType": "NUMBER",
+                      "description": "Total number of requests made to the entry point posting objects.",
+                      "id": 5002,
+                      "index": 1,
+                      "name": "Hits",
+                      "type": "METRIC",
+                      "unit": "HITS"
+                    }
+                  ],
+                  "metaData": {
+                    "aggregation": 120,
+                    "endTimeInEpoch": 1471860000,
+                    "hasMoreData": true,
+                    "limit": 300,
+                    "offset": 0,
+                    "startTimeInEpoch": 1471737600,
+                    "timeZone": "GMT"
+                  },
+                  "rows": [
+                    [
+                      "1471737600",
+                      "158"
+                    ],
+                    [
+                      "1471737720",
+                      "138"
+                    ],
+                    [
+                      "1471737840",
+                      "183"
+                    ],
+                    [
+                      "1471737960",
+                      "158"
+                    ],
+                    [
+                      "1471738080",
+                      "163"
+                    ],
+                    [
+                      "1471738200",
+                      "155"
+                    ]
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "TBD Add description.",
+                  "properties": {
+                    "columns": {
+                      "description": "Encapsulates context for each element listed within corresponding `rows`.",
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "aggregate": {
+                            "description": "TBD Add description.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "dataType": {
+                            "description": "Type of data: `STRING`, `NUMBER`, `ENCODED`, `DATE`, `COUNT`, `TIME`, `BIT_FLAG`, `VOLUME`, `BANDWIDTH`, `PERCENT`, `CONTINENT`, `COUNTRY`, `REGION`, `CPCODE`, `ACGID`, `DOMAIN` or `STREAM`.",
+                            "enum": [
+                              "STRING",
+                              "NUMBER",
+                              "ENCODED",
+                              "DATE",
+                              "COUNT",
+                              "TIME",
+                              "BIT_FLAG",
+                              "VOLUME",
+                              "BANDWIDTH",
+                              "PERCENT",
+                              "CONTINENT",
+                              "COUNTRY",
+                              "REGION",
+                              "CPCODE",
+                              "ACGID",
+                              "DOMAIN",
+                              "STREAM"
+                            ],
+                            "type": "string"
+                          },
+                          "description": {
+                            "description": "TBD Add description.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "TBD Add description.",
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "index": {
+                            "description": "Positions each column within the table.",
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "Depending on the `type`, provides the name of the relevant dimension or metric.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of data: `DIMENSION` or `METRIC`.",
+                            "enum": [
+                              "DIMENSION",
+                              "METRIC"
+                            ],
+                            "type": "string"
+                          },
+                          "unit": {
+                            "description": "Unit of column: `TIME`, `SECONDS`, `MINUTES`, `COUNT`, `HITS`, `BYTES`, `MS`, `MBPS`, `KBPS`, `MB`, `GB`, `NUMBER`, `MBIT/SEC`, `HITS/SEC` or `%`.",
+                            "enum": [
+                              "TIME",
+                              "SECONDS",
+                              "COUNT",
+                              "BYTES",
+                              "MS",
+                              "MBPS",
+                              "KBPS",
+                              "MB",
+                              "GB",
+                              "HITS",
+                              "MINUTES",
+                              "NUMBER",
+                              "MBIT/SEC",
+                              "HITS/SEC",
+                              "%"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "id",
+                          "name",
+                          "index"
+                        ],
+                        "type": "object"
+                      },
+                      "minItems": 1,
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "metaData": {
+                      "additionalProperties": false,
+                      "description": "Reflects the set of parameter values included in the request that determines this report's results.",
+                      "properties": {
+                        "aggregation": {
+                          "description": "The time span included in each record, expressed in seconds.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "dasTable": {
+                          "description": "TBD Add description.",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "endTimeInEpoch": {
+                          "description": "The end of the requested time range, in epoch seconds.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "hasMoreData": {
+                          "description": "Indicates that a constrained set of requested data doesn't represent the entire set.",
+                          "type": "boolean"
+                        },
+                        "limit": {
+                          "default": 300,
+                          "description": "The maximum number of requested data `rows`.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "messages": {
+                          "description": "TBD Add description.",
+                          "items": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "minItems": 1,
+                          "type": "array"
+                        },
+                        "offset": {
+                          "description": "The offset of the row from which the data should start. Used with overall `limit`, it reflects where a batch of data starts. For example, setting both `offset` and `limit` to `100` selects rows 101-200 from the overall results.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "startTimeInEpoch": {
+                          "description": "The start of the requested time range, in epoch seconds.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "timeZone": {
+                          "description": "Identifies the time zone from which the request was made.",
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "startTimeInEpoch",
+                        "endTimeInEpoch",
+                        "aggregation",
+                        "timeZone",
+                        "limit",
+                        "offset",
+                        "hasMoreData"
+                      ],
+                      "type": "object"
+                    },
+                    "rows": {
+                      "description": "Encapsulates the report's two-dimensional table data. If there's no data to report, the array is empty.",
+                      "items": {
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "minItems": 1,
+                        "type": "array",
+                        "uniqueItems": true
+                      },
+                      "minItems": 0,
+                      "type": "array",
+                      "uniqueItems": true
+                    }
+                  },
+                  "required": [
+                    "columns",
+                    "rows",
+                    "metaData"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/data.yaml"
+                  }
+                }
+              }
+            },
+            "description": "OK. If the report yields an empty data set, the response yields an empty set of rows."
+          }
+        },
+        "summary": "Get Media Services Live 4 data",
+        "tags": [
+          "Media Services Live 4"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/data-http-ingest.yaml",
+        "path-info": "/media-services-live/http-ingest/data"
+      }
+    },
+    "/media-services-live/http-ingest/data-stores": {
+      "get": {
+        "description": "Retrieves Media Services Live 4 data stores for the specified parameters.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Media Services Live Reports API",
+          "url": "https://techdocs.akamai.com/media-services-rpts/reference/get-http-data-stores"
+        },
+        "operationId": "get-http-data-stores",
+        "parameters": [
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "aggregationInSeconds": 120,
+                    "description": "iatstreams_-_F_time",
+                    "dimensions": [
+                      {
+                        "dataType": "TIME",
+                        "description": "Indicates the time at which content was consumed. This dimension is set automatically.",
+                        "group": [
+                          {
+                            "description": "OTHERS",
+                            "id": -1,
+                            "name": "OTHERS"
+                          }
+                        ],
+                        "helpText": "Indicates the time at which content was consumed. This dimension is set automatically.",
+                        "id": 100,
+                        "name": "Time"
+                      },
+                      {
+                        "dataType": "CPCODE",
+                        "description": "Identifier assigned to a contract associated with a particular stream.",
+                        "group": [
+                          {
+                            "description": "OTHERS",
+                            "id": -1,
+                            "name": "OTHERS"
+                          }
+                        ],
+                        "helpText": "Identifier assigned to a contract associated with a particular stream.",
+                        "id": 101,
+                        "name": "CP Code"
+                      }
+                    ],
+                    "id": 102,
+                    "maxQueryDurationInMinutes": 43200,
+                    "metrics": [
+                      {
+                        "description": "Measures the quality of connection between Encoder and Entry Point. Provides connection level ratio of data packets(bytes) lost to the data packets(bytes) sent by Encoder.",
+                        "group": [
+                          {
+                            "description": "OTHERS",
+                            "id": -1,
+                            "name": "OTHERS"
+                          }
+                        ],
+                        "id": 208,
+                        "name": "Avg Packet Loss",
+                        "type": "PERCENT",
+                        "unit": "%"
+                      },
+                      {
+                        "description": "Success Hits",
+                        "group": [
+                          {
+                            "description": "OTHERS",
+                            "id": -1,
+                            "name": "OTHERS"
+                          }
+                        ],
+                        "id": 210,
+                        "name": "Success Ingest Hits",
+                        "type": "COUNT"
+                      }
+                    ],
+                    "name": "iatstreams_-_F_time",
+                    "purgeIntervalInDays": 30,
+                    "reportType": "realtime",
+                    "type": "STANDARD"
+                  }
+                ],
+                "schema": {
+                  "description": "TBD Add description.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "TBD Add description.",
+                    "properties": {
+                      "aggregationInSeconds": {
+                        "description": "Number of seconds for which data aggregates.",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "description": {
+                        "description": "Text describing the data store.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "dimensions": {
+                        "description": "Encapsulates dimensions for the data store. A dimension acts like a key in data exploration and answers questions such as who, what, where, and which. Each dimension object provides information on the ID, name, type, and description of the dimension.",
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "dataType": {
+                              "description": "Type of data: `STRING`, `NUMBER`, `ENCODED`, `DATE`, `COUNT`, `TIME`, `BIT_FLAG`, `VOLUME`, `BANDWIDTH`, `PERCENT`, `CONTINENT`, `COUNTRY`, `REGION`, `CPCODE`, `ACGID`, `DOMAIN` or `STREAM`.",
+                              "enum": [
+                                "STRING",
+                                "NUMBER",
+                                "ENCODED",
+                                "DATE",
+                                "COUNT",
+                                "TIME",
+                                "BIT_FLAG",
+                                "VOLUME",
+                                "BANDWIDTH",
+                                "PERCENT",
+                                "CONTINENT",
+                                "COUNTRY",
+                                "REGION",
+                                "CPCODE",
+                                "ACGID",
+                                "DOMAIN",
+                                "STREAM"
+                              ],
+                              "type": "string"
+                            },
+                            "description": {
+                              "description": "A description of the dimension.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "group": {
+                              "description": "TBD Add description.",
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "description": {
+                                    "description": "TBD Add description.",
+                                    "minLength": 1,
+                                    "type": "string"
+                                  },
+                                  "id": {
+                                    "description": "TBD Add description.",
+                                    "minimum": -1,
+                                    "type": "integer"
+                                  },
+                                  "name": {
+                                    "description": "TBD Add description.",
+                                    "minLength": 1,
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "description"
+                                ],
+                                "type": "object"
+                              },
+                              "minItems": 1,
+                              "type": "array"
+                            },
+                            "helpText": {
+                              "description": "TBD Add description.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "id": {
+                              "description": "A unique identifier for each dimension.",
+                              "minimum": 0,
+                              "type": "integer"
+                            },
+                            "name": {
+                              "description": "The name of the dimension.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "type": {
+                              "description": "The type of dimension, either `STANDARD` or `CUSTOM`.",
+                              "enum": [
+                                "STANDARD",
+                                "CUSTOM"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "description"
+                          ],
+                          "type": "object"
+                        },
+                        "minItems": 1,
+                        "type": "array"
+                      },
+                      "id": {
+                        "description": "Unique identifier for each data store.",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "maxQueryDurationInMinutes": {
+                        "description": "Maximum number of minutes when you can query a data store. This system-imposed limit leads to better performance.",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "metrics": {
+                        "description": "Encapsulates metrics for the data store. A metric is a numeric aggregation against one or more dimensions and answers questions on volume of activity or attack. Each metric object provides information on the name, description, and ID of the metric.",
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "description": {
+                              "description": "A description of the metric.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "group": {
+                              "description": "TBD Add description.",
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "description": {
+                                    "description": "TBD Add description.",
+                                    "minLength": 1,
+                                    "type": "string"
+                                  },
+                                  "id": {
+                                    "description": "TBD Add description.",
+                                    "minimum": -1,
+                                    "type": "integer"
+                                  },
+                                  "name": {
+                                    "description": "TBD Add description.",
+                                    "minLength": 1,
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "description"
+                                ],
+                                "type": "object"
+                              },
+                              "minItems": 1,
+                              "type": "array"
+                            },
+                            "id": {
+                              "description": "A unique identifier for each metric.",
+                              "minimum": 0,
+                              "type": "integer"
+                            },
+                            "name": {
+                              "description": "The name of the metric.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "type": {
+                              "description": "Type of metric: `TIME`, `NUMBER`, `COUNT`, `BANDWIDTH`, `VOLUME`, `PERCENT`, `PERCENTAGE` or `%`.",
+                              "enum": [
+                                "TIME",
+                                "NUMBER",
+                                "COUNT",
+                                "BANDWIDTH",
+                                "VOLUME",
+                                "PERCENT",
+                                "PERCENTAGE",
+                                "%"
+                              ],
+                              "type": "string"
+                            },
+                            "unit": {
+                              "description": "Unit of metric: `TIME`, `SECONDS`, `MINUTES`, `COUNT`, `HITS`, `BYTES`, `MS`, `MBPS`, `KBPS`, `MB`, `GB`, `NUMBER`, `MBIT/SEC`, `HITS/SEC` or `%`.",
+                              "enum": [
+                                "TIME",
+                                "SECONDS",
+                                "COUNT",
+                                "BYTES",
+                                "MS",
+                                "MBPS",
+                                "KBPS",
+                                "MB",
+                                "GB",
+                                "HITS",
+                                "MINUTES",
+                                "NUMBER",
+                                "MBIT/SEC",
+                                "HITS/SEC",
+                                "%"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "description"
+                          ],
+                          "type": "object"
+                        },
+                        "minItems": 1,
+                        "type": "array"
+                      },
+                      "name": {
+                        "description": "The name of the data store.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "purgeIntervalInDays": {
+                        "description": "Number of days for which the data store keeps data.",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "reportType": {
+                        "description": "TBD Add description.",
+                        "minLength": 0,
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "The type of data store, either `STANDARD` or `CUSTOM`.",
+                        "enum": [
+                          "STANDARD",
+                          "CUSTOM"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "type",
+                      "dimensions",
+                      "metrics",
+                      "aggregationInSeconds",
+                      "purgeIntervalInDays",
+                      "maxQueryDurationInMinutes",
+                      "description"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/data-store.yaml"
+                    }
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/data-stores.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "List Media Services Live 4 data stores",
+        "tags": [
+          "Media Services Live 4"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/data-stores-http-ingest.yaml",
+        "path-info": "/media-services-live/http-ingest/data-stores"
+      }
+    },
+    "/media-services-live/http-ingest/data-stores/{dataStoreId}": {
+      "get": {
+        "description": "Retrieves a specific Media Services Live 4 data store, based on the `dataStoreId`.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Media Services Live Reports API",
+          "url": "https://techdocs.akamai.com/media-services-rpts/reference/get-http-ingest-data-store"
+        },
+        "operationId": "get-http-ingest-data-store",
+        "parameters": [
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "aggregationInSeconds": 120,
+                  "description": "iatstreams_-_F_time",
+                  "dimensions": [
+                    {
+                      "dataType": "TIME",
+                      "description": "Indicates the time at which content was consumed. This dimension is set automatically.",
+                      "group": [
+                        {
+                          "description": "OTHERS",
+                          "id": -1,
+                          "name": "OTHERS"
+                        }
+                      ],
+                      "helpText": "Indicates the time at which content was consumed. This dimension is set automatically.",
+                      "id": 100,
+                      "name": "Time"
+                    },
+                    {
+                      "dataType": "CPCODE",
+                      "description": "Identifier assigned to a contract associated with a particular stream.",
+                      "group": [
+                        {
+                          "description": "OTHERS",
+                          "id": -1,
+                          "name": "OTHERS"
+                        }
+                      ],
+                      "helpText": "Identifier assigned to a contract associated with a particular stream.",
+                      "id": 101,
+                      "name": "CP Code"
+                    }
+                  ],
+                  "id": 102,
+                  "maxQueryDurationInMinutes": 43200,
+                  "metrics": [
+                    {
+                      "description": "Measures the quality of connection between Encoder and Entry Point. Provides connection level ratio of data packets(bytes) lost to the data packets(bytes) sent by Encoder.",
+                      "group": [
+                        {
+                          "description": "OTHERS",
+                          "id": -1,
+                          "name": "OTHERS"
+                        }
+                      ],
+                      "id": 208,
+                      "name": "Avg Packet Loss",
+                      "type": "PERCENT",
+                      "unit": "%"
+                    },
+                    {
+                      "description": "Success Hits",
+                      "group": [
+                        {
+                          "description": "OTHERS",
+                          "id": -1,
+                          "name": "OTHERS"
+                        }
+                      ],
+                      "id": 210,
+                      "name": "Success Ingest Hits",
+                      "type": "COUNT"
+                    }
+                  ],
+                  "name": "iatstreams_-_F_time",
+                  "purgeIntervalInDays": 30,
+                  "reportType": "realtime",
+                  "type": "STANDARD"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "TBD Add description.",
+                  "properties": {
+                    "aggregationInSeconds": {
+                      "description": "Number of seconds for which data aggregates.",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "description": {
+                      "description": "Text describing the data store.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "dimensions": {
+                      "description": "Encapsulates dimensions for the data store. A dimension acts like a key in data exploration and answers questions such as who, what, where, and which. Each dimension object provides information on the ID, name, type, and description of the dimension.",
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "dataType": {
+                            "description": "Type of data: `STRING`, `NUMBER`, `ENCODED`, `DATE`, `COUNT`, `TIME`, `BIT_FLAG`, `VOLUME`, `BANDWIDTH`, `PERCENT`, `CONTINENT`, `COUNTRY`, `REGION`, `CPCODE`, `ACGID`, `DOMAIN` or `STREAM`.",
+                            "enum": [
+                              "STRING",
+                              "NUMBER",
+                              "ENCODED",
+                              "DATE",
+                              "COUNT",
+                              "TIME",
+                              "BIT_FLAG",
+                              "VOLUME",
+                              "BANDWIDTH",
+                              "PERCENT",
+                              "CONTINENT",
+                              "COUNTRY",
+                              "REGION",
+                              "CPCODE",
+                              "ACGID",
+                              "DOMAIN",
+                              "STREAM"
+                            ],
+                            "type": "string"
+                          },
+                          "description": {
+                            "description": "A description of the dimension.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "group": {
+                            "description": "TBD Add description.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "description": {
+                                  "description": "TBD Add description.",
+                                  "minLength": 1,
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "description": "TBD Add description.",
+                                  "minimum": -1,
+                                  "type": "integer"
+                                },
+                                "name": {
+                                  "description": "TBD Add description.",
+                                  "minLength": 1,
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "description"
+                              ],
+                              "type": "object"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                          },
+                          "helpText": {
+                            "description": "TBD Add description.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "A unique identifier for each dimension.",
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "The name of the dimension.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "The type of dimension, either `STANDARD` or `CUSTOM`.",
+                            "enum": [
+                              "STANDARD",
+                              "CUSTOM"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "description"
+                        ],
+                        "type": "object"
+                      },
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "id": {
+                      "description": "Unique identifier for each data store.",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "maxQueryDurationInMinutes": {
+                      "description": "Maximum number of minutes when you can query a data store. This system-imposed limit leads to better performance.",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "metrics": {
+                      "description": "Encapsulates metrics for the data store. A metric is a numeric aggregation against one or more dimensions and answers questions on volume of activity or attack. Each metric object provides information on the name, description, and ID of the metric.",
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "description": {
+                            "description": "A description of the metric.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "group": {
+                            "description": "TBD Add description.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "description": {
+                                  "description": "TBD Add description.",
+                                  "minLength": 1,
+                                  "type": "string"
+                                },
+                                "id": {
+                                  "description": "TBD Add description.",
+                                  "minimum": -1,
+                                  "type": "integer"
+                                },
+                                "name": {
+                                  "description": "TBD Add description.",
+                                  "minLength": 1,
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "description"
+                              ],
+                              "type": "object"
+                            },
+                            "minItems": 1,
+                            "type": "array"
+                          },
+                          "id": {
+                            "description": "A unique identifier for each metric.",
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "The name of the metric.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of metric: `TIME`, `NUMBER`, `COUNT`, `BANDWIDTH`, `VOLUME`, `PERCENT`, `PERCENTAGE` or `%`.",
+                            "enum": [
+                              "TIME",
+                              "NUMBER",
+                              "COUNT",
+                              "BANDWIDTH",
+                              "VOLUME",
+                              "PERCENT",
+                              "PERCENTAGE",
+                              "%"
+                            ],
+                            "type": "string"
+                          },
+                          "unit": {
+                            "description": "Unit of metric: `TIME`, `SECONDS`, `MINUTES`, `COUNT`, `HITS`, `BYTES`, `MS`, `MBPS`, `KBPS`, `MB`, `GB`, `NUMBER`, `MBIT/SEC`, `HITS/SEC` or `%`.",
+                            "enum": [
+                              "TIME",
+                              "SECONDS",
+                              "COUNT",
+                              "BYTES",
+                              "MS",
+                              "MBPS",
+                              "KBPS",
+                              "MB",
+                              "GB",
+                              "HITS",
+                              "MINUTES",
+                              "NUMBER",
+                              "MBIT/SEC",
+                              "HITS/SEC",
+                              "%"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "description"
+                        ],
+                        "type": "object"
+                      },
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "name": {
+                      "description": "The name of the data store.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "purgeIntervalInDays": {
+                      "description": "Number of days for which the data store keeps data.",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "reportType": {
+                      "description": "TBD Add description.",
+                      "minLength": 0,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "The type of data store, either `STANDARD` or `CUSTOM`.",
+                      "enum": [
+                        "STANDARD",
+                        "CUSTOM"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "type",
+                    "dimensions",
+                    "metrics",
+                    "aggregationInSeconds",
+                    "purgeIntervalInDays",
+                    "maxQueryDurationInMinutes",
+                    "description"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/data-store.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "Get a Media Services Live 4 data store",
+        "tags": [
+          "Media Services Live 4"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "The unique `dataStoreId` value for the data store.",
+          "example": "{{dataStoreId}}",
+          "in": "path",
+          "name": "dataStoreId",
+          "required": true,
+          "schema": {
+            "example": 10021,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/data-store-id-path.yaml"
+          }
+        }
+      ],
+      "x-akamai": {
+        "file-path": "paths/data-store-http-ingest.yaml",
+        "path-info": "/media-services-live/http-ingest/data-stores/{dataStoreId}"
+      }
+    },
+    "/media-services-live/http-ingest/ep-switch/data": {
+      "get": {
+        "description": "Retrieves information about the entry point switches that occurred in a given time period.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Media Services Live Reports API",
+          "url": "https://techdocs.akamai.com/media-services-rpts/reference/get-ep-switch-data"
+        },
+        "operationId": "get-ep-switch-data",
+        "parameters": [
+          {
+            "description": "Use to limit report data to specific CP codes. Comma-separate several values.",
+            "example": "{{cpcodes}}",
+            "in": "query",
+            "name": "cpcodes",
+            "schema": {
+              "example": "12345,67890",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/cpcodes-param-op-cpcodes.yaml"
+            }
+          },
+          {
+            "description": "The timestamp string in ISO 8601 format `yyyy-MM-ddTHH:mmZ` or `yyyy-MM-ddTHH:mm+HH:mm`.",
+            "example": "{{startDate}}",
+            "in": "query",
+            "name": "startDate",
+            "required": true,
+            "schema": {
+              "example": "2021-03-22T15:30Z",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/start-date-start-date.yaml"
+            }
+          },
+          {
+            "description": "The timestamp string in ISO 8601 format `yyyy-MM-ddTHH:mmZ` or `yyyy-MM-ddTHH:mm+HH:mm`.",
+            "example": "{{endDate}}",
+            "in": "query",
+            "name": "endDate",
+            "required": true,
+            "schema": {
+              "example": "2021-04-23T15:30Z",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/start-date-end-date.yaml"
+            }
+          },
+          {
+            "description": "The number of rows to return from `1` to `10000`. The default value is `300`.",
+            "example": "{{limit}}",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 300,
+              "example": 300,
+              "maximum": 10000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/batch-param-op-limit.yaml"
+            }
+          },
+          {
+            "description": "The offset of the row for the start of data, `0` by default. Use this to request progressive batches of data. For example, you can make `10` requests for  `1000` records by setting the overall `limit` to `100`, then setting the `offset` to `0`, `100`, `200`, and so on for each request.",
+            "example": "{{offset}}",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "example": 0,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/batch-param-op-offset.yaml"
+            }
+          },
+          {
+            "description": "Identifies a set of reported streams as comma-separated ID values.",
+            "example": "{{streams}}",
+            "in": "query",
+            "name": "streams",
+            "schema": {
+              "example": "12345,67890",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/streams-param-op-streams.yaml"
+            }
+          },
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "columns": [
+                    {
+                      "description": "Indicates the time at which content was consumed. This dimension is set automatically.",
+                      "id": 100,
+                      "index": 0,
+                      "name": "Time",
+                      "type": "DIMENSION"
+                    },
+                    {
+                      "description": "Unique identifier associated with a stream generated by the Akamai provisioning workflow.",
+                      "id": 102,
+                      "index": 1,
+                      "name": "Stream ID",
+                      "type": "DIMENSION"
+                    },
+                    {
+                      "description": "IP address of the Entry Point on which stream is ingested.",
+                      "id": 106,
+                      "index": 2,
+                      "name": "Entry Point",
+                      "type": "DIMENSION"
+                    },
+                    {
+                      "description": "Type of stream - Primary or Backup.",
+                      "id": 107,
+                      "index": 3,
+                      "name": "Stream Type",
+                      "type": "DIMENSION"
+                    }
+                  ],
+                  "metaData": {
+                    "aggregation": 120,
+                    "endTimeInEpoch": 1487833200,
+                    "hasMoreData": false,
+                    "limit": 300,
+                    "offset": 0,
+                    "startTimeInEpoch": 1487826000,
+                    "timeZone": "GMT"
+                  },
+                  "rows": [
+                    [
+                      "1487829360",
+                      "266583",
+                      "192.0.2.241",
+                      "Primary"
+                    ],
+                    [
+                      "1487830080",
+                      "266583",
+                      "192.0.2.171",
+                      "Primary"
+                    ],
+                    [
+                      "1487832120",
+                      "266583",
+                      "192.0.2.82",
+                      "Primary"
+                    ]
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "TBD Add description.",
+                  "properties": {
+                    "columns": {
+                      "description": "Encapsulates context for each element listed within corresponding `rows`.",
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "aggregate": {
+                            "description": "TBD Add description.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "dataType": {
+                            "description": "Type of data: `STRING`, `NUMBER`, `ENCODED`, `DATE`, `COUNT`, `TIME`, `BIT_FLAG`, `VOLUME`, `BANDWIDTH`, `PERCENT`, `CONTINENT`, `COUNTRY`, `REGION`, `CPCODE`, `ACGID`, `DOMAIN` or `STREAM`.",
+                            "enum": [
+                              "STRING",
+                              "NUMBER",
+                              "ENCODED",
+                              "DATE",
+                              "COUNT",
+                              "TIME",
+                              "BIT_FLAG",
+                              "VOLUME",
+                              "BANDWIDTH",
+                              "PERCENT",
+                              "CONTINENT",
+                              "COUNTRY",
+                              "REGION",
+                              "CPCODE",
+                              "ACGID",
+                              "DOMAIN",
+                              "STREAM"
+                            ],
+                            "type": "string"
+                          },
+                          "description": {
+                            "description": "TBD Add description.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "TBD Add description.",
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "index": {
+                            "description": "Positions each column within the table.",
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "Depending on the `type`, provides the name of the relevant dimension or metric.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of data: `DIMENSION` or `METRIC`.",
+                            "enum": [
+                              "DIMENSION",
+                              "METRIC"
+                            ],
+                            "type": "string"
+                          },
+                          "unit": {
+                            "description": "Unit of column: `TIME`, `SECONDS`, `MINUTES`, `COUNT`, `HITS`, `BYTES`, `MS`, `MBPS`, `KBPS`, `MB`, `GB`, `NUMBER`, `MBIT/SEC`, `HITS/SEC` or `%`.",
+                            "enum": [
+                              "TIME",
+                              "SECONDS",
+                              "COUNT",
+                              "BYTES",
+                              "MS",
+                              "MBPS",
+                              "KBPS",
+                              "MB",
+                              "GB",
+                              "HITS",
+                              "MINUTES",
+                              "NUMBER",
+                              "MBIT/SEC",
+                              "HITS/SEC",
+                              "%"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "id",
+                          "name",
+                          "index"
+                        ],
+                        "type": "object"
+                      },
+                      "minItems": 1,
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "metaData": {
+                      "additionalProperties": false,
+                      "description": "Reflects the set of parameter values included in the request that determines this report's results.",
+                      "properties": {
+                        "aggregation": {
+                          "description": "The time span included in each record, expressed in seconds.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "dasTable": {
+                          "description": "TBD Add description.",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "endTimeInEpoch": {
+                          "description": "The end of the requested time range, in epoch seconds.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "hasMoreData": {
+                          "description": "Indicates that a constrained set of requested data doesn't represent the entire set.",
+                          "type": "boolean"
+                        },
+                        "limit": {
+                          "default": 300,
+                          "description": "The maximum number of requested data `rows`.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "messages": {
+                          "description": "TBD Add description.",
+                          "items": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "minItems": 1,
+                          "type": "array"
+                        },
+                        "offset": {
+                          "description": "The offset of the row from which the data should start. Used with overall `limit`, it reflects where a batch of data starts. For example, setting both `offset` and `limit` to `100` selects rows 101-200 from the overall results.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "startTimeInEpoch": {
+                          "description": "The start of the requested time range, in epoch seconds.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "timeZone": {
+                          "description": "Identifies the time zone from which the request was made.",
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "startTimeInEpoch",
+                        "endTimeInEpoch",
+                        "aggregation",
+                        "timeZone",
+                        "limit",
+                        "offset",
+                        "hasMoreData"
+                      ],
+                      "type": "object"
+                    },
+                    "rows": {
+                      "description": "Encapsulates the report's two-dimensional table data. If there's no data to report, the array is empty.",
+                      "items": {
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "minItems": 1,
+                        "type": "array",
+                        "uniqueItems": true
+                      },
+                      "minItems": 0,
+                      "type": "array",
+                      "uniqueItems": true
+                    }
+                  },
+                  "required": [
+                    "columns",
+                    "rows",
+                    "metaData"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/data.yaml"
+                  }
+                }
+              }
+            },
+            "description": "OK. If the report yields an empty data set, the response yields an empty set of rows."
+          }
+        },
+        "summary": "Get Media Services Live 4 entry point switch information",
+        "tags": [
+          "Media Services Live 4"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/data-ep-switch.yaml",
+        "path-info": "/media-services-live/http-ingest/ep-switch/data"
+      }
+    },
+    "/media-services-live/http-ingest/origin-shield/data": {
+      "get": {
+        "description": "Retrieves HTTP Ingest Origin Shield data for the given parameters. You can query data collected at a one minute aggregation with ten percent sampling frequency and a purge window of seven days. The maximum duration is two minutes per query.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Media Services Live Reports API",
+          "url": "https://techdocs.akamai.com/media-services-rpts/reference/get-media-services-live-http-ingest-origin-shield-data"
+        },
+        "operationId": "get-media-services-live-http-ingest-origin-shield-data",
+        "parameters": [
+          {
+            "description": "Use to limit report data to specific CP codes. Comma-separate several values.",
+            "example": "{{cpcodes}}",
+            "in": "query",
+            "name": "cpcodes",
+            "schema": {
+              "example": "12345,67890",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/cpcodes-param-op-cpcodes.yaml"
+            }
+          },
+          {
+            "description": "Identifies dimensions with comma-separated IDs.",
+            "example": "{{dimensions}}",
+            "in": "query",
+            "name": "dimensions",
+            "required": true,
+            "schema": {
+              "example": "1,2,3",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/dim-param-op-dimensions.yaml"
+            }
+          },
+          {
+            "description": "Identifies metrics with comma-separated IDs.",
+            "example": "{{metrics}}",
+            "in": "query",
+            "name": "metrics",
+            "required": true,
+            "schema": {
+              "example": "1,2,3",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/dim-param-op-metrics.yaml"
+            }
+          },
+          {
+            "description": "Specifies the end of the reported time range, expressed in `mm/dd/yyyy:HH:MM` format. The trailing `:HH:MM` 24-hour time segment is optional.",
+            "example": "{{endDate}}",
+            "in": "query",
+            "name": "endDate",
+            "required": true,
+            "schema": {
+              "example": "02/15/2023",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/range-param-op-end-date.yaml"
+            }
+          },
+          {
+            "description": "Specifies the start of the reported time range, expressed in `mm/dd/yyyy:HH:MM` format. The trailing `:HH:MM` 24-hour time segment is optional.",
+            "example": "{{startDate}}",
+            "in": "query",
+            "name": "startDate",
+            "required": true,
+            "schema": {
+              "example": "01/15/2023",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/range-param-op-start-date.yaml"
+            }
+          },
+          {
+            "description": "The offset of the row for the start of data, `0` by default. Use this to request progressive batches of data. For example, you can make `10` requests for  `1000` records by setting the overall `limit` to `100`, then setting the `offset` to `0`, `100`, `200`, and so on for each request.",
+            "example": "{{offset}}",
+            "in": "query",
+            "name": "offset",
+            "schema": {
+              "default": 0,
+              "example": 0,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/batch-param-op-offset.yaml"
+            }
+          },
+          {
+            "description": "The number of rows to return from `1` to `10000`. The default value is `300`.",
+            "example": "{{limit}}",
+            "in": "query",
+            "name": "limit",
+            "schema": {
+              "default": 300,
+              "example": 300,
+              "maximum": 10000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/batch-param-op-limit.yaml"
+            }
+          },
+          {
+            "description": "A UTF-8, URL-encoded JSON object representing filter parameters that limit reported data. See the [FilterParams](https://techdocs.akamai.com/media-services-rpts/reference/filter-params) object for details on its structure.",
+            "example": "{{filterParams}}",
+            "in": "query",
+            "name": "filterParams",
+            "schema": {
+              "example": "[{\"type\":\"dimension\",\"values\":[\"GB\"],\"id\":4,\"condition\":\"in\"},{\"type\":\"metric\",\"values\":[16],\"id\":155,\"condition\":\"gt\"}]",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/json-filters-param-op-filter-params.yaml"
+            }
+          },
+          {
+            "description": "A UTF-8, URL-encoded JSON object representing sort parameters that rearrange reported data. See the [SortParams](https://techdocs.akamai.com/media-services-rpts/reference/sort-params) object for details on its structure.",
+            "example": "{{sortParams}}",
+            "in": "query",
+            "name": "sortParams",
+            "schema": {
+              "example": "[{\"type\":\"metric\", \"order\":\"asc\", \"id\":40}]",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/json-filters-param-op-sort-params.yaml"
+            }
+          },
+          {
+            "description": "Identifies a set of reported streams as comma-separated ID values.",
+            "example": "{{streams}}",
+            "in": "query",
+            "name": "streams",
+            "schema": {
+              "example": "12345,67890",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/streams-param-op-streams.yaml"
+            }
+          },
+          {
+            "description": "The time period in which to group each data record, expressed as number of seconds.",
+            "example": "{{aggregation}}",
+            "in": "query",
+            "name": "aggregation",
+            "schema": {
+              "example": 1440,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/agg-no-keyword-param-op-aggregation.yaml"
+            }
+          },
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "columns": [
+                    {
+                      "description": "Content provider code (CP code) is an identifier assigned to a contract and used for reporting, billing, and monitoring traffic served.",
+                      "id": 5501,
+                      "index": 0,
+                      "name": "CPCode",
+                      "type": "DIMENSION"
+                    },
+                    {
+                      "description": "Unique identifier associated with a stream.",
+                      "id": 5502,
+                      "index": 1,
+                      "name": "Stream Id",
+                      "type": "DIMENSION"
+                    },
+                    {
+                      "aggregate": "88",
+                      "description": "Total number of requests.",
+                      "id": 5520,
+                      "index": 2,
+                      "name": "Hits",
+                      "type": "METRIC"
+                    },
+                    {
+                      "aggregate": "1.47",
+                      "description": "Number of hits per second.",
+                      "id": 5521,
+                      "index": 3,
+                      "name": "Hits/sec",
+                      "type": "METRIC"
+                    },
+                    {
+                      "aggregate": "8.67",
+                      "description": "Total bandwidth usage including all HTTP response codes.",
+                      "id": 5523,
+                      "index": 4,
+                      "name": "BANDWIDTH",
+                      "type": "METRIC",
+                      "unit": "MBPS"
+                    }
+                  ],
+                  "metaData": {
+                    "aggregation": 60,
+                    "endTimeInEpoch": 1522984260,
+                    "hasMoreData": false,
+                    "limit": 300,
+                    "offset": 0,
+                    "startTimeInEpoch": 1522980000,
+                    "timeZone": "GMT"
+                  },
+                  "rows": [
+                    [
+                      "686645",
+                      "12345",
+                      "88",
+                      "1.47",
+                      "8.67"
+                    ]
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "TBD Add description.",
+                  "properties": {
+                    "columns": {
+                      "description": "Encapsulates context for each element listed within corresponding `rows`.",
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "aggregate": {
+                            "description": "TBD Add description.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "dataType": {
+                            "description": "Type of data: `STRING`, `NUMBER`, `ENCODED`, `DATE`, `COUNT`, `TIME`, `BIT_FLAG`, `VOLUME`, `BANDWIDTH`, `PERCENT`, `CONTINENT`, `COUNTRY`, `REGION`, `CPCODE`, `ACGID`, `DOMAIN` or `STREAM`.",
+                            "enum": [
+                              "STRING",
+                              "NUMBER",
+                              "ENCODED",
+                              "DATE",
+                              "COUNT",
+                              "TIME",
+                              "BIT_FLAG",
+                              "VOLUME",
+                              "BANDWIDTH",
+                              "PERCENT",
+                              "CONTINENT",
+                              "COUNTRY",
+                              "REGION",
+                              "CPCODE",
+                              "ACGID",
+                              "DOMAIN",
+                              "STREAM"
+                            ],
+                            "type": "string"
+                          },
+                          "description": {
+                            "description": "TBD Add description.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "TBD Add description.",
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "index": {
+                            "description": "Positions each column within the table.",
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "Depending on the `type`, provides the name of the relevant dimension or metric.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of data: `DIMENSION` or `METRIC`.",
+                            "enum": [
+                              "DIMENSION",
+                              "METRIC"
+                            ],
+                            "type": "string"
+                          },
+                          "unit": {
+                            "description": "Unit of column: `TIME`, `SECONDS`, `MINUTES`, `COUNT`, `HITS`, `BYTES`, `MS`, `MBPS`, `KBPS`, `MB`, `GB`, `NUMBER`, `MBIT/SEC`, `HITS/SEC` or `%`.",
+                            "enum": [
+                              "TIME",
+                              "SECONDS",
+                              "COUNT",
+                              "BYTES",
+                              "MS",
+                              "MBPS",
+                              "KBPS",
+                              "MB",
+                              "GB",
+                              "HITS",
+                              "MINUTES",
+                              "NUMBER",
+                              "MBIT/SEC",
+                              "HITS/SEC",
+                              "%"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "id",
+                          "name",
+                          "index"
+                        ],
+                        "type": "object"
+                      },
+                      "minItems": 1,
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "metaData": {
+                      "additionalProperties": false,
+                      "description": "Reflects the set of parameter values included in the request that determines this report's results.",
+                      "properties": {
+                        "aggregation": {
+                          "description": "The time span included in each record, expressed in seconds.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "dasTable": {
+                          "description": "TBD Add description.",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "endTimeInEpoch": {
+                          "description": "The end of the requested time range, in epoch seconds.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "hasMoreData": {
+                          "description": "Indicates that a constrained set of requested data doesn't represent the entire set.",
+                          "type": "boolean"
+                        },
+                        "limit": {
+                          "default": 300,
+                          "description": "The maximum number of requested data `rows`.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "messages": {
+                          "description": "TBD Add description.",
+                          "items": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "minItems": 1,
+                          "type": "array"
+                        },
+                        "offset": {
+                          "description": "The offset of the row from which the data should start. Used with overall `limit`, it reflects where a batch of data starts. For example, setting both `offset` and `limit` to `100` selects rows 101-200 from the overall results.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "startTimeInEpoch": {
+                          "description": "The start of the requested time range, in epoch seconds.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "timeZone": {
+                          "description": "Identifies the time zone from which the request was made.",
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "startTimeInEpoch",
+                        "endTimeInEpoch",
+                        "aggregation",
+                        "timeZone",
+                        "limit",
+                        "offset",
+                        "hasMoreData"
+                      ],
+                      "type": "object"
+                    },
+                    "rows": {
+                      "description": "Encapsulates the report's two-dimensional table data. If there's no data to report, the array is empty.",
+                      "items": {
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "minItems": 1,
+                        "type": "array",
+                        "uniqueItems": true
+                      },
+                      "minItems": 0,
+                      "type": "array",
+                      "uniqueItems": true
+                    }
+                  },
+                  "required": [
+                    "columns",
+                    "rows",
+                    "metaData"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/data.yaml"
+                  }
+                }
+              }
+            },
+            "description": "OK. If the report yields an empty data set, the response yields an empty set of rows."
+          }
+        },
+        "summary": "Get Media Services Live 4 Origin Shield data",
+        "tags": [
+          "Media Services Live 4"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/data-origin-shield.yaml",
+        "path-info": "/media-services-live/http-ingest/origin-shield/data"
+      }
+    },
+    "/media-services-live/http-ingest/origin-shield/data-stores": {
+      "get": {
+        "description": "Retrieves Media Services Live 4 Origin Shield data stores for the specified parameters.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Media Services Live Reports API",
+          "url": "https://techdocs.akamai.com/media-services-rpts/reference/get-http-ingest-origin-shield-data-stores"
+        },
+        "operationId": "get-http-ingest-origin-shield-data-stores",
+        "parameters": [
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "aggregationInSeconds": 60,
+                    "description": "origin shield monitoring for r lines",
+                    "dimensions": [
+                      {
+                        "dataType": "STRING",
+                        "description": "Delivery format of the stream.",
+                        "group": [
+                          {
+                            "description": "OTHERS",
+                            "id": -1,
+                            "name": "OTHERS"
+                          }
+                        ],
+                        "helpText": "Format",
+                        "id": 5504,
+                        "name": "Format"
+                      },
+                      {
+                        "dataType": "STRING",
+                        "description": "Name of the CDN provider.",
+                        "group": [
+                          {
+                            "description": "OTHERS",
+                            "id": -1,
+                            "name": "OTHERS"
+                          }
+                        ],
+                        "helpText": "CDN",
+                        "id": 5505,
+                        "name": "CDN"
+                      }
+                    ],
+                    "id": 5500,
+                    "maxQueryDurationInMinutes": 120,
+                    "metrics": [
+                      {
+                        "description": "Total number of requests.",
+                        "group": [
+                          {
+                            "description": "OTHERS",
+                            "id": -1,
+                            "name": "OTHERS"
+                          }
+                        ],
+                        "id": 5520,
+                        "name": "Hits",
+                        "type": "COUNT"
+                      },
+                      {
+                        "description": "Number of hits per second.",
+                        "group": [
+                          {
+                            "description": "OTHERS",
+                            "id": -1,
+                            "name": "OTHERS"
+                          }
+                        ],
+                        "id": 5521,
+                        "name": "Hits/sec",
+                        "type": "COUNT"
+                      }
+                    ],
+                    "name": "osm_r_sampled",
+                    "purgeIntervalInDays": 7,
+                    "reportType": "",
+                    "type": "STANDARD"
+                  }
+                ],
+                "schema": {
+                  "description": "TBD Add description.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "TBD Add description.",
+                    "properties": {
+                      "aggregationInSeconds": {
+                        "description": "Number of seconds for which data aggregates.",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "description": {
+                        "description": "Text describing the data store.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "dimensions": {
+                        "description": "Encapsulates dimensions for the data store. A dimension acts like a key in data exploration and answers questions such as who, what, where, and which. Each dimension object provides information on the ID, name, type, and description of the dimension.",
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "dataType": {
+                              "description": "Type of data: `STRING`, `NUMBER`, `ENCODED`, `DATE`, `COUNT`, `TIME`, `BIT_FLAG`, `VOLUME`, `BANDWIDTH`, `PERCENT`, `CONTINENT`, `COUNTRY`, `REGION`, `CPCODE`, `ACGID`, `DOMAIN` or `STREAM`.",
+                              "enum": [
+                                "STRING",
+                                "NUMBER",
+                                "ENCODED",
+                                "DATE",
+                                "COUNT",
+                                "TIME",
+                                "BIT_FLAG",
+                                "VOLUME",
+                                "BANDWIDTH",
+                                "PERCENT",
+                                "CONTINENT",
+                                "COUNTRY",
+                                "REGION",
+                                "CPCODE",
+                                "ACGID",
+                                "DOMAIN",
+                                "STREAM"
+                              ],
+                              "type": "string"
+                            },
+                            "description": {
+                              "description": "A description of the dimension.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "group": {
+                              "description": "TBD Add description.",
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "description": {
+                                    "description": "TBD Add description.",
+                                    "minLength": 1,
+                                    "type": "string"
+                                  },
+                                  "id": {
+                                    "description": "TBD Add description.",
+                                    "minimum": -1,
+                                    "type": "integer"
+                                  },
+                                  "name": {
+                                    "description": "TBD Add description.",
+                                    "minLength": 1,
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "description"
+                                ],
+                                "type": "object"
+                              },
+                              "minItems": 1,
+                              "type": "array"
+                            },
+                            "helpText": {
+                              "description": "TBD Add description.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "id": {
+                              "description": "A unique identifier for each dimension.",
+                              "minimum": 0,
+                              "type": "integer"
+                            },
+                            "name": {
+                              "description": "The name of the dimension.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "type": {
+                              "description": "The type of dimension, either `STANDARD` or `CUSTOM`.",
+                              "enum": [
+                                "STANDARD",
+                                "CUSTOM"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "description"
+                          ],
+                          "type": "object"
+                        },
+                        "minItems": 1,
+                        "type": "array"
+                      },
+                      "id": {
+                        "description": "Unique identifier for each data store.",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "maxQueryDurationInMinutes": {
+                        "description": "Maximum number of minutes when you can query a data store. This system-imposed limit leads to better performance.",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "metrics": {
+                        "description": "Encapsulates metrics for the data store. A metric is a numeric aggregation against one or more dimensions and answers questions on volume of activity or attack. Each metric object provides information on the name, description, and ID of the metric.",
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "description": {
+                              "description": "A description of the metric.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "group": {
+                              "description": "TBD Add description.",
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "description": {
+                                    "description": "TBD Add description.",
+                                    "minLength": 1,
+                                    "type": "string"
+                                  },
+                                  "id": {
+                                    "description": "TBD Add description.",
+                                    "minimum": -1,
+                                    "type": "integer"
+                                  },
+                                  "name": {
+                                    "description": "TBD Add description.",
+                                    "minLength": 1,
+                                    "type": "string"
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "name",
+                                  "description"
+                                ],
+                                "type": "object"
+                              },
+                              "minItems": 1,
+                              "type": "array"
+                            },
+                            "id": {
+                              "description": "A unique identifier for each metric.",
+                              "minimum": 0,
+                              "type": "integer"
+                            },
+                            "name": {
+                              "description": "The name of the metric.",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "type": {
+                              "description": "Type of metric: `TIME`, `NUMBER`, `COUNT`, `BANDWIDTH`, `VOLUME`, `PERCENT`, `PERCENTAGE` or `%`.",
+                              "enum": [
+                                "TIME",
+                                "NUMBER",
+                                "COUNT",
+                                "BANDWIDTH",
+                                "VOLUME",
+                                "PERCENT",
+                                "PERCENTAGE",
+                                "%"
+                              ],
+                              "type": "string"
+                            },
+                            "unit": {
+                              "description": "Unit of metric: `TIME`, `SECONDS`, `MINUTES`, `COUNT`, `HITS`, `BYTES`, `MS`, `MBPS`, `KBPS`, `MB`, `GB`, `NUMBER`, `MBIT/SEC`, `HITS/SEC` or `%`.",
+                              "enum": [
+                                "TIME",
+                                "SECONDS",
+                                "COUNT",
+                                "BYTES",
+                                "MS",
+                                "MBPS",
+                                "KBPS",
+                                "MB",
+                                "GB",
+                                "HITS",
+                                "MINUTES",
+                                "NUMBER",
+                                "MBIT/SEC",
+                                "HITS/SEC",
+                                "%"
+                              ],
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "description"
+                          ],
+                          "type": "object"
+                        },
+                        "minItems": 1,
+                        "type": "array"
+                      },
+                      "name": {
+                        "description": "The name of the data store.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "purgeIntervalInDays": {
+                        "description": "Number of days for which the data store keeps data.",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "reportType": {
+                        "description": "TBD Add description.",
+                        "minLength": 0,
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "The type of data store, either `STANDARD` or `CUSTOM`.",
+                        "enum": [
+                          "STANDARD",
+                          "CUSTOM"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "type",
+                      "dimensions",
+                      "metrics",
+                      "aggregationInSeconds",
+                      "purgeIntervalInDays",
+                      "maxQueryDurationInMinutes",
+                      "description"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/data-store.yaml"
+                    }
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/data-stores.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "List Media Services Live 4 Origin Shield data stores",
+        "tags": [
+          "Media Services Live 4"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/data-stores-origin-shield.yaml",
+        "path-info": "/media-services-live/http-ingest/origin-shield/data-stores"
+      }
+    },
+    "/msod/pmd/data": {
+      "get": {
+        "description": "Retrieves all data for Progressive Media Delivery.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Media Services Live Reports API",
+          "url": "https://techdocs.akamai.com/media-services-rpts/reference/get-msod-pmd-data"
+        },
+        "operationId": "get-msod-pmd-data",
+        "parameters": [
+          {
+            "description": "Use to limit report data to specific CP codes. Comma-separate several values.",
+            "example": "{{cpcodes}}",
+            "in": "query",
+            "name": "cpcodes",
+            "schema": {
+              "example": "12345,67890",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/cpcodes-param-op-cpcodes.yaml"
+            }
+          },
+          {
+            "description": "The timestamp string in ISO 8601 format `yyyy-MM-ddTHH:mmZ` or `yyyy-MM-ddTHH:mm+HH:mm`.",
+            "example": "{{startDate}}",
+            "in": "query",
+            "name": "startDate",
+            "required": true,
+            "schema": {
+              "example": "2021-03-22T15:30Z",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/start-date-start-date.yaml"
+            }
+          },
+          {
+            "description": "The timestamp string in ISO 8601 format `yyyy-MM-ddTHH:mmZ` or `yyyy-MM-ddTHH:mm+HH:mm`.",
+            "example": "{{endDate}}",
+            "in": "query",
+            "name": "endDate",
+            "required": true,
+            "schema": {
+              "example": "2021-04-23T15:30Z",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/start-date-end-date.yaml"
+            }
+          },
+          {
+            "description": "__Enum__ Limits data to the type of traffic: `non-secure` for non-secure traffic, `secure-shared` for secure shared-certificate traffic, `secure-standard` for standard secure customer-certificate traffic, `secure-premium` for premium secure customer-certificate traffic, or the default `all`.",
+            "example": "{{deliveryOption}}",
+            "in": "query",
+            "name": "deliveryOption",
+            "schema": {
+              "default": "all",
+              "enum": [
+                "non-secure",
+                "secure-shared",
+                "secure-premium",
+                "all"
+              ],
+              "example": "all",
+              "type": "string"
+            },
+            "x-akamai": {
+              "file-path": "parameters/delivery-option-delivery-option.yaml"
+            }
+          },
+          {
+            "description": "Specifies if the API should ignore ingest data when generating the response, `False` by default.",
+            "example": "{{ignorePutPost}}",
+            "in": "query",
+            "name": "ignorePutPost",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/ignore-put-post-ignore-put-post.yaml"
+            }
+          },
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "columns": [
+                    {
+                      "description": "Content Provider Code (CPCode) is an identifier assigned to a contract and used for reporting, billing and monitoring traffic served.",
+                      "id": 22002,
+                      "index": 0,
+                      "name": "CP Code",
+                      "type": "DIMENSION"
+                    },
+                    {
+                      "aggregate": "1.82",
+                      "description": "Requests",
+                      "id": 22005,
+                      "index": 1,
+                      "name": "Requests Volume",
+                      "type": "METRIC",
+                      "unit": "MB"
+                    }
+                  ],
+                  "metaData": {
+                    "aggregation": 300,
+                    "dasTable": "trafficsummary_-_F_time",
+                    "endTimeInEpoch": 1545143400,
+                    "hasMoreData": false,
+                    "limit": 300,
+                    "messages": [
+                      "Estimated data begins at 17/Dec/2018 20:00:00 GMT"
+                    ],
+                    "offset": 0,
+                    "startTimeInEpoch": 1543674600,
+                    "timeZone": "GMT"
+                  },
+                  "rows": [
+                    [
+                      "759977",
+                      "1.824443"
+                    ]
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "TBD Add description.",
+                  "properties": {
+                    "columns": {
+                      "description": "Encapsulates context for each element listed within corresponding `rows`.",
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "aggregate": {
+                            "description": "TBD Add description.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "dataType": {
+                            "description": "Type of data: `STRING`, `NUMBER`, `ENCODED`, `DATE`, `COUNT`, `TIME`, `BIT_FLAG`, `VOLUME`, `BANDWIDTH`, `PERCENT`, `CONTINENT`, `COUNTRY`, `REGION`, `CPCODE`, `ACGID`, `DOMAIN` or `STREAM`.",
+                            "enum": [
+                              "STRING",
+                              "NUMBER",
+                              "ENCODED",
+                              "DATE",
+                              "COUNT",
+                              "TIME",
+                              "BIT_FLAG",
+                              "VOLUME",
+                              "BANDWIDTH",
+                              "PERCENT",
+                              "CONTINENT",
+                              "COUNTRY",
+                              "REGION",
+                              "CPCODE",
+                              "ACGID",
+                              "DOMAIN",
+                              "STREAM"
+                            ],
+                            "type": "string"
+                          },
+                          "description": {
+                            "description": "TBD Add description.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "id": {
+                            "description": "TBD Add description.",
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "index": {
+                            "description": "Positions each column within the table.",
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "Depending on the `type`, provides the name of the relevant dimension or metric.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of data: `DIMENSION` or `METRIC`.",
+                            "enum": [
+                              "DIMENSION",
+                              "METRIC"
+                            ],
+                            "type": "string"
+                          },
+                          "unit": {
+                            "description": "Unit of column: `TIME`, `SECONDS`, `MINUTES`, `COUNT`, `HITS`, `BYTES`, `MS`, `MBPS`, `KBPS`, `MB`, `GB`, `NUMBER`, `MBIT/SEC`, `HITS/SEC` or `%`.",
+                            "enum": [
+                              "TIME",
+                              "SECONDS",
+                              "COUNT",
+                              "BYTES",
+                              "MS",
+                              "MBPS",
+                              "KBPS",
+                              "MB",
+                              "GB",
+                              "HITS",
+                              "MINUTES",
+                              "NUMBER",
+                              "MBIT/SEC",
+                              "HITS/SEC",
+                              "%"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "id",
+                          "name",
+                          "index"
+                        ],
+                        "type": "object"
+                      },
+                      "minItems": 1,
+                      "type": "array",
+                      "uniqueItems": true
+                    },
+                    "metaData": {
+                      "additionalProperties": false,
+                      "description": "Reflects the set of parameter values included in the request that determines this report's results.",
+                      "properties": {
+                        "aggregation": {
+                          "description": "The time span included in each record, expressed in seconds.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "dasTable": {
+                          "description": "TBD Add description.",
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "endTimeInEpoch": {
+                          "description": "The end of the requested time range, in epoch seconds.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "hasMoreData": {
+                          "description": "Indicates that a constrained set of requested data doesn't represent the entire set.",
+                          "type": "boolean"
+                        },
+                        "limit": {
+                          "default": 300,
+                          "description": "The maximum number of requested data `rows`.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "messages": {
+                          "description": "TBD Add description.",
+                          "items": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "minItems": 1,
+                          "type": "array"
+                        },
+                        "offset": {
+                          "description": "The offset of the row from which the data should start. Used with overall `limit`, it reflects where a batch of data starts. For example, setting both `offset` and `limit` to `100` selects rows 101-200 from the overall results.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "startTimeInEpoch": {
+                          "description": "The start of the requested time range, in epoch seconds.",
+                          "minimum": 0,
+                          "type": "integer"
+                        },
+                        "timeZone": {
+                          "description": "Identifies the time zone from which the request was made.",
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "startTimeInEpoch",
+                        "endTimeInEpoch",
+                        "aggregation",
+                        "timeZone",
+                        "limit",
+                        "offset",
+                        "hasMoreData"
+                      ],
+                      "type": "object"
+                    },
+                    "rows": {
+                      "description": "Encapsulates the report's two-dimensional table data. If there's no data to report, the array is empty.",
+                      "items": {
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "minItems": 1,
+                        "type": "array",
+                        "uniqueItems": true
+                      },
+                      "minItems": 0,
+                      "type": "array",
+                      "uniqueItems": true
+                    }
+                  },
+                  "required": [
+                    "columns",
+                    "rows",
+                    "metaData"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/data.yaml"
+                  }
+                }
+              }
+            },
+            "description": "OK. If the report yields an empty data set, the response yields an empty set of rows."
+          }
+        },
+        "summary": "Get Progressive Media Delivery data",
+        "tags": [
+          "Progressive Media Delivery"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/data-msod.yaml",
+        "path-info": "/msod/pmd/data"
+      }
+    },
+    "/msod/pmd/dimensions": {
+      "get": {
+        "description": "Retrieves all of the dimensions available for Progressive Media Delivery.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Media Services Live Reports API",
+          "url": "https://techdocs.akamai.com/media-services-rpts/reference/get-msod-pmd-dimensions"
+        },
+        "operationId": "get-msod-pmd-dimensions",
+        "parameters": [
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "description": "Browser",
+                    "id": 22005,
+                    "name": "Browser"
+                  },
+                  {
+                    "description": "Content Provider Code (CPCode) is an identifier assigned to a contract and used for reporting, billing and monitoring traffic served.",
+                    "id": 22002,
+                    "name": "CP Code"
+                  },
+                  {
+                    "description": "Canadian Province",
+                    "id": 22011,
+                    "name": "Canadian Province"
+                  },
+                  {
+                    "description": "Country",
+                    "id": 22009,
+                    "name": "Country"
+                  },
+                  {
+                    "description": "OS",
+                    "id": 22008,
+                    "name": "OS"
+                  },
+                  {
+                    "description": "State",
+                    "id": 22010,
+                    "name": "State"
+                  },
+                  {
+                    "description": "Response status code.",
+                    "id": 22003,
+                    "name": "Status Code"
+                  },
+                  {
+                    "description": "Indicates the time at which content was consumed. This dimension is set automatically.",
+                    "id": 22001,
+                    "name": "Time"
+                  },
+                  {
+                    "description": "url",
+                    "id": 22012,
+                    "name": "URL"
+                  },
+                  {
+                    "description": "htp flag",
+                    "id": 22013,
+                    "name": "number"
+                  }
+                ],
+                "schema": {
+                  "description": "TBD Add description.",
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "description": {
+                        "description": "A description of the dimension.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "Unique identifier for each dimension.",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "The name of the dimension.",
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "description"
+                    ],
+                    "type": "object"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true,
+                  "x-akamai": {
+                    "file-path": "schemas/dimensions.yaml"
+                  }
+                }
+              }
+            },
+            "description": "OK. If the report yields an empty data set, the response yields an empty set of rows."
+          }
+        },
+        "summary": "List Progressive Media Delivery dimensions",
+        "tags": [
+          "Progressive Media Delivery"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/dimensions.yaml",
+        "path-info": "/msod/pmd/dimensions"
+      }
+    },
+    "/msod/pmd/metrics": {
+      "get": {
+        "description": "Retrieves all of the metrics available for Progressive Media Delivery.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Media Services Live Reports API",
+          "url": "https://techdocs.akamai.com/media-services-rpts/reference/get-msod-pmd-metrics"
+        },
+        "operationId": "get-msod-pmd-metrics",
+        "parameters": [
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "description": "0xx",
+                    "id": 22206,
+                    "name": "0xx",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "0xx Hits",
+                    "id": 22221,
+                    "name": "0xx Hits",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "200",
+                    "id": 22208,
+                    "name": "200",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "200 Hits",
+                    "id": 22230,
+                    "name": "200 Hits",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "206",
+                    "id": 22209,
+                    "name": "206",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "206 Hits",
+                    "id": 22223,
+                    "name": "206 Hits",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "2xx",
+                    "id": 22207,
+                    "name": "2xx",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "2xx Hits",
+                    "id": 22222,
+                    "name": "2xx Hits",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "302",
+                    "id": 22211,
+                    "name": "302",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "302 Hits",
+                    "id": 22225,
+                    "name": "302 Hits",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "304",
+                    "id": 22212,
+                    "name": "304",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "304 Hits",
+                    "id": 22226,
+                    "name": "304 Hits",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "3xx",
+                    "id": 22210,
+                    "name": "3xx",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "3xx Hits",
+                    "id": 22224,
+                    "name": "3xx Hits",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "404",
+                    "id": 22214,
+                    "name": "404",
+                    "type": "COUNT"
+                  },
+                  {
+                    "description": "404 Hits",
+                    "id": 22228,
+                    "name": "404 Hits",
+                    "type": "COUNT"
+                  }
+                ],
+                "schema": {
+                  "description": "TBD Add descriptions.",
+                  "items": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "description": {
+                        "description": "A description of the metric.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "id": {
+                        "description": "Unique identifier for each metric.",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "name": {
+                        "description": "The name of the metric.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Type of metric: `TIME`, `NUMBER`, `COUNT`, `BANDWIDTH`, `VOLUME`, `PERCENT`, `PERCENTAGE` or `%`.",
+                        "enum": [
+                          "TIME",
+                          "NUMBER",
+                          "COUNT",
+                          "BANDWIDTH",
+                          "VOLUME",
+                          "PERCENT",
+                          "PERCENTAGE",
+                          "%"
+                        ],
+                        "type": "string"
+                      },
+                      "unit": {
+                        "description": "Unit of metric: `TIME`, `SECONDS`, `MINUTES`, `COUNT`, `HITS`, `BYTES`, `MS`, `MBPS`, `KBPS`, `MB`, `GB`, `NUMBER`, `MBIT/SEC`, `HITS/SEC` or `%`.",
+                        "enum": [
+                          "TIME",
+                          "SECONDS",
+                          "COUNT",
+                          "BYTES",
+                          "MS",
+                          "MBPS",
+                          "KBPS",
+                          "MB",
+                          "GB",
+                          "HITS",
+                          "MINUTES",
+                          "NUMBER",
+                          "MBIT/SEC",
+                          "HITS/SEC",
+                          "%"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "description"
+                    ],
+                    "type": "object"
+                  },
+                  "minItems": 1,
+                  "type": "array",
+                  "uniqueItems": true,
+                  "x-akamai": {
+                    "file-path": "schemas/metrics.yaml"
+                  }
+                }
+              }
+            },
+            "description": "OK. If the report yields an empty data set, the response yields an empty set of rows."
+          }
+        },
+        "summary": "List Progressive Media Delivery metrics",
+        "tags": [
+          "Progressive Media Delivery"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/metrics.yaml",
+        "path-info": "/msod/pmd/metrics"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/media-reports/v1"
+    }
+  ],
+  "tags": [],
+  "x-readme": {
+    "samples-languages": [
+      "curl",
+      "python",
+      "node"
+    ]
+  }
+}

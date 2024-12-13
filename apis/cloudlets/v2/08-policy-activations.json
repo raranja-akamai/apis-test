@@ -1,0 +1,1317 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Policy activations",
+    "version": "v2",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/cloudlets/api/v2"
+    }
+  ],
+  "paths": {
+    "/policies/{policyId}/activations": {
+      "x-akamai": {
+        "file-path": "paths/policy-activations.yaml",
+        "path-info": "/policies/{policyId}/activations"
+      },
+      "parameters": [
+        {
+          "name": "policyId",
+          "in": "path",
+          "description": "The ID of the policy.",
+          "x-akamai": {
+            "file-path": "parameters/policy-id-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 1001
+          }
+        }
+      ],
+      "get": {
+        "operationId": "get-policy-activations",
+        "summary": "List policy activations",
+        "tags": [
+          "Policy activations"
+        ],
+        "description": "Returns the activation history for the policy. The policy activation history provides results for each property where the policy applies dating back up to one year. If no activations occurred within the year, only the latest activation data is returned.\n",
+        "parameters": [
+          {
+            "name": "network",
+            "in": "query",
+            "description": "The selected network, either `staging` or `prod`.",
+            "x-akamai": {
+              "file-path": "parameters/network-query.yaml"
+            },
+            "schema": {
+              "type": "string",
+              "example": "staging",
+              "enum": [
+                "staging",
+                "prod"
+              ]
+            }
+          },
+          {
+            "name": "propertyName",
+            "in": "query",
+            "description": "Returns only activations for the selected property.",
+            "x-akamai": {
+              "file-path": "parameters/property-name-query.yaml"
+            },
+            "schema": {
+              "type": "string",
+              "example": "www.example.org"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "When requesting pages of data, `offset` is the record after which to start. Use `offset` with `pageSize`. For example: offset=25&pageSize=15 starts at record 26 and displays up to 15 records for each property the policy applies to.",
+            "x-akamai": {
+              "file-path": "parameters/offset-query.yaml"
+            },
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 25,
+              "default": 0,
+              "minimum": 0
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "description": "The number of records to return. Use with `offset` to manage the number of records returned.",
+            "x-akamai": {
+              "file-path": "parameters/page-size-query.yaml"
+            },
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "example": 15,
+              "default": 100,
+              "minimum": 5,
+              "maximum": 1000
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the policy's activation history.\n",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "serviceVersion": null,
+                    "apiVersion": "2.0",
+                    "network": "staging",
+                    "policyInfo": {
+                      "policyId": 2962,
+                      "name": "RequestControlPolicy",
+                      "version": 1,
+                      "status": "ACTIVE",
+                      "statusDetail": "File successfully deployed to Akamai's network",
+                      "detailCode": 4000,
+                      "activatedBy": "jdupont",
+                      "activationDate": 1427428800000
+                    },
+                    "propertyInfo": {
+                      "name": "www.rc-cloudlet.com",
+                      "version": 0,
+                      "groupId": 54321,
+                      "status": "INACTIVE",
+                      "activatedBy": null,
+                      "activationDate": 0
+                    }
+                  }
+                ],
+                "schema": {
+                  "type": "array",
+                  "description": "Returns policy and property activation details.",
+                  "x-akamai": {
+                    "file-path": "schemas/get-policy-activations-response.yaml"
+                  },
+                  "items": {
+                    "type": "object",
+                    "description": "Returns details of a policy activation.",
+                    "x-akamai": {
+                      "file-path": "schemas/policy-activation.yaml"
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "network",
+                      "policyInfo",
+                      "propertyInfo"
+                    ],
+                    "properties": {
+                      "apiVersion": {
+                        "type": "string",
+                        "description": "The specific version of this API.\n"
+                      },
+                      "network": {
+                        "type": "string",
+                        "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
+                        "enum": [
+                          "prod",
+                          "staging"
+                        ]
+                      },
+                      "policyInfo": {
+                        "type": "object",
+                        "description": "Returns details of a policy associated with policy activation.",
+                        "x-akamai": {
+                          "file-path": "schemas/policy-activation-policy-info.yaml"
+                        },
+                        "additionalProperties": false,
+                        "required": [
+                          "policyId",
+                          "name",
+                          "version",
+                          "status",
+                          "statusDetail",
+                          "activatedBy",
+                          "activationDate"
+                        ],
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "Name of the policy.\n"
+                          },
+                          "version": {
+                            "type": "integer",
+                            "description": "Version of the policy.\n"
+                          },
+                          "activatedBy": {
+                            "type": "string",
+                            "description": "User name who issued the activation.\n",
+                            "nullable": true
+                          },
+                          "activationDate": {
+                            "type": "integer",
+                            "description": "Date of the activation in milliseconds.\n"
+                          },
+                          "policyId": {
+                            "type": "integer",
+                            "description": "ID of the policy.\n"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Value representing activation status.",
+                            "x-akamai": {
+                              "file-path": "schemas/activation-status-enum.yaml"
+                            },
+                            "enum": [
+                              "INACTIVE",
+                              "PENDING",
+                              "ACTIVE",
+                              "FAILED",
+                              "DEACTIVATED"
+                            ]
+                          },
+                          "statusDetail": {
+                            "type": "string",
+                            "description": "Details of the activation status.\n"
+                          }
+                        }
+                      },
+                      "propertyInfo": {
+                        "type": "object",
+                        "description": "Returns details of a property associated with policy activation.",
+                        "x-akamai": {
+                          "file-path": "schemas/policy-activation-property-info.yaml"
+                        },
+                        "additionalProperties": false,
+                        "required": [
+                          "name",
+                          "version",
+                          "groupId",
+                          "status",
+                          "activatedBy",
+                          "activationDate",
+                          "id"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "ID of the property.\n"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Name of the property.\n"
+                          },
+                          "version": {
+                            "type": "integer",
+                            "description": "Version of the property.\n"
+                          },
+                          "activatedBy": {
+                            "type": "string",
+                            "description": "User name who issued the activation.\n",
+                            "nullable": true
+                          },
+                          "activationDate": {
+                            "type": "integer",
+                            "description": "Date of the activation in milliseconds.\n"
+                          },
+                          "groupId": {
+                            "type": "integer",
+                            "description": "Identifies the group where the property is placed.\n"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Value representing activation status.",
+                            "x-akamai": {
+                              "file-path": "schemas/activation-status-enum.yaml"
+                            },
+                            "enum": [
+                              "INACTIVE",
+                              "PENDING",
+                              "ACTIVE",
+                              "FAILED",
+                              "DEACTIVATED"
+                            ]
+                          }
+                        }
+                      },
+                      "serviceVersion": {
+                        "type": "string",
+                        "description": "__Deprecated__ __Deprecated__ The build of the software running on the server. The value can be `null`.\n",
+                        "x-akamai": {
+                          "status": "DEPRECATED"
+                        },
+                        "nullable": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/policies/{policyId}/versions/{version}/activations": {
+      "x-akamai": {
+        "file-path": "paths/policy-version-activations.yaml",
+        "path-info": "/policies/{policyId}/versions/{version}/activations"
+      },
+      "parameters": [
+        {
+          "name": "version",
+          "in": "path",
+          "description": "The version number of the policy.",
+          "x-akamai": {
+            "file-path": "parameters/version-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "number",
+            "example": 2
+          }
+        },
+        {
+          "name": "policyId",
+          "in": "path",
+          "description": "The ID of the policy.",
+          "x-akamai": {
+            "file-path": "parameters/policy-id-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 1001
+          }
+        }
+      ],
+      "post": {
+        "operationId": "post-policy-version-activations",
+        "summary": "Activate a policy version",
+        "tags": [
+          "Policy activations"
+        ],
+        "description": "Activate the selected cloudlet policy version.  After activation completes, the Cloudlets policy is ready for use.\n",
+        "parameters": [
+          {
+            "name": "async",
+            "in": "query",
+            "description": "Set `async` to `true` for policy activations on multiple properties to reduce API response time and let the policy activation continue asynchronously in the background. Default is `false`.",
+            "x-akamai": {
+              "file-path": "parameters/async-query.yaml"
+            },
+            "schema": {
+              "type": "boolean",
+              "example": true,
+              "default": false
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "network": "staging",
+                "additionalPropertyNames": [
+                  "Ion-Premier-Demo-Property"
+                ]
+              },
+              "schema": {
+                "type": "object",
+                "description": "TBD.\n",
+                "x-akamai": {
+                  "file-path": "schemas/post-policy-version-activations-request.yaml"
+                },
+                "additionalProperties": false,
+                "properties": {
+                  "additionalPropertyNames": {
+                    "type": "array",
+                    "description": "An array of one or more additional properties that you want to activate with the Cloudlet policy. Once activated, the property and policy are permanently linked.\n",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "network": {
+                    "type": "string",
+                    "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
+                    "enum": [
+                      "prod",
+                      "staging"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Returns the activation history for the policy.\n",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "serviceVersion": null,
+                    "apiVersion": "2.0",
+                    "network": "staging",
+                    "policyInfo": {
+                      "policyId": 2962,
+                      "name": "RequestControlPolicy",
+                      "version": 1,
+                      "status": "ACTIVE",
+                      "statusDetail": "File successfully deployed to Akamai's network",
+                      "detailCode": 4000,
+                      "activatedBy": "jkowalski",
+                      "activationDate": 1427428800000
+                    },
+                    "propertyInfo": {
+                      "name": "www.rc-cloudlet.com",
+                      "version": 0,
+                      "groupId": 12345,
+                      "status": "INACTIVE",
+                      "activatedBy": null,
+                      "activationDate": 0
+                    }
+                  }
+                ],
+                "schema": {
+                  "type": "array",
+                  "description": "Returns policy and property activation details.",
+                  "x-akamai": {
+                    "file-path": "schemas/post-policy-version-activations-response.yaml"
+                  },
+                  "items": {
+                    "type": "object",
+                    "description": "Returns details of a policy activation.",
+                    "x-akamai": {
+                      "file-path": "schemas/policy-activation.yaml"
+                    },
+                    "additionalProperties": false,
+                    "required": [
+                      "network",
+                      "policyInfo",
+                      "propertyInfo"
+                    ],
+                    "properties": {
+                      "apiVersion": {
+                        "type": "string",
+                        "description": "The specific version of this API.\n"
+                      },
+                      "network": {
+                        "type": "string",
+                        "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
+                        "enum": [
+                          "prod",
+                          "staging"
+                        ]
+                      },
+                      "policyInfo": {
+                        "type": "object",
+                        "description": "Returns details of a policy associated with policy activation.",
+                        "x-akamai": {
+                          "file-path": "schemas/policy-activation-policy-info.yaml"
+                        },
+                        "additionalProperties": false,
+                        "required": [
+                          "policyId",
+                          "name",
+                          "version",
+                          "status",
+                          "statusDetail",
+                          "activatedBy",
+                          "activationDate"
+                        ],
+                        "properties": {
+                          "name": {
+                            "type": "string",
+                            "description": "Name of the policy.\n"
+                          },
+                          "version": {
+                            "type": "integer",
+                            "description": "Version of the policy.\n"
+                          },
+                          "activatedBy": {
+                            "type": "string",
+                            "description": "User name who issued the activation.\n",
+                            "nullable": true
+                          },
+                          "activationDate": {
+                            "type": "integer",
+                            "description": "Date of the activation in milliseconds.\n"
+                          },
+                          "policyId": {
+                            "type": "integer",
+                            "description": "ID of the policy.\n"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Value representing activation status.",
+                            "x-akamai": {
+                              "file-path": "schemas/activation-status-enum.yaml"
+                            },
+                            "enum": [
+                              "INACTIVE",
+                              "PENDING",
+                              "ACTIVE",
+                              "FAILED",
+                              "DEACTIVATED"
+                            ]
+                          },
+                          "statusDetail": {
+                            "type": "string",
+                            "description": "Details of the activation status.\n"
+                          }
+                        }
+                      },
+                      "propertyInfo": {
+                        "type": "object",
+                        "description": "Returns details of a property associated with policy activation.",
+                        "x-akamai": {
+                          "file-path": "schemas/policy-activation-property-info.yaml"
+                        },
+                        "additionalProperties": false,
+                        "required": [
+                          "name",
+                          "version",
+                          "groupId",
+                          "status",
+                          "activatedBy",
+                          "activationDate",
+                          "id"
+                        ],
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "ID of the property.\n"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Name of the property.\n"
+                          },
+                          "version": {
+                            "type": "integer",
+                            "description": "Version of the property.\n"
+                          },
+                          "activatedBy": {
+                            "type": "string",
+                            "description": "User name who issued the activation.\n",
+                            "nullable": true
+                          },
+                          "activationDate": {
+                            "type": "integer",
+                            "description": "Date of the activation in milliseconds.\n"
+                          },
+                          "groupId": {
+                            "type": "integer",
+                            "description": "Identifies the group where the property is placed.\n"
+                          },
+                          "status": {
+                            "type": "string",
+                            "description": "Value representing activation status.",
+                            "x-akamai": {
+                              "file-path": "schemas/activation-status-enum.yaml"
+                            },
+                            "enum": [
+                              "INACTIVE",
+                              "PENDING",
+                              "ACTIVE",
+                              "FAILED",
+                              "DEACTIVATED"
+                            ]
+                          }
+                        }
+                      },
+                      "serviceVersion": {
+                        "type": "string",
+                        "description": "__Deprecated__ __Deprecated__ The build of the software running on the server. The value can be `null`.\n",
+                        "x-akamai": {
+                          "status": "DEPRECATED"
+                        },
+                        "nullable": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "policy-id-path": {
+        "name": "policyId",
+        "in": "path",
+        "description": "The ID of the policy.",
+        "x-akamai": {
+          "file-path": "parameters/policy-id-path.yaml"
+        },
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "example": 1001
+        }
+      },
+      "network-query": {
+        "name": "network",
+        "in": "query",
+        "description": "The selected network, either `staging` or `prod`.",
+        "x-akamai": {
+          "file-path": "parameters/network-query.yaml"
+        },
+        "schema": {
+          "type": "string",
+          "example": "staging",
+          "enum": [
+            "staging",
+            "prod"
+          ]
+        }
+      },
+      "property-name-query": {
+        "name": "propertyName",
+        "in": "query",
+        "description": "Returns only activations for the selected property.",
+        "x-akamai": {
+          "file-path": "parameters/property-name-query.yaml"
+        },
+        "schema": {
+          "type": "string",
+          "example": "www.example.org"
+        }
+      },
+      "offset-query": {
+        "name": "offset",
+        "in": "query",
+        "description": "When requesting pages of data, `offset` is the record after which to start. Use `offset` with `pageSize`. For example: offset=25&pageSize=15 starts at record 26 and displays up to 15 records for each property the policy applies to.",
+        "x-akamai": {
+          "file-path": "parameters/offset-query.yaml"
+        },
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "example": 25,
+          "default": 0,
+          "minimum": 0
+        }
+      },
+      "page-size-query": {
+        "name": "pageSize",
+        "in": "query",
+        "description": "The number of records to return. Use with `offset` to manage the number of records returned.",
+        "x-akamai": {
+          "file-path": "parameters/page-size-query.yaml"
+        },
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "example": 15,
+          "default": 100,
+          "minimum": 5,
+          "maximum": 1000
+        }
+      },
+      "version-path": {
+        "name": "version",
+        "in": "path",
+        "description": "The version number of the policy.",
+        "x-akamai": {
+          "file-path": "parameters/version-path.yaml"
+        },
+        "required": true,
+        "schema": {
+          "type": "number",
+          "example": 2
+        }
+      },
+      "async-query": {
+        "name": "async",
+        "in": "query",
+        "description": "Set `async` to `true` for policy activations on multiple properties to reduce API response time and let the policy activation continue asynchronously in the background. Default is `false`.",
+        "x-akamai": {
+          "file-path": "parameters/async-query.yaml"
+        },
+        "schema": {
+          "type": "boolean",
+          "example": true,
+          "default": false
+        }
+      }
+    },
+    "schemas": {
+      "activation-status-enum": {
+        "type": "string",
+        "description": "Value representing activation status.",
+        "x-akamai": {
+          "file-path": "schemas/activation-status-enum.yaml"
+        },
+        "enum": [
+          "INACTIVE",
+          "PENDING",
+          "ACTIVE",
+          "FAILED",
+          "DEACTIVATED"
+        ]
+      },
+      "policy-activation-policy-info": {
+        "type": "object",
+        "description": "Returns details of a policy associated with policy activation.",
+        "x-akamai": {
+          "file-path": "schemas/policy-activation-policy-info.yaml"
+        },
+        "additionalProperties": false,
+        "required": [
+          "policyId",
+          "name",
+          "version",
+          "status",
+          "statusDetail",
+          "activatedBy",
+          "activationDate"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the policy.\n"
+          },
+          "version": {
+            "type": "integer",
+            "description": "Version of the policy.\n"
+          },
+          "activatedBy": {
+            "type": "string",
+            "description": "User name who issued the activation.\n",
+            "nullable": true
+          },
+          "activationDate": {
+            "type": "integer",
+            "description": "Date of the activation in milliseconds.\n"
+          },
+          "policyId": {
+            "type": "integer",
+            "description": "ID of the policy.\n"
+          },
+          "status": {
+            "type": "string",
+            "description": "Value representing activation status.",
+            "x-akamai": {
+              "file-path": "schemas/activation-status-enum.yaml"
+            },
+            "enum": [
+              "INACTIVE",
+              "PENDING",
+              "ACTIVE",
+              "FAILED",
+              "DEACTIVATED"
+            ]
+          },
+          "statusDetail": {
+            "type": "string",
+            "description": "Details of the activation status.\n"
+          }
+        }
+      },
+      "policy-activation-property-info": {
+        "type": "object",
+        "description": "Returns details of a property associated with policy activation.",
+        "x-akamai": {
+          "file-path": "schemas/policy-activation-property-info.yaml"
+        },
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "version",
+          "groupId",
+          "status",
+          "activatedBy",
+          "activationDate",
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "ID of the property.\n"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the property.\n"
+          },
+          "version": {
+            "type": "integer",
+            "description": "Version of the property.\n"
+          },
+          "activatedBy": {
+            "type": "string",
+            "description": "User name who issued the activation.\n",
+            "nullable": true
+          },
+          "activationDate": {
+            "type": "integer",
+            "description": "Date of the activation in milliseconds.\n"
+          },
+          "groupId": {
+            "type": "integer",
+            "description": "Identifies the group where the property is placed.\n"
+          },
+          "status": {
+            "type": "string",
+            "description": "Value representing activation status.",
+            "x-akamai": {
+              "file-path": "schemas/activation-status-enum.yaml"
+            },
+            "enum": [
+              "INACTIVE",
+              "PENDING",
+              "ACTIVE",
+              "FAILED",
+              "DEACTIVATED"
+            ]
+          }
+        }
+      },
+      "policy-activation": {
+        "type": "object",
+        "description": "Returns details of a policy activation.",
+        "x-akamai": {
+          "file-path": "schemas/policy-activation.yaml"
+        },
+        "additionalProperties": false,
+        "required": [
+          "network",
+          "policyInfo",
+          "propertyInfo"
+        ],
+        "properties": {
+          "apiVersion": {
+            "type": "string",
+            "description": "The specific version of this API.\n"
+          },
+          "network": {
+            "type": "string",
+            "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
+            "enum": [
+              "prod",
+              "staging"
+            ]
+          },
+          "policyInfo": {
+            "type": "object",
+            "description": "Returns details of a policy associated with policy activation.",
+            "x-akamai": {
+              "file-path": "schemas/policy-activation-policy-info.yaml"
+            },
+            "additionalProperties": false,
+            "required": [
+              "policyId",
+              "name",
+              "version",
+              "status",
+              "statusDetail",
+              "activatedBy",
+              "activationDate"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Name of the policy.\n"
+              },
+              "version": {
+                "type": "integer",
+                "description": "Version of the policy.\n"
+              },
+              "activatedBy": {
+                "type": "string",
+                "description": "User name who issued the activation.\n",
+                "nullable": true
+              },
+              "activationDate": {
+                "type": "integer",
+                "description": "Date of the activation in milliseconds.\n"
+              },
+              "policyId": {
+                "type": "integer",
+                "description": "ID of the policy.\n"
+              },
+              "status": {
+                "type": "string",
+                "description": "Value representing activation status.",
+                "x-akamai": {
+                  "file-path": "schemas/activation-status-enum.yaml"
+                },
+                "enum": [
+                  "INACTIVE",
+                  "PENDING",
+                  "ACTIVE",
+                  "FAILED",
+                  "DEACTIVATED"
+                ]
+              },
+              "statusDetail": {
+                "type": "string",
+                "description": "Details of the activation status.\n"
+              }
+            }
+          },
+          "propertyInfo": {
+            "type": "object",
+            "description": "Returns details of a property associated with policy activation.",
+            "x-akamai": {
+              "file-path": "schemas/policy-activation-property-info.yaml"
+            },
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "version",
+              "groupId",
+              "status",
+              "activatedBy",
+              "activationDate",
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "integer",
+                "description": "ID of the property.\n"
+              },
+              "name": {
+                "type": "string",
+                "description": "Name of the property.\n"
+              },
+              "version": {
+                "type": "integer",
+                "description": "Version of the property.\n"
+              },
+              "activatedBy": {
+                "type": "string",
+                "description": "User name who issued the activation.\n",
+                "nullable": true
+              },
+              "activationDate": {
+                "type": "integer",
+                "description": "Date of the activation in milliseconds.\n"
+              },
+              "groupId": {
+                "type": "integer",
+                "description": "Identifies the group where the property is placed.\n"
+              },
+              "status": {
+                "type": "string",
+                "description": "Value representing activation status.",
+                "x-akamai": {
+                  "file-path": "schemas/activation-status-enum.yaml"
+                },
+                "enum": [
+                  "INACTIVE",
+                  "PENDING",
+                  "ACTIVE",
+                  "FAILED",
+                  "DEACTIVATED"
+                ]
+              }
+            }
+          },
+          "serviceVersion": {
+            "type": "string",
+            "description": "__Deprecated__ __Deprecated__ The build of the software running on the server. The value can be `null`.\n",
+            "x-akamai": {
+              "status": "DEPRECATED"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "get-policy-activations-response": {
+        "type": "array",
+        "description": "Returns policy and property activation details.",
+        "x-akamai": {
+          "file-path": "schemas/get-policy-activations-response.yaml"
+        },
+        "items": {
+          "type": "object",
+          "description": "Returns details of a policy activation.",
+          "x-akamai": {
+            "file-path": "schemas/policy-activation.yaml"
+          },
+          "additionalProperties": false,
+          "required": [
+            "network",
+            "policyInfo",
+            "propertyInfo"
+          ],
+          "properties": {
+            "apiVersion": {
+              "type": "string",
+              "description": "The specific version of this API.\n"
+            },
+            "network": {
+              "type": "string",
+              "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
+              "enum": [
+                "prod",
+                "staging"
+              ]
+            },
+            "policyInfo": {
+              "type": "object",
+              "description": "Returns details of a policy associated with policy activation.",
+              "x-akamai": {
+                "file-path": "schemas/policy-activation-policy-info.yaml"
+              },
+              "additionalProperties": false,
+              "required": [
+                "policyId",
+                "name",
+                "version",
+                "status",
+                "statusDetail",
+                "activatedBy",
+                "activationDate"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the policy.\n"
+                },
+                "version": {
+                  "type": "integer",
+                  "description": "Version of the policy.\n"
+                },
+                "activatedBy": {
+                  "type": "string",
+                  "description": "User name who issued the activation.\n",
+                  "nullable": true
+                },
+                "activationDate": {
+                  "type": "integer",
+                  "description": "Date of the activation in milliseconds.\n"
+                },
+                "policyId": {
+                  "type": "integer",
+                  "description": "ID of the policy.\n"
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Value representing activation status.",
+                  "x-akamai": {
+                    "file-path": "schemas/activation-status-enum.yaml"
+                  },
+                  "enum": [
+                    "INACTIVE",
+                    "PENDING",
+                    "ACTIVE",
+                    "FAILED",
+                    "DEACTIVATED"
+                  ]
+                },
+                "statusDetail": {
+                  "type": "string",
+                  "description": "Details of the activation status.\n"
+                }
+              }
+            },
+            "propertyInfo": {
+              "type": "object",
+              "description": "Returns details of a property associated with policy activation.",
+              "x-akamai": {
+                "file-path": "schemas/policy-activation-property-info.yaml"
+              },
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "version",
+                "groupId",
+                "status",
+                "activatedBy",
+                "activationDate",
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "ID of the property.\n"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Name of the property.\n"
+                },
+                "version": {
+                  "type": "integer",
+                  "description": "Version of the property.\n"
+                },
+                "activatedBy": {
+                  "type": "string",
+                  "description": "User name who issued the activation.\n",
+                  "nullable": true
+                },
+                "activationDate": {
+                  "type": "integer",
+                  "description": "Date of the activation in milliseconds.\n"
+                },
+                "groupId": {
+                  "type": "integer",
+                  "description": "Identifies the group where the property is placed.\n"
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Value representing activation status.",
+                  "x-akamai": {
+                    "file-path": "schemas/activation-status-enum.yaml"
+                  },
+                  "enum": [
+                    "INACTIVE",
+                    "PENDING",
+                    "ACTIVE",
+                    "FAILED",
+                    "DEACTIVATED"
+                  ]
+                }
+              }
+            },
+            "serviceVersion": {
+              "type": "string",
+              "description": "__Deprecated__ __Deprecated__ The build of the software running on the server. The value can be `null`.\n",
+              "x-akamai": {
+                "status": "DEPRECATED"
+              },
+              "nullable": true
+            }
+          }
+        }
+      },
+      "post-policy-version-activations-request": {
+        "type": "object",
+        "description": "TBD.\n",
+        "x-akamai": {
+          "file-path": "schemas/post-policy-version-activations-request.yaml"
+        },
+        "additionalProperties": false,
+        "properties": {
+          "additionalPropertyNames": {
+            "type": "array",
+            "description": "An array of one or more additional properties that you want to activate with the Cloudlet policy. Once activated, the property and policy are permanently linked.\n",
+            "items": {
+              "type": "string"
+            }
+          },
+          "network": {
+            "type": "string",
+            "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
+            "enum": [
+              "prod",
+              "staging"
+            ]
+          }
+        }
+      },
+      "post-policy-version-activations-response": {
+        "type": "array",
+        "description": "Returns policy and property activation details.",
+        "x-akamai": {
+          "file-path": "schemas/post-policy-version-activations-response.yaml"
+        },
+        "items": {
+          "type": "object",
+          "description": "Returns details of a policy activation.",
+          "x-akamai": {
+            "file-path": "schemas/policy-activation.yaml"
+          },
+          "additionalProperties": false,
+          "required": [
+            "network",
+            "policyInfo",
+            "propertyInfo"
+          ],
+          "properties": {
+            "apiVersion": {
+              "type": "string",
+              "description": "The specific version of this API.\n"
+            },
+            "network": {
+              "type": "string",
+              "description": "The network, either `STAGING`, `PRODUCTION`, or `prod` as shorthand, on which a load balancing configuration for Application Load Balancer has been activated. Values are case-insensitive in requests.\n",
+              "enum": [
+                "prod",
+                "staging"
+              ]
+            },
+            "policyInfo": {
+              "type": "object",
+              "description": "Returns details of a policy associated with policy activation.",
+              "x-akamai": {
+                "file-path": "schemas/policy-activation-policy-info.yaml"
+              },
+              "additionalProperties": false,
+              "required": [
+                "policyId",
+                "name",
+                "version",
+                "status",
+                "statusDetail",
+                "activatedBy",
+                "activationDate"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Name of the policy.\n"
+                },
+                "version": {
+                  "type": "integer",
+                  "description": "Version of the policy.\n"
+                },
+                "activatedBy": {
+                  "type": "string",
+                  "description": "User name who issued the activation.\n",
+                  "nullable": true
+                },
+                "activationDate": {
+                  "type": "integer",
+                  "description": "Date of the activation in milliseconds.\n"
+                },
+                "policyId": {
+                  "type": "integer",
+                  "description": "ID of the policy.\n"
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Value representing activation status.",
+                  "x-akamai": {
+                    "file-path": "schemas/activation-status-enum.yaml"
+                  },
+                  "enum": [
+                    "INACTIVE",
+                    "PENDING",
+                    "ACTIVE",
+                    "FAILED",
+                    "DEACTIVATED"
+                  ]
+                },
+                "statusDetail": {
+                  "type": "string",
+                  "description": "Details of the activation status.\n"
+                }
+              }
+            },
+            "propertyInfo": {
+              "type": "object",
+              "description": "Returns details of a property associated with policy activation.",
+              "x-akamai": {
+                "file-path": "schemas/policy-activation-property-info.yaml"
+              },
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "version",
+                "groupId",
+                "status",
+                "activatedBy",
+                "activationDate",
+                "id"
+              ],
+              "properties": {
+                "id": {
+                  "type": "integer",
+                  "description": "ID of the property.\n"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Name of the property.\n"
+                },
+                "version": {
+                  "type": "integer",
+                  "description": "Version of the property.\n"
+                },
+                "activatedBy": {
+                  "type": "string",
+                  "description": "User name who issued the activation.\n",
+                  "nullable": true
+                },
+                "activationDate": {
+                  "type": "integer",
+                  "description": "Date of the activation in milliseconds.\n"
+                },
+                "groupId": {
+                  "type": "integer",
+                  "description": "Identifies the group where the property is placed.\n"
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Value representing activation status.",
+                  "x-akamai": {
+                    "file-path": "schemas/activation-status-enum.yaml"
+                  },
+                  "enum": [
+                    "INACTIVE",
+                    "PENDING",
+                    "ACTIVE",
+                    "FAILED",
+                    "DEACTIVATED"
+                  ]
+                }
+              }
+            },
+            "serviceVersion": {
+              "type": "string",
+              "description": "__Deprecated__ __Deprecated__ The build of the software running on the server. The value can be `null`.\n",
+              "x-akamai": {
+                "status": "DEPRECATED"
+              },
+              "nullable": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "08-policy-activations.yaml"
+  }
+}

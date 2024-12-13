@@ -1,0 +1,47 @@
+type: object
+description: |-
+  High-level event details including timestamped records with associated event metrics.
+  
+x-akamai:
+  file-path: schemas/common-time-series-response.yaml
+additionalProperties: false
+properties:
+  columns:
+    type: array
+    description: |
+      Configures the time series data columns.
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required:
+      - name
+      - id
+      properties:
+        id:
+          type: string
+          description: |
+            Identifier of column data.
+          minLength: 1
+        name:
+          type: string
+          description: |
+            Name of column data.
+          minLength: 1
+  rows:
+    type: array
+    description: |
+      An array of arrays containing a timestamp followed by event counts.
+    items:
+      type: array
+      items:
+        oneOf:
+        - description: |
+            ISO 8601 timestamp within the requested time frame.
+          type: string
+          title: timestamp string
+          format: date-time
+        - description: |
+            A count of events matching the timestamp.
+          type: integer
+          title: event count

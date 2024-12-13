@@ -1,0 +1,83 @@
+type: array
+description: |-
+  Feedback details for a reported threat.
+  
+x-akamai:
+  file-path: schemas/feedback-response.yaml
+items:
+  type: object
+  additionalProperties: false
+  required:
+  - dimensionValue
+  - customerEmailId
+  - feedbackDesc
+  properties:
+    accountName:
+      type: string
+      description: |
+        Name of the account with feedback.
+    ackMailSentTime:
+      type: string
+      description: |
+        __Read-only__ ISO 8601 timestamp marking receipt of email acknowledgment.
+      readOnly: true
+      format: date-time
+    avcInfo:
+      $ref: ioc-avc-info.yaml
+    currentCategory:
+      type: string
+      description: |
+        The threat security category. Either `Malware`, `Phishing`, `C&C`, `DNS Exfiltration`, `Risky domains`, or `File sharing`.
+      enum:
+      - Malware
+      - Phishing
+      - C&C
+      - Risky domains
+      - File sharing
+      minLength: 1
+    customerEmailId:
+      type: string
+      description: |
+        __Read-only__ The email address of the contract's customer.
+      readOnly: true
+    dimension:
+      type: string
+      description: |
+        The dimension to assign to the threat.
+      minLength: 1
+    dimensionValue:
+      type: string
+      description: |
+        The dimension value.
+      minLength: 1
+    feedbackDesc:
+      type: string
+      description: |
+        A description of the feedback.
+      minLength: 1
+    feedbackType:
+      type: string
+      description: |
+        The type of feedback threat.
+      minLength: 1
+    portalUrl:
+      type: string
+      description: |
+        The feedback URL.
+    reportedTime:
+      type: string
+      description: |
+        __Read-only__ ISO 8601 timestamp marking the feedback report.
+      readOnly: true
+      format: date-time
+    submittedBy:
+      type: string
+      description: |
+        The name of the user who submitted the feedback.
+      minLength: 1
+    threatOpsNotifiedTime:
+      type: string
+      description: |
+        __Read-only__ ISO 8601 timestamp marking when Akamai Ops received notification about the threat.
+      readOnly: true
+      format: date-time

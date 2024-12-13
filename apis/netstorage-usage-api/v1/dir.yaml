@@ -1,0 +1,32 @@
+openapi: 3.0.0
+info:
+  title: dir
+  version: v1
+servers:
+- url: http://{apiKey}-nsu.akamaihd.net
+paths:
+  /{cpCode}/{path}:
+    parameters:
+    - $ref: parameters/X-Akamai-ACS-Action-dir.yaml
+    - $ref: parameters/X-Akamai-ACS-Auth-Data.yaml
+    - $ref: parameters/X-Akamai-ACS-Auth-Sign.yaml
+    - $ref: parameters/Host.yaml
+    - $ref: parameters/cpCode.yaml
+    - $ref: parameters/path.yaml
+    get:
+      operationId: get-dir
+      summary: dir action
+      tags:
+      - API actions
+      description: |
+        Use the `dir` action to list the objects directly within the specified directory (similar to a standard `ls` or `dir` command).
+      responses:
+        200:
+          description: |
+            Response data indicates a successful action.
+          content:
+            application/xml:
+              schema:
+                $ref: schemas/dir-schema.yaml
+        400:
+          $ref: errors/400.yaml
