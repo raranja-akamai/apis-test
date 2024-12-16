@@ -1,0 +1,101 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Permissions",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/eccu-api/v1"
+    }
+  ],
+  "paths": {
+    "/permissions": {
+      "get": {
+        "description": "Returns the ECCU permissions. If the response's `submitEccuRequest` member is enabled, you can run the [Create an ECCU request](ref:post-request) operation to invalidate content.\n",
+        "operationId": "get-permissions",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "submitEccuRequest": true,
+                  "viewEccuRequest": true
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Verifies your ECCU permissions. If you have `viewEccuFile` and `submitEccuFile` permissions, all API functionality is available to you.\n",
+                  "properties": {
+                    "submitEccuRequest": {
+                      "default": false,
+                      "description": "Verifies your permission to submit a refresh request.\n",
+                      "type": "boolean"
+                    },
+                    "viewEccuRequest": {
+                      "default": false,
+                      "description": "Verifies your permission to view a refresh request.\n",
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "submitEccuRequest",
+                    "viewEccuRequest"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/permissions.yaml"
+                  }
+                }
+              }
+            },
+            "description": "List permissions.\n"
+          }
+        },
+        "summary": "List permissions",
+        "tags": [
+          "Permissions"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/permissions.yaml",
+        "path-info": "/permissions"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "permissions": {
+        "additionalProperties": false,
+        "description": "Verifies your ECCU permissions. If you have `viewEccuFile` and `submitEccuFile` permissions, all API functionality is available to you.\n",
+        "properties": {
+          "submitEccuRequest": {
+            "default": false,
+            "description": "Verifies your permission to submit a refresh request.\n",
+            "type": "boolean"
+          },
+          "viewEccuRequest": {
+            "default": false,
+            "description": "Verifies your permission to view a refresh request.\n",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "submitEccuRequest",
+          "viewEccuRequest"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/permissions.yaml"
+        }
+      }
+    }
+  },
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "01-permissions.yaml"
+  }
+}

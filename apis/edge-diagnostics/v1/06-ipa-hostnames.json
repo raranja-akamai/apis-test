@@ -1,0 +1,1025 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "IPA hostnames",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/edge-diagnostics/v1"
+    }
+  ],
+  "tags": [
+    {
+      "description": "List IPA hostnames available for collecting diagnostic data.",
+      "name": "IPA hostnames"
+    }
+  ],
+  "paths": {
+    "/ipa/hostnames": {
+      "get": {
+        "description": "Lists IP acceleration (IPA) hostnames you have  access to and can [generate a diagnostic link](ref:post-user-diagnostic-data-groups) to collect  diagnostic data.\n",
+        "operationId": "get-ipa-hostnames",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "hostnames": [
+                    "example.com"
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Lists available IPA hostnames.\n",
+                  "properties": {
+                    "hostnames": {
+                      "description": "Lists available IPA hostnames.\n",
+                      "items": {
+                        "format": "hostname",
+                        "type": "string"
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "hostnames"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/ipa-hostnames.yaml"
+                  }
+                }
+              }
+            },
+            "description": "The response lists available IPA hostnames.\n",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "description": "The rate limit ceiling for this endpoint.\n",
+                "example": 10,
+                "schema": {
+                  "type": "integer"
+                },
+                "x-akamai": {
+                  "file-path": "headers/x-rate-limit-limit.yaml"
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "The number of requests left for the time window.\n",
+                "example": 5,
+                "schema": {
+                  "type": "integer"
+                },
+                "x-akamai": {
+                  "file-path": "headers/x-rate-limit-remaining.yaml"
+                }
+              }
+            }
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.luna.akamaiapis.net/-/pep-authn/deny",
+                  "title": "Not authorized",
+                  "status": 401,
+                  "detail": "Inactive client token",
+                  "instance": "https://akab-nedrvuylepskzabx-lv3dgceqqktx3i5b.luna.akamaiapis.net/edge-diagnostics/v1/grep/requests"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies the errors.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "Detail about the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies the error that occurred.\n",
+                        "properties": {
+                          "requestField": {
+                            "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                            "type": "string"
+                          },
+                          "requestValues": {
+                            "description": "Lists values corresponding to the `requestField`.\n",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "title": "String",
+                                  "type": "string"
+                                },
+                                {
+                                  "title": "Integer",
+                                  "type": "integer"
+                                },
+                                {
+                                  "title": "Object",
+                                  "type": "object"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          },
+                          "title": {
+                            "description": "Title of the error.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of error.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "title"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/sub-problem.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "requestField": {
+                      "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                      "type": "string"
+                    },
+                    "requestValues": {
+                      "description": "Lists values corresponding to the `requestField`.\n",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "title": "String",
+                            "type": "string"
+                          },
+                          {
+                            "title": "Integer",
+                            "type": "integer"
+                          },
+                          {
+                            "title": "Object",
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "type": "array"
+                    },
+                    "status": {
+                      "description": "HTTP response code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Title of the error.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "Type of error.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Authorization error](ref:401).\n",
+            "x-akamai": {
+              "file-path": "errors/401.yaml"
+            }
+          },
+          "405": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "method.not.allowed",
+                  "title": "Method not allowed"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies the errors.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "Detail about the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies the error that occurred.\n",
+                        "properties": {
+                          "requestField": {
+                            "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                            "type": "string"
+                          },
+                          "requestValues": {
+                            "description": "Lists values corresponding to the `requestField`.\n",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "title": "String",
+                                  "type": "string"
+                                },
+                                {
+                                  "title": "Integer",
+                                  "type": "integer"
+                                },
+                                {
+                                  "title": "Object",
+                                  "type": "object"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          },
+                          "title": {
+                            "description": "Title of the error.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of error.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "title"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/sub-problem.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "requestField": {
+                      "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                      "type": "string"
+                    },
+                    "requestValues": {
+                      "description": "Lists values corresponding to the `requestField`.\n",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "title": "String",
+                            "type": "string"
+                          },
+                          {
+                            "title": "Integer",
+                            "type": "integer"
+                          },
+                          {
+                            "title": "Object",
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "type": "array"
+                    },
+                    "status": {
+                      "description": "HTTP response code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Title of the error.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "Type of error.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Method not allowed](ref:405).\n",
+            "x-akamai": {
+              "file-path": "errors/405.yaml"
+            }
+          },
+          "429": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "requests.exceeded.error",
+                  "title": "Too Many Requests",
+                  "detail": "You have exceeded total number of requests configured for this API.",
+                  "status": 429
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies the errors.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "Detail about the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies the error that occurred.\n",
+                        "properties": {
+                          "requestField": {
+                            "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                            "type": "string"
+                          },
+                          "requestValues": {
+                            "description": "Lists values corresponding to the `requestField`.\n",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "title": "String",
+                                  "type": "string"
+                                },
+                                {
+                                  "title": "Integer",
+                                  "type": "integer"
+                                },
+                                {
+                                  "title": "Object",
+                                  "type": "object"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          },
+                          "title": {
+                            "description": "Title of the error.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of error.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "title"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/sub-problem.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "requestField": {
+                      "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                      "type": "string"
+                    },
+                    "requestValues": {
+                      "description": "Lists values corresponding to the `requestField`.\n",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "title": "String",
+                            "type": "string"
+                          },
+                          {
+                            "title": "Integer",
+                            "type": "integer"
+                          },
+                          {
+                            "title": "Object",
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "type": "array"
+                    },
+                    "status": {
+                      "description": "HTTP response code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Title of the error.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "Type of error.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Too many requests](ref:429).\n",
+            "x-akamai": {
+              "file-path": "errors/429.yaml"
+            }
+          }
+        },
+        "summary": "List IP acceleration hostnames",
+        "tags": [
+          "IPA hostnames"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/hostnames.yaml",
+        "path-info": "/ipa/hostnames"
+      }
+    }
+  },
+  "components": {
+    "headers": {
+      "x-rate-limit-limit": {
+        "description": "The rate limit ceiling for this endpoint.\n",
+        "example": 10,
+        "schema": {
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "headers/x-rate-limit-limit.yaml"
+        }
+      },
+      "x-rate-limit-remaining": {
+        "description": "The number of requests left for the time window.\n",
+        "example": 5,
+        "schema": {
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "headers/x-rate-limit-remaining.yaml"
+        }
+      }
+    },
+    "schemas": {
+      "ipa-hostnames": {
+        "additionalProperties": false,
+        "description": "Lists available IPA hostnames.\n",
+        "properties": {
+          "hostnames": {
+            "description": "Lists available IPA hostnames.\n",
+            "items": {
+              "format": "hostname",
+              "type": "string"
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "hostnames"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/ipa-hostnames.yaml"
+        }
+      },
+      "sub-problem": {
+        "additionalProperties": true,
+        "description": "Specifies the error that occurred.\n",
+        "properties": {
+          "requestField": {
+            "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+            "type": "string"
+          },
+          "requestValues": {
+            "description": "Lists values corresponding to the `requestField`.\n",
+            "items": {
+              "anyOf": [
+                {
+                  "title": "String",
+                  "type": "string"
+                },
+                {
+                  "title": "Integer",
+                  "type": "integer"
+                },
+                {
+                  "title": "Object",
+                  "type": "object"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "title": {
+            "description": "Title of the error.\n",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of error.\n",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/sub-problem.yaml"
+        }
+      },
+      "problem": {
+        "additionalProperties": true,
+        "description": "Specifies the errors.\n",
+        "properties": {
+          "detail": {
+            "description": "Detail about the problem.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "errors": {
+            "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+            "items": {
+              "additionalProperties": true,
+              "description": "Specifies the error that occurred.\n",
+              "properties": {
+                "requestField": {
+                  "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                  "type": "string"
+                },
+                "requestValues": {
+                  "description": "Lists values corresponding to the `requestField`.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "title": "String",
+                        "type": "string"
+                      },
+                      {
+                        "title": "Integer",
+                        "type": "integer"
+                      },
+                      {
+                        "title": "Object",
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                },
+                "title": {
+                  "description": "Title of the error.\n",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of error.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/sub-problem.yaml"
+              }
+            },
+            "type": "array"
+          },
+          "requestField": {
+            "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+            "type": "string"
+          },
+          "requestValues": {
+            "description": "Lists values corresponding to the `requestField`.\n",
+            "items": {
+              "anyOf": [
+                {
+                  "title": "String",
+                  "type": "string"
+                },
+                {
+                  "title": "Integer",
+                  "type": "integer"
+                },
+                {
+                  "title": "Object",
+                  "type": "object"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "status": {
+            "description": "HTTP response code.\n",
+            "type": "integer"
+          },
+          "title": {
+            "description": "Title of the error.\n",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of error.\n",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/problem.yaml"
+        }
+      }
+    },
+    "responses": {
+      "401": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "type": "https://problems.luna.akamaiapis.net/-/pep-authn/deny",
+              "title": "Not authorized",
+              "status": 401,
+              "detail": "Inactive client token",
+              "instance": "https://akab-nedrvuylepskzabx-lv3dgceqqktx3i5b.luna.akamaiapis.net/edge-diagnostics/v1/grep/requests"
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "Specifies the errors.\n",
+              "properties": {
+                "detail": {
+                  "description": "Detail about the problem.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "errors": {
+                  "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Specifies the error that occurred.\n",
+                    "properties": {
+                      "requestField": {
+                        "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                        "type": "string"
+                      },
+                      "requestValues": {
+                        "description": "Lists values corresponding to the `requestField`.\n",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "title": "String",
+                              "type": "string"
+                            },
+                            {
+                              "title": "Integer",
+                              "type": "integer"
+                            },
+                            {
+                              "title": "Object",
+                              "type": "object"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      },
+                      "title": {
+                        "description": "Title of the error.\n",
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Type of error.\n",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "title"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/sub-problem.yaml"
+                    }
+                  },
+                  "type": "array"
+                },
+                "requestField": {
+                  "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                  "type": "string"
+                },
+                "requestValues": {
+                  "description": "Lists values corresponding to the `requestField`.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "title": "String",
+                        "type": "string"
+                      },
+                      {
+                        "title": "Integer",
+                        "type": "integer"
+                      },
+                      {
+                        "title": "Object",
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                },
+                "status": {
+                  "description": "HTTP response code.\n",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title of the error.\n",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of error.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/problem.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Authorization error](ref:401).\n",
+        "x-akamai": {
+          "file-path": "errors/401.yaml"
+        }
+      },
+      "405": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "type": "method.not.allowed",
+              "title": "Method not allowed"
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "Specifies the errors.\n",
+              "properties": {
+                "detail": {
+                  "description": "Detail about the problem.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "errors": {
+                  "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Specifies the error that occurred.\n",
+                    "properties": {
+                      "requestField": {
+                        "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                        "type": "string"
+                      },
+                      "requestValues": {
+                        "description": "Lists values corresponding to the `requestField`.\n",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "title": "String",
+                              "type": "string"
+                            },
+                            {
+                              "title": "Integer",
+                              "type": "integer"
+                            },
+                            {
+                              "title": "Object",
+                              "type": "object"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      },
+                      "title": {
+                        "description": "Title of the error.\n",
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Type of error.\n",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "title"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/sub-problem.yaml"
+                    }
+                  },
+                  "type": "array"
+                },
+                "requestField": {
+                  "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                  "type": "string"
+                },
+                "requestValues": {
+                  "description": "Lists values corresponding to the `requestField`.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "title": "String",
+                        "type": "string"
+                      },
+                      {
+                        "title": "Integer",
+                        "type": "integer"
+                      },
+                      {
+                        "title": "Object",
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                },
+                "status": {
+                  "description": "HTTP response code.\n",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title of the error.\n",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of error.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/problem.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Method not allowed](ref:405).\n",
+        "x-akamai": {
+          "file-path": "errors/405.yaml"
+        }
+      },
+      "429": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "type": "requests.exceeded.error",
+              "title": "Too Many Requests",
+              "detail": "You have exceeded total number of requests configured for this API.",
+              "status": 429
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "Specifies the errors.\n",
+              "properties": {
+                "detail": {
+                  "description": "Detail about the problem.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "errors": {
+                  "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Specifies the error that occurred.\n",
+                    "properties": {
+                      "requestField": {
+                        "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                        "type": "string"
+                      },
+                      "requestValues": {
+                        "description": "Lists values corresponding to the `requestField`.\n",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "title": "String",
+                              "type": "string"
+                            },
+                            {
+                              "title": "Integer",
+                              "type": "integer"
+                            },
+                            {
+                              "title": "Object",
+                              "type": "object"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      },
+                      "title": {
+                        "description": "Title of the error.\n",
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Type of error.\n",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "title"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/sub-problem.yaml"
+                    }
+                  },
+                  "type": "array"
+                },
+                "requestField": {
+                  "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                  "type": "string"
+                },
+                "requestValues": {
+                  "description": "Lists values corresponding to the `requestField`.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "title": "String",
+                        "type": "string"
+                      },
+                      {
+                        "title": "Integer",
+                        "type": "integer"
+                      },
+                      {
+                        "title": "Object",
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                },
+                "status": {
+                  "description": "HTTP response code.\n",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title of the error.\n",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of error.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/problem.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Too many requests](ref:429).\n",
+        "x-akamai": {
+          "file-path": "errors/429.yaml"
+        }
+      }
+    }
+  },
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "06-ipa-hostnames.yaml"
+  }
+}
