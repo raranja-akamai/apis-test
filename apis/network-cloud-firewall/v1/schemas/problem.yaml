@@ -1,0 +1,47 @@
+type: object
+description: |-
+  Represents error data.
+  
+x-akamai:
+  file-path: schemas/problem.yaml
+additionalProperties: false
+required:
+- errorCode
+- status
+properties:
+  args:
+    type: array
+    description: |
+      The request properties related to the error.
+    items:
+      anyOf:
+      - title: Strings
+        type: string
+      - title: Integer
+        type: integer
+      - items:
+          anyOf:
+          - title: String
+            type: string
+          - title: Numeric
+            type: integer
+        type: array
+        title: Array
+  data:
+    description: |
+      The customer request data related to the error.
+  errorCode:
+    type: string
+    description: |
+      A short description of the error.
+  message:
+    type: string
+    description: |
+      Diagnostic instructions to locate and fix the problem.
+    minLength: 1
+  status:
+    type: integer
+    description: |
+      The error's HTTP response code.
+    minimum: 100
+    maximum: 600

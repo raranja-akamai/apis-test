@@ -1,0 +1,57 @@
+type: object
+description: |-
+  Specifies a report's data request.
+  
+x-akamai:
+  file-path: schemas/report-data-request.yaml
+additionalProperties: false
+required:
+- metrics
+- dimensions
+- filters
+- sortBys
+- limit
+properties:
+  dimensions:
+    type: array
+    description: |
+      Dimensions to include in the report.
+    minItems: 0
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+  filters:
+    type: array
+    description: |
+      Filters to narrow down the report data. You can filter by metrics and dimensions. Support for specific filter types may vary by report type. See the report documentation under [Available reports](ref:available-reports).
+    minItems: 0
+    uniqueItems: true
+    items:
+      anyOf:
+      - $ref: metric-filter.yaml
+        title: Metric filter
+      - $ref: dimension-filter.yaml
+        title: Dimension filter
+  limit:
+    type: integer
+    description: |
+      Limits the number of records returned in the response.
+    minimum: 0
+  metrics:
+    type: array
+    description: |
+      Metrics to include in the report.
+    minItems: 0
+    uniqueItems: true
+    items:
+      type: string
+      minLength: 1
+  sortBys:
+    type: array
+    description: |
+      Specifies metrics or dimensions for sorting the report data.
+    minItems: 0
+    uniqueItems: true
+    items:
+      $ref: sort-by.yaml

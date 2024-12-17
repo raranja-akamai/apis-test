@@ -1,0 +1,74 @@
+type: object
+description: |-
+  Describes a key collection version, including the type of public keys it uses to validate JWT signatures, and whether it's active in the staging and production environments.
+  
+x-akamai:
+  file-path: schemas/key-collection-version-response.yaml
+additionalProperties: false
+required:
+- id
+- collectionId
+- false
+- description
+- createdDate
+- createdBy
+- stagingStatus
+- productionStatus
+- algorithm
+properties:
+  id:
+    type: integer
+    description: |
+      The identifier of the key collection version.
+    minimum: 1
+  description:
+    type: string
+    description: |
+      A description for the key collection version.
+    minLength: 1
+  algorithm:
+    type: string
+    description: |
+      The encryption algorithm of the public keys that the key collection version uses, either `RSA` or `ECDSA_P_256`. To see the public keys that the version uses, run the [Get a key collection version](ref:get-key-collection-version) operation.
+    enum:
+    - RSA
+    - ECDSA_P_256
+    minLength: 1
+  collectionId:
+    type: integer
+    description: |
+      Identifies the key collection for this version.
+    minimum: 1
+  createdBy:
+    type: string
+    description: |
+      The username who created the key collection version.
+    minLength: 1
+  createdDate:
+    type: integer
+    description: |
+      An epoch timestamp when the key collection version was created.
+    minimum: 0
+  'no':
+    type: integer
+    description: |
+      The number of the key collection version. With each new version of this key collection, this number increments by 1.
+    minimum: 1
+  productionStatus:
+    type: string
+    description: |
+      The status of the key collection version in the production environment, either `INACTIVE`, `PENDING`, or `ACTIVE`.
+    enum:
+    - INACTIVE
+    - PENDING
+    - ACTIVE
+    minLength: 1
+  stagingStatus:
+    type: string
+    description: |
+      The status of the key collection version in the staging environment, either `INACTIVE`, `PENDING`, or `ACTIVE`.
+    enum:
+    - INACTIVE
+    - PENDING
+    - ACTIVE
+    minLength: 1

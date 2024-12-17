@@ -1,0 +1,53 @@
+type: object
+description: |-
+  Specifies an error response returned by the IoT Token Access Control API.
+  
+x-akamai:
+  file-path: schemas/http-problem-details.yaml
+additionalProperties: true
+required:
+- type
+- title
+properties:
+  type:
+    type: string
+    description: |
+      A non-navigable URI that identifies each error case.
+    format: uri
+  title:
+    type: string
+    description: |
+      A short, human-readable summary of the problem type.
+    minLength: 1
+  code:
+    type: string
+    description: |
+      Unique code for an error.
+    minLength: 1
+  detail:
+    type: string
+    description: |
+      A human-readable explanation specific to the problem.
+    minLength: 1
+  details:
+    type: array
+    description: |
+      A list of HTTP problem details. This field exists if there are many problems with a single request and you want to call them each out explicitly.
+    minItems: 1
+    items:
+      $ref: http-problem-details-nested.yaml
+  incidentId:
+    type: string
+    description: |
+      A logging key useful when communicating about problems with Technical Support representatives.
+    minLength: 1
+  instance:
+    type: string
+    description: |
+      A non-navigable URI that identifies each error instance.
+    format: uri
+  status:
+    type: integer
+    description: |
+      The HTTP error code.
+    minimum: 0
