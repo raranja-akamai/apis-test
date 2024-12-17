@@ -1,0 +1,4022 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Report schedules",
+    "version": "v3"
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/etp-report/v3"
+    }
+  ],
+  "tags": [
+    {
+      "description": "Set up schedules to generate SIA reports.\n",
+      "name": "Report schedules"
+    }
+  ],
+  "paths": {
+    "/configs/{configId}/schedules": {
+      "get": {
+        "description": "Lists all configured report schedules for a given configuration.\n",
+        "operationId": "get-config-schedules",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "scheduleId": 100,
+                    "recurrence": "WEEKLY",
+                    "dayOfWeek": "MONDAY",
+                    "userTimeZone": "+05:30",
+                    "status": "ENABLED",
+                    "reportTemplate": "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN",
+                    "createdBy": "jsmith",
+                    "creationDate": "2017-06-22T11:12:55Z",
+                    "modifiedBy": "jsmith",
+                    "modifiedDate": "2017-06-28T11:12:55Z",
+                    "emails": [
+                      "user1@akamai.com",
+                      "user2@akamai.com"
+                    ],
+                    "filters": {
+                      "isAlert": {
+                        "in": [
+                          "true"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "scheduleId": 110,
+                    "recurrence": "DAILY",
+                    "dayOfWeek": null,
+                    "userTimeZone": "+05:30",
+                    "status": "ENABLED",
+                    "reportTemplate": "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN",
+                    "createdBy": "jkowalski",
+                    "creationDate": "2017-06-23T11:12:55Z",
+                    "modifiedBy": "tyamada",
+                    "modifiedDate": "2017-06-23T11:12:55Z",
+                    "emails": [
+                      "user1@akamai.com"
+                    ]
+                  }
+                ],
+                "schema": {
+                  "description": "SIA report scheduling parameters.\n",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Report scheduling configuration, on a daily or weekly basis.\n",
+                    "properties": {
+                      "createdBy": {
+                        "description": "The user who initially created the report schedule configuration.\n",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "createdDate": {
+                        "description": "ISO 8601 timestamp marking the report schedule configuration's creation.\n",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "criterias": {
+                        "additionalProperties": false,
+                        "description": "Describes the report criteria.\n",
+                        "properties": {
+                          "siteIds": {
+                            "description": "The site IDs applicable to the report.\n",
+                            "items": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "minItems": 0,
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "siteIds"
+                        ],
+                        "type": "object"
+                      },
+                      "daily": {
+                        "description": "Indicates a daily report schedule.\n",
+                        "type": "boolean"
+                      },
+                      "dayOfWeek": {
+                        "description": "Specifies the day of the week to generate the report. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+                        "enum": [
+                          "MONDAY",
+                          "TUESDAY",
+                          "WEDNESDAY",
+                          "THURSDAY",
+                          "FRIDAY",
+                          "SATURDAY",
+                          "SUNDAY"
+                        ],
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "emails": {
+                        "description": "Specifies the email addresses to send generated reports.\n",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "minItems": 0,
+                        "type": "array"
+                      },
+                      "enable": {
+                        "description": "Enables the report schedule.\n",
+                        "type": "boolean"
+                      },
+                      "filters": {
+                        "additionalProperties": true,
+                        "description": "Specifies filters to apply while generating the report.\n",
+                        "properties": {
+                          "filters": {
+                            "description": "Filter strings to exclude or include report data. Refer to [Filters object](ref:filters) for a complete list.\n",
+                            "enum": [
+                              "INTERNALIP",
+                              "SOURCEPORT",
+                              "DESTINATIONPORT",
+                              "SINKHOLEID",
+                              "SINKHOLEIP",
+                              "HOSTNAME",
+                              "MACHINENAME",
+                              "UUID",
+                              "DESTINATIONIP",
+                              "SITE",
+                              "LIST",
+                              "POLICY",
+                              "ACTION",
+                              "CATEGORY",
+                              "ISALERT",
+                              "CONFIDENCE",
+                              "DOMAIN"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "format": {
+                        "description": "Format of the report.\n",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "isHtml": {
+                        "description": "Indicates an HTML formatted report.\n",
+                        "type": "boolean"
+                      },
+                      "isNew": {
+                        "description": "Indicates a new report.\n",
+                        "type": "boolean"
+                      },
+                      "modifiedBy": {
+                        "description": "The user who last modified the report schedule configuration.\n",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "modifiedDate": {
+                        "description": "ISO 8601 timestamp string marking the report schedule configuration's last modification.\n",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "recurrence": {
+                        "description": "Specifies the frequency of the report schedule, either `DAILY`, or `WEEKLY`.\n",
+                        "enum": [
+                          "DAILY",
+                          "WEEKLY"
+                        ],
+                        "type": "string"
+                      },
+                      "reportTemplate": {
+                        "description": "Specifies the report template. The only currently supported syntax is `THREAT_EVENTS_BY_LOCATION_AND_DOMAIN`.\n",
+                        "enum": [
+                          "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN"
+                        ],
+                        "type": "string"
+                      },
+                      "scheduleId": {
+                        "description": "A unique identifier for the report schedule configuration.\n",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "status": {
+                        "description": "Specifies the status of the report schedule configuration, either `ENABLED` or `DISABLED`.\n",
+                        "enum": [
+                          "ENABLED",
+                          "DISABLED"
+                        ],
+                        "type": "string"
+                      },
+                      "useFilters": {
+                        "description": "Indicates if the report should use filters.\n",
+                        "type": "boolean"
+                      },
+                      "userTimeZone": {
+                        "description": "Specifies a user timezone offset for generating the report. For example, `-05:00`.\n",
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "recurrence",
+                      "userTimeZone",
+                      "emails",
+                      "reportTemplate"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/report-schedule.yaml"
+                    }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/report-schedules.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response.\n"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "invalid-format": {
+                    "summary": "Invalid request format",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "The system cannot understand your request.  Please check the syntax and correct any problems.",
+                      "status": 400,
+                      "instance": "1e4c346b-3a36-4527-9c37-86ae748b87c5"
+                    }
+                  },
+                  "invalid-start-time": {
+                    "summary": "Invalid startTime",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "Start time is invalid. Code-000104",
+                      "status": 400,
+                      "instance": "0415df5e-6e9c-4596-bdd3-9ada53b63599"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Bad Request](ref:400).\n",
+            "x-akamai": {
+              "file-path": "errors/400.yaml"
+            }
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/forbidden",
+                  "title": "Forbidden",
+                  "detail": "Insufficient permissions. Code-01",
+                  "status": 403,
+                  "instance": "3e3f11da-e205-409a-be77-24e459f29fa8"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Access forbidden](ref:403).\n",
+            "x-akamai": {
+              "file-path": "errors/insufficient-permissions-403.yaml"
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/not-found",
+                  "title": "Not Found",
+                  "detail": "Invalid SIA configuration 101. Code-090209",
+                  "status": 404,
+                  "instance": "aeb030ed-0645-484d-93e2-77e88566312c"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Configuration not Found](ref:404).\n",
+            "x-akamai": {
+              "file-path": "errors/not-found-404.yaml"
+            }
+          }
+        },
+        "summary": "List report schedules",
+        "tags": [
+          "Report schedules"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "A unique identifier for each configuration.\n",
+          "in": "path",
+          "name": "configId",
+          "required": true,
+          "schema": {
+            "example": 100,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/config-id-path.yaml"
+          }
+        }
+      ],
+      "post": {
+        "description": "Creates a new report schedule for a given SIA configuration.\n",
+        "operationId": "post-config-schedule",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "recurrence": "DAILY",
+                "dayOfWeek": null,
+                "userTimeZone": "America/New_York",
+                "reportTemplate": "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN",
+                "status": "ENABLED",
+                "format": "HTML",
+                "daily": true,
+                "enable": true,
+                "isNew": true,
+                "isHtml": true,
+                "useFilters": false,
+                "emails": [
+                  "user@example.com"
+                ],
+                "criterias": {
+                  "siteIds": []
+                }
+              },
+              "schema": {
+                "additionalProperties": false,
+                "description": "Configures daily or weekly scheduled reports.\n",
+                "properties": {
+                  "criterias": {
+                    "additionalProperties": false,
+                    "description": "The report criteria.\n",
+                    "properties": {
+                      "siteIds": {
+                        "description": "The site IDs for the report.\n",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "minItems": 0,
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "siteIds"
+                    ],
+                    "type": "object"
+                  },
+                  "daily": {
+                    "description": "Indicates a daily report schedule.\n",
+                    "type": "boolean"
+                  },
+                  "dayOfWeek": {
+                    "description": "Specifies the day of the week to generate the report. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+                    "enum": [
+                      "MONDAY",
+                      "TUESDAY",
+                      "WEDNESDAY",
+                      "THURSDAY",
+                      "FRIDAY",
+                      "SATURDAY",
+                      "SUNDAY"
+                    ],
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "emails": {
+                    "description": "Specifies the email addresses to send generated reports.\n",
+                    "items": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "minItems": 0,
+                    "type": "array"
+                  },
+                  "enable": {
+                    "description": "Enables the report schedule.\n",
+                    "type": "boolean"
+                  },
+                  "filters": {
+                    "additionalProperties": false,
+                    "description": "Optional filters to apply while generating the report.\n",
+                    "properties": {
+                      "filters": {
+                        "description": "Filter strings to exclude or include report data. See the [Filters](ref:filters) object for a complete list.\n",
+                        "enum": [
+                          "INTERNALIP",
+                          "SOURCEPORT",
+                          "DESTINATIONPORT",
+                          "SINKHOLEID",
+                          "SINKHOLEIP",
+                          "HOSTNAME",
+                          "MACHINENAME",
+                          "UUID",
+                          "DESTINATIONIP",
+                          "SITE",
+                          "LIST",
+                          "POLICY",
+                          "ACTION",
+                          "CATEGORY",
+                          "ISALERT",
+                          "CONFIDENCE",
+                          "DOMAIN"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "format": {
+                    "description": "Format of the report.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "isHtml": {
+                    "description": "Indicates an HTML formatted report.\n",
+                    "type": "boolean"
+                  },
+                  "isNew": {
+                    "description": "Indicates a new report schedule.\n",
+                    "type": "boolean"
+                  },
+                  "recurrence": {
+                    "description": "The report schedule frequency, either `DAILY`, or `WEEKLY`. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+                    "enum": [
+                      "DAILY",
+                      "WEEKLY"
+                    ],
+                    "type": "string"
+                  },
+                  "reportTemplate": {
+                    "description": "The report template. The only currently supported syntax is `THREAT_EVENTS_BY_LOCATION_AND_DOMAIN`.\n",
+                    "enum": [
+                      "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN"
+                    ],
+                    "type": "string"
+                  },
+                  "scheduleId": {
+                    "description": "__Read-only__ A unique identifier for the report schedule configuration.\n",
+                    "minimum": 0,
+                    "readOnly": true,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "description": "The report schedule configuration status, either `ENABLED` or `DISABLED`.\n",
+                    "enum": [
+                      "ENABLED",
+                      "DISABLED"
+                    ],
+                    "type": "string"
+                  },
+                  "useFilters": {
+                    "description": "Indicates if the report should use filters.\n",
+                    "type": "boolean"
+                  },
+                  "userTimeZone": {
+                    "description": "Specifies a user-timezone-offset for generating the report. For example, `-05:00`.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "recurrence",
+                  "userTimeZone",
+                  "emails",
+                  "reportTemplate"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/report-schedule-post-request.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "scheduleId": 100,
+                    "recurrence": "WEEKLY",
+                    "dayOfWeek": "MONDAY",
+                    "userTimeZone": "+05:30",
+                    "status": "ENABLED",
+                    "reportTemplate": "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN",
+                    "createdBy": "jsmith",
+                    "creationDate": "2017-06-22T11:12:55Z",
+                    "modifiedBy": "jsmith",
+                    "modifiedDate": "2017-06-28T11:12:55Z",
+                    "emails": [
+                      "user1@akamai.com",
+                      "user2@akamai.com"
+                    ],
+                    "filters": {
+                      "isAlert": {
+                        "in": [
+                          "true"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "scheduleId": 110,
+                    "recurrence": "DAILY",
+                    "dayOfWeek": null,
+                    "userTimeZone": "+05:30",
+                    "status": "ENABLED",
+                    "reportTemplate": "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN",
+                    "createdBy": "jkowalski",
+                    "creationDate": "2017-06-23T11:12:55Z",
+                    "modifiedBy": "tyamada",
+                    "modifiedDate": "2017-06-23T11:12:55Z",
+                    "emails": [
+                      "user1@akamai.com"
+                    ]
+                  }
+                ],
+                "schema": {
+                  "description": "SIA report scheduling parameters.\n",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Report scheduling configuration, on a daily or weekly basis.\n",
+                    "properties": {
+                      "createdBy": {
+                        "description": "The user who initially created the report schedule configuration.\n",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "createdDate": {
+                        "description": "ISO 8601 timestamp marking the report schedule configuration's creation.\n",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "criterias": {
+                        "additionalProperties": false,
+                        "description": "Describes the report criteria.\n",
+                        "properties": {
+                          "siteIds": {
+                            "description": "The site IDs applicable to the report.\n",
+                            "items": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "minItems": 0,
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "siteIds"
+                        ],
+                        "type": "object"
+                      },
+                      "daily": {
+                        "description": "Indicates a daily report schedule.\n",
+                        "type": "boolean"
+                      },
+                      "dayOfWeek": {
+                        "description": "Specifies the day of the week to generate the report. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+                        "enum": [
+                          "MONDAY",
+                          "TUESDAY",
+                          "WEDNESDAY",
+                          "THURSDAY",
+                          "FRIDAY",
+                          "SATURDAY",
+                          "SUNDAY"
+                        ],
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "emails": {
+                        "description": "Specifies the email addresses to send generated reports.\n",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "minItems": 0,
+                        "type": "array"
+                      },
+                      "enable": {
+                        "description": "Enables the report schedule.\n",
+                        "type": "boolean"
+                      },
+                      "filters": {
+                        "additionalProperties": true,
+                        "description": "Specifies filters to apply while generating the report.\n",
+                        "properties": {
+                          "filters": {
+                            "description": "Filter strings to exclude or include report data. Refer to [Filters object](ref:filters) for a complete list.\n",
+                            "enum": [
+                              "INTERNALIP",
+                              "SOURCEPORT",
+                              "DESTINATIONPORT",
+                              "SINKHOLEID",
+                              "SINKHOLEIP",
+                              "HOSTNAME",
+                              "MACHINENAME",
+                              "UUID",
+                              "DESTINATIONIP",
+                              "SITE",
+                              "LIST",
+                              "POLICY",
+                              "ACTION",
+                              "CATEGORY",
+                              "ISALERT",
+                              "CONFIDENCE",
+                              "DOMAIN"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "format": {
+                        "description": "Format of the report.\n",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "isHtml": {
+                        "description": "Indicates an HTML formatted report.\n",
+                        "type": "boolean"
+                      },
+                      "isNew": {
+                        "description": "Indicates a new report.\n",
+                        "type": "boolean"
+                      },
+                      "modifiedBy": {
+                        "description": "The user who last modified the report schedule configuration.\n",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "modifiedDate": {
+                        "description": "ISO 8601 timestamp string marking the report schedule configuration's last modification.\n",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "recurrence": {
+                        "description": "Specifies the frequency of the report schedule, either `DAILY`, or `WEEKLY`.\n",
+                        "enum": [
+                          "DAILY",
+                          "WEEKLY"
+                        ],
+                        "type": "string"
+                      },
+                      "reportTemplate": {
+                        "description": "Specifies the report template. The only currently supported syntax is `THREAT_EVENTS_BY_LOCATION_AND_DOMAIN`.\n",
+                        "enum": [
+                          "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN"
+                        ],
+                        "type": "string"
+                      },
+                      "scheduleId": {
+                        "description": "A unique identifier for the report schedule configuration.\n",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "status": {
+                        "description": "Specifies the status of the report schedule configuration, either `ENABLED` or `DISABLED`.\n",
+                        "enum": [
+                          "ENABLED",
+                          "DISABLED"
+                        ],
+                        "type": "string"
+                      },
+                      "useFilters": {
+                        "description": "Indicates if the report should use filters.\n",
+                        "type": "boolean"
+                      },
+                      "userTimeZone": {
+                        "description": "Specifies a user timezone offset for generating the report. For example, `-05:00`.\n",
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "recurrence",
+                      "userTimeZone",
+                      "emails",
+                      "reportTemplate"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/report-schedule.yaml"
+                    }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/report-schedules.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response.\n"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "invalid-format": {
+                    "summary": "Invalid request format",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "The system cannot understand your request.  Please check the syntax and correct any problems.",
+                      "status": 400,
+                      "instance": "1e4c346b-3a36-4527-9c37-86ae748b87c5"
+                    }
+                  },
+                  "invalid-start-time": {
+                    "summary": "Invalid startTime",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "Start time is invalid. Code-000104",
+                      "status": 400,
+                      "instance": "0415df5e-6e9c-4596-bdd3-9ada53b63599"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Bad Request](ref:400).\n",
+            "x-akamai": {
+              "file-path": "errors/400.yaml"
+            }
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/forbidden",
+                  "title": "Forbidden",
+                  "detail": "Insufficient permissions. Code-01",
+                  "status": 403,
+                  "instance": "3e3f11da-e205-409a-be77-24e459f29fa8"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Access forbidden](ref:403).\n",
+            "x-akamai": {
+              "file-path": "errors/insufficient-permissions-403.yaml"
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/not-found",
+                  "title": "Not Found",
+                  "detail": "Invalid SIA configuration 101. Code-090209",
+                  "status": 404,
+                  "instance": "aeb030ed-0645-484d-93e2-77e88566312c"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Configuration not Found](ref:404).\n",
+            "x-akamai": {
+              "file-path": "errors/not-found-404.yaml"
+            }
+          }
+        },
+        "summary": "Create a report schedule",
+        "tags": [
+          "Report schedules"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/schedules.yaml",
+        "path-info": "/configs/{configId}/schedules"
+      }
+    },
+    "/configs/{configId}/schedules/{scheduleId}": {
+      "delete": {
+        "description": "Removes the configuration of a specified report schedule.\n",
+        "operationId": "delete-config-schedule",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "scheduleId": 100,
+                    "recurrence": "WEEKLY",
+                    "dayOfWeek": "MONDAY",
+                    "userTimeZone": "+05:30",
+                    "status": "ENABLED",
+                    "reportTemplate": "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN",
+                    "createdBy": "jsmith",
+                    "creationDate": "2017-06-22T11:12:55Z",
+                    "modifiedBy": "jsmith",
+                    "modifiedDate": "2017-06-28T11:12:55Z",
+                    "emails": [
+                      "user1@akamai.com",
+                      "user2@akamai.com"
+                    ],
+                    "filters": {
+                      "isAlert": {
+                        "in": [
+                          "true"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "scheduleId": 110,
+                    "recurrence": "DAILY",
+                    "dayOfWeek": null,
+                    "userTimeZone": "+05:30",
+                    "status": "ENABLED",
+                    "reportTemplate": "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN",
+                    "createdBy": "jkowalski",
+                    "creationDate": "2017-06-23T11:12:55Z",
+                    "modifiedBy": "tyamada",
+                    "modifiedDate": "2017-06-23T11:12:55Z",
+                    "emails": [
+                      "user1@akamai.com"
+                    ]
+                  }
+                ],
+                "schema": {
+                  "description": "SIA report scheduling parameters.\n",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Report scheduling configuration, on a daily or weekly basis.\n",
+                    "properties": {
+                      "createdBy": {
+                        "description": "The user who initially created the report schedule configuration.\n",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "createdDate": {
+                        "description": "ISO 8601 timestamp marking the report schedule configuration's creation.\n",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "criterias": {
+                        "additionalProperties": false,
+                        "description": "Describes the report criteria.\n",
+                        "properties": {
+                          "siteIds": {
+                            "description": "The site IDs applicable to the report.\n",
+                            "items": {
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "minItems": 0,
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "siteIds"
+                        ],
+                        "type": "object"
+                      },
+                      "daily": {
+                        "description": "Indicates a daily report schedule.\n",
+                        "type": "boolean"
+                      },
+                      "dayOfWeek": {
+                        "description": "Specifies the day of the week to generate the report. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+                        "enum": [
+                          "MONDAY",
+                          "TUESDAY",
+                          "WEDNESDAY",
+                          "THURSDAY",
+                          "FRIDAY",
+                          "SATURDAY",
+                          "SUNDAY"
+                        ],
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "emails": {
+                        "description": "Specifies the email addresses to send generated reports.\n",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "minItems": 0,
+                        "type": "array"
+                      },
+                      "enable": {
+                        "description": "Enables the report schedule.\n",
+                        "type": "boolean"
+                      },
+                      "filters": {
+                        "additionalProperties": true,
+                        "description": "Specifies filters to apply while generating the report.\n",
+                        "properties": {
+                          "filters": {
+                            "description": "Filter strings to exclude or include report data. Refer to [Filters object](ref:filters) for a complete list.\n",
+                            "enum": [
+                              "INTERNALIP",
+                              "SOURCEPORT",
+                              "DESTINATIONPORT",
+                              "SINKHOLEID",
+                              "SINKHOLEIP",
+                              "HOSTNAME",
+                              "MACHINENAME",
+                              "UUID",
+                              "DESTINATIONIP",
+                              "SITE",
+                              "LIST",
+                              "POLICY",
+                              "ACTION",
+                              "CATEGORY",
+                              "ISALERT",
+                              "CONFIDENCE",
+                              "DOMAIN"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "format": {
+                        "description": "Format of the report.\n",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "isHtml": {
+                        "description": "Indicates an HTML formatted report.\n",
+                        "type": "boolean"
+                      },
+                      "isNew": {
+                        "description": "Indicates a new report.\n",
+                        "type": "boolean"
+                      },
+                      "modifiedBy": {
+                        "description": "The user who last modified the report schedule configuration.\n",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "modifiedDate": {
+                        "description": "ISO 8601 timestamp string marking the report schedule configuration's last modification.\n",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "recurrence": {
+                        "description": "Specifies the frequency of the report schedule, either `DAILY`, or `WEEKLY`.\n",
+                        "enum": [
+                          "DAILY",
+                          "WEEKLY"
+                        ],
+                        "type": "string"
+                      },
+                      "reportTemplate": {
+                        "description": "Specifies the report template. The only currently supported syntax is `THREAT_EVENTS_BY_LOCATION_AND_DOMAIN`.\n",
+                        "enum": [
+                          "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN"
+                        ],
+                        "type": "string"
+                      },
+                      "scheduleId": {
+                        "description": "A unique identifier for the report schedule configuration.\n",
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      "status": {
+                        "description": "Specifies the status of the report schedule configuration, either `ENABLED` or `DISABLED`.\n",
+                        "enum": [
+                          "ENABLED",
+                          "DISABLED"
+                        ],
+                        "type": "string"
+                      },
+                      "useFilters": {
+                        "description": "Indicates if the report should use filters.\n",
+                        "type": "boolean"
+                      },
+                      "userTimeZone": {
+                        "description": "Specifies a user timezone offset for generating the report. For example, `-05:00`.\n",
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "recurrence",
+                      "userTimeZone",
+                      "emails",
+                      "reportTemplate"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/report-schedule.yaml"
+                    }
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/report-schedules.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response.\n"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "invalid-format": {
+                    "summary": "Invalid request format",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "The system cannot understand your request.  Please check the syntax and correct any problems.",
+                      "status": 400,
+                      "instance": "1e4c346b-3a36-4527-9c37-86ae748b87c5"
+                    }
+                  },
+                  "invalid-start-time": {
+                    "summary": "Invalid startTime",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "Start time is invalid. Code-000104",
+                      "status": 400,
+                      "instance": "0415df5e-6e9c-4596-bdd3-9ada53b63599"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Bad Request](ref:400).\n",
+            "x-akamai": {
+              "file-path": "errors/400.yaml"
+            }
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/forbidden",
+                  "title": "Forbidden",
+                  "detail": "Insufficient permissions. Code-01",
+                  "status": 403,
+                  "instance": "3e3f11da-e205-409a-be77-24e459f29fa8"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Access forbidden](ref:403).\n",
+            "x-akamai": {
+              "file-path": "errors/insufficient-permissions-403.yaml"
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/not-found",
+                  "title": "Not Found",
+                  "detail": "Invalid SIA configuration 101. Code-090209",
+                  "status": 404,
+                  "instance": "aeb030ed-0645-484d-93e2-77e88566312c"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Configuration not Found](ref:404).\n",
+            "x-akamai": {
+              "file-path": "errors/not-found-404.yaml"
+            }
+          }
+        },
+        "summary": "Remove a report schedule",
+        "tags": [
+          "Report schedules"
+        ]
+      },
+      "get": {
+        "description": "Lists the configuration of a specified report schedule.\n",
+        "operationId": "get-config-schedule",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "scheduleId": 100,
+                  "recurrence": "WEEKLY",
+                  "dayOfWeek": "MONDAY",
+                  "userTimeZone": "+05:30",
+                  "status": "ENABLED",
+                  "reportTemplate": "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN",
+                  "daily": true,
+                  "enable": true,
+                  "isNew": true,
+                  "isHtml": true,
+                  "useFilters": false,
+                  "createdBy": "alfulani",
+                  "creationDate": "2017-06-22T11:12:55Z",
+                  "modifiedBy": "mrossi",
+                  "modifiedDate": "2017-06-28T11:12:55Z",
+                  "emails": [
+                    "user1@akamai.com",
+                    "user2@akamai.com"
+                  ],
+                  "filters": {
+                    "isAlert": {
+                      "in": [
+                        "true"
+                      ]
+                    }
+                  },
+                  "criterias": {
+                    "siteIds": []
+                  }
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Report scheduling configuration, on a daily or weekly basis.\n",
+                  "properties": {
+                    "createdBy": {
+                      "description": "The user who initially created the report schedule configuration.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "createdDate": {
+                      "description": "ISO 8601 timestamp marking the report schedule configuration's creation.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "criterias": {
+                      "additionalProperties": false,
+                      "description": "Describes the report criteria.\n",
+                      "properties": {
+                        "siteIds": {
+                          "description": "The site IDs applicable to the report.\n",
+                          "items": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "minItems": 0,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "siteIds"
+                      ],
+                      "type": "object"
+                    },
+                    "daily": {
+                      "description": "Indicates a daily report schedule.\n",
+                      "type": "boolean"
+                    },
+                    "dayOfWeek": {
+                      "description": "Specifies the day of the week to generate the report. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+                      "enum": [
+                        "MONDAY",
+                        "TUESDAY",
+                        "WEDNESDAY",
+                        "THURSDAY",
+                        "FRIDAY",
+                        "SATURDAY",
+                        "SUNDAY"
+                      ],
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "emails": {
+                      "description": "Specifies the email addresses to send generated reports.\n",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "enable": {
+                      "description": "Enables the report schedule.\n",
+                      "type": "boolean"
+                    },
+                    "filters": {
+                      "additionalProperties": true,
+                      "description": "Specifies filters to apply while generating the report.\n",
+                      "properties": {
+                        "filters": {
+                          "description": "Filter strings to exclude or include report data. Refer to [Filters object](ref:filters) for a complete list.\n",
+                          "enum": [
+                            "INTERNALIP",
+                            "SOURCEPORT",
+                            "DESTINATIONPORT",
+                            "SINKHOLEID",
+                            "SINKHOLEIP",
+                            "HOSTNAME",
+                            "MACHINENAME",
+                            "UUID",
+                            "DESTINATIONIP",
+                            "SITE",
+                            "LIST",
+                            "POLICY",
+                            "ACTION",
+                            "CATEGORY",
+                            "ISALERT",
+                            "CONFIDENCE",
+                            "DOMAIN"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "format": {
+                      "description": "Format of the report.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "isHtml": {
+                      "description": "Indicates an HTML formatted report.\n",
+                      "type": "boolean"
+                    },
+                    "isNew": {
+                      "description": "Indicates a new report.\n",
+                      "type": "boolean"
+                    },
+                    "modifiedBy": {
+                      "description": "The user who last modified the report schedule configuration.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "modifiedDate": {
+                      "description": "ISO 8601 timestamp string marking the report schedule configuration's last modification.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "recurrence": {
+                      "description": "Specifies the frequency of the report schedule, either `DAILY`, or `WEEKLY`.\n",
+                      "enum": [
+                        "DAILY",
+                        "WEEKLY"
+                      ],
+                      "type": "string"
+                    },
+                    "reportTemplate": {
+                      "description": "Specifies the report template. The only currently supported syntax is `THREAT_EVENTS_BY_LOCATION_AND_DOMAIN`.\n",
+                      "enum": [
+                        "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN"
+                      ],
+                      "type": "string"
+                    },
+                    "scheduleId": {
+                      "description": "A unique identifier for the report schedule configuration.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "status": {
+                      "description": "Specifies the status of the report schedule configuration, either `ENABLED` or `DISABLED`.\n",
+                      "enum": [
+                        "ENABLED",
+                        "DISABLED"
+                      ],
+                      "type": "string"
+                    },
+                    "useFilters": {
+                      "description": "Indicates if the report should use filters.\n",
+                      "type": "boolean"
+                    },
+                    "userTimeZone": {
+                      "description": "Specifies a user timezone offset for generating the report. For example, `-05:00`.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "recurrence",
+                    "userTimeZone",
+                    "emails",
+                    "reportTemplate"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/report-schedule.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response.\n"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "invalid-format": {
+                    "summary": "Invalid request format",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "The system cannot understand your request.  Please check the syntax and correct any problems.",
+                      "status": 400,
+                      "instance": "1e4c346b-3a36-4527-9c37-86ae748b87c5"
+                    }
+                  },
+                  "invalid-start-time": {
+                    "summary": "Invalid startTime",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "Start time is invalid. Code-000104",
+                      "status": 400,
+                      "instance": "0415df5e-6e9c-4596-bdd3-9ada53b63599"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Bad Request](ref:400).\n",
+            "x-akamai": {
+              "file-path": "errors/400.yaml"
+            }
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/forbidden",
+                  "title": "Forbidden",
+                  "detail": "Insufficient permissions. Code-01",
+                  "status": 403,
+                  "instance": "3e3f11da-e205-409a-be77-24e459f29fa8"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Access forbidden](ref:403).\n",
+            "x-akamai": {
+              "file-path": "errors/insufficient-permissions-403.yaml"
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/not-found",
+                  "title": "Not Found",
+                  "detail": "Invalid SIA configuration 101. Code-090209",
+                  "status": 404,
+                  "instance": "aeb030ed-0645-484d-93e2-77e88566312c"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Configuration not Found](ref:404).\n",
+            "x-akamai": {
+              "file-path": "errors/not-found-404.yaml"
+            }
+          }
+        },
+        "summary": "Get a report schedule",
+        "tags": [
+          "Report schedules"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "A unique identifier for each report schedule configuration.\n",
+          "in": "path",
+          "name": "scheduleId",
+          "required": true,
+          "schema": {
+            "example": 1000,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/schedule-id-path.yaml"
+          }
+        },
+        {
+          "description": "A unique identifier for each configuration.\n",
+          "in": "path",
+          "name": "configId",
+          "required": true,
+          "schema": {
+            "example": 100,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/config-id-path.yaml"
+          }
+        }
+      ],
+      "put": {
+        "description": "Updates the configuration of a specified report schedule.\n",
+        "operationId": "put-config-schedule",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "recurrence": "DAILY",
+                "dayOfWeek": null,
+                "userTimeZone": "America/New_York",
+                "reportTemplate": "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN",
+                "status": "ENABLED",
+                "format": "HTML",
+                "daily": true,
+                "enable": true,
+                "isNew": true,
+                "isHtml": true,
+                "useFilters": false,
+                "scheduleId": 16460,
+                "emails": [
+                  "user@example.com"
+                ],
+                "criterias": {
+                  "siteIds": []
+                }
+              },
+              "schema": {
+                "additionalProperties": false,
+                "description": "Configures daily or weekly scheduled reports.\n",
+                "properties": {
+                  "criterias": {
+                    "additionalProperties": false,
+                    "description": "The report criteria.\n",
+                    "properties": {
+                      "siteIds": {
+                        "description": "The site IDs for the report.\n",
+                        "items": {
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        "minItems": 0,
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "siteIds"
+                    ],
+                    "type": "object"
+                  },
+                  "daily": {
+                    "description": "Indicates a daily report schedule.\n",
+                    "type": "boolean"
+                  },
+                  "dayOfWeek": {
+                    "description": "Specifies the day of the week to generate the report. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+                    "enum": [
+                      "MONDAY",
+                      "TUESDAY",
+                      "WEDNESDAY",
+                      "THURSDAY",
+                      "FRIDAY",
+                      "SATURDAY",
+                      "SUNDAY"
+                    ],
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "emails": {
+                    "description": "Specifies the email addresses to send generated reports.\n",
+                    "items": {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "minItems": 0,
+                    "type": "array"
+                  },
+                  "enable": {
+                    "description": "Enables the report schedule.\n",
+                    "type": "boolean"
+                  },
+                  "filters": {
+                    "additionalProperties": false,
+                    "description": "Optional filters to apply while generating the report.\n",
+                    "properties": {
+                      "filters": {
+                        "description": "Filter strings to exclude or include report data. See the [Filters](ref:filters) object for a complete list.\n",
+                        "enum": [
+                          "INTERNALIP",
+                          "SOURCEPORT",
+                          "DESTINATIONPORT",
+                          "SINKHOLEID",
+                          "SINKHOLEIP",
+                          "HOSTNAME",
+                          "MACHINENAME",
+                          "UUID",
+                          "DESTINATIONIP",
+                          "SITE",
+                          "LIST",
+                          "POLICY",
+                          "ACTION",
+                          "CATEGORY",
+                          "ISALERT",
+                          "CONFIDENCE",
+                          "DOMAIN"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "format": {
+                    "description": "Format of the report.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "isHtml": {
+                    "description": "Indicates an HTML formatted report.\n",
+                    "type": "boolean"
+                  },
+                  "isNew": {
+                    "description": "Indicates a new report schedule.\n",
+                    "type": "boolean"
+                  },
+                  "recurrence": {
+                    "description": "The report schedule frequency, either `DAILY`, or `WEEKLY`. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+                    "enum": [
+                      "DAILY",
+                      "WEEKLY"
+                    ],
+                    "type": "string"
+                  },
+                  "reportTemplate": {
+                    "description": "The report template. The only currently supported syntax is `THREAT_EVENTS_BY_LOCATION_AND_DOMAIN`.\n",
+                    "enum": [
+                      "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN"
+                    ],
+                    "type": "string"
+                  },
+                  "scheduleId": {
+                    "description": "__Read-only__ A unique identifier for the report schedule configuration.\n",
+                    "minimum": 0,
+                    "readOnly": true,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "description": "The report schedule configuration status, either `ENABLED` or `DISABLED`.\n",
+                    "enum": [
+                      "ENABLED",
+                      "DISABLED"
+                    ],
+                    "type": "string"
+                  },
+                  "useFilters": {
+                    "description": "Indicates if the report should use filters.\n",
+                    "type": "boolean"
+                  },
+                  "userTimeZone": {
+                    "description": "Specifies a user-timezone-offset for generating the report. For example, `-05:00`.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "recurrence",
+                  "userTimeZone",
+                  "emails",
+                  "reportTemplate"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/report-schedule-post-request.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "scheduleId": 100,
+                  "recurrence": "WEEKLY",
+                  "dayOfWeek": "MONDAY",
+                  "userTimeZone": "+05:30",
+                  "status": "ENABLED",
+                  "reportTemplate": "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN",
+                  "daily": true,
+                  "enable": true,
+                  "isNew": true,
+                  "isHtml": true,
+                  "useFilters": false,
+                  "createdBy": "alfulani",
+                  "creationDate": "2017-06-22T11:12:55Z",
+                  "modifiedBy": "mrossi",
+                  "modifiedDate": "2017-06-28T11:12:55Z",
+                  "emails": [
+                    "user1@akamai.com",
+                    "user2@akamai.com"
+                  ],
+                  "filters": {
+                    "isAlert": {
+                      "in": [
+                        "true"
+                      ]
+                    }
+                  },
+                  "criterias": {
+                    "siteIds": []
+                  }
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Report scheduling configuration, on a daily or weekly basis.\n",
+                  "properties": {
+                    "createdBy": {
+                      "description": "The user who initially created the report schedule configuration.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "createdDate": {
+                      "description": "ISO 8601 timestamp marking the report schedule configuration's creation.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "criterias": {
+                      "additionalProperties": false,
+                      "description": "Describes the report criteria.\n",
+                      "properties": {
+                        "siteIds": {
+                          "description": "The site IDs applicable to the report.\n",
+                          "items": {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "minItems": 0,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "siteIds"
+                      ],
+                      "type": "object"
+                    },
+                    "daily": {
+                      "description": "Indicates a daily report schedule.\n",
+                      "type": "boolean"
+                    },
+                    "dayOfWeek": {
+                      "description": "Specifies the day of the week to generate the report. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+                      "enum": [
+                        "MONDAY",
+                        "TUESDAY",
+                        "WEDNESDAY",
+                        "THURSDAY",
+                        "FRIDAY",
+                        "SATURDAY",
+                        "SUNDAY"
+                      ],
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "emails": {
+                      "description": "Specifies the email addresses to send generated reports.\n",
+                      "items": {
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "enable": {
+                      "description": "Enables the report schedule.\n",
+                      "type": "boolean"
+                    },
+                    "filters": {
+                      "additionalProperties": true,
+                      "description": "Specifies filters to apply while generating the report.\n",
+                      "properties": {
+                        "filters": {
+                          "description": "Filter strings to exclude or include report data. Refer to [Filters object](ref:filters) for a complete list.\n",
+                          "enum": [
+                            "INTERNALIP",
+                            "SOURCEPORT",
+                            "DESTINATIONPORT",
+                            "SINKHOLEID",
+                            "SINKHOLEIP",
+                            "HOSTNAME",
+                            "MACHINENAME",
+                            "UUID",
+                            "DESTINATIONIP",
+                            "SITE",
+                            "LIST",
+                            "POLICY",
+                            "ACTION",
+                            "CATEGORY",
+                            "ISALERT",
+                            "CONFIDENCE",
+                            "DOMAIN"
+                          ],
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "format": {
+                      "description": "Format of the report.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "isHtml": {
+                      "description": "Indicates an HTML formatted report.\n",
+                      "type": "boolean"
+                    },
+                    "isNew": {
+                      "description": "Indicates a new report.\n",
+                      "type": "boolean"
+                    },
+                    "modifiedBy": {
+                      "description": "The user who last modified the report schedule configuration.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "modifiedDate": {
+                      "description": "ISO 8601 timestamp string marking the report schedule configuration's last modification.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "recurrence": {
+                      "description": "Specifies the frequency of the report schedule, either `DAILY`, or `WEEKLY`.\n",
+                      "enum": [
+                        "DAILY",
+                        "WEEKLY"
+                      ],
+                      "type": "string"
+                    },
+                    "reportTemplate": {
+                      "description": "Specifies the report template. The only currently supported syntax is `THREAT_EVENTS_BY_LOCATION_AND_DOMAIN`.\n",
+                      "enum": [
+                        "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN"
+                      ],
+                      "type": "string"
+                    },
+                    "scheduleId": {
+                      "description": "A unique identifier for the report schedule configuration.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "status": {
+                      "description": "Specifies the status of the report schedule configuration, either `ENABLED` or `DISABLED`.\n",
+                      "enum": [
+                        "ENABLED",
+                        "DISABLED"
+                      ],
+                      "type": "string"
+                    },
+                    "useFilters": {
+                      "description": "Indicates if the report should use filters.\n",
+                      "type": "boolean"
+                    },
+                    "userTimeZone": {
+                      "description": "Specifies a user timezone offset for generating the report. For example, `-05:00`.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "recurrence",
+                    "userTimeZone",
+                    "emails",
+                    "reportTemplate"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/report-schedule.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response.\n"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "invalid-format": {
+                    "summary": "Invalid request format",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "The system cannot understand your request.  Please check the syntax and correct any problems.",
+                      "status": 400,
+                      "instance": "1e4c346b-3a36-4527-9c37-86ae748b87c5"
+                    }
+                  },
+                  "invalid-start-time": {
+                    "summary": "Invalid startTime",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "Start time is invalid. Code-000104",
+                      "status": 400,
+                      "instance": "0415df5e-6e9c-4596-bdd3-9ada53b63599"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Bad Request](ref:400).\n",
+            "x-akamai": {
+              "file-path": "errors/400.yaml"
+            }
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/forbidden",
+                  "title": "Forbidden",
+                  "detail": "Insufficient permissions. Code-01",
+                  "status": 403,
+                  "instance": "3e3f11da-e205-409a-be77-24e459f29fa8"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Access forbidden](ref:403).\n",
+            "x-akamai": {
+              "file-path": "errors/insufficient-permissions-403.yaml"
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/not-found",
+                  "title": "Not Found",
+                  "detail": "Invalid SIA configuration 101. Code-090209",
+                  "status": 404,
+                  "instance": "aeb030ed-0645-484d-93e2-77e88566312c"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Configuration not Found](ref:404).\n",
+            "x-akamai": {
+              "file-path": "errors/not-found-404.yaml"
+            }
+          }
+        },
+        "summary": "Update a report schedule",
+        "tags": [
+          "Report schedules"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/schedule.yaml",
+        "path-info": "/configs/{configId}/schedules/{scheduleId}"
+      }
+    },
+    "/configs/{configId}/schedules/{scheduleId}/disable": {
+      "parameters": [
+        {
+          "description": "A unique identifier for each report schedule configuration.\n",
+          "in": "path",
+          "name": "scheduleId",
+          "required": true,
+          "schema": {
+            "example": 1000,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/schedule-id-path.yaml"
+          }
+        },
+        {
+          "description": "A unique identifier for each configuration.\n",
+          "in": "path",
+          "name": "configId",
+          "required": true,
+          "schema": {
+            "example": 100,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/config-id-path.yaml"
+          }
+        }
+      ],
+      "post": {
+        "description": "Disables the configuration of a specified report schedule.\n",
+        "operationId": "post-config-schedule-disable",
+        "responses": {
+          "200": {
+            "description": "Successful response.\n"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "invalid-format": {
+                    "summary": "Invalid request format",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "The system cannot understand your request.  Please check the syntax and correct any problems.",
+                      "status": 400,
+                      "instance": "1e4c346b-3a36-4527-9c37-86ae748b87c5"
+                    }
+                  },
+                  "invalid-start-time": {
+                    "summary": "Invalid startTime",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "Start time is invalid. Code-000104",
+                      "status": 400,
+                      "instance": "0415df5e-6e9c-4596-bdd3-9ada53b63599"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Bad Request](ref:400).\n",
+            "x-akamai": {
+              "file-path": "errors/400.yaml"
+            }
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/forbidden",
+                  "title": "Forbidden",
+                  "detail": "Insufficient permissions. Code-01",
+                  "status": 403,
+                  "instance": "3e3f11da-e205-409a-be77-24e459f29fa8"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Access forbidden](ref:403).\n",
+            "x-akamai": {
+              "file-path": "errors/insufficient-permissions-403.yaml"
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/not-found",
+                  "title": "Not Found",
+                  "detail": "Invalid SIA configuration 101. Code-090209",
+                  "status": 404,
+                  "instance": "aeb030ed-0645-484d-93e2-77e88566312c"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Configuration not Found](ref:404).\n",
+            "x-akamai": {
+              "file-path": "errors/not-found-404.yaml"
+            }
+          }
+        },
+        "summary": "Disable a report schedule",
+        "tags": [
+          "Report schedules"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/disable.yaml",
+        "path-info": "/configs/{configId}/schedules/{scheduleId}/disable"
+      }
+    },
+    "/configs/{configId}/schedules/{scheduleId}/enable": {
+      "parameters": [
+        {
+          "description": "A unique identifier for each report schedule configuration.\n",
+          "in": "path",
+          "name": "scheduleId",
+          "required": true,
+          "schema": {
+            "example": 1000,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/schedule-id-path.yaml"
+          }
+        },
+        {
+          "description": "A unique identifier for each configuration.\n",
+          "in": "path",
+          "name": "configId",
+          "required": true,
+          "schema": {
+            "example": 100,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/config-id-path.yaml"
+          }
+        }
+      ],
+      "post": {
+        "description": "Enables the configuration of a specified report schedule.\n",
+        "operationId": "post-config-schedule-enable",
+        "responses": {
+          "200": {
+            "description": "Successful response.\n"
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "examples": {
+                  "invalid-format": {
+                    "summary": "Invalid request format",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "The system cannot understand your request.  Please check the syntax and correct any problems.",
+                      "status": 400,
+                      "instance": "1e4c346b-3a36-4527-9c37-86ae748b87c5"
+                    }
+                  },
+                  "invalid-start-time": {
+                    "summary": "Invalid startTime",
+                    "value": {
+                      "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                      "title": "Bad Request",
+                      "detail": "Start time is invalid. Code-000104",
+                      "status": 400,
+                      "instance": "0415df5e-6e9c-4596-bdd3-9ada53b63599"
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Bad Request](ref:400).\n",
+            "x-akamai": {
+              "file-path": "errors/400.yaml"
+            }
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/forbidden",
+                  "title": "Forbidden",
+                  "detail": "Insufficient permissions. Code-01",
+                  "status": 403,
+                  "instance": "3e3f11da-e205-409a-be77-24e459f29fa8"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Access forbidden](ref:403).\n",
+            "x-akamai": {
+              "file-path": "errors/insufficient-permissions-403.yaml"
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.omni.akamaiapis.net/http/not-found",
+                  "title": "Not Found",
+                  "detail": "Invalid SIA configuration 101. Code-090209",
+                  "status": 404,
+                  "instance": "aeb030ed-0645-484d-93e2-77e88566312c"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                      "items": {
+                        "description": "A nested problem response error object.\n",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-nested.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "The URI for this error occurrence.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP status code generated by the origin server.\n",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A short, human-readable summary of the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI reference that identifies the problem type.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title",
+                    "detail",
+                    "instance",
+                    "status"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Configuration not Found](ref:404).\n",
+            "x-akamai": {
+              "file-path": "errors/not-found-404.yaml"
+            }
+          }
+        },
+        "summary": "Enable a report schedule",
+        "tags": [
+          "Report schedules"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/enable.yaml",
+        "path-info": "/configs/{configId}/schedules/{scheduleId}/enable"
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "config-id-path": {
+        "description": "A unique identifier for each configuration.\n",
+        "in": "path",
+        "name": "configId",
+        "required": true,
+        "schema": {
+          "example": 100,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/config-id-path.yaml"
+        }
+      },
+      "schedule-id-path": {
+        "description": "A unique identifier for each report schedule configuration.\n",
+        "in": "path",
+        "name": "scheduleId",
+        "required": true,
+        "schema": {
+          "example": 1000,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/schedule-id-path.yaml"
+        }
+      }
+    },
+    "schemas": {
+      "report-schedule": {
+        "additionalProperties": true,
+        "description": "Report scheduling configuration, on a daily or weekly basis.\n",
+        "properties": {
+          "createdBy": {
+            "description": "The user who initially created the report schedule configuration.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "createdDate": {
+            "description": "ISO 8601 timestamp marking the report schedule configuration's creation.\n",
+            "format": "date-time",
+            "type": "string"
+          },
+          "criterias": {
+            "additionalProperties": false,
+            "description": "Describes the report criteria.\n",
+            "properties": {
+              "siteIds": {
+                "description": "The site IDs applicable to the report.\n",
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "minItems": 0,
+                "type": "array"
+              }
+            },
+            "required": [
+              "siteIds"
+            ],
+            "type": "object"
+          },
+          "daily": {
+            "description": "Indicates a daily report schedule.\n",
+            "type": "boolean"
+          },
+          "dayOfWeek": {
+            "description": "Specifies the day of the week to generate the report. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+            "enum": [
+              "MONDAY",
+              "TUESDAY",
+              "WEDNESDAY",
+              "THURSDAY",
+              "FRIDAY",
+              "SATURDAY",
+              "SUNDAY"
+            ],
+            "nullable": true,
+            "type": "string"
+          },
+          "emails": {
+            "description": "Specifies the email addresses to send generated reports.\n",
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "minItems": 0,
+            "type": "array"
+          },
+          "enable": {
+            "description": "Enables the report schedule.\n",
+            "type": "boolean"
+          },
+          "filters": {
+            "additionalProperties": true,
+            "description": "Specifies filters to apply while generating the report.\n",
+            "properties": {
+              "filters": {
+                "description": "Filter strings to exclude or include report data. Refer to [Filters object](ref:filters) for a complete list.\n",
+                "enum": [
+                  "INTERNALIP",
+                  "SOURCEPORT",
+                  "DESTINATIONPORT",
+                  "SINKHOLEID",
+                  "SINKHOLEIP",
+                  "HOSTNAME",
+                  "MACHINENAME",
+                  "UUID",
+                  "DESTINATIONIP",
+                  "SITE",
+                  "LIST",
+                  "POLICY",
+                  "ACTION",
+                  "CATEGORY",
+                  "ISALERT",
+                  "CONFIDENCE",
+                  "DOMAIN"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "format": {
+            "description": "Format of the report.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "isHtml": {
+            "description": "Indicates an HTML formatted report.\n",
+            "type": "boolean"
+          },
+          "isNew": {
+            "description": "Indicates a new report.\n",
+            "type": "boolean"
+          },
+          "modifiedBy": {
+            "description": "The user who last modified the report schedule configuration.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "modifiedDate": {
+            "description": "ISO 8601 timestamp string marking the report schedule configuration's last modification.\n",
+            "format": "date-time",
+            "type": "string"
+          },
+          "recurrence": {
+            "description": "Specifies the frequency of the report schedule, either `DAILY`, or `WEEKLY`.\n",
+            "enum": [
+              "DAILY",
+              "WEEKLY"
+            ],
+            "type": "string"
+          },
+          "reportTemplate": {
+            "description": "Specifies the report template. The only currently supported syntax is `THREAT_EVENTS_BY_LOCATION_AND_DOMAIN`.\n",
+            "enum": [
+              "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN"
+            ],
+            "type": "string"
+          },
+          "scheduleId": {
+            "description": "A unique identifier for the report schedule configuration.\n",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "status": {
+            "description": "Specifies the status of the report schedule configuration, either `ENABLED` or `DISABLED`.\n",
+            "enum": [
+              "ENABLED",
+              "DISABLED"
+            ],
+            "type": "string"
+          },
+          "useFilters": {
+            "description": "Indicates if the report should use filters.\n",
+            "type": "boolean"
+          },
+          "userTimeZone": {
+            "description": "Specifies a user timezone offset for generating the report. For example, `-05:00`.\n",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "recurrence",
+          "userTimeZone",
+          "emails",
+          "reportTemplate"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/report-schedule.yaml"
+        }
+      },
+      "report-schedules": {
+        "description": "SIA report scheduling parameters.\n",
+        "items": {
+          "additionalProperties": true,
+          "description": "Report scheduling configuration, on a daily or weekly basis.\n",
+          "properties": {
+            "createdBy": {
+              "description": "The user who initially created the report schedule configuration.\n",
+              "minLength": 1,
+              "type": "string"
+            },
+            "createdDate": {
+              "description": "ISO 8601 timestamp marking the report schedule configuration's creation.\n",
+              "format": "date-time",
+              "type": "string"
+            },
+            "criterias": {
+              "additionalProperties": false,
+              "description": "Describes the report criteria.\n",
+              "properties": {
+                "siteIds": {
+                  "description": "The site IDs applicable to the report.\n",
+                  "items": {
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "minItems": 0,
+                  "type": "array"
+                }
+              },
+              "required": [
+                "siteIds"
+              ],
+              "type": "object"
+            },
+            "daily": {
+              "description": "Indicates a daily report schedule.\n",
+              "type": "boolean"
+            },
+            "dayOfWeek": {
+              "description": "Specifies the day of the week to generate the report. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+              "enum": [
+                "MONDAY",
+                "TUESDAY",
+                "WEDNESDAY",
+                "THURSDAY",
+                "FRIDAY",
+                "SATURDAY",
+                "SUNDAY"
+              ],
+              "nullable": true,
+              "type": "string"
+            },
+            "emails": {
+              "description": "Specifies the email addresses to send generated reports.\n",
+              "items": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "minItems": 0,
+              "type": "array"
+            },
+            "enable": {
+              "description": "Enables the report schedule.\n",
+              "type": "boolean"
+            },
+            "filters": {
+              "additionalProperties": true,
+              "description": "Specifies filters to apply while generating the report.\n",
+              "properties": {
+                "filters": {
+                  "description": "Filter strings to exclude or include report data. Refer to [Filters object](ref:filters) for a complete list.\n",
+                  "enum": [
+                    "INTERNALIP",
+                    "SOURCEPORT",
+                    "DESTINATIONPORT",
+                    "SINKHOLEID",
+                    "SINKHOLEIP",
+                    "HOSTNAME",
+                    "MACHINENAME",
+                    "UUID",
+                    "DESTINATIONIP",
+                    "SITE",
+                    "LIST",
+                    "POLICY",
+                    "ACTION",
+                    "CATEGORY",
+                    "ISALERT",
+                    "CONFIDENCE",
+                    "DOMAIN"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "format": {
+              "description": "Format of the report.\n",
+              "minLength": 1,
+              "type": "string"
+            },
+            "isHtml": {
+              "description": "Indicates an HTML formatted report.\n",
+              "type": "boolean"
+            },
+            "isNew": {
+              "description": "Indicates a new report.\n",
+              "type": "boolean"
+            },
+            "modifiedBy": {
+              "description": "The user who last modified the report schedule configuration.\n",
+              "minLength": 1,
+              "type": "string"
+            },
+            "modifiedDate": {
+              "description": "ISO 8601 timestamp string marking the report schedule configuration's last modification.\n",
+              "format": "date-time",
+              "type": "string"
+            },
+            "recurrence": {
+              "description": "Specifies the frequency of the report schedule, either `DAILY`, or `WEEKLY`.\n",
+              "enum": [
+                "DAILY",
+                "WEEKLY"
+              ],
+              "type": "string"
+            },
+            "reportTemplate": {
+              "description": "Specifies the report template. The only currently supported syntax is `THREAT_EVENTS_BY_LOCATION_AND_DOMAIN`.\n",
+              "enum": [
+                "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN"
+              ],
+              "type": "string"
+            },
+            "scheduleId": {
+              "description": "A unique identifier for the report schedule configuration.\n",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "status": {
+              "description": "Specifies the status of the report schedule configuration, either `ENABLED` or `DISABLED`.\n",
+              "enum": [
+                "ENABLED",
+                "DISABLED"
+              ],
+              "type": "string"
+            },
+            "useFilters": {
+              "description": "Indicates if the report should use filters.\n",
+              "type": "boolean"
+            },
+            "userTimeZone": {
+              "description": "Specifies a user timezone offset for generating the report. For example, `-05:00`.\n",
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "recurrence",
+            "userTimeZone",
+            "emails",
+            "reportTemplate"
+          ],
+          "type": "object",
+          "x-akamai": {
+            "file-path": "schemas/report-schedule.yaml"
+          }
+        },
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/report-schedules.yaml"
+        }
+      },
+      "http-problem-nested": {
+        "description": "A nested problem response error object.\n",
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/http-problem-nested.yaml"
+        }
+      },
+      "http-problem": {
+        "additionalProperties": true,
+        "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+        "properties": {
+          "detail": {
+            "description": "A human-readable explanation specific to the problem.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "errors": {
+            "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+            "items": {
+              "description": "A nested problem response error object.\n",
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/http-problem-nested.yaml"
+              }
+            },
+            "minItems": 0,
+            "type": "array"
+          },
+          "instance": {
+            "description": "The URI for this error occurrence.\n",
+            "type": "string"
+          },
+          "status": {
+            "description": "The HTTP status code generated by the origin server.\n",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "title": {
+            "description": "A short, human-readable summary of the problem type.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": {
+            "description": "A URI reference that identifies the problem type.\n",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title",
+          "detail",
+          "instance",
+          "status"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/http-problem.yaml"
+        }
+      },
+      "report-schedule-post-request": {
+        "additionalProperties": false,
+        "description": "Configures daily or weekly scheduled reports.\n",
+        "properties": {
+          "criterias": {
+            "additionalProperties": false,
+            "description": "The report criteria.\n",
+            "properties": {
+              "siteIds": {
+                "description": "The site IDs for the report.\n",
+                "items": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "minItems": 0,
+                "type": "array"
+              }
+            },
+            "required": [
+              "siteIds"
+            ],
+            "type": "object"
+          },
+          "daily": {
+            "description": "Indicates a daily report schedule.\n",
+            "type": "boolean"
+          },
+          "dayOfWeek": {
+            "description": "Specifies the day of the week to generate the report. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+            "enum": [
+              "MONDAY",
+              "TUESDAY",
+              "WEDNESDAY",
+              "THURSDAY",
+              "FRIDAY",
+              "SATURDAY",
+              "SUNDAY"
+            ],
+            "nullable": true,
+            "type": "string"
+          },
+          "emails": {
+            "description": "Specifies the email addresses to send generated reports.\n",
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "minItems": 0,
+            "type": "array"
+          },
+          "enable": {
+            "description": "Enables the report schedule.\n",
+            "type": "boolean"
+          },
+          "filters": {
+            "additionalProperties": false,
+            "description": "Optional filters to apply while generating the report.\n",
+            "properties": {
+              "filters": {
+                "description": "Filter strings to exclude or include report data. See the [Filters](ref:filters) object for a complete list.\n",
+                "enum": [
+                  "INTERNALIP",
+                  "SOURCEPORT",
+                  "DESTINATIONPORT",
+                  "SINKHOLEID",
+                  "SINKHOLEIP",
+                  "HOSTNAME",
+                  "MACHINENAME",
+                  "UUID",
+                  "DESTINATIONIP",
+                  "SITE",
+                  "LIST",
+                  "POLICY",
+                  "ACTION",
+                  "CATEGORY",
+                  "ISALERT",
+                  "CONFIDENCE",
+                  "DOMAIN"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "format": {
+            "description": "Format of the report.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "isHtml": {
+            "description": "Indicates an HTML formatted report.\n",
+            "type": "boolean"
+          },
+          "isNew": {
+            "description": "Indicates a new report schedule.\n",
+            "type": "boolean"
+          },
+          "recurrence": {
+            "description": "The report schedule frequency, either `DAILY`, or `WEEKLY`. Refer to [Report scheduling](ref:report-scheduling) for details.\n",
+            "enum": [
+              "DAILY",
+              "WEEKLY"
+            ],
+            "type": "string"
+          },
+          "reportTemplate": {
+            "description": "The report template. The only currently supported syntax is `THREAT_EVENTS_BY_LOCATION_AND_DOMAIN`.\n",
+            "enum": [
+              "THREAT_EVENTS_BY_LOCATION_AND_DOMAIN"
+            ],
+            "type": "string"
+          },
+          "scheduleId": {
+            "description": "__Read-only__ A unique identifier for the report schedule configuration.\n",
+            "minimum": 0,
+            "readOnly": true,
+            "type": "integer"
+          },
+          "status": {
+            "description": "The report schedule configuration status, either `ENABLED` or `DISABLED`.\n",
+            "enum": [
+              "ENABLED",
+              "DISABLED"
+            ],
+            "type": "string"
+          },
+          "useFilters": {
+            "description": "Indicates if the report should use filters.\n",
+            "type": "boolean"
+          },
+          "userTimeZone": {
+            "description": "Specifies a user-timezone-offset for generating the report. For example, `-05:00`.\n",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "recurrence",
+          "userTimeZone",
+          "emails",
+          "reportTemplate"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/report-schedule-post-request.yaml"
+        }
+      }
+    },
+    "responses": {
+      "400": {
+        "content": {
+          "application/problem+json": {
+            "examples": {
+              "invalid-format": {
+                "summary": "Invalid request format",
+                "value": {
+                  "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                  "title": "Bad Request",
+                  "detail": "The system cannot understand your request.  Please check the syntax and correct any problems.",
+                  "status": 400,
+                  "instance": "1e4c346b-3a36-4527-9c37-86ae748b87c5"
+                }
+              },
+              "invalid-start-time": {
+                "summary": "Invalid startTime",
+                "value": {
+                  "type": "https://problems.omni.akamaiapis.net/http/bad-request",
+                  "title": "Bad Request",
+                  "detail": "Start time is invalid. Code-000104",
+                  "status": 400,
+                  "instance": "0415df5e-6e9c-4596-bdd3-9ada53b63599"
+                }
+              }
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+              "properties": {
+                "detail": {
+                  "description": "A human-readable explanation specific to the problem.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "errors": {
+                  "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                  "items": {
+                    "description": "A nested problem response error object.\n",
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/http-problem-nested.yaml"
+                    }
+                  },
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "instance": {
+                  "description": "The URI for this error occurrence.\n",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "The HTTP status code generated by the origin server.\n",
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "A short, human-readable summary of the problem type.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "description": "A URI reference that identifies the problem type.\n",
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title",
+                "detail",
+                "instance",
+                "status"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/http-problem.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Bad Request](ref:400).\n",
+        "x-akamai": {
+          "file-path": "errors/400.yaml"
+        }
+      },
+      "insufficient-permissions-403": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "type": "https://problems.omni.akamaiapis.net/http/forbidden",
+              "title": "Forbidden",
+              "detail": "Insufficient permissions. Code-01",
+              "status": 403,
+              "instance": "3e3f11da-e205-409a-be77-24e459f29fa8"
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+              "properties": {
+                "detail": {
+                  "description": "A human-readable explanation specific to the problem.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "errors": {
+                  "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                  "items": {
+                    "description": "A nested problem response error object.\n",
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/http-problem-nested.yaml"
+                    }
+                  },
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "instance": {
+                  "description": "The URI for this error occurrence.\n",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "The HTTP status code generated by the origin server.\n",
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "A short, human-readable summary of the problem type.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "description": "A URI reference that identifies the problem type.\n",
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title",
+                "detail",
+                "instance",
+                "status"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/http-problem.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Access forbidden](ref:403).\n",
+        "x-akamai": {
+          "file-path": "errors/insufficient-permissions-403.yaml"
+        }
+      },
+      "not-found-404": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "type": "https://problems.omni.akamaiapis.net/http/not-found",
+              "title": "Not Found",
+              "detail": "Invalid SIA configuration 101. Code-090209",
+              "status": 404,
+              "instance": "aeb030ed-0645-484d-93e2-77e88566312c"
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "A common [RFC 9457](https://www.rfc-editor.org/rfc/rfc9457) Problem Response error.\n",
+              "properties": {
+                "detail": {
+                  "description": "A human-readable explanation specific to the problem.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "errors": {
+                  "description": "A list of HTTP problem details. The error response includes this list if there are several problems with a single request, to call out each of them separately.\n",
+                  "items": {
+                    "description": "A nested problem response error object.\n",
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/http-problem-nested.yaml"
+                    }
+                  },
+                  "minItems": 0,
+                  "type": "array"
+                },
+                "instance": {
+                  "description": "The URI for this error occurrence.\n",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "The HTTP status code generated by the origin server.\n",
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "A short, human-readable summary of the problem type.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "description": "A URI reference that identifies the problem type.\n",
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title",
+                "detail",
+                "instance",
+                "status"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/http-problem.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Configuration not Found](ref:404).\n",
+        "x-akamai": {
+          "file-path": "errors/not-found-404.yaml"
+        }
+      }
+    }
+  },
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "12-report-schedule.yaml"
+  }
+}

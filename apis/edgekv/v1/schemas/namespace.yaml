@@ -1,0 +1,64 @@
+type: object
+description: |-
+  Represents an EdgeKV namespace.
+  
+x-akamai:
+  file-path: schemas/namespace.yaml
+additionalProperties: false
+required:
+- namespace
+- retentionInSeconds
+- groupId
+properties:
+  dataAccessPolicy:
+    type: object
+    description: |
+      Overrides the default data access policy. If not specified, all new namespaces use the current `dataAccessPolicy`. The default data access policy is defined when first initializing EdgeKV. You can change the settings for new namespaces by running the [Modify the default data access policy](ref:put-auth-database) operation after initialization. You can't change the data access policy after you create a namespace.
+    additionalProperties: false
+    required:
+    - restrictDataAccess
+    - policyType
+    properties:
+      policyType:
+        type: string
+        description: |
+          __Read-only__ Indicates if the default data access policy has been `inherited` or `overridden`.
+        default: inherited
+        readOnly: true
+        enum:
+        - inherited
+        - overridden
+      restrictDataAccess:
+        type: boolean
+        description: |
+          Set a data access policy to override the default setting. You can only change the data access policy for a namespace if `allowNamespacePolicyOverride`  is set to `true` when first initializing EdgeKV. You can also use the [Modify the default data access policy](ref:put-auth-database) endpoint to change the settings after initialization is complete.
+  geoLocation:
+    type: string
+    description: |
+      Specifies the storage location for data when creating a namespace on the production network. This can help optimize performance by storing data where most of your users are located. Once you set this value, you can't modify it. The value defaults to `US` on the `STAGING` and `PRODUCTION` networks. The available locations on the `PRODUCTION` network also include `EU` (Europe), `JP` (Japan), and `GLOBAL`. The `GLOBAL` location automatically replicates data to `US`, `EU`, and `JP` storage locations. If you use the `GLOBAL` location, reads are faster but write operations are slighly slower.
+    default: US
+    enum:
+    - US
+    - EU
+    - JP
+    - GLOBAL
+  groupId:
+    type: integer
+    description: |
+      The Akamai access group the namespace is assigned to. A value of `0` makes the namespace available to all Akamai access groups on the account with EdgeKV capabilities.
+    minimum: 0
+  namespace:
+    type: string
+    description: |
+      A name for a namespace.
+  retentionInSeconds:
+    type: integer
+    description: |
+      Retention period of underlying data, represented in seconds. Accepts values between `86400` for one day and `315360000` for 10 years. You can also enter a value of `0` to retain data indefinitely.
+    oneOf:
+    - enum:
+      - 0
+      title: Retain data indefinitely
+    - maximum: 315360000
+      title: Retain data for a specific period
+      minimum: 86400

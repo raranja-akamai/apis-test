@@ -1,0 +1,67 @@
+type: object
+x-akamai:
+  file-path: schemas/config-version-open-output.yaml
+properties:
+  configVersionId:
+    type: integer
+  createdBy:
+    type: string
+  createdTimestamp:
+    type: string
+    format: date-time
+  ipsAllocated:
+    type: integer
+  ipsConfigured:
+    type: integer
+  pdSubnets:
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      properties:
+        legacyPdSubnet:
+          type: boolean
+        pdSubnet:
+          type: string
+        pdSubnetId:
+          type: integer
+        vips:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                description: |
+                  The type of IP address or subnet service configured.
+              akamaiFrontend:
+                type: string
+                description: |
+                  The Akamai virtual IP address that's been mapped to a back-end server or subnet.
+              customerBackend:
+                type: string
+              legacyVip:
+                type: boolean
+                description: |
+                  Indicates whether Prolexic Proxy created the virtual IP address.
+              ports:
+                type: string
+              sourceIpProtocol:
+                type: string
+                description: |
+                  This field is used to manage Source IP data on their VIPs. CIP, Proxy Protocol(V1 & V2) and OPTION_28 are available only when VIP is running over TCP. NAT46 option is available if the VIP has an IPv4 front end, with an IPv6 back end. NA is used as a default option when source IP data is not available for a particular VIP.
+                enum:
+                - CIP
+                - PROXY_PROTOCOL_V1
+                - PROXY_PROTOCOL_V2
+                - OPTION_28
+                - NAT46
+                - NA
+              vipId:
+                type: integer
+  updatedBy:
+    type: string
+    nullable: true
+  updatedTimestamp:
+    type: string
+    format: date-time

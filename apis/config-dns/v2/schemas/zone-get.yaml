@@ -1,0 +1,108 @@
+type: object
+description: |-
+  An Edge DNS zone. This object contains zone settings, but not record sets.
+  
+x-akamai:
+  file-path: schemas/zone-get.yaml
+additionalProperties: false
+required:
+- contractId
+- zone
+- type
+- versionId
+- lastModifiedDate
+- lastModifiedBy
+- activationState
+properties:
+  type:
+    type: string
+    description: |
+      The zone type. A `PRIMARY` zone's records are stored in Control Center. A `SECONDARY` zone's records are stored on the customer's name servers. `ALIAS` zones allow users to duplicate the configuration of an existing zone.
+    enum:
+    - PRIMARY
+    - SECONDARY
+    - ALIAS
+  activationState:
+    type: string
+    description: |
+      The current zone activation status. Either `NEW`, `PENDING`, `PENDING_APPROVAL`, `ACTIVE`, `OBSOLETE`, `LOCKED`, `ERROR`, or `DELETED`.
+    enum:
+    - NEW
+    - PENDING
+    - PENDING_APPROVAL
+    - ACTIVE
+    - OBSOLETE
+    - ERROR
+    - LOCKED
+    - DELETED
+  aliasCount:
+    type: integer
+    description: |
+      For primary and secondary zones only. The number of zones of type `ALIAS` that point to this zone.
+  comment:
+    type: string
+    description: |
+      Free-form user comments.
+  contractId:
+    type: string
+    description: |
+      The contract for this zone.
+  endCustomerId:
+    type: string
+    description: |
+      Free-form user identifier for this zone, often used by resellers.
+  lastActivationDate:
+    type: string
+    description: |
+      "An ISO 8601 timestamp indicating when the latest zone version was activated. For primary and secondary zones only.
+      \n"
+  lastModifiedBy:
+    type: string
+    description: |
+      The name of the user that last edited this zone.
+  lastModifiedDate:
+    type: string
+    description: |
+      An ISO 8601 timestamp indicating when the zone was last modified.
+  masters:
+    type: array
+    description: |
+      "The names or addresses of the customer's name servers from which the zone data should be retrieved. For `SECONDARY` zones
+      only. \n"
+    items:
+      type: string
+  outboundZoneTransfer:
+    $ref: outbound-zone-transfer.yaml
+  signAndServe:
+    type: boolean
+    description: |
+      Whether DNSSEC Sign&Serve is enabled. Applies to primary and secondary zones only.
+  signAndServeAlgorithm:
+    type: string
+    description: |
+      The algorithm currently or last used for DNSSEC Sign&Serve, present only if an algorithm has been assigned. Either `RSA_SHA1`, `RSA_SHA256`, `RSA_SHA512`, `ECDSA_P256_SHA256`, or `ECDSA_P384_SHA384`.
+    nullable: true
+    enum:
+    - RSA_SHA1
+    - RSA_SHA256
+    - RSA_SHA512
+    - ECDSA_P256_SHA256
+    - ECDSA_P384_SHA384
+  subzoneGrants:
+    type: boolean
+    description: |
+      Indicates that cross-account subzones are enabled. Users can still create subzones.
+  target:
+    type: string
+    description: |
+      The name of the zone whose configuration this zone copies. For `ALIAS` zones only. 
+  tsigKey:
+    $ref: tsigkey-get.yaml
+  versionId:
+    type: string
+    description: |
+      The most recently activated version's unique ID. You can use this value as an `ETag` when performing operations that affect zones.
+  zone:
+    type: string
+    description: |
+      The name of the zone.

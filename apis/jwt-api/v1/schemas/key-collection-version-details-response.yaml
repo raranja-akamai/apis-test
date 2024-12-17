@@ -1,0 +1,67 @@
+type: object
+description: |-
+  Describes a key collection version, including its public keys and details about the encryption algorithm used for their generation. It also specifies whether the version is active in the staging and production environments.
+  
+x-akamai:
+  file-path: schemas/key-collection-version-details-response.yaml
+additionalProperties: false
+required:
+- collectionId
+- versionId
+- versionNo
+- primaryKey
+- staging
+- production
+properties:
+  description:
+    type: string
+    description: |
+      A description for the key collection version.
+    minLength: 1
+  algorithm:
+    type: string
+    description: |
+      The encryption algorithm of the public keys in the `primaryKey` and `secondaryKey` members, either `RSA` or `ECDSA_P_256`.
+    enum:
+    - RSA
+    - ECDSA_P_256
+    minLength: 1
+  algorithmDetails:
+    type: string
+    description: |
+      Details about the encryption algorithm used to generate the public  key in the `primaryKey` member. For `RSA`, it specifies the length of an RSA   key. For `ECDSA_P_256`, it specifies the parameter of the P-256 elliptic curve, only `secp256k1` is available at this time. See [Keys and JWT signing algorithms](ref:keys-and-jwt-signing-algorithms).
+    minLength: 1
+  collectionId:
+    type: integer
+    description: |
+      The identifier of the key collection.
+    minimum: 1
+  primaryKey:
+    type: string
+    description: |
+      The primary RSA or ECDSA public key. The version uses it to validate JWT signatures. This key is in PEM format, which presents base64-encoded data between the begin header and the end footer. See [Keys and JWT signing algorithms](ref:keys-and-jwt-signing-algorithms).
+    minLength: 1
+  production:
+    $ref: current-version-details-response.yaml
+  secondaryAlgorithmDetails:
+    type: string
+    description: |
+      Details about the encryption algorithm used to generate the public  key in the `secondaryKey` member. For `RSA`, it specifies the length of the  RSA key. For `ECDSA_P_256`, it specifies the parameter of the P-256 elliptic curve, only `secp256k1` is available at this time. See [Keys and JWT signing algorithms](ref:keys-and-jwt-signing-algorithms).
+    minLength: 1
+  secondaryKey:
+    type: string
+    description: |
+      The backup RSA or ECDSA public key. The version uses it to validate JWT signatures in case the `primaryKey` fails. This key is in PEM format, which presents base64-encoded data between the begin header and the end footer. See [Key rotation](ref:rotate-public-keys) and [Keys and JWT signing algorithms](ref:keys-and-jwt-signing-algorithms).
+    minLength: 1
+  staging:
+    $ref: current-version-details-response.yaml
+  versionId:
+    type: integer
+    description: |
+      The identifier of the key collection version.
+    minimum: 1
+  versionNo:
+    type: integer
+    description: |
+      The number of the key collection version. With each new version of this key collection, this number increments by 1.
+    minimum: 1
