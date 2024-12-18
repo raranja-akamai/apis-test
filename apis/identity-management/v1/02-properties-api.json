@@ -6,39 +6,29 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "title": "Properties",
-    "version": "3"
+    "version": "v2"
   },
   "servers": [
     {
-      "url": "https://{hostname}/identity-management/v3"
-    }
-  ],
-  "tags": [
-    {
-      "description": "Fetch properties and includes used by an account with their details,\nincluding their users.\n",
-      "name": "Assets"
-    },
-    {
-      "description": "Fetch resources used by a property or include.\n",
-      "name": "Resources"
+      "url": "https://{hostname}/identity-management/v2"
     }
   ],
   "paths": {
     "/user-admin/properties": {
       "get": {
-        "description": "This operation lists the properties and includes for the current account or other managed accounts using the `accountSwitchKey` parameter. Include the `groupId` parameter in your request to filter the results by group. The response returns a list of `propertyId` regardless of whether they represent a property or include in PAPI. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
+        "description": "Return a list of properties for an account. Include the `groupId` parameter in your request to filter the results by group.\n",
         "operationId": "get-properties",
         "parameters": [
           {
-            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+            "description": "A unique identifier for each group.\n",
             "in": "query",
             "name": "groupId",
             "schema": {
-              "example": 54321,
+              "example": 32145,
               "type": "integer"
             },
             "x-akamai": {
-              "file-path": "parameters/group-id-opt-group-id.yaml"
+              "file-path": "parameters/group-idopt-group-id.yaml"
             }
           }
         ],
@@ -48,69 +38,61 @@
               "application/json": {
                 "example": [
                   {
-                    "groupName": "Digital Company",
-                    "groupId": 12345,
+                    "groupName": "Internet Company",
+                    "groupId": 32145,
                     "propertyId": 99999999,
                     "propertyTypeDescription": "On Demand Media",
-                    "propertyName": "0rb-digital-company-01.com",
+                    "propertyName": "0rb-internet-company-01.com",
                     "actions": {
                       "move": true
                     }
                   },
                   {
-                    "groupName": "Internet Company",
-                    "groupId": 32145,
+                    "groupName": "Digital Company",
+                    "groupId": 12345,
                     "propertyId": 88888888,
                     "propertyTypeDescription": "On Demand Media",
-                    "propertyName": "0rb-internet-company-01.com",
+                    "propertyName": "0rb-digital-company-01.com",
                     "actions": {
                       "move": true
                     }
                   }
                 ],
                 "schema": {
-                  "description": "Encapsulates information about each property.\n",
+                  "description": "Encapsulates information about a property.\n",
                   "items": {
                     "additionalProperties": false,
-                    "description": "Encapsulates information about an asset.\n",
+                    "description": "Encapsulates information about a property.\n",
                     "properties": {
                       "actions": {
                         "additionalProperties": false,
-                        "description": "Specifies activities available for the group.\n",
+                        "description": "Encapsulates permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
                         "properties": {
                           "move": {
-                            "description": "Whether you can move a asset from one group to another group.\n",
+                            "description": "Move a property from one group to another group.\n",
                             "type": "boolean"
                           }
                         },
-                        "required": [
-                          "move"
-                        ],
                         "type": "object"
                       },
                       "groupId": {
-                        "description": "Unique identifier for each group. It filters down results to properties in the specified group.\n",
-                        "minimum": 0,
+                        "description": "A unique identifier for each group.\n",
                         "type": "integer"
                       },
                       "groupName": {
-                        "description": "Descriptive label for the group.\n",
-                        "minLength": 1,
+                        "description": "A group's name.\n",
                         "type": "string"
                       },
                       "propertyId": {
-                        "description": "Unique identifier for a property or include. This is what [PAPI](https://techdocs.akamai.com/property-mgr/reference/get-properties) refers to as an `assetId`. Note there’s a discrepancy between how PAPI and Identity and Access Management refer to `propertyId` values. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
-                        "minimum": 0,
+                        "description": "A unique identifier for each property.\n",
                         "type": "integer"
                       },
                       "propertyName": {
-                        "description": "Name of the property [created in PAPI](https://techdocs.akamai.com/property-mgr/reference/post-properties), or the `includeName` when [creating an include](https://techdocs.akamai.com/property-mgr/reference/post-includes). To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
-                        "minLength": 1,
+                        "description": "The name for a property.\n",
                         "type": "string"
                       },
                       "propertyTypeDescription": {
                         "description": "Identifies the product-type such as `On Demand Media`, `Site`, `Application`, `Live Media Streams`, or `NetStorage`.\n",
-                        "minLength": 1,
                         "type": "string"
                       }
                     },
@@ -119,14 +101,14 @@
                       "groupId",
                       "groupName",
                       "propertyName",
-                      "propertyTypeDescription"
+                      "propertyTypeDescription",
+                      "actions"
                     ],
                     "type": "object",
                     "x-akamai": {
                       "file-path": "schemas/property-list-item.yaml"
                     }
                   },
-                  "minItems": 0,
                   "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/list-of-property-list-item.yaml"
@@ -134,12 +116,12 @@
                 }
               }
             },
-            "description": "The response provides the assets.\n"
+            "description": "The response lists properties.\n"
           }
         },
-        "summary": "List properties or includes",
+        "summary": "List properties",
         "tags": [
-          "Assets"
+          "Properties"
         ]
       },
       "x-akamai": {
@@ -147,13 +129,13 @@
         "path-info": "/user-admin/properties"
       }
     },
-    "/user-admin/properties/{assetId}": {
+    "/user-admin/properties/{propertyId}": {
       "get": {
-        "description": "This operation fetches a property's or include's details. The response returns details for `propertyId` regardless of whether it represent a property or include in PAPI. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
+        "description": "Get information about a property.\n",
         "operationId": "get-property",
         "parameters": [
           {
-            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+            "description": "A unique identifier for each group.\n",
             "in": "query",
             "name": "groupId",
             "required": true,
@@ -162,7 +144,7 @@
               "type": "integer"
             },
             "x-akamai": {
-              "file-path": "parameters/group-id-req-qp-group-id.yaml"
+              "file-path": "parameters/group-idreq-qp-group-id.yaml"
             }
           }
         ],
@@ -172,62 +154,55 @@
               "application/json": {
                 "example": {
                   "createdDate": "2017-07-27T18:11:25.000Z",
-                  "createdBy": "afero@example.com",
+                  "createdBy": "mrossi@example.com",
                   "modifiedDate": "2017-07-27T18:11:25.000Z",
-                  "modifiedBy": "adevi@example.com",
+                  "modifiedBy": "alfulani@example.com",
                   "groupName": "Sales Team",
-                  "groupId": 12345,
-                  "arlConfigFile": "0rb-internet-company-01.com.xml",
+                  "groupId": 32145,
+                  "arlConfigFile": "abc-dn123-abcde.akamaiorigin.net.xml",
                   "propertyId": 9678999,
-                  "propertyName": "0rb-internet-company-01.com"
+                  "propertyName": "abc-dn123-abcde.akamaiorigin.net"
                 },
                 "schema": {
                   "additionalProperties": false,
-                  "description": "Encapsulates information about an asset.\n",
+                  "description": "Encapsulates information about a property.\n",
                   "properties": {
                     "arlConfigFile": {
-                      "description": "An ARL (Akamai resource locator) configuration file, specifying versions of an object you can't purge using the URL. The `arlConfigFile` is the same as the `propertyName` with an `xml` extension.\n",
-                      "minLength": 1,
+                      "description": "The configuration file. The `arlConfigFile` is the same as the `propertyName` with an xml extension.\n",
                       "type": "string"
                     },
                     "createdBy": {
-                      "description": "The user who created the asset.\n",
-                      "minLength": 1,
+                      "description": "The username of the person who created the property.\n",
                       "type": "string"
                     },
                     "createdDate": {
-                      "description": "ISO 8601 timestamp indicating when the asset was originally created.\n",
+                      "description": "ISO 8601 timestamp indicating when the property was originally created.\n",
                       "format": "date-time",
                       "type": "string"
                     },
                     "groupId": {
-                      "description": "Unique identifier for each group. It filters down results to properties in the specified group.\n",
-                      "minimum": 0,
+                      "description": "A unique identifier for each group.\n",
                       "type": "integer"
                     },
                     "groupName": {
-                      "description": "Descriptive label for the group.\n",
-                      "minLength": 1,
+                      "description": "A group's name.\n",
                       "type": "string"
                     },
                     "modifiedBy": {
-                      "description": "The user who last edited the asset.\n",
-                      "minLength": 1,
+                      "description": "The username of the last person to edit the property.\n",
                       "type": "string"
                     },
                     "modifiedDate": {
-                      "description": "ISO 8601 timestamp indicating when the asset was last updated.\n",
+                      "description": "ISO 8601 timestamp indicating when the property was last updated.\n",
                       "format": "date-time",
                       "type": "string"
                     },
                     "propertyId": {
-                      "description": "Unique identifier for a property or include. This is what [PAPI](https://techdocs.akamai.com/property-mgr/reference/get-properties) refers to as an `assetId`. Note there’s a discrepancy between how PAPI and Identity and Access Management refer to `propertyId` values. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
-                      "minimum": 0,
+                      "description": "A unique identifier for each property.\n",
                       "type": "integer"
                     },
                     "propertyName": {
-                      "description": "Name of the property [created in PAPI](https://techdocs.akamai.com/property-mgr/reference/post-properties), or the `includeName` when [creating an include](https://techdocs.akamai.com/property-mgr/reference/post-includes). To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
-                      "minLength": 1,
+                      "description": "The name for a property.\n",
                       "type": "string"
                     }
                   },
@@ -249,31 +224,31 @@
                 }
               }
             },
-            "description": "The response provides the asset's details.\n"
+            "description": "The response returns the property.\n"
           }
         },
-        "summary": "Get a property or include",
+        "summary": "Get a property",
         "tags": [
-          "Assets"
+          "Properties"
         ]
       },
       "parameters": [
         {
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
+          "description": "A unique identifier for each property.\n",
           "in": "path",
-          "name": "assetId",
+          "name": "propertyId",
           "required": true,
           "schema": {
             "example": 9678999,
             "type": "integer"
           },
           "x-akamai": {
-            "file-path": "parameters/asset-id-path.yaml"
+            "file-path": "parameters/property-id-path.yaml"
           }
         }
       ],
       "put": {
-        "description": "This operation moves a property or include from one group to another group. You can only move an asset into another group within the same group hierarchy. Depending on your role in the destination group, you may lose access to resources the asset uses. Before moving an asset, run the [List users affected by moving a group](ref:get-move-affected-users) operation to review which users will be affected by the move.\n",
+        "description": "Move a property from one group to another group. You can only move a property into another group within the same group hierarchy. Depending on your role in the destination group, you may lose access to resources the property uses.\n",
         "operationId": "put-property",
         "requestBody": {
           "content": {
@@ -287,13 +262,11 @@
                 "description": "Describes the request body for moving a property under another group.\n",
                 "properties": {
                   "destinationGroupId": {
-                    "description": "Identifies the group where you want to move the `sourceGroupId` within the same parent hierarchy. To get this value, run the [List groups](ref:get-groups) operation.\n",
-                    "minimum": 0,
+                    "description": "Identifies the group within account hierarchy where you want to move the `sourceGroupId`. It can't be a child or descendant of the current group.\n",
                     "type": "integer"
                   },
                   "sourceGroupId": {
-                    "description": "Identifies the group from which you want to move the asset. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
-                    "minimum": 0,
+                    "description": "Identifies the nested group you want to move to the `destinationGroupId`.\n",
                     "type": "integer"
                   }
                 },
@@ -312,26 +285,26 @@
         },
         "responses": {
           "204": {
-            "description": "Asset successfully moved.\n"
+            "description": "Property moved.\n"
           }
         },
-        "summary": "Move a property or include",
+        "summary": "Move a property",
         "tags": [
-          "Assets"
+          "Properties"
         ]
       },
       "x-akamai": {
         "file-path": "paths/property.yaml",
-        "path-info": "/user-admin/properties/{assetId}"
+        "path-info": "/user-admin/properties/{propertyId}"
       }
     },
-    "/user-admin/properties/{assetId}/resources": {
+    "/user-admin/properties/{propertyId}/resources": {
       "get": {
-        "description": "This operation lists resources a property or include uses to deliver your web content across Akamai's edge network. You can think of these resources as objects, like CP codes and configuration files. For example, an ARL (Akamai resource locator) configuration file specifies how Akamai purges versions of an object that you can’t purge using just the URL.\n",
+        "description": "List of resources the property uses.\n",
         "operationId": "get-property-resources",
         "parameters": [
           {
-            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+            "description": "A unique identifier for each group.\n",
             "in": "query",
             "name": "groupId",
             "required": true,
@@ -340,7 +313,7 @@
               "type": "integer"
             },
             "x-akamai": {
-              "file-path": "parameters/group-id-req-qp-group-id.yaml"
+              "file-path": "parameters/group-idreq-qp-group-id.yaml"
             }
           }
         ],
@@ -352,13 +325,13 @@
                   {
                     "resourceId": 111111,
                     "resourceType": "arlfile",
-                    "resourceName": "0rb-internet-company-01.com.xml",
+                    "resourceName": "abc-dn123-abcde.akamaiorigin.net.xml",
                     "modifiedDate": "2017-09-07T17:00:58.000Z"
                   },
                   {
                     "resourceId": 8988898,
                     "resourceType": "cpcode",
-                    "resourceName": "mycpcode(123456)",
+                    "resourceName": "mycpcodeexample(123456)",
                     "modifiedDate": "2017-04-24T16:19:27.000Z"
                   }
                 ],
@@ -375,40 +348,30 @@
                       },
                       "resourceId": {
                         "description": "Unique identifier for each resource.\n",
-                        "minimum": 0,
                         "type": "integer"
                       },
                       "resourceName": {
-                        "description": "Descriptive label for the resource.\n",
-                        "minLength": 1,
+                        "description": "The name you supply for the resource.\n",
                         "type": "string"
                       },
                       "resourceType": {
-                        "description": "Helps to characterize a asset's resource, either `cname`, `arlfile`, `cpcode`, `storagegroup`, `fpdomain`, or `edns`. For more information, see [View property details](https://techdocs.akamai.com/iam/docs/mng-properties).\n",
+                        "description": "The type of the resource, either `cname`, `arlfile`, `cpcode`, `storagegroup`, `fpdomain`, or `edns`.\n",
                         "enum": [
-                          "enable",
+                          "cname",
                           "arlfile",
                           "cpcode",
                           "storagegroup",
                           "fpdomain",
                           "edns"
                         ],
-                        "minLength": 1,
                         "type": "string"
                       }
                     },
-                    "required": [
-                      "resourceId",
-                      "resourceType",
-                      "resourceName",
-                      "modifiedDate"
-                    ],
                     "type": "object",
                     "x-akamai": {
                       "file-path": "schemas/resource-item.yaml"
                     }
                   },
-                  "minItems": 0,
                   "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/list-of-resource-item.yaml"
@@ -416,41 +379,41 @@
                 }
               }
             },
-            "description": "The response provides the resources.\n"
+            "description": "The response returns resources.\n"
           }
         },
-        "summary": "Get asset's resources",
+        "summary": "Get a property's resources",
         "tags": [
           "Resources"
         ]
       },
       "parameters": [
         {
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
+          "description": "A unique identifier for each property.\n",
           "in": "path",
-          "name": "assetId",
+          "name": "propertyId",
           "required": true,
           "schema": {
             "example": 9678999,
             "type": "integer"
           },
           "x-akamai": {
-            "file-path": "parameters/asset-id-path.yaml"
+            "file-path": "parameters/property-id-path.yaml"
           }
         }
       ],
       "x-akamai": {
         "file-path": "paths/resources.yaml",
-        "path-info": "/user-admin/properties/{assetId}/resources"
+        "path-info": "/user-admin/properties/{propertyId}/resources"
       }
     },
-    "/user-admin/properties/{assetId}/users": {
+    "/user-admin/properties/{propertyId}/users": {
       "get": {
-        "description": "This operation lists users who can access a property or include.\n",
+        "description": "List users who can access this property.\n",
         "operationId": "get-property-users",
         "parameters": [
           {
-            "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.\n",
+            "description": "Indicates the type of users to get, either those who have `lostAccess` or the reverse `gainAccess`.\n",
             "in": "query",
             "name": "userType",
             "schema": {
@@ -472,14 +435,14 @@
               "application/json": {
                 "example": [
                   {
-                    "uiUserName": "szhang",
+                    "uiUserName": "aditparikh",
                     "uiIdentityId": "B-3-146FAB9",
                     "firstName": "Media",
                     "lastName": "QA",
                     "isBlocked": true
                   },
                   {
-                    "uiUserName": "mrossi",
+                    "uiUserName": "amoody",
                     "uiIdentityId": "B-C-IP9IND",
                     "firstName": "Bert",
                     "lastName": "Moody",
@@ -487,33 +450,29 @@
                   }
                 ],
                 "schema": {
-                  "description": "Encapsulates all the users of a property by property ID.\n",
+                  "description": "All the users of a property, by property ID.\n",
                   "items": {
                     "additionalProperties": false,
-                    "description": "Encapsulates all the users of a property by property ID.\n",
+                    "description": "This object encapsulates all the users of a property by property ID.\n",
                     "properties": {
                       "firstName": {
                         "description": "The user's first name.\n",
-                        "minLength": 1,
                         "type": "string"
                       },
                       "isBlocked": {
-                        "description": "Whether a user's access to an asset is blocked.\n",
+                        "description": "Shows if the user is blocked.\n",
                         "type": "boolean"
                       },
                       "lastName": {
-                        "description": "The user's surname.\n",
-                        "minLength": 1,
+                        "description": "The user's last name.\n",
                         "type": "string"
                       },
                       "uiIdentityId": {
-                        "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.\n",
-                        "minLength": 1,
+                        "description": "A unique identifier for a user. Also known as a `contactId` in other APIs.\n",
                         "type": "string"
                       },
                       "uiUserName": {
-                        "description": "The user's username in Control Center.\n",
-                        "minLength": 1,
+                        "description": "The full name for the user, as it appears in interfaces.\n",
                         "type": "string"
                       }
                     },
@@ -529,7 +488,6 @@
                       "file-path": "schemas/user-property-id.yaml"
                     }
                   },
-                  "minItems": 0,
                   "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/users-of-property-response.yaml"
@@ -537,52 +495,52 @@
                 }
               }
             },
-            "description": "The response provides the users accessing the property or include.\n"
+            "description": "The response lists users.\n"
           }
         },
-        "summary": "List users for property or include",
+        "summary": "List users for property",
         "tags": [
-          "Assets"
+          "Users"
         ]
       },
       "parameters": [
         {
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
+          "description": "A unique identifier for each property.\n",
           "in": "path",
-          "name": "assetId",
+          "name": "propertyId",
           "required": true,
           "schema": {
             "example": 9678999,
             "type": "integer"
           },
           "x-akamai": {
-            "file-path": "parameters/asset-id-path.yaml"
+            "file-path": "parameters/property-id-path.yaml"
           }
         }
       ],
       "x-akamai": {
-        "file-path": "paths/users-property.yaml",
-        "path-info": "/user-admin/properties/{assetId}/users"
+        "file-path": "paths/users.yaml",
+        "path-info": "/user-admin/properties/{propertyId}/users"
       }
     },
-    "/user-admin/properties/{assetId}/users/block": {
+    "/user-admin/properties/{propertyId}/users/block": {
       "parameters": [
         {
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
+          "description": "A unique identifier for each property.\n",
           "in": "path",
-          "name": "assetId",
+          "name": "propertyId",
           "required": true,
           "schema": {
             "example": 9678999,
             "type": "integer"
           },
           "x-akamai": {
-            "file-path": "parameters/asset-id-path.yaml"
+            "file-path": "parameters/property-id-path.yaml"
           }
         }
       ],
       "put": {
-        "description": "This operation blocks the users on a property or include.\n",
+        "description": "Block the list of users on a property.\n",
         "operationId": "put-property-users-block",
         "requestBody": {
           "content": {
@@ -596,14 +554,14 @@
                 }
               ],
               "schema": {
-                "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
+                "description": "This object encapsulates all the users who needs to be blocked based on UI identities.\n",
                 "items": {
                   "additionalProperties": false,
-                  "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
+                  "description": "This object encapsulates all the users who needs to be blocked based on UI identities.\n",
                   "properties": {
                     "uiIdentityId": {
-                      "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs. To get this value, run the [List users for property or include](ref:get-property-users) operation.\n",
-                      "minLength": 1,
+                      "description": "__Read-only__ A unique identifier for a user. Also known as a `contactId` in other APIs.\n",
+                      "readOnly": true,
                       "type": "string"
                     }
                   },
@@ -612,13 +570,12 @@
                   ],
                   "type": "object",
                   "x-akamai": {
-                    "file-path": "schemas/user-block-uiidentities.yaml"
+                    "file-path": "schemas/user-block-ui-identities.yaml"
                   }
                 },
-                "minItems": 0,
                 "type": "array",
                 "x-akamai": {
-                  "file-path": "schemas/users-block-uiidentities.yaml"
+                  "file-path": "schemas/users-block-ui-identities.yaml"
                 }
               }
             }
@@ -631,14 +588,14 @@
               "application/json": {
                 "example": [
                   {
-                    "uiUserName": "szhang",
+                    "uiUserName": "aditparikh",
                     "uiIdentityId": "B-3-146FAB9",
                     "firstName": "Media",
                     "lastName": "QA",
                     "isBlocked": true
                   },
                   {
-                    "uiUserName": "mrossi",
+                    "uiUserName": "amoody",
                     "uiIdentityId": "B-C-IP9IND",
                     "firstName": "Bert",
                     "lastName": "Moody",
@@ -646,33 +603,29 @@
                   }
                 ],
                 "schema": {
-                  "description": "Encapsulates all the users of a property by property ID.\n",
+                  "description": "All the users of a property, by property ID.\n",
                   "items": {
                     "additionalProperties": false,
-                    "description": "Encapsulates all the users of a property by property ID.\n",
+                    "description": "This object encapsulates all the users of a property by property ID.\n",
                     "properties": {
                       "firstName": {
                         "description": "The user's first name.\n",
-                        "minLength": 1,
                         "type": "string"
                       },
                       "isBlocked": {
-                        "description": "Whether a user's access to an asset is blocked.\n",
+                        "description": "Shows if the user is blocked.\n",
                         "type": "boolean"
                       },
                       "lastName": {
-                        "description": "The user's surname.\n",
-                        "minLength": 1,
+                        "description": "The user's last name.\n",
                         "type": "string"
                       },
                       "uiIdentityId": {
-                        "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.\n",
-                        "minLength": 1,
+                        "description": "A unique identifier for a user. Also known as a `contactId` in other APIs.\n",
                         "type": "string"
                       },
                       "uiUserName": {
-                        "description": "The user's username in Control Center.\n",
-                        "minLength": 1,
+                        "description": "The full name for the user, as it appears in interfaces.\n",
                         "type": "string"
                       }
                     },
@@ -688,7 +641,6 @@
                       "file-path": "schemas/user-property-id.yaml"
                     }
                   },
-                  "minItems": 0,
                   "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/users-of-property-response.yaml"
@@ -696,49 +648,49 @@
                 }
               }
             },
-            "description": "The response provides the users blocked from the asset.\n"
+            "description": "The response lists block users.\n"
           }
         },
-        "summary": "Block users from a property or include",
+        "summary": "Block users",
         "tags": [
-          "Assets"
+          "Users"
         ]
       },
       "x-akamai": {
         "file-path": "paths/block.yaml",
-        "path-info": "/user-admin/properties/{assetId}/users/block"
+        "path-info": "/user-admin/properties/{propertyId}/users/block"
       }
     }
   },
   "components": {
     "parameters": {
-      "group-id-opt-group-id": {
-        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+      "group-idopt-group-id": {
+        "description": "A unique identifier for each group.\n",
         "in": "query",
         "name": "groupId",
         "schema": {
-          "example": 54321,
+          "example": 32145,
           "type": "integer"
         },
         "x-akamai": {
-          "file-path": "parameters/group-id-opt-group-id.yaml"
+          "file-path": "parameters/group-idopt-group-id.yaml"
         }
       },
-      "asset-id-path": {
-        "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
+      "property-id-path": {
+        "description": "A unique identifier for each property.\n",
         "in": "path",
-        "name": "assetId",
+        "name": "propertyId",
         "required": true,
         "schema": {
           "example": 9678999,
           "type": "integer"
         },
         "x-akamai": {
-          "file-path": "parameters/asset-id-path.yaml"
+          "file-path": "parameters/property-id-path.yaml"
         }
       },
-      "group-id-req-qp-group-id": {
-        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+      "group-idreq-qp-group-id": {
+        "description": "A unique identifier for each group.\n",
         "in": "query",
         "name": "groupId",
         "required": true,
@@ -747,11 +699,11 @@
           "type": "integer"
         },
         "x-akamai": {
-          "file-path": "parameters/group-id-req-qp-group-id.yaml"
+          "file-path": "parameters/group-idreq-qp-group-id.yaml"
         }
       },
       "user-type-query": {
-        "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.\n",
+        "description": "Indicates the type of users to get, either those who have `lostAccess` or the reverse `gainAccess`.\n",
         "in": "query",
         "name": "userType",
         "schema": {
@@ -770,45 +722,37 @@
     "schemas": {
       "property-list-item": {
         "additionalProperties": false,
-        "description": "Encapsulates information about an asset.\n",
+        "description": "Encapsulates information about a property.\n",
         "properties": {
           "actions": {
             "additionalProperties": false,
-            "description": "Specifies activities available for the group.\n",
+            "description": "Encapsulates permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
             "properties": {
               "move": {
-                "description": "Whether you can move a asset from one group to another group.\n",
+                "description": "Move a property from one group to another group.\n",
                 "type": "boolean"
               }
             },
-            "required": [
-              "move"
-            ],
             "type": "object"
           },
           "groupId": {
-            "description": "Unique identifier for each group. It filters down results to properties in the specified group.\n",
-            "minimum": 0,
+            "description": "A unique identifier for each group.\n",
             "type": "integer"
           },
           "groupName": {
-            "description": "Descriptive label for the group.\n",
-            "minLength": 1,
+            "description": "A group's name.\n",
             "type": "string"
           },
           "propertyId": {
-            "description": "Unique identifier for a property or include. This is what [PAPI](https://techdocs.akamai.com/property-mgr/reference/get-properties) refers to as an `assetId`. Note there’s a discrepancy between how PAPI and Identity and Access Management refer to `propertyId` values. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
-            "minimum": 0,
+            "description": "A unique identifier for each property.\n",
             "type": "integer"
           },
           "propertyName": {
-            "description": "Name of the property [created in PAPI](https://techdocs.akamai.com/property-mgr/reference/post-properties), or the `includeName` when [creating an include](https://techdocs.akamai.com/property-mgr/reference/post-includes). To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
-            "minLength": 1,
+            "description": "The name for a property.\n",
             "type": "string"
           },
           "propertyTypeDescription": {
             "description": "Identifies the product-type such as `On Demand Media`, `Site`, `Application`, `Live Media Streams`, or `NetStorage`.\n",
-            "minLength": 1,
             "type": "string"
           }
         },
@@ -817,7 +761,8 @@
           "groupId",
           "groupName",
           "propertyName",
-          "propertyTypeDescription"
+          "propertyTypeDescription",
+          "actions"
         ],
         "type": "object",
         "x-akamai": {
@@ -825,48 +770,40 @@
         }
       },
       "list-of-property-list-item": {
-        "description": "Encapsulates information about each property.\n",
+        "description": "Encapsulates information about a property.\n",
         "items": {
           "additionalProperties": false,
-          "description": "Encapsulates information about an asset.\n",
+          "description": "Encapsulates information about a property.\n",
           "properties": {
             "actions": {
               "additionalProperties": false,
-              "description": "Specifies activities available for the group.\n",
+              "description": "Encapsulates permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
               "properties": {
                 "move": {
-                  "description": "Whether you can move a asset from one group to another group.\n",
+                  "description": "Move a property from one group to another group.\n",
                   "type": "boolean"
                 }
               },
-              "required": [
-                "move"
-              ],
               "type": "object"
             },
             "groupId": {
-              "description": "Unique identifier for each group. It filters down results to properties in the specified group.\n",
-              "minimum": 0,
+              "description": "A unique identifier for each group.\n",
               "type": "integer"
             },
             "groupName": {
-              "description": "Descriptive label for the group.\n",
-              "minLength": 1,
+              "description": "A group's name.\n",
               "type": "string"
             },
             "propertyId": {
-              "description": "Unique identifier for a property or include. This is what [PAPI](https://techdocs.akamai.com/property-mgr/reference/get-properties) refers to as an `assetId`. Note there’s a discrepancy between how PAPI and Identity and Access Management refer to `propertyId` values. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
-              "minimum": 0,
+              "description": "A unique identifier for each property.\n",
               "type": "integer"
             },
             "propertyName": {
-              "description": "Name of the property [created in PAPI](https://techdocs.akamai.com/property-mgr/reference/post-properties), or the `includeName` when [creating an include](https://techdocs.akamai.com/property-mgr/reference/post-includes). To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
-              "minLength": 1,
+              "description": "The name for a property.\n",
               "type": "string"
             },
             "propertyTypeDescription": {
               "description": "Identifies the product-type such as `On Demand Media`, `Site`, `Application`, `Live Media Streams`, or `NetStorage`.\n",
-              "minLength": 1,
               "type": "string"
             }
           },
@@ -875,14 +812,14 @@
             "groupId",
             "groupName",
             "propertyName",
-            "propertyTypeDescription"
+            "propertyTypeDescription",
+            "actions"
           ],
           "type": "object",
           "x-akamai": {
             "file-path": "schemas/property-list-item.yaml"
           }
         },
-        "minItems": 0,
         "type": "array",
         "x-akamai": {
           "file-path": "schemas/list-of-property-list-item.yaml"
@@ -890,51 +827,44 @@
       },
       "property-response": {
         "additionalProperties": false,
-        "description": "Encapsulates information about an asset.\n",
+        "description": "Encapsulates information about a property.\n",
         "properties": {
           "arlConfigFile": {
-            "description": "An ARL (Akamai resource locator) configuration file, specifying versions of an object you can't purge using the URL. The `arlConfigFile` is the same as the `propertyName` with an `xml` extension.\n",
-            "minLength": 1,
+            "description": "The configuration file. The `arlConfigFile` is the same as the `propertyName` with an xml extension.\n",
             "type": "string"
           },
           "createdBy": {
-            "description": "The user who created the asset.\n",
-            "minLength": 1,
+            "description": "The username of the person who created the property.\n",
             "type": "string"
           },
           "createdDate": {
-            "description": "ISO 8601 timestamp indicating when the asset was originally created.\n",
+            "description": "ISO 8601 timestamp indicating when the property was originally created.\n",
             "format": "date-time",
             "type": "string"
           },
           "groupId": {
-            "description": "Unique identifier for each group. It filters down results to properties in the specified group.\n",
-            "minimum": 0,
+            "description": "A unique identifier for each group.\n",
             "type": "integer"
           },
           "groupName": {
-            "description": "Descriptive label for the group.\n",
-            "minLength": 1,
+            "description": "A group's name.\n",
             "type": "string"
           },
           "modifiedBy": {
-            "description": "The user who last edited the asset.\n",
-            "minLength": 1,
+            "description": "The username of the last person to edit the property.\n",
             "type": "string"
           },
           "modifiedDate": {
-            "description": "ISO 8601 timestamp indicating when the asset was last updated.\n",
+            "description": "ISO 8601 timestamp indicating when the property was last updated.\n",
             "format": "date-time",
             "type": "string"
           },
           "propertyId": {
-            "description": "Unique identifier for a property or include. This is what [PAPI](https://techdocs.akamai.com/property-mgr/reference/get-properties) refers to as an `assetId`. Note there’s a discrepancy between how PAPI and Identity and Access Management refer to `propertyId` values. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
-            "minimum": 0,
+            "description": "A unique identifier for each property.\n",
             "type": "integer"
           },
           "propertyName": {
-            "description": "Name of the property [created in PAPI](https://techdocs.akamai.com/property-mgr/reference/post-properties), or the `includeName` when [creating an include](https://techdocs.akamai.com/property-mgr/reference/post-includes). To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
-            "minLength": 1,
+            "description": "The name for a property.\n",
             "type": "string"
           }
         },
@@ -959,13 +889,11 @@
         "description": "Describes the request body for moving a property under another group.\n",
         "properties": {
           "destinationGroupId": {
-            "description": "Identifies the group where you want to move the `sourceGroupId` within the same parent hierarchy. To get this value, run the [List groups](ref:get-groups) operation.\n",
-            "minimum": 0,
+            "description": "Identifies the group within account hierarchy where you want to move the `sourceGroupId`. It can't be a child or descendant of the current group.\n",
             "type": "integer"
           },
           "sourceGroupId": {
-            "description": "Identifies the group from which you want to move the asset. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
-            "minimum": 0,
+            "description": "Identifies the nested group you want to move to the `destinationGroupId`.\n",
             "type": "integer"
           }
         },
@@ -989,34 +917,25 @@
           },
           "resourceId": {
             "description": "Unique identifier for each resource.\n",
-            "minimum": 0,
             "type": "integer"
           },
           "resourceName": {
-            "description": "Descriptive label for the resource.\n",
-            "minLength": 1,
+            "description": "The name you supply for the resource.\n",
             "type": "string"
           },
           "resourceType": {
-            "description": "Helps to characterize a asset's resource, either `cname`, `arlfile`, `cpcode`, `storagegroup`, `fpdomain`, or `edns`. For more information, see [View property details](https://techdocs.akamai.com/iam/docs/mng-properties).\n",
+            "description": "The type of the resource, either `cname`, `arlfile`, `cpcode`, `storagegroup`, `fpdomain`, or `edns`.\n",
             "enum": [
-              "enable",
+              "cname",
               "arlfile",
               "cpcode",
               "storagegroup",
               "fpdomain",
               "edns"
             ],
-            "minLength": 1,
             "type": "string"
           }
         },
-        "required": [
-          "resourceId",
-          "resourceType",
-          "resourceName",
-          "modifiedDate"
-        ],
         "type": "object",
         "x-akamai": {
           "file-path": "schemas/resource-item.yaml"
@@ -1035,40 +954,30 @@
             },
             "resourceId": {
               "description": "Unique identifier for each resource.\n",
-              "minimum": 0,
               "type": "integer"
             },
             "resourceName": {
-              "description": "Descriptive label for the resource.\n",
-              "minLength": 1,
+              "description": "The name you supply for the resource.\n",
               "type": "string"
             },
             "resourceType": {
-              "description": "Helps to characterize a asset's resource, either `cname`, `arlfile`, `cpcode`, `storagegroup`, `fpdomain`, or `edns`. For more information, see [View property details](https://techdocs.akamai.com/iam/docs/mng-properties).\n",
+              "description": "The type of the resource, either `cname`, `arlfile`, `cpcode`, `storagegroup`, `fpdomain`, or `edns`.\n",
               "enum": [
-                "enable",
+                "cname",
                 "arlfile",
                 "cpcode",
                 "storagegroup",
                 "fpdomain",
                 "edns"
               ],
-              "minLength": 1,
               "type": "string"
             }
           },
-          "required": [
-            "resourceId",
-            "resourceType",
-            "resourceName",
-            "modifiedDate"
-          ],
           "type": "object",
           "x-akamai": {
             "file-path": "schemas/resource-item.yaml"
           }
         },
-        "minItems": 0,
         "type": "array",
         "x-akamai": {
           "file-path": "schemas/list-of-resource-item.yaml"
@@ -1076,30 +985,26 @@
       },
       "user-property-id": {
         "additionalProperties": false,
-        "description": "Encapsulates all the users of a property by property ID.\n",
+        "description": "This object encapsulates all the users of a property by property ID.\n",
         "properties": {
           "firstName": {
             "description": "The user's first name.\n",
-            "minLength": 1,
             "type": "string"
           },
           "isBlocked": {
-            "description": "Whether a user's access to an asset is blocked.\n",
+            "description": "Shows if the user is blocked.\n",
             "type": "boolean"
           },
           "lastName": {
-            "description": "The user's surname.\n",
-            "minLength": 1,
+            "description": "The user's last name.\n",
             "type": "string"
           },
           "uiIdentityId": {
-            "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.\n",
-            "minLength": 1,
+            "description": "A unique identifier for a user. Also known as a `contactId` in other APIs.\n",
             "type": "string"
           },
           "uiUserName": {
-            "description": "The user's username in Control Center.\n",
-            "minLength": 1,
+            "description": "The full name for the user, as it appears in interfaces.\n",
             "type": "string"
           }
         },
@@ -1116,33 +1021,29 @@
         }
       },
       "users-of-property-response": {
-        "description": "Encapsulates all the users of a property by property ID.\n",
+        "description": "All the users of a property, by property ID.\n",
         "items": {
           "additionalProperties": false,
-          "description": "Encapsulates all the users of a property by property ID.\n",
+          "description": "This object encapsulates all the users of a property by property ID.\n",
           "properties": {
             "firstName": {
               "description": "The user's first name.\n",
-              "minLength": 1,
               "type": "string"
             },
             "isBlocked": {
-              "description": "Whether a user's access to an asset is blocked.\n",
+              "description": "Shows if the user is blocked.\n",
               "type": "boolean"
             },
             "lastName": {
-              "description": "The user's surname.\n",
-              "minLength": 1,
+              "description": "The user's last name.\n",
               "type": "string"
             },
             "uiIdentityId": {
-              "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.\n",
-              "minLength": 1,
+              "description": "A unique identifier for a user. Also known as a `contactId` in other APIs.\n",
               "type": "string"
             },
             "uiUserName": {
-              "description": "The user's username in Control Center.\n",
-              "minLength": 1,
+              "description": "The full name for the user, as it appears in interfaces.\n",
               "type": "string"
             }
           },
@@ -1158,19 +1059,18 @@
             "file-path": "schemas/user-property-id.yaml"
           }
         },
-        "minItems": 0,
         "type": "array",
         "x-akamai": {
           "file-path": "schemas/users-of-property-response.yaml"
         }
       },
-      "user-block-uiidentities": {
+      "user-block-ui-identities": {
         "additionalProperties": false,
-        "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
+        "description": "This object encapsulates all the users who needs to be blocked based on UI identities.\n",
         "properties": {
           "uiIdentityId": {
-            "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs. To get this value, run the [List users for property or include](ref:get-property-users) operation.\n",
-            "minLength": 1,
+            "description": "__Read-only__ A unique identifier for a user. Also known as a `contactId` in other APIs.\n",
+            "readOnly": true,
             "type": "string"
           }
         },
@@ -1179,18 +1079,18 @@
         ],
         "type": "object",
         "x-akamai": {
-          "file-path": "schemas/user-block-uiidentities.yaml"
+          "file-path": "schemas/user-block-ui-identities.yaml"
         }
       },
-      "users-block-uiidentities": {
-        "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
+      "users-block-ui-identities": {
+        "description": "This object encapsulates all the users who needs to be blocked based on UI identities.\n",
         "items": {
           "additionalProperties": false,
-          "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
+          "description": "This object encapsulates all the users who needs to be blocked based on UI identities.\n",
           "properties": {
             "uiIdentityId": {
-              "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs. To get this value, run the [List users for property or include](ref:get-property-users) operation.\n",
-              "minLength": 1,
+              "description": "__Read-only__ A unique identifier for a user. Also known as a `contactId` in other APIs.\n",
+              "readOnly": true,
               "type": "string"
             }
           },
@@ -1199,13 +1099,12 @@
           ],
           "type": "object",
           "x-akamai": {
-            "file-path": "schemas/user-block-uiidentities.yaml"
+            "file-path": "schemas/user-block-ui-identities.yaml"
           }
         },
-        "minItems": 0,
         "type": "array",
         "x-akamai": {
-          "file-path": "schemas/users-block-uiidentities.yaml"
+          "file-path": "schemas/users-block-ui-identities.yaml"
         }
       }
     }
