@@ -1,4 +1,6 @@
 type: object
+x-akamai:
+  file-path: schemas/api-client-post-request-v3.yaml
 additionalProperties: false
 required:
 - clientType
@@ -6,50 +8,35 @@ required:
 - groupAccess
 - authorizedUsers
 properties:
-  clientType:
-    type: string
+  allowAccountSwitch:
+    type: boolean
     description: |
-      Specifies the API client's ownership and credential management. `CLIENT` indicates the creator owns and manages the credentials. `USER_CLIENT` indicates another user owns the client and manages the credentials.
-    enum:
-    - CLIENT
-    - USER_CLIENT
-  clientName:
-    type: string
-    description: |
-      Descriptive label for the API client.
-    minLength: 1
-  authorizedUsers:
-    type: array
-    description: |
-      The API client's valid users. When the `clientType` is either `CLIENT` or `USER_CLIENT`, you need to specify a single `username` in the array. To get this data, run the [List authorized users](ref:get-api-clients-users) operation.
-    minItems: 0
-    items:
-      type: string
-      minLength: 1
+      Enables the API client to manage more than one account. For details, see [Manage many accounts with one API client](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client).
+    default: false
   apiAccess:
     type: object
     description: |
       The APIs the API client can access.
     additionalProperties: false
     oneOf:
-    - properties:
-        allAccessibleApis:
-          type: boolean
-          description: |
-            Enables the API client to access a full set of available APIs. Note there's a limit of 99 API services for each client. Clients that make calls to URLs from the 100th service get a 403 error.
+    - additionalProperties: false
       title: Not all APIs accessible
-      additionalProperties: false
       required:
       - apis
-    - properties:
+      properties:
         allAccessibleApis:
           type: boolean
           description: |
             Enables the API client to access a full set of available APIs. Note there's a limit of 99 API services for each client. Clients that make calls to URLs from the 100th service get a 403 error.
+    - additionalProperties: false
       title: All APIs accessible
-      additionalProperties: false
       required:
       - allAccessibleApis
+      properties:
+        allAccessibleApis:
+          type: boolean
+          description: |
+            Enables the API client to access a full set of available APIs. Note there's a limit of 99 API services for each client. Clients that make calls to URLs from the 100th service get a 403 error.
     properties:
       allAccessibleApis:
         type: boolean
@@ -72,6 +59,13 @@ properties:
               description: |
                 Descriptive label for the API.
               minLength: 1
+            accessLevel:
+              type: string
+              description: |
+                The API client's access level on a per API basis, either `READ-ONLY` or `READ-WRITE`.
+              enum:
+              - READ-ONLY
+              - READ-WRITE
             apiId:
               type: integer
               description: |
@@ -92,20 +86,53 @@ properties:
               description: |
                 Specifies where the API can access resources.
               minLength: 1
-            accessLevel:
-              type: string
-              description: |
-                The API client's access level on a per API basis, either `READ-ONLY` or `READ-WRITE`.
-              enum:
-              - READ-ONLY
-              - READ-WRITE
+  authorizedUsers:
+    type: array
+    description: |
+      The API client's valid users. When the `clientType` is either `CLIENT` or `USER_CLIENT`, you need to specify a single `username` in the array. To get this data, run the [List authorized users](ref:get-api-clients-users) operation.
+    minItems: 0
+    items:
+      type: string
+      minLength: 1
+  canAutoCreateCredential:
+    type: boolean
+    description: |
+      Whether the API client can create a credential for a new API client. The default is `false`.
+    default: false
+  clientDescription:
+    type: string
+    description: |
+      Descriptive label about the API client.
+    minLength: 1
+  clientName:
+    type: string
+    description: |
+      Descriptive label for the API client.
+    minLength: 1
+  clientType:
+    type: string
+    description: |
+      Specifies the API client's ownership and credential management. `CLIENT` indicates the creator owns and manages the credentials. `USER_CLIENT` indicates another user owns the client and manages the credentials.
+    enum:
+    - CLIENT
+    - USER_CLIENT
+  createCredential:
+    type: boolean
+    description: |
+      With `canAutoCreateCredential` enabled, setting this to `true` creates new credentials along with a new API client. The default is `false`.
+    default: false
   groupAccess:
     type: object
     description: |
       Specifies the API client's group access.
     additionalProperties: false
     oneOf:
-    - properties:
+    - additionalProperties: false
+      title: Custom access
+      required:
+      - groups
+      - cloneAuthorizedUserGroups
+      properties:
         cloneAuthorizedUserGroups:
           type: boolean
           description: |
@@ -117,12 +144,11 @@ properties:
           minItems: 0
           items:
             $ref: groups.yaml#/definitions/groups
-      title: Custom access
-      additionalProperties: false
+    - additionalProperties: false
+      title: Cloned access
       required:
-      - groups
       - cloneAuthorizedUserGroups
-    - properties:
+      properties:
         cloneAuthorizedUserGroups:
           type: boolean
           description: |
@@ -134,30 +160,27 @@ properties:
           minItems: 0
           items:
             $ref: groups.yaml#/definitions/groups
-      title: Cloned access
-      additionalProperties: false
-      required:
-      - cloneAuthorizedUserGroups
-  allowAccountSwitch:
-    type: boolean
+  ipAcl:
+    type: object
     description: |
-      Enables the API client to manage more than one account. For details, see [Manage many accounts with one API client](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client).
-    default: false
-  canAutoCreateCredential:
-    type: boolean
-    description: |
-      Whether the API client can create a credential for a new API client. The default is `false`.
-    default: false
-  createCredential:
-    type: boolean
-    description: |
-      With `canAutoCreateCredential` enabled, setting this to `true` creates new credentials along with a new API client. The default is `false`.
-    default: false
-  clientDescription:
-    type: string
-    description: |
-      Descriptive label about the API client.
-    minLength: 1
+      Specifies the API client's IP list restriction.
+    additionalProperties: false
+    required:
+    - enable
+    - cidr
+    properties:
+      cidr:
+        type: array
+        description: |
+          IP addresses or CIDR blocks the API client can access.
+        minItems: 0
+        items:
+          type: string
+          minLength: 1
+      enable:
+        type: boolean
+        description: |
+          Enables API client's access to the IP ACL.
   notificationEmails:
     type: array
     description: |
@@ -205,24 +228,3 @@ properties:
             items:
               type: integer
               minimum: 0
-  ipAcl:
-    type: object
-    description: |
-      Specifies the API client's IP list restriction.
-    additionalProperties: false
-    required:
-    - enable
-    - cidr
-    properties:
-      enable:
-        type: boolean
-        description: |
-          Enables API client's access to the IP ACL.
-      cidr:
-        type: array
-        description: |
-          IP addresses or CIDR blocks the API client can access.
-        minItems: 0
-        items:
-          type: string
-          minLength: 1
