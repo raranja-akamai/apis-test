@@ -1,6 +1,9 @@
 type: object
-description: |
+description: |-
   Contains match rule information for Edge Redirector.
+  
+x-akamai:
+  file-path: schemas/match-rule-er.yaml
 title: Edge Redirector
 additionalProperties: false
 required:
@@ -8,13 +11,6 @@ required:
 - redirectURL
 - statusCode
 properties:
-  id:
-    type: integer
-    description: |
-      Akamai internal use only.
-    x-akamai:
-      exclude-reason: INTERNAL
-    nullable: true
   name:
     type: string
     description: |
@@ -32,12 +28,6 @@ properties:
     description: |
       If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
     default: false
-  start:
-    type: integer
-    description: |
-      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
-    default: 0
-    minimum: 0
   end:
     type: integer
     description: |
@@ -67,6 +57,12 @@ properties:
       The URL Edge Redirector redirects the request to. If using `useRelativeUrl`, you can enter a path for the value. If `useRelativeUrl` is not used or set to `none`, then the `redirectUrl` should be a fully qualified URL.
     minLength: 1
     maxLength: 8192
+  start:
+    type: integer
+    description: |
+      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
+    default: 0
+    minimum: 0
   statusCode:
     type: integer
     description: |
