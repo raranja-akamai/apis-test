@@ -2,16 +2,27 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Your user profile",
-    "version": "v2"
+    "version": "3",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
   },
   "servers": [
     {
-      "url": "https://{hostname}/identity-management/v2"
+      "url": "https://{hostname}/identity-management/v3"
+    }
+  ],
+  "tags": [
+    {
+      "description": "Manage your profile, password, or multi-factor authentication. Users\ncan edit their own profiles, but only administrators can edit profiles belonging\nto other users.\n",
+      "name": "Profile"
     }
   ],
   "paths": {
     "/user-profile": {
       "x-akamai": {
+        "file-path": "paths/user-profile.yaml",
         "path-info": "/user-profile"
       },
       "get": {
@@ -20,12 +31,15 @@
         "tags": [
           "Profile"
         ],
-        "description": "Return your own profile information. To make changes to your profile, run the [Edit your profile](ref:put-user-profile-info) operation.\n",
+        "description": "This operation gets your profile information. To make changes to your profile, run the [Edit your profile](ref:put-user-profile-info) operation.\n",
         "parameters": [
           {
             "name": "authGrants",
             "in": "query",
             "description": "Includes the list of your group and role assignments, `false` by default.\n",
+            "x-akamai": {
+              "file-path": "parameters/auth-grants-query.yaml"
+            },
             "required": false,
             "schema": {
               "type": "boolean",
@@ -37,6 +51,9 @@
             "name": "notifications",
             "in": "query",
             "description": "Includes product notifications you subscribe to, `false` by default.\n",
+            "x-akamai": {
+              "file-path": "parameters/notifications-query.yaml"
+            },
             "schema": {
               "type": "boolean",
               "example": true,
@@ -46,7 +63,10 @@
           {
             "name": "actions",
             "in": "query",
-            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
+            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
+            "x-akamai": {
+              "file-path": "parameters/qparams-actions-actions.yaml"
+            },
             "schema": {
               "type": "boolean",
               "example": true,
@@ -56,26 +76,27 @@
         ],
         "responses": {
           "200": {
-            "description": "The response returns the profile.\n",
+            "description": "The response provides your profile.\n",
             "content": {
               "application/json": {
                 "example": {
                   "uiIdentityId": "A-B-123456",
                   "firstName": "John",
                   "lastName": "Smith",
-                  "uiUserName": "john.smith@mycompany.com",
-                  "email": "afero@mycompany.com",
+                  "uiUserName": "jsmith@example.com",
+                  "email": "jsmith@example.com",
                   "lastLoginDate": "2016-01-13T17:53:57Z",
-                  "tfaEnabled": true,
+                  "additionalAuthentication": "TFA",
                   "country": "USA",
                   "phone": "3456788765",
-                  "contactType": "Prolexic",
+                  "contactType": "Billing",
                   "isLocked": false,
                   "timeZone": "GMT",
                   "preferredLanguage": "English",
                   "sessionTimeOut": 30,
                   "passwordExpiryDate": "2018-01-13T17:53:57Z",
-                  "secondaryEmail": "john-smith@gmail.com",
+                  "secondaryEmail": "john-smith@example.com",
+                  "additionalAuthenticationConfigured": false,
                   "mobilePhone": "3456787657",
                   "address": "first Street",
                   "city": "Santa Clara",
@@ -87,7 +108,7 @@
                     "delete": true,
                     "edit": true,
                     "apiClient": true,
-                    "isCloneable": true,
+                    "isCloneable": false,
                     "thirdPartyAccess": true
                   },
                   "notifications": {
@@ -95,6 +116,7 @@
                     "options": {
                       "passwordExpiry": true,
                       "newUserNotification": true,
+                      "apiClientCredentialExpiryNotification": false,
                       "upgrade": [
                         "NetStorage",
                         "Other Upgrade Notifications (Planned)"
@@ -108,209 +130,40 @@
                   "authGrants": [
                     {
                       "groupId": 12345,
-                      "groupName": "MyGroup",
+                      "groupName": "Internet Company",
                       "roleId": 16,
                       "roleName": "Publisher",
-                      "roleDescription": "This is a new role that has been created to"
+                      "roleDescription": "A newly create role."
                     }
                   ]
                 },
                 "schema": {
                   "type": "object",
                   "description": "Encapsulates information about each user.\n",
+                  "x-akamai": {
+                    "file-path": "schemas/user-response.yaml"
+                  },
                   "additionalProperties": false,
                   "required": [
                     "uiIdentityId",
                     "firstName",
                     "lastName",
                     "email",
-                    "tfaEnabled",
+                    "additionalAuthentication",
                     "country",
-                    "phone"
+                    "address",
+                    "timeZone",
+                    "additionalAuthenticationConfigured"
                   ],
                   "properties": {
-                    "notifications": {
-                      "type": "object",
-                      "description": "The notification emails the user receives for products.\n",
-                      "additionalProperties": false,
-                      "properties": {
-                        "options": {
-                          "type": "object",
-                          "description": "The types of notification emails the user receives.\n",
-                          "additionalProperties": false,
-                          "properties": {
-                            "upgrade": {
-                              "type": "array",
-                              "description": "Lists products for which the user receives notification emails about upgrades.\n",
-                              "items": {
-                                "type": "string"
-                              }
-                            },
-                            "proactive": {
-                              "type": "array",
-                              "description": "Lists products for which the user receives notification emails about service issues.\n",
-                              "items": {
-                                "type": "string"
-                              }
-                            },
-                            "passwordExpiry": {
-                              "type": "boolean",
-                              "description": "Send emails regarding password expiration.\n"
-                            },
-                            "newUserNotification": {
-                              "type": "boolean",
-                              "description": "Send emails to group administrators when new users are created.\n"
-                            }
-                          }
-                        },
-                        "enableEmailNotifications": {
-                          "type": "boolean",
-                          "description": "Indicates if email notifications are enabled.\n"
-                        }
-                      }
-                    },
-                    "city": {
-                      "type": "string",
-                      "description": "The user's city.\n"
-                    },
-                    "contactType": {
-                      "type": "string",
-                      "description": "To help characterize the user, the value can be any that are available from the [View contact types](ref:get-common-contact-types) operation.\n"
-                    },
-                    "country": {
-                      "type": "string",
-                      "description": "Part of the user's location. This can be any value available from the [View supported countries](ref:get-common-countries) operation.\n"
-                    },
-                    "jobTitle": {
-                      "type": "string",
-                      "description": "The user's job title.\n"
-                    },
-                    "lastLoginDate": {
-                      "type": "string",
-                      "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
-                      "format": "date-time"
-                    },
-                    "mobilePhone": {
-                      "type": "string",
-                      "description": "The user's mobile phone number, represented as a 10-digit integer within a string.\n"
-                    },
-                    "passwordExpiryDate": {
-                      "type": "string",
-                      "description": "The date a user's password expires.\n",
-                      "format": "date-time"
-                    },
-                    "preferredLanguage": {
-                      "type": "string",
-                      "description": "The value can be any that are available from the [View languages](ref:get-common-languages) operation.\n"
-                    },
-                    "secondaryEmail": {
-                      "type": "string",
-                      "description": "The user's alternate email address.\n",
-                      "format": "email"
-                    },
-                    "sessionTimeOut": {
-                      "type": "integer",
-                      "description": "The number of seconds it takes for the user's Control Center session to time out if there hasn't been any activity. This corresponds to the `value` output of the [View timeout policies](ref:get-common-timeout-policies) operation.\n"
-                    },
-                    "state": {
-                      "type": "string",
-                      "description": "The user's state.\n"
-                    },
-                    "address": {
-                      "type": "string",
-                      "description": "The user's street address.\n"
-                    },
-                    "zipCode": {
-                      "type": "string",
-                      "description": "The user's five-digit ZIP code, represented as a string.\n"
-                    },
-                    "uiIdentityId": {
-                      "type": "string",
-                      "description": "A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.\n"
-                    },
-                    "firstName": {
-                      "type": "string",
-                      "description": "The user's first name.\n"
-                    },
-                    "lastName": {
-                      "type": "string",
-                      "description": "The user's last name.\n"
-                    },
-                    "uiUserName": {
-                      "type": "string",
-                      "description": "A user's `loginId`. Typically, a user's email address.\n"
-                    },
-                    "email": {
-                      "type": "string",
-                      "description": "The user's email address.\n",
-                      "format": "email"
-                    },
-                    "isLocked": {
-                      "type": "boolean",
-                      "description": "The user's lock status.\n"
-                    },
-                    "phone": {
-                      "type": "string",
-                      "description": "The user's main phone number, represented as a ten-digit integer within a string.\n"
-                    },
-                    "timeZone": {
-                      "type": "string",
-                      "description": "The user's time zone. The value can be any that are available from the [View time zones](ref:get-common-timezones) operation.\n"
-                    },
                     "accountId": {
                       "type": "string",
-                      "description": "A unique identifier for each account.\n"
-                    },
-                    "tfaEnabled": {
-                      "type": "boolean",
-                      "description": "Indicates if TFA is enabled.\n"
-                    },
-                    "authGrants": {
-                      "type": "array",
-                      "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
-                      "items": {
-                        "type": "object",
-                        "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
-                        "additionalProperties": false,
-                        "properties": {
-                          "groupId": {
-                            "type": "integer",
-                            "description": "A unique identifier for each group.\n"
-                          },
-                          "roleId": {
-                            "type": "integer",
-                            "description": "A unique identifier for each role.\n"
-                          },
-                          "groupName": {
-                            "type": "string",
-                            "description": "A group's name.\n"
-                          },
-                          "roleName": {
-                            "type": "string",
-                            "description": "The role's name.\n"
-                          },
-                          "roleDescription": {
-                            "type": "string",
-                            "description": "Descriptive text for the role.\n"
-                          },
-                          "isBlocked": {
-                            "type": "boolean",
-                            "description": "Indicates whether a user's access is blocked for a group.\n"
-                          },
-                          "subGroups": {
-                            "type": "array",
-                            "description": "Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-                            "items": {
-                              "type": "object",
-                              "description": "A further-nested group.\n"
-                            }
-                          }
-                        }
-                      }
+                      "description": "Unique identifier for each account.\n",
+                      "minLength": 1
                     },
                     "actions": {
                       "type": "object",
-                      "description": "Encapsulates permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter that applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
+                      "description": "Specifies permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter that applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
                       "additionalProperties": false,
                       "required": [
                         "delete",
@@ -323,29 +176,279 @@
                       "properties": {
                         "delete": {
                           "type": "boolean",
-                          "description": "Indicates whether the user is deletable.\n"
-                        },
-                        "edit": {
-                          "type": "boolean",
-                          "description": "Indicates whether the user is editable.\n"
-                        },
-                        "resetPassword": {
-                          "type": "boolean",
-                          "description": "Allows an administrator to send a user a password by email or see a one-time token.\n"
-                        },
-                        "isCloneable": {
-                          "type": "boolean",
-                          "description": "If `true`, an administrator can create a new user with the same permissions as this user.\n"
-                        },
-                        "thirdPartyAccess": {
-                          "type": "boolean",
-                          "description": "Allows the administrator to manage extended access.\n"
+                          "description": "Whether the user is deletable.\n"
                         },
                         "apiClient": {
                           "type": "boolean",
-                          "description": "Allows the administrator to create an API client.\n"
+                          "description": "Enables the administrator to create an API client.\n"
+                        },
+                        "edit": {
+                          "type": "boolean",
+                          "description": "Whether the user is editable.\n"
+                        },
+                        "isCloneable": {
+                          "type": "boolean",
+                          "description": "Enables an administrator to create a new user with permissions cloned from this user.\n"
+                        },
+                        "resetPassword": {
+                          "type": "boolean",
+                          "description": "Enables an administrator to send a user a password by email or see a one-time token.\n"
+                        },
+                        "thirdPartyAccess": {
+                          "type": "boolean",
+                          "description": "Enables the administrator to manage extended access.\n"
                         }
                       }
+                    },
+                    "additionalAuthentication": {
+                      "type": "string",
+                      "description": "Specifies the user's multi-factor authentication method, confirming their identity. Either `TFA`, `MFA`, or `NONE`, which offers no additional authentication.\n",
+                      "enum": [
+                        "TFA",
+                        "MFA",
+                        "NONE"
+                      ]
+                    },
+                    "additionalAuthenticationConfigured": {
+                      "type": "boolean",
+                      "description": "Whether the user has multi-factor authentication configured.\n"
+                    },
+                    "address": {
+                      "type": "string",
+                      "description": "The user's street address.\n",
+                      "minLength": 1
+                    },
+                    "authGrants": {
+                      "type": "array",
+                      "description": "A user's role assignments, per group.\n",
+                      "minItems": 0,
+                      "items": {
+                        "type": "object",
+                        "description": "A user's role assignments, per group.\n",
+                        "x-akamai": {
+                          "file-path": "schemas/auth-grant-response.yaml"
+                        },
+                        "additionalProperties": false,
+                        "required": [
+                          "roleId",
+                          "roleName"
+                        ],
+                        "properties": {
+                          "groupId": {
+                            "type": "integer",
+                            "description": "Unique identifier for each group. It's returned only for group roles.\n",
+                            "minimum": 0
+                          },
+                          "groupName": {
+                            "type": "string",
+                            "description": "Descriptive label for the group.\n",
+                            "minLength": 1
+                          },
+                          "isBlocked": {
+                            "type": "boolean",
+                            "description": "Whether a user's access to a group is blocked.\n"
+                          },
+                          "roleDescription": {
+                            "type": "string",
+                            "description": "Descriptive label for the role to convey its use.\n",
+                            "minLength": 1
+                          },
+                          "roleId": {
+                            "type": "integer",
+                            "description": "Unique identifier for each role.\n",
+                            "minimum": 1
+                          },
+                          "roleName": {
+                            "type": "string",
+                            "description": "Descriptive label for the role.\n",
+                            "minLength": 1
+                          },
+                          "subGroups": {
+                            "type": "array",
+                            "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+                            "minItems": 0,
+                            "items": {
+                              "type": "object",
+                              "description": "A further nested group.\n",
+                              "x-akamai": {
+                                "file-path": "schemas/groups-nested.yaml"
+                              },
+                              "additionalProperties": true,
+                              "properties": {}
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "city": {
+                      "type": "string",
+                      "description": "The user's city.\n",
+                      "minLength": 1
+                    },
+                    "contactType": {
+                      "type": "string",
+                      "description": "User's contact type.\n",
+                      "minLength": 1
+                    },
+                    "country": {
+                      "type": "string",
+                      "description": "User's country.\n",
+                      "minLength": 1
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "The user's email address.\n",
+                      "format": "email"
+                    },
+                    "emailUpdatePending": {
+                      "type": "boolean",
+                      "description": "Whether there are any pending changes to the email address.\n"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "description": "The user's first name.\n",
+                      "minLength": 1
+                    },
+                    "isLocked": {
+                      "type": "boolean",
+                      "description": "Whether the user's account is locked. To learn more, see [Temporary account lockout](https://techdocs.akamai.com/iam/docs/tmp-account-lockout).\n"
+                    },
+                    "jobTitle": {
+                      "type": "string",
+                      "description": "The user's position at the company.\n",
+                      "minLength": 1
+                    },
+                    "lastLoginDate": {
+                      "type": "string",
+                      "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
+                      "format": "date-time"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "description": "The user's surname.\n",
+                      "minLength": 1
+                    },
+                    "mobilePhone": {
+                      "type": "string",
+                      "description": "The user's mobile phone number in ITU-T E.164 format, that is, `+country code-area code-subscriber number`.\n",
+                      "minLength": 1
+                    },
+                    "notifications": {
+                      "type": "object",
+                      "description": "Specifies email notifications the user receives for products.\n",
+                      "additionalProperties": false,
+                      "required": [
+                        "options",
+                        "enableEmailNotifications"
+                      ],
+                      "properties": {
+                        "options": {
+                          "type": "object",
+                          "description": "Specifies email notifications settings.\n",
+                          "additionalProperties": false,
+                          "required": [
+                            "upgrade",
+                            "proactive",
+                            "passwordExpiry",
+                            "newUserNotification",
+                            "apiClientCredentialExpiryNotification"
+                          ],
+                          "properties": {
+                            "apiClientCredentialExpiryNotification": {
+                              "type": "boolean",
+                              "description": "Whether the user gets notifications for expiring API client credentials.\n"
+                            },
+                            "newUserNotification": {
+                              "type": "boolean",
+                              "description": "Whether group administrators get notifications when the user creates other new users.\n"
+                            },
+                            "passwordExpiry": {
+                              "type": "boolean",
+                              "description": "Whether the user gets notifications for password expiration.\n"
+                            },
+                            "proactive": {
+                              "type": "array",
+                              "description": "Products for which the user gets notifications for service issues.\n",
+                              "minItems": 0,
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "upgrade": {
+                              "type": "array",
+                              "description": "Products for which the user receives notifications for upgrades.\n",
+                              "minItems": 0,
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            }
+                          }
+                        },
+                        "enableEmailNotifications": {
+                          "type": "boolean",
+                          "description": "Enables email notifications.\n"
+                        }
+                      }
+                    },
+                    "passwordExpiryDate": {
+                      "type": "string",
+                      "description": "The date a user's password expires.\n",
+                      "format": "date-time"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "description": "The user's mobile phone number in ITU-T E.164 format, that is, `+country code-area code-subscriber number`.\n",
+                      "minLength": 1
+                    },
+                    "preferredLanguage": {
+                      "type": "string",
+                      "description": "The user's language.\n",
+                      "minLength": 1
+                    },
+                    "secondaryEmail": {
+                      "type": "string",
+                      "description": "The user's alternate email address.\n",
+                      "format": "email"
+                    },
+                    "sessionTimeOut": {
+                      "type": "integer",
+                      "description": "The number of seconds it takes for the user's Control Center session to time out after no activity.\n",
+                      "minimum": 0
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "The user's state or province if user's country is USA or Canada.\n",
+                      "minLength": 1
+                    },
+                    "tfaConfigured": {
+                      "type": "boolean",
+                      "description": "Whether TFA is configured.\n"
+                    },
+                    "tfaEnabled": {
+                      "type": "boolean",
+                      "description": "Whether TFA is enabled.\n"
+                    },
+                    "timeZone": {
+                      "type": "string",
+                      "description": "The user's time zone. To get the available values, run the [View time zones](ref:get-common-timezones) operation.\n",
+                      "minLength": 1
+                    },
+                    "uiIdentityId": {
+                      "type": "string",
+                      "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.\n",
+                      "minLength": 1
+                    },
+                    "uiUserName": {
+                      "type": "string",
+                      "description": "The user's username in Control Center.\n",
+                      "minLength": 1
+                    },
+                    "zipCode": {
+                      "type": "string",
+                      "description": "The user's five-digit postal code, represented as a string.\n",
+                      "minLength": 1
                     }
                   }
                 }
@@ -355,8 +458,78 @@
         }
       }
     },
+    "/user-profile/additionalAuthentication": {
+      "x-akamai": {
+        "file-path": "paths/additional-authentication-profile.yaml",
+        "path-info": "/user-profile/additionalAuthentication"
+      },
+      "put": {
+        "operationId": "put-user-profile-additional-authentication",
+        "summary": "Set multi-factor authentication for your user profile",
+        "tags": [
+          "User authentication settings"
+        ],
+        "description": "This operation sets multi-factor authentication to `TFA`, `MFA`, or `NONE`. You have five login attempts with MFA or 2FA before your account is locked. If your account is locked, use the [Reset multi-factor authentication for your user profile](ref:put-user-profile-reset-additional-authentication) operation to unlock it.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "value": "TFA"
+              },
+              "schema": {
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/additional-authentication-request.yaml"
+                },
+                "additionalProperties": false,
+                "required": [
+                  "value"
+                ],
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "description": "A user's multi-factor authentication method, either `TFA`, `MFA`, or `NONE`.\n",
+                    "enum": [
+                      "TFA",
+                      "MFA",
+                      "NONE"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Authentication successfully set.\n"
+          }
+        }
+      }
+    },
+    "/user-profile/additionalAuthentication/reset": {
+      "x-akamai": {
+        "file-path": "paths/reset-auth-profile.yaml",
+        "path-info": "/user-profile/additionalAuthentication/reset"
+      },
+      "put": {
+        "operationId": "put-user-profile-reset-additional-authentication",
+        "summary": "Reset multi-factor authentication for your user profile",
+        "tags": [
+          "User authentication settings"
+        ],
+        "description": "This operation resets your multi-factor authentication.\n",
+        "responses": {
+          "204": {
+            "description": "Authentication successfully reset.\n"
+          }
+        }
+      }
+    },
     "/user-profile/basic-info": {
       "x-akamai": {
+        "file-path": "paths/basic-info-profile.yaml",
         "path-info": "/user-profile/basic-info"
       },
       "put": {
@@ -365,7 +538,7 @@
         "tags": [
           "Profile"
         ],
-        "description": "Update your basic profile information. You can update simple items like your name or phone number, but you can't update your group or role assignments through this operation.\n",
+        "description": "This operation updates your basic profile information, such as your name or phone number. To edit detailed settings, run the [Update your notifications](ref:put-user-profile-notifications) or [Modify a user's group and role assignments](ref:put-ui-uiidentity-auth-grants) operations.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -373,14 +546,14 @@
               "example": {
                 "firstName": "John",
                 "lastName": "Smith",
-                "tfaEnabled": true,
+                "additionalAuthentication": "TFA",
                 "country": "USA",
                 "phone": "3456788765",
                 "contactType": "Billing",
                 "timeZone": "GMT",
                 "preferredLanguage": "English",
                 "sessionTimeOut": 30,
-                "secondaryEmail": "john.smith@mycompany.com",
+                "secondaryEmail": "john.smith@example.com",
                 "mobilePhone": "3456787657",
                 "address": "first Street",
                 "city": "Santa Clara",
@@ -390,28 +563,51 @@
               },
               "schema": {
                 "type": "object",
-                "description": "Specifies user's profile.\n",
+                "x-akamai": {
+                  "file-path": "schemas/update-user-basic-info-request.yaml"
+                },
                 "additionalProperties": false,
+                "required": [
+                  "firstName",
+                  "lastName",
+                  "country",
+                  "preferredLanguage",
+                  "sessionTimeOut",
+                  "timeZone"
+                ],
                 "properties": {
+                  "additionalAuthentication": {
+                    "type": "string",
+                    "description": "Specifies the user's multi-factor authentication method, confirming their identity. Either `TFA`, `MFA`, or `NONE`, which offers no additional authentication.\n",
+                    "enum": [
+                      "TFA",
+                      "MFA",
+                      "NONE"
+                    ]
+                  },
                   "address": {
                     "type": "string",
-                    "description": "The user's street address.\n"
+                    "description": "The user's street address.\n",
+                    "minLength": 1
                   },
                   "city": {
                     "type": "string",
-                    "description": "The user's city.\n"
+                    "description": "The user's city.\n",
+                    "minLength": 1
                   },
                   "contactType": {
                     "type": "string",
-                    "description": "Any of the values available from the [View contact types](ref:get-common-contact-types) operation.\n"
+                    "description": "User's contact type. To get the available values, run the [View contact types](ref:get-common-contact-types) operation.\n",
+                    "minLength": 1
                   },
                   "country": {
                     "type": "string",
-                    "description": "Part of the user's location. This can be any value available from the [View supported countries](ref:get-common-countries) operation.\n"
+                    "description": "User's country. To get the available values, run the [View supported countries](ref:get-common-countries) operation.\n",
+                    "minLength": 1
                   },
                   "email": {
                     "type": "string",
-                    "description": "The user's email address.\n",
+                    "description": "The user's email address. It needs to be a valid email address users can access, as they'll be sent a OTP to enter while logging in for the first time. To learn more, see [Frequently asked questions](https://techdocs.akamai.com/iam/docs/frequently-asked-questions-gss#why-am-i-asked-to-enter-a-code-while-logging-in).\n",
                     "format": "email"
                   },
                   "firstName": {
@@ -422,27 +618,30 @@
                   },
                   "jobTitle": {
                     "type": "string",
-                    "description": "The user's job title.\n",
+                    "description": "The user's position at the company.\n",
                     "minLength": 1,
                     "maxLength": 75
                   },
                   "lastName": {
                     "type": "string",
-                    "description": "The user's last name.\n",
+                    "description": "The user's surname.\n",
                     "minLength": 1,
                     "maxLength": 50
                   },
                   "mobilePhone": {
                     "type": "string",
-                    "description": "The user's mobile phone number, represented as a 10-digit integer within a string.\n"
+                    "description": "The user's mobile phone number in ITU-T E.164 format, that is, `+country code-area code-subscriber number`. For example, `+3551234567891` or `+441234567891`. For Canadian and US phone numbers, you can provide them with a country code (for example, `+11234567891`) or without it as a ten-digit integer within a string (for example, `1234567891`).\n",
+                    "minLength": 1
                   },
                   "phone": {
                     "type": "string",
-                    "description": "The user's main phone number, represented as a ten-digit integer within a string.\n"
+                    "description": "The user's mobile phone number in ITU-T E.164 format, that is, `+country code-area code-subscriber number`. For example, `+3551234567891` or `+441234567891`. For Canadian and US phone numbers, you can provide them with a country code (for example, `+11234567891`) or without it as a ten-digit integer within a string (for example, `1234567891`).\n",
+                    "minLength": 1
                   },
                   "preferredLanguage": {
                     "type": "string",
-                    "description": "Any of the values available from the [View languages](ref:get-common-languages) operation.\n"
+                    "description": "The user's language. To get the available values, run the [View languages](ref:get-common-languages) operation.\n",
+                    "minLength": 1
                   },
                   "secondaryEmail": {
                     "type": "string",
@@ -451,23 +650,23 @@
                   },
                   "sessionTimeOut": {
                     "type": "integer",
-                    "description": "The number of seconds it takes for the user's Control Center session to time out if there hasn't been any activity. This corresponds to the `value` output of the [View timeout policies](ref:get-common-timeout-policies) operation.\n"
+                    "description": "The number of seconds it takes for the user's Control Center session to time out after no activity. To get the available values, run the [View timeout policies](ref:get-common-timeout-policies) operation if you're an administrator or [View timeout policies for a user profile](ref:get-user-timeout-policies) operation if you're the account's user. Make sure to select a value that's equal or smaller to the **Max session timeout** value, set for your account in the Identity and Access Management interface's [Settings](https://techdocs.akamai.com/iam/docs/account-settings) tab.\n",
+                    "minimum": 0
                   },
                   "state": {
                     "type": "string",
-                    "description": "The user's state if `country=USA`, or the user's province if `country=Canada`. For all other countries, this field is optional.\n"
-                  },
-                  "tfaEnabled": {
-                    "type": "boolean",
-                    "description": "Indicates whether two-factor authentication is enabled.\n"
+                    "description": "The user's state or province if user's country is USA or Canada. To get the available values, run the [View states for a user profile](ref:get-user-states) operation.\n",
+                    "minLength": 1
                   },
                   "timeZone": {
                     "type": "string",
-                    "description": "The user's time zone. The value can be any that are available from the [View time zones](ref:get-common-timezones) operation.\n"
+                    "description": "The user's time zone. To get the available values, run the [View time zones](ref:get-common-timezones) operation.\n",
+                    "minLength": 1
                   },
                   "zipCode": {
                     "type": "string",
-                    "description": "The user's five-digit ZIP code, represented as a string.\n"
+                    "description": "The user's five-digit postal code, represented as a string.\n",
+                    "minLength": 1
                   }
                 }
               }
@@ -476,225 +675,61 @@
         },
         "responses": {
           "200": {
-            "description": "The response returns the updated profile.\n",
+            "description": "The response reflects the user's modified profile.\n",
             "content": {
               "application/json": {
                 "example": {
-                  "uiIdentityId": "1-ABCDE",
-                  "firstName": "John",
-                  "lastName": "Smith",
-                  "tfaEnabled": true,
-                  "country": "USA",
-                  "email": "adevi@mycompany.com",
-                  "phone": "3456788765",
-                  "contactType": "Billing",
-                  "timeZone": "GMT",
-                  "preferredLanguage": "English",
-                  "sessionTimeOut": 30,
-                  "secondaryEmail": "john-smith@gmail.com",
-                  "mobilePhone": "3456787657",
-                  "address": "first Street",
                   "city": "Santa Clara",
+                  "contactType": "Billing",
+                  "country": "USA",
+                  "email": "jsmith@example.com",
+                  "firstName": "John",
+                  "isLocked": false,
+                  "jobTitle": "Engineer",
+                  "lastLoginDate": "2016-04-12T20:54:24.000Z",
+                  "lastName": "Smith",
+                  "mobilePhone": "3456787657",
+                  "passwordExpiryDate": "2023-04-12T20:54:24.000Z",
+                  "phone": "3456788765",
+                  "preferredLanguage": "English",
+                  "secondaryEmail": "john-smith@example.com",
+                  "sessionTimeOut": 30,
                   "state": "CA",
+                  "address": "first Street",
+                  "timeZone": "GMT",
                   "zipCode": "34567",
-                  "jobTitle": "Engineer"
+                  "additionalAuthentication": "TFA",
+                  "uiIdentityId": "1-ABCDE",
+                  "uiUserName": "jsmith",
+                  "additionalAuthenticationConfigured": false
                 },
                 "schema": {
                   "type": "object",
                   "description": "Encapsulates information about each user.\n",
+                  "x-akamai": {
+                    "file-path": "schemas/user-response.yaml"
+                  },
                   "additionalProperties": false,
                   "required": [
                     "uiIdentityId",
                     "firstName",
                     "lastName",
                     "email",
-                    "tfaEnabled",
+                    "additionalAuthentication",
                     "country",
-                    "phone"
+                    "address",
+                    "timeZone",
+                    "additionalAuthenticationConfigured"
                   ],
                   "properties": {
-                    "notifications": {
-                      "type": "object",
-                      "description": "The notification emails the user receives for products.\n",
-                      "additionalProperties": false,
-                      "properties": {
-                        "options": {
-                          "type": "object",
-                          "description": "The types of notification emails the user receives.\n",
-                          "additionalProperties": false,
-                          "properties": {
-                            "upgrade": {
-                              "type": "array",
-                              "description": "Lists products for which the user receives notification emails about upgrades.\n",
-                              "items": {
-                                "type": "string"
-                              }
-                            },
-                            "proactive": {
-                              "type": "array",
-                              "description": "Lists products for which the user receives notification emails about service issues.\n",
-                              "items": {
-                                "type": "string"
-                              }
-                            },
-                            "passwordExpiry": {
-                              "type": "boolean",
-                              "description": "Send emails regarding password expiration.\n"
-                            },
-                            "newUserNotification": {
-                              "type": "boolean",
-                              "description": "Send emails to group administrators when new users are created.\n"
-                            }
-                          }
-                        },
-                        "enableEmailNotifications": {
-                          "type": "boolean",
-                          "description": "Indicates if email notifications are enabled.\n"
-                        }
-                      }
-                    },
-                    "city": {
-                      "type": "string",
-                      "description": "The user's city.\n"
-                    },
-                    "contactType": {
-                      "type": "string",
-                      "description": "To help characterize the user, the value can be any that are available from the [View contact types](ref:get-common-contact-types) operation.\n"
-                    },
-                    "country": {
-                      "type": "string",
-                      "description": "Part of the user's location. This can be any value available from the [View supported countries](ref:get-common-countries) operation.\n"
-                    },
-                    "jobTitle": {
-                      "type": "string",
-                      "description": "The user's job title.\n"
-                    },
-                    "lastLoginDate": {
-                      "type": "string",
-                      "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
-                      "format": "date-time"
-                    },
-                    "mobilePhone": {
-                      "type": "string",
-                      "description": "The user's mobile phone number, represented as a 10-digit integer within a string.\n"
-                    },
-                    "passwordExpiryDate": {
-                      "type": "string",
-                      "description": "The date a user's password expires.\n",
-                      "format": "date-time"
-                    },
-                    "preferredLanguage": {
-                      "type": "string",
-                      "description": "The value can be any that are available from the [View languages](ref:get-common-languages) operation.\n"
-                    },
-                    "secondaryEmail": {
-                      "type": "string",
-                      "description": "The user's alternate email address.\n",
-                      "format": "email"
-                    },
-                    "sessionTimeOut": {
-                      "type": "integer",
-                      "description": "The number of seconds it takes for the user's Control Center session to time out if there hasn't been any activity. This corresponds to the `value` output of the [View timeout policies](ref:get-common-timeout-policies) operation.\n"
-                    },
-                    "state": {
-                      "type": "string",
-                      "description": "The user's state.\n"
-                    },
-                    "address": {
-                      "type": "string",
-                      "description": "The user's street address.\n"
-                    },
-                    "zipCode": {
-                      "type": "string",
-                      "description": "The user's five-digit ZIP code, represented as a string.\n"
-                    },
-                    "uiIdentityId": {
-                      "type": "string",
-                      "description": "A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.\n"
-                    },
-                    "firstName": {
-                      "type": "string",
-                      "description": "The user's first name.\n"
-                    },
-                    "lastName": {
-                      "type": "string",
-                      "description": "The user's last name.\n"
-                    },
-                    "uiUserName": {
-                      "type": "string",
-                      "description": "A user's `loginId`. Typically, a user's email address.\n"
-                    },
-                    "email": {
-                      "type": "string",
-                      "description": "The user's email address.\n",
-                      "format": "email"
-                    },
-                    "isLocked": {
-                      "type": "boolean",
-                      "description": "The user's lock status.\n"
-                    },
-                    "phone": {
-                      "type": "string",
-                      "description": "The user's main phone number, represented as a ten-digit integer within a string.\n"
-                    },
-                    "timeZone": {
-                      "type": "string",
-                      "description": "The user's time zone. The value can be any that are available from the [View time zones](ref:get-common-timezones) operation.\n"
-                    },
                     "accountId": {
                       "type": "string",
-                      "description": "A unique identifier for each account.\n"
-                    },
-                    "tfaEnabled": {
-                      "type": "boolean",
-                      "description": "Indicates if TFA is enabled.\n"
-                    },
-                    "authGrants": {
-                      "type": "array",
-                      "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
-                      "items": {
-                        "type": "object",
-                        "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
-                        "additionalProperties": false,
-                        "properties": {
-                          "groupId": {
-                            "type": "integer",
-                            "description": "A unique identifier for each group.\n"
-                          },
-                          "roleId": {
-                            "type": "integer",
-                            "description": "A unique identifier for each role.\n"
-                          },
-                          "groupName": {
-                            "type": "string",
-                            "description": "A group's name.\n"
-                          },
-                          "roleName": {
-                            "type": "string",
-                            "description": "The role's name.\n"
-                          },
-                          "roleDescription": {
-                            "type": "string",
-                            "description": "Descriptive text for the role.\n"
-                          },
-                          "isBlocked": {
-                            "type": "boolean",
-                            "description": "Indicates whether a user's access is blocked for a group.\n"
-                          },
-                          "subGroups": {
-                            "type": "array",
-                            "description": "Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-                            "items": {
-                              "type": "object",
-                              "description": "A further-nested group.\n"
-                            }
-                          }
-                        }
-                      }
+                      "description": "Unique identifier for each account.\n",
+                      "minLength": 1
                     },
                     "actions": {
                       "type": "object",
-                      "description": "Encapsulates permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter that applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
+                      "description": "Specifies permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter that applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
                       "additionalProperties": false,
                       "required": [
                         "delete",
@@ -707,29 +742,279 @@
                       "properties": {
                         "delete": {
                           "type": "boolean",
-                          "description": "Indicates whether the user is deletable.\n"
-                        },
-                        "edit": {
-                          "type": "boolean",
-                          "description": "Indicates whether the user is editable.\n"
-                        },
-                        "resetPassword": {
-                          "type": "boolean",
-                          "description": "Allows an administrator to send a user a password by email or see a one-time token.\n"
-                        },
-                        "isCloneable": {
-                          "type": "boolean",
-                          "description": "If `true`, an administrator can create a new user with the same permissions as this user.\n"
-                        },
-                        "thirdPartyAccess": {
-                          "type": "boolean",
-                          "description": "Allows the administrator to manage extended access.\n"
+                          "description": "Whether the user is deletable.\n"
                         },
                         "apiClient": {
                           "type": "boolean",
-                          "description": "Allows the administrator to create an API client.\n"
+                          "description": "Enables the administrator to create an API client.\n"
+                        },
+                        "edit": {
+                          "type": "boolean",
+                          "description": "Whether the user is editable.\n"
+                        },
+                        "isCloneable": {
+                          "type": "boolean",
+                          "description": "Enables an administrator to create a new user with permissions cloned from this user.\n"
+                        },
+                        "resetPassword": {
+                          "type": "boolean",
+                          "description": "Enables an administrator to send a user a password by email or see a one-time token.\n"
+                        },
+                        "thirdPartyAccess": {
+                          "type": "boolean",
+                          "description": "Enables the administrator to manage extended access.\n"
                         }
                       }
+                    },
+                    "additionalAuthentication": {
+                      "type": "string",
+                      "description": "Specifies the user's multi-factor authentication method, confirming their identity. Either `TFA`, `MFA`, or `NONE`, which offers no additional authentication.\n",
+                      "enum": [
+                        "TFA",
+                        "MFA",
+                        "NONE"
+                      ]
+                    },
+                    "additionalAuthenticationConfigured": {
+                      "type": "boolean",
+                      "description": "Whether the user has multi-factor authentication configured.\n"
+                    },
+                    "address": {
+                      "type": "string",
+                      "description": "The user's street address.\n",
+                      "minLength": 1
+                    },
+                    "authGrants": {
+                      "type": "array",
+                      "description": "A user's role assignments, per group.\n",
+                      "minItems": 0,
+                      "items": {
+                        "type": "object",
+                        "description": "A user's role assignments, per group.\n",
+                        "x-akamai": {
+                          "file-path": "schemas/auth-grant-response.yaml"
+                        },
+                        "additionalProperties": false,
+                        "required": [
+                          "roleId",
+                          "roleName"
+                        ],
+                        "properties": {
+                          "groupId": {
+                            "type": "integer",
+                            "description": "Unique identifier for each group. It's returned only for group roles.\n",
+                            "minimum": 0
+                          },
+                          "groupName": {
+                            "type": "string",
+                            "description": "Descriptive label for the group.\n",
+                            "minLength": 1
+                          },
+                          "isBlocked": {
+                            "type": "boolean",
+                            "description": "Whether a user's access to a group is blocked.\n"
+                          },
+                          "roleDescription": {
+                            "type": "string",
+                            "description": "Descriptive label for the role to convey its use.\n",
+                            "minLength": 1
+                          },
+                          "roleId": {
+                            "type": "integer",
+                            "description": "Unique identifier for each role.\n",
+                            "minimum": 1
+                          },
+                          "roleName": {
+                            "type": "string",
+                            "description": "Descriptive label for the role.\n",
+                            "minLength": 1
+                          },
+                          "subGroups": {
+                            "type": "array",
+                            "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+                            "minItems": 0,
+                            "items": {
+                              "type": "object",
+                              "description": "A further nested group.\n",
+                              "x-akamai": {
+                                "file-path": "schemas/groups-nested.yaml"
+                              },
+                              "additionalProperties": true,
+                              "properties": {}
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "city": {
+                      "type": "string",
+                      "description": "The user's city.\n",
+                      "minLength": 1
+                    },
+                    "contactType": {
+                      "type": "string",
+                      "description": "User's contact type.\n",
+                      "minLength": 1
+                    },
+                    "country": {
+                      "type": "string",
+                      "description": "User's country.\n",
+                      "minLength": 1
+                    },
+                    "email": {
+                      "type": "string",
+                      "description": "The user's email address.\n",
+                      "format": "email"
+                    },
+                    "emailUpdatePending": {
+                      "type": "boolean",
+                      "description": "Whether there are any pending changes to the email address.\n"
+                    },
+                    "firstName": {
+                      "type": "string",
+                      "description": "The user's first name.\n",
+                      "minLength": 1
+                    },
+                    "isLocked": {
+                      "type": "boolean",
+                      "description": "Whether the user's account is locked. To learn more, see [Temporary account lockout](https://techdocs.akamai.com/iam/docs/tmp-account-lockout).\n"
+                    },
+                    "jobTitle": {
+                      "type": "string",
+                      "description": "The user's position at the company.\n",
+                      "minLength": 1
+                    },
+                    "lastLoginDate": {
+                      "type": "string",
+                      "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
+                      "format": "date-time"
+                    },
+                    "lastName": {
+                      "type": "string",
+                      "description": "The user's surname.\n",
+                      "minLength": 1
+                    },
+                    "mobilePhone": {
+                      "type": "string",
+                      "description": "The user's mobile phone number in ITU-T E.164 format, that is, `+country code-area code-subscriber number`.\n",
+                      "minLength": 1
+                    },
+                    "notifications": {
+                      "type": "object",
+                      "description": "Specifies email notifications the user receives for products.\n",
+                      "additionalProperties": false,
+                      "required": [
+                        "options",
+                        "enableEmailNotifications"
+                      ],
+                      "properties": {
+                        "options": {
+                          "type": "object",
+                          "description": "Specifies email notifications settings.\n",
+                          "additionalProperties": false,
+                          "required": [
+                            "upgrade",
+                            "proactive",
+                            "passwordExpiry",
+                            "newUserNotification",
+                            "apiClientCredentialExpiryNotification"
+                          ],
+                          "properties": {
+                            "apiClientCredentialExpiryNotification": {
+                              "type": "boolean",
+                              "description": "Whether the user gets notifications for expiring API client credentials.\n"
+                            },
+                            "newUserNotification": {
+                              "type": "boolean",
+                              "description": "Whether group administrators get notifications when the user creates other new users.\n"
+                            },
+                            "passwordExpiry": {
+                              "type": "boolean",
+                              "description": "Whether the user gets notifications for password expiration.\n"
+                            },
+                            "proactive": {
+                              "type": "array",
+                              "description": "Products for which the user gets notifications for service issues.\n",
+                              "minItems": 0,
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "upgrade": {
+                              "type": "array",
+                              "description": "Products for which the user receives notifications for upgrades.\n",
+                              "minItems": 0,
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            }
+                          }
+                        },
+                        "enableEmailNotifications": {
+                          "type": "boolean",
+                          "description": "Enables email notifications.\n"
+                        }
+                      }
+                    },
+                    "passwordExpiryDate": {
+                      "type": "string",
+                      "description": "The date a user's password expires.\n",
+                      "format": "date-time"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "description": "The user's mobile phone number in ITU-T E.164 format, that is, `+country code-area code-subscriber number`.\n",
+                      "minLength": 1
+                    },
+                    "preferredLanguage": {
+                      "type": "string",
+                      "description": "The user's language.\n",
+                      "minLength": 1
+                    },
+                    "secondaryEmail": {
+                      "type": "string",
+                      "description": "The user's alternate email address.\n",
+                      "format": "email"
+                    },
+                    "sessionTimeOut": {
+                      "type": "integer",
+                      "description": "The number of seconds it takes for the user's Control Center session to time out after no activity.\n",
+                      "minimum": 0
+                    },
+                    "state": {
+                      "type": "string",
+                      "description": "The user's state or province if user's country is USA or Canada.\n",
+                      "minLength": 1
+                    },
+                    "tfaConfigured": {
+                      "type": "boolean",
+                      "description": "Whether TFA is configured.\n"
+                    },
+                    "tfaEnabled": {
+                      "type": "boolean",
+                      "description": "Whether TFA is enabled.\n"
+                    },
+                    "timeZone": {
+                      "type": "string",
+                      "description": "The user's time zone. To get the available values, run the [View time zones](ref:get-common-timezones) operation.\n",
+                      "minLength": 1
+                    },
+                    "uiIdentityId": {
+                      "type": "string",
+                      "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.\n",
+                      "minLength": 1
+                    },
+                    "uiUserName": {
+                      "type": "string",
+                      "description": "The user's username in Control Center.\n",
+                      "minLength": 1
+                    },
+                    "zipCode": {
+                      "type": "string",
+                      "description": "The user's five-digit postal code, represented as a string.\n",
+                      "minLength": 1
                     }
                   }
                 }
@@ -741,26 +1026,30 @@
     },
     "/user-profile/change-password": {
       "x-akamai": {
+        "file-path": "paths/change-password.yaml",
         "path-info": "/user-profile/change-password"
       },
       "post": {
         "operationId": "post-profile-change-password",
         "summary": "Rotate your password",
         "tags": [
-          "Access"
+          "User authentication settings"
         ],
-        "description": "To update or change your password, include your old password and your new password in the request body. Run the [View password policy](ref:get-common-password-policy) operation before you create your new password to ensure it adheres to your policy. If you pass your existing password incorrectly and make too many login attempts, your account locks.\n",
+        "description": "This operation changes your password. Include your old password and your new password in the request body. Before you create your new password, run the [View password policy](ref:get-common-password-policy) operation to ensure it adheres to your policy. If you include your existing password incorrectly and make too many login attempts, your account locks.\n",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "example": {
-                "currentPassword": "abcbd",
-                "newPassword": "abcdg"
+                "currentPassword": "CompanyLogin!3",
+                "newPassword": "CompanyLogin!3"
               },
               "schema": {
                 "type": "object",
                 "description": "Uses the old password to authenticate you are who you say you are when you update your password. Includes the new password.\n",
+                "x-akamai": {
+                  "file-path": "schemas/change-password-request.yaml"
+                },
                 "additionalProperties": false,
                 "required": [
                   "currentPassword",
@@ -769,11 +1058,13 @@
                 "properties": {
                   "currentPassword": {
                     "type": "string",
-                    "description": "Your existing password.\n"
+                    "description": "Your existing password.\n",
+                    "minLength": 1
                   },
                   "newPassword": {
                     "type": "string",
-                    "description": "The new password.\n"
+                    "description": "New password.\n",
+                    "minLength": 1
                   }
                 }
               }
@@ -782,22 +1073,23 @@
         },
         "responses": {
           "204": {
-            "description": "Password rotated.\n"
+            "description": "Password successfully rotated.\n"
           }
         }
       }
     },
     "/user-profile/notifications": {
       "x-akamai": {
+        "file-path": "paths/notifications-profile.yaml",
         "path-info": "/user-profile/notifications"
       },
       "put": {
         "operationId": "put-user-profile-notifications",
-        "summary": "Update notifications",
+        "summary": "Update your notifications",
         "tags": [
-          "Notifications"
+          "User notifications"
         ],
-        "description": "Subscribe to notifications emails for password expiration reminders, proactive maintenance emails, and upgrade notification emails. Make a PUT request with a notification object.\n",
+        "description": "This operation subscribes to notifications emails for password expiration reminders, proactive maintenance emails, and upgrade notification emails.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -807,6 +1099,7 @@
                 "options": {
                   "passwordExpiry": true,
                   "newUserNotification": true,
+                  "apiClientCredentialExpiryNotification": true,
                   "upgrade": [
                     "NetStorage",
                     "Other Upgrade Notifications (Planned)"
@@ -818,35 +1111,54 @@
                 }
               },
               "schema": {
-                "type": "object",
                 "description": "Encapsulates the types of email notifications you can receive.\n",
+                "x-akamai": {
+                  "file-path": "schemas/notifications-request.yaml"
+                },
                 "additionalProperties": false,
+                "required": [
+                  "enableEmailNotifications",
+                  "options"
+                ],
                 "properties": {
                   "options": {
                     "type": "object",
-                    "description": "Specific notification types users can subscribe to.\n",
+                    "description": "Specifies email notifications settings.\n",
                     "additionalProperties": false,
+                    "required": [
+                      "passwordExpiry",
+                      "proactive",
+                      "upgrade"
+                    ],
                     "properties": {
+                      "apiClientCredentialExpiryNotification": {
+                        "type": "boolean",
+                        "description": "Enables notifications for expiring API client credentials.\n"
+                      },
                       "newUserNotification": {
                         "type": "boolean",
-                        "description": "If `true`, send emails to group admins. This notification informs the admin a new user was created and granted access to their group.\n"
+                        "description": "Enables notifications for group administrators when the user creates other new users.\n"
                       },
                       "passwordExpiry": {
                         "type": "boolean",
-                        "description": "Send emails regarding password expiration.\n"
+                        "description": "Enables notifications for expiring passwords.\n"
                       },
                       "proactive": {
                         "type": "array",
-                        "description": "A list of products subscribed to for proactive notification emails.\n",
+                        "description": "Products for which the user gets notifications for service issues.\n",
+                        "minItems": 0,
                         "items": {
-                          "type": "string"
+                          "type": "string",
+                          "minLength": 1
                         }
                       },
                       "upgrade": {
                         "type": "array",
-                        "description": "A list of products subscribed to for upgrade notification emails.\n",
+                        "description": "Products for which the user receives notifications for upgrades.\n",
+                        "minItems": 0,
                         "items": {
-                          "type": "string"
+                          "type": "string",
+                          "minLength": 1
                         }
                       }
                     }
@@ -862,7 +1174,7 @@
         },
         "responses": {
           "200": {
-            "description": "The response returns updated notifications.\n",
+            "description": "The response reflects the modified notifications emails.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -870,6 +1182,7 @@
                   "options": {
                     "passwordExpiry": true,
                     "newUserNotification": true,
+                    "apiClientCredentialExpiryNotification": true,
                     "upgrade": [
                       "NetStorage",
                       "Other Upgrade Notifications (Planned)"
@@ -883,80 +1196,67 @@
                 "schema": {
                   "type": "object",
                   "description": "Encapsulates the types of email notifications you can receive.\n",
+                  "x-akamai": {
+                    "file-path": "schemas/notifications-response.yaml"
+                  },
                   "additionalProperties": false,
+                  "required": [
+                    "options",
+                    "enableEmailNotifications"
+                  ],
                   "properties": {
                     "options": {
                       "type": "object",
-                      "description": "Specific notification types users can subscribe to.\n",
+                      "description": "Specifies email notifications settings.\n",
                       "additionalProperties": false,
+                      "required": [
+                        "newUserNotification",
+                        "passwordExpiry",
+                        "proactive",
+                        "upgrade",
+                        "apiClientCredentialExpiryNotification"
+                      ],
                       "properties": {
+                        "apiClientCredentialExpiryNotification": {
+                          "type": "boolean",
+                          "description": "Whether the user gets notifications for expiring API client credentials.\n"
+                        },
                         "newUserNotification": {
                           "type": "boolean",
-                          "description": "Send emails to group admins regarding new user creation.\n"
+                          "description": "Whether group administrators get notifications when the user creates other new users.\n"
                         },
                         "passwordExpiry": {
                           "type": "boolean",
-                          "description": "Send emails regarding password expiration.\n"
+                          "description": "Whether the user gets notifications for password expiration.\n"
                         },
                         "proactive": {
                           "type": "array",
-                          "description": "A list of products subscribed to for proactive notification emails.\n",
+                          "description": "Products for which the user gets notifications for service issues.\n",
+                          "minItems": 0,
                           "items": {
-                            "type": "string"
+                            "type": "string",
+                            "minLength": 1
                           }
                         },
                         "upgrade": {
                           "type": "array",
-                          "description": "A list of products subscribed to for upgrade notification emails.\n",
+                          "description": "Products for which the user receives notifications for upgrades.\n",
+                          "minItems": 0,
                           "items": {
-                            "type": "string"
+                            "type": "string",
+                            "minLength": 1
                           }
                         }
                       }
                     },
                     "enableEmailNotifications": {
                       "type": "boolean",
-                      "description": "Indicates if email notifications are enabled.\n"
+                      "description": "Enables email notifications.\n"
                     }
                   }
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/user-profile/tfa": {
-      "x-akamai": {
-        "path-info": "/user-profile/tfa"
-      },
-      "put": {
-        "operationId": "put-user-profile-tfa",
-        "summary": "Set two-factor authentication",
-        "tags": [
-          "Access"
-        ],
-        "description": "Enable or disable TFA on your profile. An account administrator needs to disable TFA for you if the account is set to `enable`. If the account doesn't specify a TFA setting, you can `disable` TFA on your profile yourself. You can always set TFA to `enable` regardless of account-level settings. If you have TFA enabled, `reset` TFA clears your TFA settings and you'll be asked to set up TFA the next time you log in to Control Center.\n",
-        "parameters": [
-          {
-            "name": "action",
-            "in": "query",
-            "description": "Includes the actions you can perform for TFA on your own profile, either `enable`, `disable`, or `reset`. Don't confuse this with the `actions` parameter, which applies to the various operations that get user data.\n",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "example": "enable",
-              "enum": [
-                "enable",
-                "disable",
-                "reset"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Authentication updated.\n"
           }
         }
       }
@@ -968,6 +1268,9 @@
         "name": "authGrants",
         "in": "query",
         "description": "Includes the list of your group and role assignments, `false` by default.\n",
+        "x-akamai": {
+          "file-path": "parameters/auth-grants-query.yaml"
+        },
         "required": false,
         "schema": {
           "type": "boolean",
@@ -979,78 +1282,92 @@
         "name": "notifications",
         "in": "query",
         "description": "Includes product notifications you subscribe to, `false` by default.\n",
+        "x-akamai": {
+          "file-path": "parameters/notifications-query.yaml"
+        },
         "schema": {
           "type": "boolean",
           "example": true,
           "default": false
         }
       },
-      "q-params-actions-actions": {
+      "qparams-actions-actions": {
         "name": "actions",
         "in": "query",
-        "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
+        "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
+        "x-akamai": {
+          "file-path": "parameters/qparams-actions-actions.yaml"
+        },
         "schema": {
           "type": "boolean",
           "example": true,
           "default": false
-        }
-      },
-      "action-query": {
-        "name": "action",
-        "in": "query",
-        "description": "Includes the actions you can perform for TFA on your own profile, either `enable`, `disable`, or `reset`. Don't confuse this with the `actions` parameter, which applies to the various operations that get user data.\n",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "example": "enable",
-          "enum": [
-            "enable",
-            "disable",
-            "reset"
-          ]
         }
       }
     },
     "schemas": {
       "groups-nested": {
         "type": "object",
-        "description": "A further-nested group.\n"
+        "description": "A further nested group.\n",
+        "x-akamai": {
+          "file-path": "schemas/groups-nested.yaml"
+        },
+        "additionalProperties": true,
+        "properties": {}
       },
       "auth-grant-response": {
         "type": "object",
-        "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
+        "description": "A user's role assignments, per group.\n",
+        "x-akamai": {
+          "file-path": "schemas/auth-grant-response.yaml"
+        },
         "additionalProperties": false,
+        "required": [
+          "roleId",
+          "roleName"
+        ],
         "properties": {
           "groupId": {
             "type": "integer",
-            "description": "A unique identifier for each group.\n"
-          },
-          "roleId": {
-            "type": "integer",
-            "description": "A unique identifier for each role.\n"
+            "description": "Unique identifier for each group. It's returned only for group roles.\n",
+            "minimum": 0
           },
           "groupName": {
             "type": "string",
-            "description": "A group's name.\n"
-          },
-          "roleName": {
-            "type": "string",
-            "description": "The role's name.\n"
-          },
-          "roleDescription": {
-            "type": "string",
-            "description": "Descriptive text for the role.\n"
+            "description": "Descriptive label for the group.\n",
+            "minLength": 1
           },
           "isBlocked": {
             "type": "boolean",
-            "description": "Indicates whether a user's access is blocked for a group.\n"
+            "description": "Whether a user's access to a group is blocked.\n"
+          },
+          "roleDescription": {
+            "type": "string",
+            "description": "Descriptive label for the role to convey its use.\n",
+            "minLength": 1
+          },
+          "roleId": {
+            "type": "integer",
+            "description": "Unique identifier for each role.\n",
+            "minimum": 1
+          },
+          "roleName": {
+            "type": "string",
+            "description": "Descriptive label for the role.\n",
+            "minLength": 1
           },
           "subGroups": {
             "type": "array",
-            "description": "Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+            "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+            "minItems": 0,
             "items": {
               "type": "object",
-              "description": "A further-nested group.\n"
+              "description": "A further nested group.\n",
+              "x-akamai": {
+                "file-path": "schemas/groups-nested.yaml"
+              },
+              "additionalProperties": true,
+              "properties": {}
             }
           }
         }
@@ -1058,199 +1375,30 @@
       "user-response": {
         "type": "object",
         "description": "Encapsulates information about each user.\n",
+        "x-akamai": {
+          "file-path": "schemas/user-response.yaml"
+        },
         "additionalProperties": false,
         "required": [
           "uiIdentityId",
           "firstName",
           "lastName",
           "email",
-          "tfaEnabled",
+          "additionalAuthentication",
           "country",
-          "phone"
+          "address",
+          "timeZone",
+          "additionalAuthenticationConfigured"
         ],
         "properties": {
-          "notifications": {
-            "type": "object",
-            "description": "The notification emails the user receives for products.\n",
-            "additionalProperties": false,
-            "properties": {
-              "options": {
-                "type": "object",
-                "description": "The types of notification emails the user receives.\n",
-                "additionalProperties": false,
-                "properties": {
-                  "upgrade": {
-                    "type": "array",
-                    "description": "Lists products for which the user receives notification emails about upgrades.\n",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "proactive": {
-                    "type": "array",
-                    "description": "Lists products for which the user receives notification emails about service issues.\n",
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "passwordExpiry": {
-                    "type": "boolean",
-                    "description": "Send emails regarding password expiration.\n"
-                  },
-                  "newUserNotification": {
-                    "type": "boolean",
-                    "description": "Send emails to group administrators when new users are created.\n"
-                  }
-                }
-              },
-              "enableEmailNotifications": {
-                "type": "boolean",
-                "description": "Indicates if email notifications are enabled.\n"
-              }
-            }
-          },
-          "city": {
-            "type": "string",
-            "description": "The user's city.\n"
-          },
-          "contactType": {
-            "type": "string",
-            "description": "To help characterize the user, the value can be any that are available from the [View contact types](ref:get-common-contact-types) operation.\n"
-          },
-          "country": {
-            "type": "string",
-            "description": "Part of the user's location. This can be any value available from the [View supported countries](ref:get-common-countries) operation.\n"
-          },
-          "jobTitle": {
-            "type": "string",
-            "description": "The user's job title.\n"
-          },
-          "lastLoginDate": {
-            "type": "string",
-            "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
-            "format": "date-time"
-          },
-          "mobilePhone": {
-            "type": "string",
-            "description": "The user's mobile phone number, represented as a 10-digit integer within a string.\n"
-          },
-          "passwordExpiryDate": {
-            "type": "string",
-            "description": "The date a user's password expires.\n",
-            "format": "date-time"
-          },
-          "preferredLanguage": {
-            "type": "string",
-            "description": "The value can be any that are available from the [View languages](ref:get-common-languages) operation.\n"
-          },
-          "secondaryEmail": {
-            "type": "string",
-            "description": "The user's alternate email address.\n",
-            "format": "email"
-          },
-          "sessionTimeOut": {
-            "type": "integer",
-            "description": "The number of seconds it takes for the user's Control Center session to time out if there hasn't been any activity. This corresponds to the `value` output of the [View timeout policies](ref:get-common-timeout-policies) operation.\n"
-          },
-          "state": {
-            "type": "string",
-            "description": "The user's state.\n"
-          },
-          "address": {
-            "type": "string",
-            "description": "The user's street address.\n"
-          },
-          "zipCode": {
-            "type": "string",
-            "description": "The user's five-digit ZIP code, represented as a string.\n"
-          },
-          "uiIdentityId": {
-            "type": "string",
-            "description": "A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.\n"
-          },
-          "firstName": {
-            "type": "string",
-            "description": "The user's first name.\n"
-          },
-          "lastName": {
-            "type": "string",
-            "description": "The user's last name.\n"
-          },
-          "uiUserName": {
-            "type": "string",
-            "description": "A user's `loginId`. Typically, a user's email address.\n"
-          },
-          "email": {
-            "type": "string",
-            "description": "The user's email address.\n",
-            "format": "email"
-          },
-          "isLocked": {
-            "type": "boolean",
-            "description": "The user's lock status.\n"
-          },
-          "phone": {
-            "type": "string",
-            "description": "The user's main phone number, represented as a ten-digit integer within a string.\n"
-          },
-          "timeZone": {
-            "type": "string",
-            "description": "The user's time zone. The value can be any that are available from the [View time zones](ref:get-common-timezones) operation.\n"
-          },
           "accountId": {
             "type": "string",
-            "description": "A unique identifier for each account.\n"
-          },
-          "tfaEnabled": {
-            "type": "boolean",
-            "description": "Indicates if TFA is enabled.\n"
-          },
-          "authGrants": {
-            "type": "array",
-            "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
-            "items": {
-              "type": "object",
-              "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
-              "additionalProperties": false,
-              "properties": {
-                "groupId": {
-                  "type": "integer",
-                  "description": "A unique identifier for each group.\n"
-                },
-                "roleId": {
-                  "type": "integer",
-                  "description": "A unique identifier for each role.\n"
-                },
-                "groupName": {
-                  "type": "string",
-                  "description": "A group's name.\n"
-                },
-                "roleName": {
-                  "type": "string",
-                  "description": "The role's name.\n"
-                },
-                "roleDescription": {
-                  "type": "string",
-                  "description": "Descriptive text for the role.\n"
-                },
-                "isBlocked": {
-                  "type": "boolean",
-                  "description": "Indicates whether a user's access is blocked for a group.\n"
-                },
-                "subGroups": {
-                  "type": "array",
-                  "description": "Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-                  "items": {
-                    "type": "object",
-                    "description": "A further-nested group.\n"
-                  }
-                }
-              }
-            }
+            "description": "Unique identifier for each account.\n",
+            "minLength": 1
           },
           "actions": {
             "type": "object",
-            "description": "Encapsulates permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter that applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
+            "description": "Specifies permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter that applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
             "additionalProperties": false,
             "required": [
               "delete",
@@ -1263,56 +1411,350 @@
             "properties": {
               "delete": {
                 "type": "boolean",
-                "description": "Indicates whether the user is deletable.\n"
-              },
-              "edit": {
-                "type": "boolean",
-                "description": "Indicates whether the user is editable.\n"
-              },
-              "resetPassword": {
-                "type": "boolean",
-                "description": "Allows an administrator to send a user a password by email or see a one-time token.\n"
-              },
-              "isCloneable": {
-                "type": "boolean",
-                "description": "If `true`, an administrator can create a new user with the same permissions as this user.\n"
-              },
-              "thirdPartyAccess": {
-                "type": "boolean",
-                "description": "Allows the administrator to manage extended access.\n"
+                "description": "Whether the user is deletable.\n"
               },
               "apiClient": {
                 "type": "boolean",
-                "description": "Allows the administrator to create an API client.\n"
+                "description": "Enables the administrator to create an API client.\n"
+              },
+              "edit": {
+                "type": "boolean",
+                "description": "Whether the user is editable.\n"
+              },
+              "isCloneable": {
+                "type": "boolean",
+                "description": "Enables an administrator to create a new user with permissions cloned from this user.\n"
+              },
+              "resetPassword": {
+                "type": "boolean",
+                "description": "Enables an administrator to send a user a password by email or see a one-time token.\n"
+              },
+              "thirdPartyAccess": {
+                "type": "boolean",
+                "description": "Enables the administrator to manage extended access.\n"
               }
             }
+          },
+          "additionalAuthentication": {
+            "type": "string",
+            "description": "Specifies the user's multi-factor authentication method, confirming their identity. Either `TFA`, `MFA`, or `NONE`, which offers no additional authentication.\n",
+            "enum": [
+              "TFA",
+              "MFA",
+              "NONE"
+            ]
+          },
+          "additionalAuthenticationConfigured": {
+            "type": "boolean",
+            "description": "Whether the user has multi-factor authentication configured.\n"
+          },
+          "address": {
+            "type": "string",
+            "description": "The user's street address.\n",
+            "minLength": 1
+          },
+          "authGrants": {
+            "type": "array",
+            "description": "A user's role assignments, per group.\n",
+            "minItems": 0,
+            "items": {
+              "type": "object",
+              "description": "A user's role assignments, per group.\n",
+              "x-akamai": {
+                "file-path": "schemas/auth-grant-response.yaml"
+              },
+              "additionalProperties": false,
+              "required": [
+                "roleId",
+                "roleName"
+              ],
+              "properties": {
+                "groupId": {
+                  "type": "integer",
+                  "description": "Unique identifier for each group. It's returned only for group roles.\n",
+                  "minimum": 0
+                },
+                "groupName": {
+                  "type": "string",
+                  "description": "Descriptive label for the group.\n",
+                  "minLength": 1
+                },
+                "isBlocked": {
+                  "type": "boolean",
+                  "description": "Whether a user's access to a group is blocked.\n"
+                },
+                "roleDescription": {
+                  "type": "string",
+                  "description": "Descriptive label for the role to convey its use.\n",
+                  "minLength": 1
+                },
+                "roleId": {
+                  "type": "integer",
+                  "description": "Unique identifier for each role.\n",
+                  "minimum": 1
+                },
+                "roleName": {
+                  "type": "string",
+                  "description": "Descriptive label for the role.\n",
+                  "minLength": 1
+                },
+                "subGroups": {
+                  "type": "array",
+                  "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+                  "minItems": 0,
+                  "items": {
+                    "type": "object",
+                    "description": "A further nested group.\n",
+                    "x-akamai": {
+                      "file-path": "schemas/groups-nested.yaml"
+                    },
+                    "additionalProperties": true,
+                    "properties": {}
+                  }
+                }
+              }
+            }
+          },
+          "city": {
+            "type": "string",
+            "description": "The user's city.\n",
+            "minLength": 1
+          },
+          "contactType": {
+            "type": "string",
+            "description": "User's contact type.\n",
+            "minLength": 1
+          },
+          "country": {
+            "type": "string",
+            "description": "User's country.\n",
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "description": "The user's email address.\n",
+            "format": "email"
+          },
+          "emailUpdatePending": {
+            "type": "boolean",
+            "description": "Whether there are any pending changes to the email address.\n"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "The user's first name.\n",
+            "minLength": 1
+          },
+          "isLocked": {
+            "type": "boolean",
+            "description": "Whether the user's account is locked. To learn more, see [Temporary account lockout](https://techdocs.akamai.com/iam/docs/tmp-account-lockout).\n"
+          },
+          "jobTitle": {
+            "type": "string",
+            "description": "The user's position at the company.\n",
+            "minLength": 1
+          },
+          "lastLoginDate": {
+            "type": "string",
+            "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
+            "format": "date-time"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "The user's surname.\n",
+            "minLength": 1
+          },
+          "mobilePhone": {
+            "type": "string",
+            "description": "The user's mobile phone number in ITU-T E.164 format, that is, `+country code-area code-subscriber number`.\n",
+            "minLength": 1
+          },
+          "notifications": {
+            "type": "object",
+            "description": "Specifies email notifications the user receives for products.\n",
+            "additionalProperties": false,
+            "required": [
+              "options",
+              "enableEmailNotifications"
+            ],
+            "properties": {
+              "options": {
+                "type": "object",
+                "description": "Specifies email notifications settings.\n",
+                "additionalProperties": false,
+                "required": [
+                  "upgrade",
+                  "proactive",
+                  "passwordExpiry",
+                  "newUserNotification",
+                  "apiClientCredentialExpiryNotification"
+                ],
+                "properties": {
+                  "apiClientCredentialExpiryNotification": {
+                    "type": "boolean",
+                    "description": "Whether the user gets notifications for expiring API client credentials.\n"
+                  },
+                  "newUserNotification": {
+                    "type": "boolean",
+                    "description": "Whether group administrators get notifications when the user creates other new users.\n"
+                  },
+                  "passwordExpiry": {
+                    "type": "boolean",
+                    "description": "Whether the user gets notifications for password expiration.\n"
+                  },
+                  "proactive": {
+                    "type": "array",
+                    "description": "Products for which the user gets notifications for service issues.\n",
+                    "minItems": 0,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "upgrade": {
+                    "type": "array",
+                    "description": "Products for which the user receives notifications for upgrades.\n",
+                    "minItems": 0,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              },
+              "enableEmailNotifications": {
+                "type": "boolean",
+                "description": "Enables email notifications.\n"
+              }
+            }
+          },
+          "passwordExpiryDate": {
+            "type": "string",
+            "description": "The date a user's password expires.\n",
+            "format": "date-time"
+          },
+          "phone": {
+            "type": "string",
+            "description": "The user's mobile phone number in ITU-T E.164 format, that is, `+country code-area code-subscriber number`.\n",
+            "minLength": 1
+          },
+          "preferredLanguage": {
+            "type": "string",
+            "description": "The user's language.\n",
+            "minLength": 1
+          },
+          "secondaryEmail": {
+            "type": "string",
+            "description": "The user's alternate email address.\n",
+            "format": "email"
+          },
+          "sessionTimeOut": {
+            "type": "integer",
+            "description": "The number of seconds it takes for the user's Control Center session to time out after no activity.\n",
+            "minimum": 0
+          },
+          "state": {
+            "type": "string",
+            "description": "The user's state or province if user's country is USA or Canada.\n",
+            "minLength": 1
+          },
+          "tfaConfigured": {
+            "type": "boolean",
+            "description": "Whether TFA is configured.\n"
+          },
+          "tfaEnabled": {
+            "type": "boolean",
+            "description": "Whether TFA is enabled.\n"
+          },
+          "timeZone": {
+            "type": "string",
+            "description": "The user's time zone. To get the available values, run the [View time zones](ref:get-common-timezones) operation.\n",
+            "minLength": 1
+          },
+          "uiIdentityId": {
+            "type": "string",
+            "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.\n",
+            "minLength": 1
+          },
+          "uiUserName": {
+            "type": "string",
+            "description": "The user's username in Control Center.\n",
+            "minLength": 1
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "The user's five-digit postal code, represented as a string.\n",
+            "minLength": 1
+          }
+        }
+      },
+      "additional-authentication-request": {
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/additional-authentication-request.yaml"
+        },
+        "additionalProperties": false,
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "type": "string",
+            "description": "A user's multi-factor authentication method, either `TFA`, `MFA`, or `NONE`.\n",
+            "enum": [
+              "TFA",
+              "MFA",
+              "NONE"
+            ]
           }
         }
       },
       "update-user-basic-info-request": {
         "type": "object",
-        "description": "Specifies user's profile.\n",
+        "x-akamai": {
+          "file-path": "schemas/update-user-basic-info-request.yaml"
+        },
         "additionalProperties": false,
+        "required": [
+          "firstName",
+          "lastName",
+          "country",
+          "preferredLanguage",
+          "sessionTimeOut",
+          "timeZone"
+        ],
         "properties": {
+          "additionalAuthentication": {
+            "type": "string",
+            "description": "Specifies the user's multi-factor authentication method, confirming their identity. Either `TFA`, `MFA`, or `NONE`, which offers no additional authentication.\n",
+            "enum": [
+              "TFA",
+              "MFA",
+              "NONE"
+            ]
+          },
           "address": {
             "type": "string",
-            "description": "The user's street address.\n"
+            "description": "The user's street address.\n",
+            "minLength": 1
           },
           "city": {
             "type": "string",
-            "description": "The user's city.\n"
+            "description": "The user's city.\n",
+            "minLength": 1
           },
           "contactType": {
             "type": "string",
-            "description": "Any of the values available from the [View contact types](ref:get-common-contact-types) operation.\n"
+            "description": "User's contact type. To get the available values, run the [View contact types](ref:get-common-contact-types) operation.\n",
+            "minLength": 1
           },
           "country": {
             "type": "string",
-            "description": "Part of the user's location. This can be any value available from the [View supported countries](ref:get-common-countries) operation.\n"
+            "description": "User's country. To get the available values, run the [View supported countries](ref:get-common-countries) operation.\n",
+            "minLength": 1
           },
           "email": {
             "type": "string",
-            "description": "The user's email address.\n",
+            "description": "The user's email address. It needs to be a valid email address users can access, as they'll be sent a OTP to enter while logging in for the first time. To learn more, see [Frequently asked questions](https://techdocs.akamai.com/iam/docs/frequently-asked-questions-gss#why-am-i-asked-to-enter-a-code-while-logging-in).\n",
             "format": "email"
           },
           "firstName": {
@@ -1323,27 +1765,30 @@
           },
           "jobTitle": {
             "type": "string",
-            "description": "The user's job title.\n",
+            "description": "The user's position at the company.\n",
             "minLength": 1,
             "maxLength": 75
           },
           "lastName": {
             "type": "string",
-            "description": "The user's last name.\n",
+            "description": "The user's surname.\n",
             "minLength": 1,
             "maxLength": 50
           },
           "mobilePhone": {
             "type": "string",
-            "description": "The user's mobile phone number, represented as a 10-digit integer within a string.\n"
+            "description": "The user's mobile phone number in ITU-T E.164 format, that is, `+country code-area code-subscriber number`. For example, `+3551234567891` or `+441234567891`. For Canadian and US phone numbers, you can provide them with a country code (for example, `+11234567891`) or without it as a ten-digit integer within a string (for example, `1234567891`).\n",
+            "minLength": 1
           },
           "phone": {
             "type": "string",
-            "description": "The user's main phone number, represented as a ten-digit integer within a string.\n"
+            "description": "The user's mobile phone number in ITU-T E.164 format, that is, `+country code-area code-subscriber number`. For example, `+3551234567891` or `+441234567891`. For Canadian and US phone numbers, you can provide them with a country code (for example, `+11234567891`) or without it as a ten-digit integer within a string (for example, `1234567891`).\n",
+            "minLength": 1
           },
           "preferredLanguage": {
             "type": "string",
-            "description": "Any of the values available from the [View languages](ref:get-common-languages) operation.\n"
+            "description": "The user's language. To get the available values, run the [View languages](ref:get-common-languages) operation.\n",
+            "minLength": 1
           },
           "secondaryEmail": {
             "type": "string",
@@ -1352,29 +1797,32 @@
           },
           "sessionTimeOut": {
             "type": "integer",
-            "description": "The number of seconds it takes for the user's Control Center session to time out if there hasn't been any activity. This corresponds to the `value` output of the [View timeout policies](ref:get-common-timeout-policies) operation.\n"
+            "description": "The number of seconds it takes for the user's Control Center session to time out after no activity. To get the available values, run the [View timeout policies](ref:get-common-timeout-policies) operation if you're an administrator or [View timeout policies for a user profile](ref:get-user-timeout-policies) operation if you're the account's user. Make sure to select a value that's equal or smaller to the **Max session timeout** value, set for your account in the Identity and Access Management interface's [Settings](https://techdocs.akamai.com/iam/docs/account-settings) tab.\n",
+            "minimum": 0
           },
           "state": {
             "type": "string",
-            "description": "The user's state if `country=USA`, or the user's province if `country=Canada`. For all other countries, this field is optional.\n"
-          },
-          "tfaEnabled": {
-            "type": "boolean",
-            "description": "Indicates whether two-factor authentication is enabled.\n"
+            "description": "The user's state or province if user's country is USA or Canada. To get the available values, run the [View states for a user profile](ref:get-user-states) operation.\n",
+            "minLength": 1
           },
           "timeZone": {
             "type": "string",
-            "description": "The user's time zone. The value can be any that are available from the [View time zones](ref:get-common-timezones) operation.\n"
+            "description": "The user's time zone. To get the available values, run the [View time zones](ref:get-common-timezones) operation.\n",
+            "minLength": 1
           },
           "zipCode": {
             "type": "string",
-            "description": "The user's five-digit ZIP code, represented as a string.\n"
+            "description": "The user's five-digit postal code, represented as a string.\n",
+            "minLength": 1
           }
         }
       },
       "change-password-request": {
         "type": "object",
         "description": "Uses the old password to authenticate you are who you say you are when you update your password. Includes the new password.\n",
+        "x-akamai": {
+          "file-path": "schemas/change-password-request.yaml"
+        },
         "additionalProperties": false,
         "required": [
           "currentPassword",
@@ -1383,44 +1831,65 @@
         "properties": {
           "currentPassword": {
             "type": "string",
-            "description": "Your existing password.\n"
+            "description": "Your existing password.\n",
+            "minLength": 1
           },
           "newPassword": {
             "type": "string",
-            "description": "The new password.\n"
+            "description": "New password.\n",
+            "minLength": 1
           }
         }
       },
       "notifications-request": {
-        "type": "object",
         "description": "Encapsulates the types of email notifications you can receive.\n",
+        "x-akamai": {
+          "file-path": "schemas/notifications-request.yaml"
+        },
         "additionalProperties": false,
+        "required": [
+          "enableEmailNotifications",
+          "options"
+        ],
         "properties": {
           "options": {
             "type": "object",
-            "description": "Specific notification types users can subscribe to.\n",
+            "description": "Specifies email notifications settings.\n",
             "additionalProperties": false,
+            "required": [
+              "passwordExpiry",
+              "proactive",
+              "upgrade"
+            ],
             "properties": {
+              "apiClientCredentialExpiryNotification": {
+                "type": "boolean",
+                "description": "Enables notifications for expiring API client credentials.\n"
+              },
               "newUserNotification": {
                 "type": "boolean",
-                "description": "If `true`, send emails to group admins. This notification informs the admin a new user was created and granted access to their group.\n"
+                "description": "Enables notifications for group administrators when the user creates other new users.\n"
               },
               "passwordExpiry": {
                 "type": "boolean",
-                "description": "Send emails regarding password expiration.\n"
+                "description": "Enables notifications for expiring passwords.\n"
               },
               "proactive": {
                 "type": "array",
-                "description": "A list of products subscribed to for proactive notification emails.\n",
+                "description": "Products for which the user gets notifications for service issues.\n",
+                "minItems": 0,
                 "items": {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 }
               },
               "upgrade": {
                 "type": "array",
-                "description": "A list of products subscribed to for upgrade notification emails.\n",
+                "description": "Products for which the user receives notifications for upgrades.\n",
+                "minItems": 0,
                 "items": {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 }
               }
             }
@@ -1434,46 +1903,69 @@
       "notifications-response": {
         "type": "object",
         "description": "Encapsulates the types of email notifications you can receive.\n",
+        "x-akamai": {
+          "file-path": "schemas/notifications-response.yaml"
+        },
         "additionalProperties": false,
+        "required": [
+          "options",
+          "enableEmailNotifications"
+        ],
         "properties": {
           "options": {
             "type": "object",
-            "description": "Specific notification types users can subscribe to.\n",
+            "description": "Specifies email notifications settings.\n",
             "additionalProperties": false,
+            "required": [
+              "newUserNotification",
+              "passwordExpiry",
+              "proactive",
+              "upgrade",
+              "apiClientCredentialExpiryNotification"
+            ],
             "properties": {
+              "apiClientCredentialExpiryNotification": {
+                "type": "boolean",
+                "description": "Whether the user gets notifications for expiring API client credentials.\n"
+              },
               "newUserNotification": {
                 "type": "boolean",
-                "description": "Send emails to group admins regarding new user creation.\n"
+                "description": "Whether group administrators get notifications when the user creates other new users.\n"
               },
               "passwordExpiry": {
                 "type": "boolean",
-                "description": "Send emails regarding password expiration.\n"
+                "description": "Whether the user gets notifications for password expiration.\n"
               },
               "proactive": {
                 "type": "array",
-                "description": "A list of products subscribed to for proactive notification emails.\n",
+                "description": "Products for which the user gets notifications for service issues.\n",
+                "minItems": 0,
                 "items": {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 }
               },
               "upgrade": {
                 "type": "array",
-                "description": "A list of products subscribed to for upgrade notification emails.\n",
+                "description": "Products for which the user receives notifications for upgrades.\n",
+                "minItems": 0,
                 "items": {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 }
               }
             }
           },
           "enableEmailNotifications": {
             "type": "boolean",
-            "description": "Indicates if email notifications are enabled.\n"
+            "description": "Enables email notifications.\n"
           }
         }
       }
     }
   },
   "x-akamai": {
-    "auth-type": "EDGE_GRID"
+    "auth-type": "EDGE_GRID",
+    "file-path": "05-user-profile-api.yaml"
   }
 }

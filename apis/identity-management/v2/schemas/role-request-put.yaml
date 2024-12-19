@@ -1,7 +1,7 @@
 type: object
-description: |-
-  Add or remove permissions from a role.
-  
+description: |
+  Add or remove role assignments. When you modify a role, those changes affect existing API clients. Review all API clients
+  belonging to the user before modifying a role.
 x-akamai:
   file-path: schemas/role-request-put.yaml
 additionalProperties: false
@@ -9,7 +9,8 @@ properties:
   grantedRoles:
     type: array
     description: |
-      A list of grantable role IDs.
+      Granted roles for the account.
+    minItems: 0
     items:
       type: object
       additionalProperties: false
@@ -19,16 +20,17 @@ properties:
         grantedRoleId:
           type: integer
           description: |
-            A unique identifier for each granted role.
+            Unique identifier for the grantable role. To get this value, run the [List grantable roles](ref:get-grantable-roles) operation.
+          minimum: 1
   roleDescription:
     type: string
     description: |
-      A meaningful description for the role.
+      Descriptive label for the role to convey its use.
     minLength: 1
     maxLength: 250
   roleName:
     type: string
     description: |
-      The role's name.
+      Descriptive label for the role.
     minLength: 1
     maxLength: 70
