@@ -2,21 +2,11 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Roles",
-    "version": "3"
+    "version": "v2"
   },
   "servers": [
     {
-      "url": "https://{hostname}/identity-management/v3"
-    }
-  ],
-  "tags": [
-    {
-      "description": "Create and manage the roles for an account. Roles are lists of permissions\nthat are explicitly tied to both a user and a group.\n",
-      "name": "Roles"
-    },
-    {
-      "description": "Get information about roles you can include in a new custom role.\n",
-      "name": "Grantable roles"
+      "url": "https://{hostname}/identity-management/v2"
     }
   ],
   "paths": {
@@ -30,14 +20,14 @@
         "tags": [
           "Roles"
         ],
-        "description": "This operation creates a custom role. A custom role combines [grantable roles](ref:get-grantable-roles) defined by Akamai. Roles exist at the account level regardless of group, but are constrained by contract type. If you create a role under one contract type, you can't apply that role to groups belonging to a different contract type, even if they're in the same account.\n",
+        "description": "Create a custom role. Roles exist at the account level regardless of group, but are constrained by contract type. If you create a role under one contract type, you can't apply that role to groups belonging to a different contract type, even if they're in the same account.\n",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "example": {
                 "roleName": "Edit Reports",
-                "roleDescription": "This role lets users edit or create reports.",
+                "roleDescription": "This role will let the users to Edit/Create Reports",
                 "grantedRoles": [
                   {
                     "grantedRoleId": 2051
@@ -90,27 +80,19 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Custom role successfully created.\n",
-            "headers": {
-              "Location": {
-                "description": "A URL path to the newly created object.\n",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
+          "200": {
+            "description": "The response returns the created role.\n",
             "content": {
               "application/json": {
                 "example": {
                   "roleId": 12345678,
                   "roleName": "Edit Role",
-                  "roleDescription": "Provides users with edit and create access to reports.",
+                  "roleDescription": "This role will let the users to Edit/Create Reports",
                   "type": "custom",
                   "createdDate": "2017-09-11T13:43:54.005Z",
-                  "createdBy": "alfulani",
+                  "createdBy": "szhang",
                   "modifiedDate": "2017-09-11T13:43:54.005Z",
-                  "modifiedBy": "mrossi",
+                  "modifiedBy": "jperez",
                   "actions": {
                     "edit": true,
                     "delete": true
@@ -127,8 +109,8 @@
                       "uiIdentityId": "A-B-12345",
                       "firstName": "John",
                       "lastName": "Smith",
-                      "accountId": "A-CCT5678",
-                      "email": "jsmith@example.com",
+                      "accountId": "A-CCT7890",
+                      "email": "jsmith@mycompany.com",
                       "lastLoginDate": "2016-01-13T17:53:57Z"
                     }
                   ]
@@ -302,7 +284,7 @@
         "tags": [
           "Roles"
         ],
-        "description": "This operation lists roles for the current account and contract type or other accounts using the `accountSwitchKey` parameter. The account and contract type are determined by the access tokens in your API client.\n",
+        "description": "List roles for the current account and contract type. The account and contract type are determined by the access tokens in your API client.\n",
         "parameters": [
           {
             "name": "actions",
@@ -349,19 +331,31 @@
         ],
         "responses": {
           "200": {
-            "description": "The response provides the roles for the account.\n",
+            "description": "The response list roles.\n",
             "content": {
               "application/json": {
                 "example": [
+                  {
+                    "roleId": 123456,
+                    "roleName": "View Only",
+                    "roleDescription": "This role will allow you to view",
+                    "type": "custom",
+                    "createdDate": "2017-07-27T18:11:25.000Z",
+                    "createdBy": "asingh@mycompany.com",
+                    "modifiedDate": "2017-07-27T18:11:25.000Z",
+                    "modifiedBy": "jsmith@mycompany.com",
+                    "actions": {
+                      "edit": true,
+                      "delete": true
+                    }
+                  },
                   {
                     "roleId": 13,
                     "roleName": "Accounting",
                     "roleDescription": "This role allows for 'read only'",
                     "type": "standard",
-                    "createdBy": "hgildong",
-                    "createdDate": "2023-07-27T18:11:25.000Z",
+                    "createdBy": "jdupont",
                     "modifiedBy": "szhang",
-                    "modifiedDate": "2023-07-27T18:11:25.000Z",
                     "numUsers": 2,
                     "actions": {
                       "edit": false,
@@ -373,7 +367,7 @@
                         "firstName": "John",
                         "lastName": "Smith",
                         "accountId": "A-CCT3456",
-                        "email": "jsmith@example.com",
+                        "email": "jsmith@mycompany.com",
                         "lastLoginDate": "2017-08-03T21:15:27.000Z"
                       },
                       {
@@ -381,41 +375,15 @@
                         "firstName": "Jan",
                         "lastName": "Kowalski",
                         "accountId": "A-CCT1234",
-                        "email": "jkowalski@example.com",
+                        "email": "jkowalski@mycompany.com",
                         "lastLoginDate": "2016-09-07T00:00:00.000Z"
-                      }
-                    ]
-                  },
-                  {
-                    "roleId": 100004,
-                    "roleName": "Admin for Account Settings",
-                    "roleDescription": "Users with this role can manage account settings in Identity and Access management application",
-                    "type": "account",
-                    "createdBy": "hgildong",
-                    "createdDate": "2023-07-27T18:11:25.000Z",
-                    "modifiedBy": "szhang",
-                    "modifiedDate": "2023-07-27T18:11:25.000Z",
-                    "numUsers": 1,
-                    "actions": {
-                      "edit": false,
-                      "delete": false
-                    },
-                    "users": [
-                      {
-                        "uiIdentityId": "A-B-1BCDEF",
-                        "firstName": "John",
-                        "lastName": "Smith",
-                        "accountId": "A-CCT3456",
-                        "email": "jsmith@example.com",
-                        "lastLoginDate": "2017-08-03T21:15:27.000Z"
                       }
                     ]
                   }
                 ],
                 "schema": {
                   "type": "array",
-                  "description": "Encapsulates information about various roles.\n",
-                  "minItems": 0,
+                  "description": "Lists available roles.\n",
                   "items": {
                     "type": "object",
                     "description": "Encapsulates information about multiple roles.\n",
@@ -563,10 +531,10 @@
         "tags": [
           "Grantable roles"
         ],
-        "description": "This operation lists the grantable roles you can include in a new custom role, or add to an existing custom role.\n",
+        "description": "List which grantable roles you can include in a new custom role or add to an existing custom role.\n",
         "responses": {
           "200": {
-            "description": "The response provides grantable roles.\n",
+            "description": "The response lists grantable roles.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -598,31 +566,22 @@
                 ],
                 "schema": {
                   "type": "array",
-                  "description": "Lists grantable roles.\n",
-                  "minItems": 1,
+                  "description": "Testing to see where it appears?\n",
                   "items": {
                     "type": "object",
                     "additionalProperties": false,
-                    "required": [
-                      "grantedRoleId",
-                      "grantedRoleName",
-                      "grantedRoleDescription"
-                    ],
                     "properties": {
                       "grantedRoleId": {
                         "type": "integer",
-                        "description": "Unique identifier for each granted role.\n",
-                        "minimum": 1
+                        "description": "A unique identifier for each granted role.\n"
                       },
                       "grantedRoleName": {
                         "type": "string",
-                        "description": "Descriptive label for the granted role.\n",
-                        "minLength": 1
+                        "description": "The name you supply for the granted role.\n"
                       },
                       "grantedRoleDescription": {
                         "type": "string",
-                        "description": "Descriptive label for the role to convey its use.\n",
-                        "minLength": 1
+                        "description": "The description you supply for the granted role.\n"
                       }
                     }
                   }
@@ -655,7 +614,7 @@
         "tags": [
           "Roles"
         ],
-        "description": "This operation retrieves a role's details.\n",
+        "description": "Get details for a specific role.\n",
         "parameters": [
           {
             "name": "actions",
@@ -691,7 +650,7 @@
         ],
         "responses": {
           "200": {
-            "description": "The response provides the role's details.\n",
+            "description": "The response returns the role.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -700,9 +659,9 @@
                   "roleDescription": "This role will allow you to look at the security reports",
                   "type": "custom",
                   "createdDate": "2017-07-27T18:11:25.000Z",
-                  "createdBy": "afero@example.com",
+                  "createdBy": "jsmith@mycompany.com",
                   "modifiedDate": "2017-07-27T18:11:25.000Z",
-                  "modifiedBy": "asingh@example.com",
+                  "modifiedBy": "jperez@mycompany.com",
                   "actions": {
                     "edit": false,
                     "delete": false
@@ -712,16 +671,16 @@
                       "uiIdentityId": "A-B-12345",
                       "firstName": "John",
                       "lastName": "Smith",
-                      "accountId": "A-CCT9012",
-                      "email": "jsmith@example.com",
+                      "accountId": "A-CCT3456",
+                      "email": "jsmith@mycompany.com",
                       "lastLoginDate": "2017-08-03T21:15:27.000Z"
                     },
                     {
                       "uiIdentityId": "1-2ABCD",
                       "firstName": "Jan",
                       "lastName": "Kowalski",
-                      "accountId": "A-CCT1234",
-                      "email": "jkowalski@example.com",
+                      "accountId": "A-CCT3456",
+                      "email": "jkowalski@mycompany.com",
                       "lastLoginDate": "2016-09-07T00:00:00.000Z"
                     }
                   ],
@@ -902,14 +861,14 @@
         "tags": [
           "Roles"
         ],
-        "description": "This operation adds or removes a role's group role assignments, along with other data such as name and description. When you modify a role, those changes affect existing API clients. Review all API clients belonging to the user before modifying a role.\n",
+        "description": "Add or remove permissions from a role. Additionally, edit the name, description, and so on.\n",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "example": {
                 "roleName": "Edit Reports",
-                "roleDescription": "Provides users with edit and create access to reports.",
+                "roleDescription": "This role will let the users to Edit/Create Reports",
                 "grantedRoles": [
                   {
                     "grantedRoleId": 2063
@@ -959,7 +918,7 @@
         },
         "responses": {
           "200": {
-            "description": "The response reflects the modified role.\n",
+            "description": "The response returns the updated role.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -1152,7 +1111,7 @@
         "tags": [
           "Roles"
         ],
-        "description": "This operation deletes a custom role. You can't delete a role if it's assigned to a user.\n",
+        "description": "This operation is only allowed if the role isn't assigned to any users.\n",
         "responses": {
           "204": {
             "description": "Role deleted.\n"
@@ -1359,8 +1318,7 @@
       },
       "list-of-role-list-item": {
         "type": "array",
-        "description": "Encapsulates information about various roles.\n",
-        "minItems": 0,
+        "description": "Lists available roles.\n",
         "items": {
           "type": "object",
           "description": "Encapsulates information about multiple roles.\n",
@@ -1695,56 +1653,39 @@
       "granted-role": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "grantedRoleId",
-          "grantedRoleName",
-          "grantedRoleDescription"
-        ],
         "properties": {
           "grantedRoleId": {
             "type": "integer",
-            "description": "Unique identifier for each granted role.\n",
-            "minimum": 1
+            "description": "A unique identifier for each granted role.\n"
           },
           "grantedRoleName": {
             "type": "string",
-            "description": "Descriptive label for the granted role.\n",
-            "minLength": 1
+            "description": "The name you supply for the granted role.\n"
           },
           "grantedRoleDescription": {
             "type": "string",
-            "description": "Descriptive label for the role to convey its use.\n",
-            "minLength": 1
+            "description": "The description you supply for the granted role.\n"
           }
         }
       },
       "list-of-granted-role": {
         "type": "array",
-        "description": "Lists grantable roles.\n",
-        "minItems": 1,
+        "description": "Testing to see where it appears?\n",
         "items": {
           "type": "object",
           "additionalProperties": false,
-          "required": [
-            "grantedRoleId",
-            "grantedRoleName",
-            "grantedRoleDescription"
-          ],
           "properties": {
             "grantedRoleId": {
               "type": "integer",
-              "description": "Unique identifier for each granted role.\n",
-              "minimum": 1
+              "description": "A unique identifier for each granted role.\n"
             },
             "grantedRoleName": {
               "type": "string",
-              "description": "Descriptive label for the granted role.\n",
-              "minLength": 1
+              "description": "The name you supply for the granted role.\n"
             },
             "grantedRoleDescription": {
               "type": "string",
-              "description": "Descriptive label for the role to convey its use.\n",
-              "minLength": 1
+              "description": "The description you supply for the granted role.\n"
             }
           }
         }
@@ -1943,14 +1884,6 @@
               }
             }
           }
-        }
-      }
-    },
-    "headers": {
-      "location": {
-        "description": "A URL path to the newly created object.\n",
-        "schema": {
-          "type": "string"
         }
       }
     }

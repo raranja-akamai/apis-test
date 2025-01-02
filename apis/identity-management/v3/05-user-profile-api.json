@@ -2,17 +2,11 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Your user profile",
-    "version": "3"
+    "version": "v2"
   },
   "servers": [
     {
-      "url": "https://{hostname}/identity-management/v3"
-    }
-  ],
-  "tags": [
-    {
-      "description": "Manage your profile, password, or multi-factor authentication. Users\ncan edit their own profiles, but only administrators can edit profiles belonging\nto other users.\n",
-      "name": "Profile"
+      "url": "https://{hostname}/identity-management/v2"
     }
   ],
   "paths": {
@@ -26,7 +20,7 @@
         "tags": [
           "Profile"
         ],
-        "description": "This operation gets your profile information. To make changes to your profile, run the [Edit your profile](ref:put-user-profile-info) operation.\n",
+        "description": "Return your own profile information. To make changes to your profile, run the [Edit your profile](ref:put-user-profile-info) operation.\n",
         "parameters": [
           {
             "name": "authGrants",
@@ -62,27 +56,26 @@
         ],
         "responses": {
           "200": {
-            "description": "The response provides your profile.\n",
+            "description": "The response returns the profile.\n",
             "content": {
               "application/json": {
                 "example": {
                   "uiIdentityId": "A-B-123456",
                   "firstName": "John",
                   "lastName": "Smith",
-                  "uiUserName": "jsmith@example.com",
-                  "email": "jsmith@example.com",
+                  "uiUserName": "john.smith@mycompany.com",
+                  "email": "afero@mycompany.com",
                   "lastLoginDate": "2016-01-13T17:53:57Z",
-                  "additionalAuthentication": "TFA",
+                  "tfaEnabled": true,
                   "country": "USA",
                   "phone": "3456788765",
-                  "contactType": "Billing",
+                  "contactType": "Prolexic",
                   "isLocked": false,
                   "timeZone": "GMT",
                   "preferredLanguage": "English",
                   "sessionTimeOut": 30,
                   "passwordExpiryDate": "2018-01-13T17:53:57Z",
-                  "secondaryEmail": "john-smith@example.com",
-                  "additionalAuthenticationConfigured": false,
+                  "secondaryEmail": "john-smith@gmail.com",
                   "mobilePhone": "3456787657",
                   "address": "first Street",
                   "city": "Santa Clara",
@@ -94,7 +87,7 @@
                     "delete": true,
                     "edit": true,
                     "apiClient": true,
-                    "isCloneable": false,
+                    "isCloneable": true,
                     "thirdPartyAccess": true
                   },
                   "notifications": {
@@ -102,7 +95,6 @@
                     "options": {
                       "passwordExpiry": true,
                       "newUserNotification": true,
-                      "apiClientCredentialExpiryNotification": false,
                       "upgrade": [
                         "NetStorage",
                         "Other Upgrade Notifications (Planned)"
@@ -116,10 +108,10 @@
                   "authGrants": [
                     {
                       "groupId": 12345,
-                      "groupName": "Internet Company",
+                      "groupName": "MyGroup",
                       "roleId": 16,
                       "roleName": "Publisher",
-                      "roleDescription": "A newly create role."
+                      "roleDescription": "This is a new role that has been created to"
                     }
                   ]
                 },
@@ -338,51 +330,39 @@
                       "minItems": 0,
                       "items": {
                         "type": "object",
-                        "description": "A user's role assignments, per group.\n",
+                        "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
                         "additionalProperties": false,
-                        "required": [
-                          "roleId",
-                          "roleName"
-                        ],
                         "properties": {
                           "groupId": {
                             "type": "integer",
-                            "description": "Unique identifier for each group. It's returned only for group roles.\n",
-                            "minimum": 0
+                            "description": "A unique identifier for each group.\n"
                           },
                           "roleId": {
                             "type": "integer",
-                            "description": "Unique identifier for each role.\n",
-                            "minimum": 1
+                            "description": "A unique identifier for each role.\n"
                           },
                           "groupName": {
                             "type": "string",
-                            "description": "Descriptive label for the group.\n",
-                            "minLength": 1
+                            "description": "A group's name.\n"
                           },
                           "roleName": {
                             "type": "string",
-                            "description": "Descriptive label for the role.\n",
-                            "minLength": 1
+                            "description": "The role's name.\n"
                           },
                           "roleDescription": {
                             "type": "string",
-                            "description": "Descriptive label for the role to convey its use.\n",
-                            "minLength": 1
+                            "description": "Descriptive text for the role.\n"
                           },
                           "isBlocked": {
                             "type": "boolean",
-                            "description": "Whether a user's access to a group is blocked.\n"
+                            "description": "Indicates whether a user's access is blocked for a group.\n"
                           },
                           "subGroups": {
                             "type": "array",
-                            "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-                            "minItems": 0,
+                            "description": "Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
                             "items": {
                               "type": "object",
-                              "description": "A further nested group.\n",
-                              "additionalProperties": true,
-                              "properties": {}
+                              "description": "A further-nested group.\n"
                             }
                           }
                         }
@@ -435,70 +415,6 @@
         }
       }
     },
-    "/user-profile/additionalAuthentication": {
-      "x-akamai": {
-        "path-info": "/user-profile/additionalAuthentication"
-      },
-      "put": {
-        "operationId": "put-user-profile-additional-authentication",
-        "summary": "Set multi-factor authentication for your user profile",
-        "tags": [
-          "User authentication settings"
-        ],
-        "description": "This operation sets multi-factor authentication to `TFA`, `MFA`, or `NONE`. You have five login attempts with MFA or 2FA before your account is locked. If your account is locked, use the [Reset multi-factor authentication for your user profile](ref:put-user-profile-reset-additional-authentication) operation to unlock it.\n",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "example": {
-                "value": "TFA"
-              },
-              "schema": {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "value"
-                ],
-                "properties": {
-                  "value": {
-                    "type": "string",
-                    "description": "A user's multi-factor authentication method, either `TFA`, `MFA`, or `NONE`.\n",
-                    "enum": [
-                      "TFA",
-                      "MFA",
-                      "NONE"
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "Authentication successfully set.\n"
-          }
-        }
-      }
-    },
-    "/user-profile/additionalAuthentication/reset": {
-      "x-akamai": {
-        "path-info": "/user-profile/additionalAuthentication/reset"
-      },
-      "put": {
-        "operationId": "put-user-profile-reset-additional-authentication",
-        "summary": "Reset multi-factor authentication for your user profile",
-        "tags": [
-          "User authentication settings"
-        ],
-        "description": "This operation resets your multi-factor authentication.\n",
-        "responses": {
-          "204": {
-            "description": "Authentication successfully reset.\n"
-          }
-        }
-      }
-    },
     "/user-profile/basic-info": {
       "x-akamai": {
         "path-info": "/user-profile/basic-info"
@@ -509,7 +425,7 @@
         "tags": [
           "Profile"
         ],
-        "description": "This operation updates your basic profile information, such as your name or phone number. To edit detailed settings, run the [Update your notifications](ref:put-user-profile-notifications) or [Modify a user's group and role assignments](ref:put-ui-uiidentity-auth-grants) operations.\n",
+        "description": "Update your basic profile information. You can update simple items like your name or phone number, but you can't update your group or role assignments through this operation.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -517,14 +433,14 @@
               "example": {
                 "firstName": "John",
                 "lastName": "Smith",
-                "additionalAuthentication": "TFA",
+                "tfaEnabled": true,
                 "country": "USA",
                 "phone": "3456788765",
                 "contactType": "Billing",
                 "timeZone": "GMT",
                 "preferredLanguage": "English",
                 "sessionTimeOut": 30,
-                "secondaryEmail": "john.smith@example.com",
+                "secondaryEmail": "john.smith@mycompany.com",
                 "mobilePhone": "3456787657",
                 "address": "first Street",
                 "city": "Santa Clara",
@@ -643,7 +559,7 @@
         },
         "responses": {
           "200": {
-            "description": "The response reflects the user's modified profile.\n",
+            "description": "The response returns the updated profile.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -886,51 +802,39 @@
                       "minItems": 0,
                       "items": {
                         "type": "object",
-                        "description": "A user's role assignments, per group.\n",
+                        "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
                         "additionalProperties": false,
-                        "required": [
-                          "roleId",
-                          "roleName"
-                        ],
                         "properties": {
                           "groupId": {
                             "type": "integer",
-                            "description": "Unique identifier for each group. It's returned only for group roles.\n",
-                            "minimum": 0
+                            "description": "A unique identifier for each group.\n"
                           },
                           "roleId": {
                             "type": "integer",
-                            "description": "Unique identifier for each role.\n",
-                            "minimum": 1
+                            "description": "A unique identifier for each role.\n"
                           },
                           "groupName": {
                             "type": "string",
-                            "description": "Descriptive label for the group.\n",
-                            "minLength": 1
+                            "description": "A group's name.\n"
                           },
                           "roleName": {
                             "type": "string",
-                            "description": "Descriptive label for the role.\n",
-                            "minLength": 1
+                            "description": "The role's name.\n"
                           },
                           "roleDescription": {
                             "type": "string",
-                            "description": "Descriptive label for the role to convey its use.\n",
-                            "minLength": 1
+                            "description": "Descriptive text for the role.\n"
                           },
                           "isBlocked": {
                             "type": "boolean",
-                            "description": "Whether a user's access to a group is blocked.\n"
+                            "description": "Indicates whether a user's access is blocked for a group.\n"
                           },
                           "subGroups": {
                             "type": "array",
-                            "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-                            "minItems": 0,
+                            "description": "Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
                             "items": {
                               "type": "object",
-                              "description": "A further nested group.\n",
-                              "additionalProperties": true,
-                              "properties": {}
+                              "description": "A further-nested group.\n"
                             }
                           }
                         }
@@ -991,16 +895,16 @@
         "operationId": "post-profile-change-password",
         "summary": "Rotate your password",
         "tags": [
-          "User authentication settings"
+          "Access"
         ],
-        "description": "This operation changes your password. Include your old password and your new password in the request body. Before you create your new password, run the [View password policy](ref:get-common-password-policy) operation to ensure it adheres to your policy. If you include your existing password incorrectly and make too many login attempts, your account locks.\n",
+        "description": "To update or change your password, include your old password and your new password in the request body. Run the [View password policy](ref:get-common-password-policy) operation before you create your new password to ensure it adheres to your policy. If you pass your existing password incorrectly and make too many login attempts, your account locks.\n",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "example": {
-                "currentPassword": "CompanyLogin!3",
-                "newPassword": "CompanyLogin!3"
+                "currentPassword": "abcbd",
+                "newPassword": "abcdg"
               },
               "schema": {
                 "type": "object",
@@ -1013,13 +917,11 @@
                 "properties": {
                   "currentPassword": {
                     "type": "string",
-                    "description": "Your existing password.\n",
-                    "minLength": 1
+                    "description": "Your existing password.\n"
                   },
                   "newPassword": {
                     "type": "string",
-                    "description": "New password.\n",
-                    "minLength": 1
+                    "description": "The new password.\n"
                   }
                 }
               }
@@ -1028,7 +930,7 @@
         },
         "responses": {
           "204": {
-            "description": "Password successfully rotated.\n"
+            "description": "Password rotated.\n"
           }
         }
       }
@@ -1039,11 +941,11 @@
       },
       "put": {
         "operationId": "put-user-profile-notifications",
-        "summary": "Update your notifications",
+        "summary": "Update notifications",
         "tags": [
-          "User notifications"
+          "Notifications"
         ],
-        "description": "This operation subscribes to notifications emails for password expiration reminders, proactive maintenance emails, and upgrade notification emails.\n",
+        "description": "Subscribe to notifications emails for password expiration reminders, proactive maintenance emails, and upgrade notification emails. Make a PUT request with a notification object.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -1053,7 +955,6 @@
                 "options": {
                   "passwordExpiry": true,
                   "newUserNotification": true,
-                  "apiClientCredentialExpiryNotification": true,
                   "upgrade": [
                     "NetStorage",
                     "Other Upgrade Notifications (Planned)"
@@ -1125,7 +1026,7 @@
         },
         "responses": {
           "200": {
-            "description": "The response reflects the modified notifications emails.\n",
+            "description": "The response returns updated notifications.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -1133,7 +1034,6 @@
                   "options": {
                     "passwordExpiry": true,
                     "newUserNotification": true,
-                    "apiClientCredentialExpiryNotification": true,
                     "upgrade": [
                       "NetStorage",
                       "Other Upgrade Notifications (Planned)"
@@ -1208,6 +1108,41 @@
           }
         }
       }
+    },
+    "/user-profile/tfa": {
+      "x-akamai": {
+        "path-info": "/user-profile/tfa"
+      },
+      "put": {
+        "operationId": "put-user-profile-tfa",
+        "summary": "Set two-factor authentication",
+        "tags": [
+          "Access"
+        ],
+        "description": "Enable or disable TFA on your profile. An account administrator needs to disable TFA for you if the account is set to `enable`. If the account doesn't specify a TFA setting, you can `disable` TFA on your profile yourself. You can always set TFA to `enable` regardless of account-level settings. If you have TFA enabled, `reset` TFA clears your TFA settings and you'll be asked to set up TFA the next time you log in to Control Center.\n",
+        "parameters": [
+          {
+            "name": "action",
+            "in": "query",
+            "description": "Includes actions you can perform for 2FA on your profile, either `enable`, `disable`, or `reset`. Don't confuse this with the `actions` parameter, which applies to the various operations that get user data.\n",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "enable",
+              "enum": [
+                "enable",
+                "disable",
+                "reset"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Authentication updated.\n"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1233,7 +1168,7 @@
           "default": false
         }
       },
-      "qparams-actions-actions": {
+      "q-params-actions-actions": {
         "name": "actions",
         "in": "query",
         "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
@@ -1242,62 +1177,63 @@
           "example": true,
           "default": false
         }
+      },
+      "action-query": {
+        "name": "action",
+        "in": "query",
+        "description": "Includes actions you can perform for 2FA on your profile, either `enable`, `disable`, or `reset`. Don't confuse this with the `actions` parameter, which applies to the various operations that get user data.\n",
+        "required": true,
+        "schema": {
+          "type": "string",
+          "example": "enable",
+          "enum": [
+            "enable",
+            "disable",
+            "reset"
+          ]
+        }
       }
     },
     "schemas": {
       "groups-nested": {
         "type": "object",
-        "description": "A further nested group.\n",
-        "additionalProperties": true,
-        "properties": {}
+        "description": "A further-nested group.\n"
       },
       "auth-grant-response": {
         "type": "object",
-        "description": "A user's role assignments, per group.\n",
+        "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
         "additionalProperties": false,
-        "required": [
-          "roleId",
-          "roleName"
-        ],
         "properties": {
           "groupId": {
             "type": "integer",
-            "description": "Unique identifier for each group. It's returned only for group roles.\n",
-            "minimum": 0
+            "description": "A unique identifier for each group.\n"
           },
           "roleId": {
             "type": "integer",
-            "description": "Unique identifier for each role.\n",
-            "minimum": 1
+            "description": "A unique identifier for each role.\n"
           },
           "groupName": {
             "type": "string",
-            "description": "Descriptive label for the group.\n",
-            "minLength": 1
+            "description": "A group's name.\n"
           },
           "roleName": {
             "type": "string",
-            "description": "Descriptive label for the role.\n",
-            "minLength": 1
+            "description": "The role's name.\n"
           },
           "roleDescription": {
             "type": "string",
-            "description": "Descriptive label for the role to convey its use.\n",
-            "minLength": 1
+            "description": "Descriptive text for the role.\n"
           },
           "isBlocked": {
             "type": "boolean",
-            "description": "Whether a user's access to a group is blocked.\n"
+            "description": "Indicates whether a user's access is blocked for a group.\n"
           },
           "subGroups": {
             "type": "array",
-            "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-            "minItems": 0,
+            "description": "Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
             "items": {
               "type": "object",
-              "description": "A further nested group.\n",
-              "additionalProperties": true,
-              "properties": {}
+              "description": "A further-nested group.\n"
             }
           }
         }
@@ -1517,51 +1453,39 @@
             "minItems": 0,
             "items": {
               "type": "object",
-              "description": "A user's role assignments, per group.\n",
+              "description": "A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.\n",
               "additionalProperties": false,
-              "required": [
-                "roleId",
-                "roleName"
-              ],
               "properties": {
                 "groupId": {
                   "type": "integer",
-                  "description": "Unique identifier for each group. It's returned only for group roles.\n",
-                  "minimum": 0
+                  "description": "A unique identifier for each group.\n"
                 },
                 "roleId": {
                   "type": "integer",
-                  "description": "Unique identifier for each role.\n",
-                  "minimum": 1
+                  "description": "A unique identifier for each role.\n"
                 },
                 "groupName": {
                   "type": "string",
-                  "description": "Descriptive label for the group.\n",
-                  "minLength": 1
+                  "description": "A group's name.\n"
                 },
                 "roleName": {
                   "type": "string",
-                  "description": "Descriptive label for the role.\n",
-                  "minLength": 1
+                  "description": "The role's name.\n"
                 },
                 "roleDescription": {
                   "type": "string",
-                  "description": "Descriptive label for the role to convey its use.\n",
-                  "minLength": 1
+                  "description": "Descriptive text for the role.\n"
                 },
                 "isBlocked": {
                   "type": "boolean",
-                  "description": "Whether a user's access to a group is blocked.\n"
+                  "description": "Indicates whether a user's access is blocked for a group.\n"
                 },
                 "subGroups": {
                   "type": "array",
-                  "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-                  "minItems": 0,
+                  "description": "Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
                   "items": {
                     "type": "object",
-                    "description": "A further nested group.\n",
-                    "additionalProperties": true,
-                    "properties": {}
+                    "description": "A further-nested group.\n"
                   }
                 }
               }
@@ -1605,24 +1529,6 @@
                 "description": "Enables the administrator to create an API client.\n"
               }
             }
-          }
-        }
-      },
-      "additional-authentication-request": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "value"
-        ],
-        "properties": {
-          "value": {
-            "type": "string",
-            "description": "A user's multi-factor authentication method, either `TFA`, `MFA`, or `NONE`.\n",
-            "enum": [
-              "TFA",
-              "MFA",
-              "NONE"
-            ]
           }
         }
       },
@@ -1743,13 +1649,11 @@
         "properties": {
           "currentPassword": {
             "type": "string",
-            "description": "Your existing password.\n",
-            "minLength": 1
+            "description": "Your existing password.\n"
           },
           "newPassword": {
             "type": "string",
-            "description": "New password.\n",
-            "minLength": 1
+            "description": "The new password.\n"
           }
         }
       },

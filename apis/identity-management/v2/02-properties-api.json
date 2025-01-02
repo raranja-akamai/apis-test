@@ -2,21 +2,11 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Properties",
-    "version": "3"
+    "version": "v2"
   },
   "servers": [
     {
-      "url": "https://{hostname}/identity-management/v3"
-    }
-  ],
-  "tags": [
-    {
-      "description": "Fetch properties and includes used by an account with their details,\nincluding their users.\n",
-      "name": "Assets"
-    },
-    {
-      "description": "Fetch resources used by a property or include.\n",
-      "name": "Resources"
+      "url": "https://{hostname}/identity-management/v2"
     }
   ],
   "paths": {
@@ -26,44 +16,44 @@
       },
       "get": {
         "operationId": "get-properties",
-        "summary": "List properties or includes",
+        "summary": "List properties",
         "tags": [
-          "Assets"
+          "Properties"
         ],
-        "description": "This operation lists the properties and includes for the current account or other managed accounts using the `accountSwitchKey` parameter. Include the `groupId` parameter in your request to filter the results by group. The response returns a list of `propertyId` regardless of whether they represent a property or include in PAPI. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
+        "description": "Return a list of properties for an account. Include the `groupId` parameter in your request to filter the results by group.\n",
         "parameters": [
           {
             "name": "groupId",
             "in": "query",
-            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+            "description": "A unique identifier for each group.\n",
             "schema": {
               "type": "integer",
-              "example": 54321
+              "example": 32145
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "The response provides the assets.\n",
+            "description": "The response lists properties.\n",
             "content": {
               "application/json": {
                 "example": [
                   {
-                    "groupName": "Digital Company",
-                    "groupId": 12345,
+                    "groupName": "Internet Company",
+                    "groupId": 32145,
                     "propertyId": 99999999,
                     "propertyTypeDescription": "On Demand Media",
-                    "propertyName": "0rb-digital-company-01.com",
+                    "propertyName": "0rb-internet-company-01.com",
                     "actions": {
                       "move": true
                     }
                   },
                   {
-                    "groupName": "Internet Company",
-                    "groupId": 32145,
+                    "groupName": "Digital Company",
+                    "groupId": 12345,
                     "propertyId": 88888888,
                     "propertyTypeDescription": "On Demand Media",
-                    "propertyName": "0rb-internet-company-01.com",
+                    "propertyName": "0rb-digital-company-01.com",
                     "actions": {
                       "move": true
                     }
@@ -71,8 +61,7 @@
                 ],
                 "schema": {
                   "type": "array",
-                  "description": "Encapsulates information about each property.\n",
-                  "minItems": 0,
+                  "description": "Encapsulates information about a property.\n",
                   "items": {
                     "type": "object",
                     "description": "Encapsulates information about an asset.\n",
@@ -133,15 +122,15 @@
         }
       }
     },
-    "/user-admin/properties/{assetId}": {
+    "/user-admin/properties/{propertyId}": {
       "x-akamai": {
-        "path-info": "/user-admin/properties/{assetId}"
+        "path-info": "/user-admin/properties/{propertyId}"
       },
       "parameters": [
         {
-          "name": "assetId",
+          "name": "propertyId",
           "in": "path",
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
+          "description": "A unique identifier for each property.\n",
           "required": true,
           "schema": {
             "type": "integer",
@@ -151,16 +140,16 @@
       ],
       "get": {
         "operationId": "get-property",
-        "summary": "Get a property or include",
+        "summary": "Get a property",
         "tags": [
-          "Assets"
+          "Properties"
         ],
-        "description": "This operation fetches a property's or include's details. The response returns details for `propertyId` regardless of whether it represent a property or include in PAPI. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
+        "description": "Get information about a property.\n",
         "parameters": [
           {
             "name": "groupId",
             "in": "query",
-            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+            "description": "A unique identifier for each group.\n",
             "required": true,
             "schema": {
               "type": "integer",
@@ -170,19 +159,19 @@
         ],
         "responses": {
           "200": {
-            "description": "The response provides the asset's details.\n",
+            "description": "The response returns the property.\n",
             "content": {
               "application/json": {
                 "example": {
                   "createdDate": "2017-07-27T18:11:25.000Z",
-                  "createdBy": "afero@example.com",
+                  "createdBy": "mrossi@example.com",
                   "modifiedDate": "2017-07-27T18:11:25.000Z",
-                  "modifiedBy": "adevi@example.com",
+                  "modifiedBy": "alfulani@example.com",
                   "groupName": "Sales Team",
-                  "groupId": 12345,
-                  "arlConfigFile": "0rb-internet-company-01.com.xml",
+                  "groupId": 32145,
+                  "arlConfigFile": "abc-dn123-abcde.akamaiorigin.net.xml",
                   "propertyId": 9678999,
-                  "propertyName": "0rb-internet-company-01.com"
+                  "propertyName": "abc-dn123-abcde.akamaiorigin.net"
                 },
                 "schema": {
                   "type": "object",
@@ -254,11 +243,11 @@
       },
       "put": {
         "operationId": "put-property",
-        "summary": "Move a property or include",
+        "summary": "Move a property",
         "tags": [
-          "Assets"
+          "Properties"
         ],
-        "description": "This operation moves a property or include from one group to another group. You can only move an asset into another group within the same group hierarchy. Depending on your role in the destination group, you may lose access to resources the asset uses. Before moving an asset, run the [List users affected by moving a group](ref:get-move-affected-users) operation to review which users will be affected by the move.\n",
+        "description": "Move a property from one group to another group. You can only move a property into another group within the same group hierarchy. Depending on your role in the destination group, you may lose access to resources the property uses.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -293,20 +282,20 @@
         },
         "responses": {
           "204": {
-            "description": "Asset successfully moved.\n"
+            "description": "Property moved.\n"
           }
         }
       }
     },
-    "/user-admin/properties/{assetId}/resources": {
+    "/user-admin/properties/{propertyId}/resources": {
       "x-akamai": {
-        "path-info": "/user-admin/properties/{assetId}/resources"
+        "path-info": "/user-admin/properties/{propertyId}/resources"
       },
       "parameters": [
         {
-          "name": "assetId",
+          "name": "propertyId",
           "in": "path",
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
+          "description": "A unique identifier for each property.\n",
           "required": true,
           "schema": {
             "type": "integer",
@@ -316,16 +305,16 @@
       ],
       "get": {
         "operationId": "get-property-resources",
-        "summary": "Get asset's resources",
+        "summary": "Get a property's resources",
         "tags": [
           "Resources"
         ],
-        "description": "This operation lists resources a property or include uses to deliver your web content across Akamai's edge network. You can think of these resources as objects, like CP codes and configuration files. For example, an ARL (Akamai resource locator) configuration file specifies how Akamai purges versions of an object that you can’t purge using just the URL.\n",
+        "description": "List of resources the property uses.\n",
         "parameters": [
           {
             "name": "groupId",
             "in": "query",
-            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+            "description": "A unique identifier for each group.\n",
             "required": true,
             "schema": {
               "type": "integer",
@@ -335,27 +324,26 @@
         ],
         "responses": {
           "200": {
-            "description": "The response provides the resources.\n",
+            "description": "The response returns resources.\n",
             "content": {
               "application/json": {
                 "example": [
                   {
                     "resourceId": 111111,
                     "resourceType": "arlfile",
-                    "resourceName": "0rb-internet-company-01.com.xml",
+                    "resourceName": "abc-dn123-abcde.akamaiorigin.net.xml",
                     "modifiedDate": "2017-09-07T17:00:58.000Z"
                   },
                   {
                     "resourceId": 8988898,
                     "resourceType": "cpcode",
-                    "resourceName": "mycpcode(123456)",
+                    "resourceName": "mycpcodeexample(123456)",
                     "modifiedDate": "2017-04-24T16:19:27.000Z"
                   }
                 ],
                 "schema": {
                   "type": "array",
                   "description": "Encapsulates information about resources.\n",
-                  "minItems": 0,
                   "items": {
                     "type": "object",
                     "description": "Encapsulates information about resources.\n",
@@ -404,15 +392,15 @@
         }
       }
     },
-    "/user-admin/properties/{assetId}/users": {
+    "/user-admin/properties/{propertyId}/users": {
       "x-akamai": {
-        "path-info": "/user-admin/properties/{assetId}/users"
+        "path-info": "/user-admin/properties/{propertyId}/users"
       },
       "parameters": [
         {
-          "name": "assetId",
+          "name": "propertyId",
           "in": "path",
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
+          "description": "A unique identifier for each property.\n",
           "required": true,
           "schema": {
             "type": "integer",
@@ -422,11 +410,11 @@
       ],
       "get": {
         "operationId": "get-property-users",
-        "summary": "List users for property or include",
+        "summary": "List users for property",
         "tags": [
-          "Assets"
+          "Users"
         ],
-        "description": "This operation lists users who can access a property or include.\n",
+        "description": "List users who can access this property.\n",
         "parameters": [
           {
             "name": "userType",
@@ -444,19 +432,19 @@
         ],
         "responses": {
           "200": {
-            "description": "The response provides the users accessing the property or include.\n",
+            "description": "The response lists users.\n",
             "content": {
               "application/json": {
                 "example": [
                   {
-                    "uiUserName": "szhang",
+                    "uiUserName": "aditparikh",
                     "uiIdentityId": "B-3-146FAB9",
                     "firstName": "Media",
                     "lastName": "QA",
                     "isBlocked": true
                   },
                   {
-                    "uiUserName": "mrossi",
+                    "uiUserName": "amoody",
                     "uiIdentityId": "B-C-IP9IND",
                     "firstName": "Bert",
                     "lastName": "Moody",
@@ -512,15 +500,15 @@
         }
       }
     },
-    "/user-admin/properties/{assetId}/users/block": {
+    "/user-admin/properties/{propertyId}/users/block": {
       "x-akamai": {
-        "path-info": "/user-admin/properties/{assetId}/users/block"
+        "path-info": "/user-admin/properties/{propertyId}/users/block"
       },
       "parameters": [
         {
-          "name": "assetId",
+          "name": "propertyId",
           "in": "path",
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
+          "description": "A unique identifier for each property.\n",
           "required": true,
           "schema": {
             "type": "integer",
@@ -530,11 +518,11 @@
       ],
       "put": {
         "operationId": "put-property-users-block",
-        "summary": "Block users from a property or include",
+        "summary": "Block users",
         "tags": [
-          "Assets"
+          "Users"
         ],
-        "description": "This operation blocks the users on a property or include.\n",
+        "description": "Block the list of users on a property.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -549,11 +537,10 @@
               ],
               "schema": {
                 "type": "array",
-                "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
-                "minItems": 0,
+                "description": "This object encapsulates all the users who needs to be blocked based on UI identities.\n",
                 "items": {
                   "type": "object",
-                  "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
+                  "description": "This object encapsulates all the users who needs to be blocked based on UI identities.\n",
                   "additionalProperties": false,
                   "required": [
                     "uiIdentityId"
@@ -561,8 +548,8 @@
                   "properties": {
                     "uiIdentityId": {
                       "type": "string",
-                      "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs. To get this value, run the [List users for property or include](ref:get-property-users) operation.\n",
-                      "minLength": 1
+                      "description": "A unique identifier for a user. Also known as a `contactId` in other APIs.\n",
+                      "readOnly": true
                     }
                   }
                 }
@@ -572,19 +559,19 @@
         },
         "responses": {
           "200": {
-            "description": "The response provides the users blocked from the asset.\n",
+            "description": "The response lists block users.\n",
             "content": {
               "application/json": {
                 "example": [
                   {
-                    "uiUserName": "szhang",
+                    "uiUserName": "aditparikh",
                     "uiIdentityId": "B-3-146FAB9",
                     "firstName": "Media",
                     "lastName": "QA",
                     "isBlocked": true
                   },
                   {
-                    "uiUserName": "mrossi",
+                    "uiUserName": "amoody",
                     "uiIdentityId": "B-C-IP9IND",
                     "firstName": "Bert",
                     "lastName": "Moody",
@@ -643,29 +630,29 @@
   },
   "components": {
     "parameters": {
-      "group-id-opt-group-id": {
+      "group-idopt-group-id": {
         "name": "groupId",
         "in": "query",
-        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+        "description": "A unique identifier for each group.\n",
         "schema": {
           "type": "integer",
-          "example": 54321
+          "example": 32145
         }
       },
-      "asset-id-path": {
-        "name": "assetId",
+      "property-id-path": {
+        "name": "propertyId",
         "in": "path",
-        "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
+        "description": "A unique identifier for each property.\n",
         "required": true,
         "schema": {
           "type": "integer",
           "example": 9678999
         }
       },
-      "group-id-req-qp-group-id": {
+      "group-idreq-qp-group-id": {
         "name": "groupId",
         "in": "query",
-        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+        "description": "A unique identifier for each group.\n",
         "required": true,
         "schema": {
           "type": "integer",
@@ -742,8 +729,7 @@
       },
       "list-of-property-list-item": {
         "type": "array",
-        "description": "Encapsulates information about each property.\n",
-        "minItems": 0,
+        "description": "Encapsulates information about a property.\n",
         "items": {
           "type": "object",
           "description": "Encapsulates information about an asset.\n",
@@ -926,7 +912,6 @@
       "list-of-resource-item": {
         "type": "array",
         "description": "Encapsulates information about resources.\n",
-        "minItems": 0,
         "items": {
           "type": "object",
           "description": "Encapsulates information about resources.\n",
@@ -1050,9 +1035,9 @@
           }
         }
       },
-      "user-block-uiidentities": {
+      "user-block-ui-identities": {
         "type": "object",
-        "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
+        "description": "This object encapsulates all the users who needs to be blocked based on UI identities.\n",
         "additionalProperties": false,
         "required": [
           "uiIdentityId"
@@ -1060,18 +1045,17 @@
         "properties": {
           "uiIdentityId": {
             "type": "string",
-            "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs. To get this value, run the [List users for property or include](ref:get-property-users) operation.\n",
-            "minLength": 1
+            "description": "A unique identifier for a user. Also known as a `contactId` in other APIs.\n",
+            "readOnly": true
           }
         }
       },
-      "users-block-uiidentities": {
+      "users-block-ui-identities": {
         "type": "array",
-        "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
-        "minItems": 0,
+        "description": "This object encapsulates all the users who needs to be blocked based on UI identities.\n",
         "items": {
           "type": "object",
-          "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
+          "description": "This object encapsulates all the users who needs to be blocked based on UI identities.\n",
           "additionalProperties": false,
           "required": [
             "uiIdentityId"
@@ -1079,8 +1063,8 @@
           "properties": {
             "uiIdentityId": {
               "type": "string",
-              "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs. To get this value, run the [List users for property or include](ref:get-property-users) operation.\n",
-              "minLength": 1
+              "description": "A unique identifier for a user. Also known as a `contactId` in other APIs.\n",
+              "readOnly": true
             }
           }
         }
