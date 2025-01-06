@@ -1,6 +1,9 @@
 type: object
-description: |
+description: |-
   Contains match rule information for Application Load Balancer.
+  
+x-akamai:
+  file-path: schemas/match-rule-alb.yaml
 title: Application Load Balancer
 additionalProperties: false
 required:
@@ -10,9 +13,8 @@ properties:
     type: integer
     description: |
       Akamai internal use only.
-    x-akamai:
-      exclude-reason: INTERNAL
     nullable: true
+    readOnly: true
   name:
     type: string
     description: |
@@ -25,23 +27,49 @@ properties:
       The type of Cloudlet the rule is for. For example, the string for Application Load Balancer is `albMatchRule`.
     enum:
     - albMatchRule
+  akaRuleId:
+    type: string
+    description: |
+      The rule's unique identifier within the policy version.
+    readOnly: true
   disabled:
     type: boolean
     description: |
       If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
     default: false
-  start:
-    type: integer
-    description: |
-      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
-    default: 0
-    minimum: 0
   end:
     type: integer
     description: |
       The end time for this match rule in epoch seconds. When `end` is `0`, there is no end time for this match rule.
     default: 0
     minimum: 0
+  forwardSettings:
+    type: object
+    description: |
+      Defines data used to construct a new request URL. If all set conditions are true, the edge server returns an HTTP response from the rewritten URL. You can specify any of the following with this object: `originId`, `pathAndQS`, and `useIncomingQueryString`.
+    additionalProperties: false
+    properties:
+      originId:
+        type: string
+        description: |
+          The conditional origin's unique identifier.
+        nullable: true
+        maxLength: 8192
+      pathAndQS:
+        type: string
+        description: |
+          If a value is provided and match conditions are met, this is the URL path to rewrite the incoming request's URL. The URL may include additional query parameters.
+        minLength: 1
+        maxLength: 8192
+      useIncomingQueryString:
+        type: boolean
+        description: |
+          If set to `true`, the Cloudlet includes the requests' query string in the rewritten or forwarded URL.
+  location:
+    type: string
+    description: |
+      The navigable endpoint used for the object referred to in the operation.
+    readOnly: true
   matchURL:
     type: string
     description: |
@@ -59,25 +87,9 @@ properties:
     type: boolean
     description: |
       The match rule always applies when `true`. When `false`, the rule applies within the `start` and `end` time range.
-  forwardSettings:
-    type: object
+  start:
+    type: integer
     description: |
-      Defines data used to construct a new request URL. If all set conditions are true, the edge server returns an HTTP response from the rewritten URL. You can specify any of the following with this object: `originId`, `pathAndQS`, and `useIncomingQueryString`.
-    additionalProperties: false
-    properties:
-      pathAndQS:
-        type: string
-        description: |
-          If a value is provided and match conditions are met, this is the URL path to rewrite the incoming request's URL. The URL may include additional query parameters.
-        minLength: 1
-        maxLength: 8192
-      useIncomingQueryString:
-        type: boolean
-        description: |
-          If set to `true`, the Cloudlet includes the requests' query string in the rewritten or forwarded URL.
-      originId:
-        type: string
-        description: |
-          The conditional origin's unique identifier.
-        nullable: true
-        maxLength: 8192
+      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
+    default: 0
+    minimum: 0

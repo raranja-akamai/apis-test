@@ -1,9 +1,6 @@
 type: object
-description: |-
+description: |
   Provides detailed information about a Sumo Logic connector that you can use in your stream.
-  
-x-akamai:
-  file-path: schemas/sumo-logic-saved-connector.yaml
 title: SUMO_LOGIC
 additionalProperties: false
 required:
@@ -13,6 +10,24 @@ required:
 - endpoint
 - compressLogs
 properties:
+  connectorId:
+    type: integer
+    description: |
+      Identifies the connector associated with the data stream.
+  connectorType:
+    type: string
+    description: |
+      The name of the connector type. Set this value to `SUMO_LOGIC` for this connector type.
+    enum:
+    - SUMO_LOGIC
+  connectorName:
+    type: string
+    description: |
+      The name of the connector.
+  endpoint:
+    type: string
+    description: |
+      The Sumo Logic collection endpoint where you want to send your logs. You should follow the `https://<SumoEndpoint>/receiver/v1/http` format, and enter the collector code in the `collectorCode` member. You can use Akamaized property hostnames as endpoint URLs. See [Stream logs to Sumo Logic](doc:stream-sumo-logic#akamaized-hostname-as-endpoint), and [Upload Metrics to an HTTP Source](https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/upload-metrics/) in the Sumo Logic documentation.
   collectorCode:
     type: string
     description: |
@@ -22,20 +37,6 @@ properties:
     description: |
       Enables gzip compression for a log file sent to a destination. If not set, this member's value is `true` by default.
     default: true
-  connectorId:
-    type: integer
-    description: |
-      Identifies the connector associated with the data stream.
-  connectorName:
-    type: string
-    description: |
-      The name of the connector.
-  connectorType:
-    type: string
-    description: |
-      The name of the connector type. Set this value to `SUMO_LOGIC` for this connector type.
-    enum:
-    - SUMO_LOGIC
   contentType:
     type: string
     description: |
@@ -48,7 +49,3 @@ properties:
     type: string
     description: |
       The custom header's contents passed with the request that contains information about the client connection.
-  endpoint:
-    type: string
-    description: |
-      The Sumo Logic collection endpoint where you want to send your logs. You should follow the `https://<SumoEndpoint>/receiver/v1/http` format, and enter the collector code in the `collectorCode` member. You can use Akamaized property hostnames as endpoint URLs. See [Stream logs to Sumo Logic](doc:stream-sumo-logic#akamaized-hostname-as-endpoint), and [Upload Metrics to an HTTP Source](https://help.sumologic.com/docs/send-data/hosted-collectors/http-source/upload-metrics/) in the Sumo Logic documentation.

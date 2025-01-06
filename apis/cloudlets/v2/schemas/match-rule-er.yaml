@@ -1,6 +1,8 @@
 type: object
 description: |
   Contains match rule information for Edge Redirector.
+x-akamai:
+  file-path: schemas/match-rule-er.yaml
 title: Edge Redirector
 additionalProperties: false
 required:
@@ -11,10 +13,9 @@ properties:
   id:
     type: integer
     description: |
-      Akamai internal use only.
-    x-akamai:
-      exclude-reason: INTERNAL
+      __Read-only__ __Read-only__ Akamai internal use only.
     nullable: true
+    readOnly: true
   name:
     type: string
     description: |
@@ -27,23 +28,27 @@ properties:
       The type of Cloudlet the rule is for. For example, the string for Edge Redirector is `erMatchRule`.
     enum:
     - erMatchRule
+  akaRuleId:
+    type: string
+    description: |
+      __Read-only__ __Read-only__ The rule's unique identifier within the policy version.
+    readOnly: true
   disabled:
     type: boolean
     description: |
       If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
     default: false
-  start:
-    type: integer
-    description: |
-      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
-    default: 0
-    minimum: 0
   end:
     type: integer
     description: |
       The end time for this match rule in epoch seconds. When `end` is `0`, there is no end time for this match rule.
     default: 0
     minimum: 0
+  location:
+    type: string
+    description: |
+      __Read-only__ __Read-only__ The navigable endpoint used for the object referred to in the operation.
+    readOnly: true
   matchURL:
     type: string
     description: |
@@ -67,6 +72,12 @@ properties:
       The URL Edge Redirector redirects the request to. If using `useRelativeUrl`, you can enter a path for the value. If `useRelativeUrl` is not used or set to `none`, then the `redirectUrl` should be a fully qualified URL.
     minLength: 1
     maxLength: 8192
+  start:
+    type: integer
+    description: |
+      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
+    default: 0
+    minimum: 0
   statusCode:
     type: integer
     description: |
