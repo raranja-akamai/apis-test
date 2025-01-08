@@ -1,10 +1,6 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "license": {
-      "name": "Apache 2.0",
-      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    },
     "title": "Groups",
     "version": "3"
   },
@@ -25,26 +21,31 @@
   ],
   "paths": {
     "/user-admin/groups": {
+      "x-akamai": {
+        "path-info": "/user-admin/groups"
+      },
       "get": {
-        "description": "This operation lists all groups the administrator can manage for the current account and contract type or other managed accounts using the `accountSwitchKey` parameter. The account and contract type are determined by the access tokens in your API client.\n",
         "operationId": "get-groups",
+        "summary": "List groups",
+        "tags": [
+          "Groups"
+        ],
+        "description": "This operation lists all groups the administrator can manage for the current account and contract type or other managed accounts using the `accountSwitchKey` parameter. The account and contract type are determined by the access tokens in your API client.\n",
         "parameters": [
           {
-            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
-            "in": "query",
             "name": "actions",
+            "in": "query",
+            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
             "schema": {
-              "default": false,
+              "type": "boolean",
               "example": true,
-              "type": "boolean"
-            },
-            "x-akamai": {
-              "file-path": "parameters/roles-filter-params-actions-actions.yaml"
+              "default": false
             }
           }
         ],
         "responses": {
           "200": {
+            "description": "The response provides the groups.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -93,80 +94,13 @@
                   }
                 ],
                 "schema": {
+                  "type": "array",
                   "description": "Encapsulates information about a group.\n",
+                  "minItems": 0,
                   "items": {
-                    "additionalProperties": false,
+                    "type": "object",
                     "description": "Specifies a group.\n",
-                    "properties": {
-                      "actions": {
-                        "additionalProperties": false,
-                        "description": "Specifies activities available for the group.\n",
-                        "properties": {
-                          "delete": {
-                            "description": "Whether you can remove the group from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.\n",
-                            "type": "boolean"
-                          },
-                          "edit": {
-                            "description": "Whether you can modify the group.\n",
-                            "type": "boolean"
-                          }
-                        },
-                        "required": [
-                          "delete",
-                          "edit"
-                        ],
-                        "type": "object"
-                      },
-                      "createdBy": {
-                        "description": "The user who created the group.\n",
-                        "minLength": 1,
-                        "type": "string"
-                      },
-                      "createdDate": {
-                        "description": "ISO 8601 timestamp indicating when the group was created.\n",
-                        "format": "date-time",
-                        "type": "string"
-                      },
-                      "groupId": {
-                        "description": "Unique identifier for each group.\n",
-                        "minimum": 1,
-                        "type": "integer"
-                      },
-                      "groupName": {
-                        "description": "Descriptive label for the group.\n",
-                        "minLength": 1,
-                        "type": "string"
-                      },
-                      "modifiedBy": {
-                        "description": "The user who last edited the group.\n",
-                        "minLength": 1,
-                        "type": "string"
-                      },
-                      "modifiedDate": {
-                        "description": "ISO 8601 timestamp indicating when the group was last updated.\n",
-                        "format": "date-time",
-                        "type": "string"
-                      },
-                      "parentGroupId": {
-                        "description": "Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
-                        "minimum": 0,
-                        "type": "integer"
-                      },
-                      "subGroups": {
-                        "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-                        "items": {
-                          "additionalProperties": true,
-                          "description": "A further nested group.\n",
-                          "properties": {},
-                          "type": "object",
-                          "x-akamai": {
-                            "file-path": "schemas/groups-nested.yaml"
-                          }
-                        },
-                        "minItems": 0,
-                        "type": "array"
-                      }
-                    },
+                    "additionalProperties": false,
                     "required": [
                       "createdBy",
                       "createdDate",
@@ -176,37 +110,94 @@
                       "modifiedDate",
                       "subGroups"
                     ],
-                    "type": "object",
-                    "x-akamai": {
-                      "file-path": "schemas/group-response.yaml"
+                    "properties": {
+                      "actions": {
+                        "type": "object",
+                        "description": "Specifies activities available for the group.\n",
+                        "additionalProperties": false,
+                        "required": [
+                          "delete",
+                          "edit"
+                        ],
+                        "properties": {
+                          "delete": {
+                            "type": "boolean",
+                            "description": "Whether you can remove the group from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.\n"
+                          },
+                          "edit": {
+                            "type": "boolean",
+                            "description": "Whether you can modify the group.\n"
+                          }
+                        }
+                      },
+                      "createdBy": {
+                        "type": "string",
+                        "description": "The user who created the group.\n",
+                        "minLength": 1
+                      },
+                      "createdDate": {
+                        "type": "string",
+                        "description": "ISO 8601 timestamp indicating when the group was created.\n",
+                        "format": "date-time"
+                      },
+                      "groupId": {
+                        "type": "integer",
+                        "description": "Unique identifier for each group.\n",
+                        "minimum": 1
+                      },
+                      "groupName": {
+                        "type": "string",
+                        "description": "Descriptive label for the group.\n",
+                        "minLength": 1
+                      },
+                      "modifiedBy": {
+                        "type": "string",
+                        "description": "The user who last edited the group.\n",
+                        "minLength": 1
+                      },
+                      "modifiedDate": {
+                        "type": "string",
+                        "description": "ISO 8601 timestamp indicating when the group was last updated.\n",
+                        "format": "date-time"
+                      },
+                      "parentGroupId": {
+                        "type": "integer",
+                        "description": "Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
+                        "minimum": 0
+                      },
+                      "subGroups": {
+                        "type": "array",
+                        "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+                        "minItems": 0,
+                        "items": {
+                          "type": "object",
+                          "description": "A further nested group.\n",
+                          "additionalProperties": true,
+                          "properties": {}
+                        }
+                      }
                     }
-                  },
-                  "minItems": 0,
-                  "type": "array",
-                  "x-akamai": {
-                    "file-path": "schemas/list-of-group-response.yaml"
                   }
                 }
               }
-            },
-            "description": "The response provides the groups.\n"
+            }
           }
-        },
-        "summary": "List groups",
-        "tags": [
-          "Groups"
-        ]
-      },
-      "x-akamai": {
-        "file-path": "paths/groups.yaml",
-        "path-info": "/user-admin/groups"
+        }
       }
     },
     "/user-admin/groups/move": {
+      "x-akamai": {
+        "path-info": "/user-admin/groups/move"
+      },
       "post": {
-        "description": "This operation moves a nested group under another group within the same parent hierarchy.\n",
         "operationId": "post-groups-move",
+        "summary": "Move a group",
+        "tags": [
+          "Move groups"
+        ],
+        "description": "This operation moves a nested group under another group within the same parent hierarchy.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -214,72 +205,87 @@
                 "destinationGroupId": 54321
               },
               "schema": {
-                "additionalProperties": false,
+                "type": "object",
                 "description": "Describes the request body to move one group under another group.\n",
-                "properties": {
-                  "destinationGroupId": {
-                    "description": "Identifies the group where you want to move the `sourceGroupId` within the same parent hierarchy. To get this value, run the [List groups](ref:get-groups) operation.\n",
-                    "minimum": 0,
-                    "type": "integer"
-                  },
-                  "sourceGroupId": {
-                    "description": "Identifies the nested group you want to move to the `destinationGroupId`. To get this value, run the [List groups](ref:get-groups) operation.\n",
-                    "minimum": 0,
-                    "type": "integer"
-                  }
-                },
+                "additionalProperties": false,
                 "required": [
                   "sourceGroupId",
                   "destinationGroupId"
                 ],
-                "type": "object",
-                "x-akamai": {
-                  "file-path": "schemas/move-group-request.yaml"
+                "properties": {
+                  "destinationGroupId": {
+                    "type": "integer",
+                    "description": "Identifies the group where you want to move the `sourceGroupId` within the same parent hierarchy. To get this value, run the [List groups](ref:get-groups) operation.\n",
+                    "minimum": 0
+                  },
+                  "sourceGroupId": {
+                    "type": "integer",
+                    "description": "Identifies the nested group you want to move to the `destinationGroupId`. To get this value, run the [List groups](ref:get-groups) operation.\n",
+                    "minimum": 0
+                  }
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "204": {
             "description": "Nested group successfully moved.\n"
           }
-        },
-        "summary": "Move a group",
-        "tags": [
-          "Move groups"
-        ]
-      },
-      "x-akamai": {
-        "file-path": "paths/move.yaml",
-        "path-info": "/user-admin/groups/move"
+        }
       }
     },
     "/user-admin/groups/move/{sourceGroupId}/{destinationGroupId}/affected-users": {
+      "x-akamai": {
+        "path-info": "/user-admin/groups/move/{sourceGroupId}/{destinationGroupId}/affected-users"
+      },
+      "parameters": [
+        {
+          "name": "destinationGroupId",
+          "in": "path",
+          "description": "Unique identifier for a group you're putting the other group into. To get this value, run the [List groups](ref:get-groups) operation.\n",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 54321
+          }
+        },
+        {
+          "name": "sourceGroupId",
+          "in": "path",
+          "description": "Unique identifier for a group you want to move. To get this value, run the [List groups](ref:get-groups) operation.\n",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 32145
+          }
+        }
+      ],
       "get": {
-        "description": "This operation lists users who are affected when you move a group. Users may lose or gain access to resources depending on the roles and permissions inherited from the new parent group. Users with a `userType` of `lostAccess` lose their access to the source group. If the `userType` is `gainAccess`, they gain access to the resources in the source group. Users who have inherited access to a group lose access to that group if it moves out of its hierarchy that gives them those access rights. If the group moves to another parent group to which they have access, they still have access to the group you move. Likewise, when you move a group to a new location, users who inherit their access rights from the new parent group gain access to the resources in the group you move.\n",
         "operationId": "get-move-affected-users",
+        "summary": "List users affected by moving a group",
+        "tags": [
+          "Move groups"
+        ],
+        "description": "This operation lists users who are affected when you move a group. Users may lose or gain access to resources depending on the roles and permissions inherited from the new parent group. Users with a `userType` of `lostAccess` lose their access to the source group. If the `userType` is `gainAccess`, they gain access to the resources in the source group. Users who have inherited access to a group lose access to that group if it moves out of its hierarchy that gives them those access rights. If the group moves to another parent group to which they have access, they still have access to the group you move. Likewise, when you move a group to a new location, users who inherit their access rights from the new parent group gain access to the resources in the group you move.\n",
         "parameters": [
           {
-            "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.\n",
-            "in": "query",
             "name": "userType",
+            "in": "query",
+            "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.\n",
             "schema": {
+              "type": "string",
+              "example": "lostAccess",
               "enum": [
                 "lostAccess",
                 "gainAccess"
-              ],
-              "example": "lostAccess",
-              "type": "string"
-            },
-            "x-akamai": {
-              "file-path": "parameters/user-type-query.yaml"
+              ]
             }
           }
         ],
         "responses": {
           "200": {
+            "description": "The response provides the affected users.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -303,45 +309,11 @@
                   }
                 ],
                 "schema": {
+                  "type": "array",
+                  "minItems": 0,
                   "items": {
+                    "type": "object",
                     "additionalProperties": false,
-                    "properties": {
-                      "accountId": {
-                        "description": "Unique identifier for each account.\n",
-                        "minLength": 1,
-                        "type": "string"
-                      },
-                      "email": {
-                        "description": "The user's email address.\n",
-                        "format": "email",
-                        "type": "string"
-                      },
-                      "firstName": {
-                        "description": "The user's first name.\n",
-                        "minLength": 1,
-                        "type": "string"
-                      },
-                      "lastLoginDate": {
-                        "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
-                        "format": "date-time",
-                        "type": "string"
-                      },
-                      "lastName": {
-                        "description": "The user's surname.\n",
-                        "minLength": 1,
-                        "type": "string"
-                      },
-                      "uiIdentityId": {
-                        "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.\n",
-                        "minLength": 1,
-                        "type": "string"
-                      },
-                      "uiUserName": {
-                        "description": "The user's username in Control Center.\n",
-                        "minLength": 1,
-                        "type": "string"
-                      }
-                    },
                     "required": [
                       "accountId",
                       "email",
@@ -350,91 +322,231 @@
                       "uiIdentityId",
                       "uiUserName"
                     ],
-                    "type": "object"
-                  },
-                  "minItems": 0,
-                  "type": "array",
-                  "x-akamai": {
-                    "file-path": "schemas/list-of-move-user-response.yaml"
+                    "properties": {
+                      "accountId": {
+                        "type": "string",
+                        "description": "Unique identifier for each account.\n",
+                        "minLength": 1
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "The user's email address.\n",
+                        "format": "email"
+                      },
+                      "firstName": {
+                        "type": "string",
+                        "description": "The user's first name.\n",
+                        "minLength": 1
+                      },
+                      "lastLoginDate": {
+                        "type": "string",
+                        "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
+                        "format": "date-time"
+                      },
+                      "lastName": {
+                        "type": "string",
+                        "description": "The user's surname.\n",
+                        "minLength": 1
+                      },
+                      "uiIdentityId": {
+                        "type": "string",
+                        "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.\n",
+                        "minLength": 1
+                      },
+                      "uiUserName": {
+                        "type": "string",
+                        "description": "The user's username in Control Center.\n",
+                        "minLength": 1
+                      }
+                    }
                   }
                 }
               }
-            },
-            "description": "The response provides the affected users.\n"
-          }
-        },
-        "summary": "List users affected by moving a group",
-        "tags": [
-          "Move groups"
-        ]
-      },
-      "parameters": [
-        {
-          "description": "Unique identifier for a group you're putting the other group into. To get this value, run the [List groups](ref:get-groups) operation.\n",
-          "in": "path",
-          "name": "destinationGroupId",
-          "required": true,
-          "schema": {
-            "example": 54321,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/destination-group-id-path.yaml"
-          }
-        },
-        {
-          "description": "Unique identifier for a group you want to move. To get this value, run the [List groups](ref:get-groups) operation.\n",
-          "in": "path",
-          "name": "sourceGroupId",
-          "required": true,
-          "schema": {
-            "example": 32145,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/source-group-id-path.yaml"
+            }
           }
         }
-      ],
-      "x-akamai": {
-        "file-path": "paths/affected-users.yaml",
-        "path-info": "/user-admin/groups/move/{sourceGroupId}/{destinationGroupId}/affected-users"
       }
     },
     "/user-admin/groups/{groupId}": {
-      "delete": {
-        "description": "This operation deletes a group. You can't delete a group that contains subgroups, resources, or users with roles on that group. You need admin access to delete a group.\n",
-        "operationId": "delete-group",
-        "responses": {
-          "204": {
-            "description": "Group successfully deleted.\n"
+      "x-akamai": {
+        "path-info": "/user-admin/groups/{groupId}"
+      },
+      "parameters": [
+        {
+          "name": "groupId",
+          "in": "path",
+          "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 54321
           }
-        },
-        "summary": "Delete a group",
+        }
+      ],
+      "post": {
+        "operationId": "post-group",
+        "summary": "Create a new group",
         "tags": [
           "Groups"
-        ]
+        ],
+        "description": "This operation creates a new group within the specified parent group.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "example": {
+                "groupName": "Digital Company"
+              },
+              "schema": {
+                "type": "object",
+                "description": "Includes the new `groupName` you're using to replace the old `groupName`.\n",
+                "additionalProperties": false,
+                "required": [
+                  "groupName"
+                ],
+                "properties": {
+                  "groupName": {
+                    "type": "string",
+                    "description": "Descriptive label for the group.\n",
+                    "minLength": 1,
+                    "maxLength": 50
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Group successfully created.\n",
+            "headers": {
+              "Location": {
+                "description": "A URL path to the newly created object.\n",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "example": {
+                  "groupId": 32145,
+                  "groupName": "Digital Company",
+                  "parentGroupId": 19807,
+                  "createdDate": "2017-09-18T19:03:28.000Z",
+                  "createdBy": "jkowalski",
+                  "modifiedDate": "2017-09-18T19:03:28.000Z",
+                  "modifiedBy": "adevi",
+                  "subGroups": []
+                },
+                "schema": {
+                  "type": "object",
+                  "description": "Specifies a group.\n",
+                  "additionalProperties": false,
+                  "required": [
+                    "createdBy",
+                    "createdDate",
+                    "groupId",
+                    "groupName",
+                    "modifiedBy",
+                    "modifiedDate",
+                    "subGroups"
+                  ],
+                  "properties": {
+                    "actions": {
+                      "type": "object",
+                      "description": "Specifies activities available for the group.\n",
+                      "additionalProperties": false,
+                      "required": [
+                        "delete",
+                        "edit"
+                      ],
+                      "properties": {
+                        "delete": {
+                          "type": "boolean",
+                          "description": "Whether you can remove the group from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.\n"
+                        },
+                        "edit": {
+                          "type": "boolean",
+                          "description": "Whether you can modify the group.\n"
+                        }
+                      }
+                    },
+                    "createdBy": {
+                      "type": "string",
+                      "description": "The user who created the group.\n",
+                      "minLength": 1
+                    },
+                    "createdDate": {
+                      "type": "string",
+                      "description": "ISO 8601 timestamp indicating when the group was created.\n",
+                      "format": "date-time"
+                    },
+                    "groupId": {
+                      "type": "integer",
+                      "description": "Unique identifier for each group.\n",
+                      "minimum": 1
+                    },
+                    "groupName": {
+                      "type": "string",
+                      "description": "Descriptive label for the group.\n",
+                      "minLength": 1
+                    },
+                    "modifiedBy": {
+                      "type": "string",
+                      "description": "The user who last edited the group.\n",
+                      "minLength": 1
+                    },
+                    "modifiedDate": {
+                      "type": "string",
+                      "description": "ISO 8601 timestamp indicating when the group was last updated.\n",
+                      "format": "date-time"
+                    },
+                    "parentGroupId": {
+                      "type": "integer",
+                      "description": "Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
+                      "minimum": 0
+                    },
+                    "subGroups": {
+                      "type": "array",
+                      "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+                      "minItems": 0,
+                      "items": {
+                        "type": "object",
+                        "description": "A further nested group.\n",
+                        "additionalProperties": true,
+                        "properties": {}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
       },
       "get": {
-        "description": "This operation retrieves a group's details.\n",
         "operationId": "get-group",
+        "summary": "Get a group",
+        "tags": [
+          "Groups"
+        ],
+        "description": "This operation retrieves a group's details.\n",
         "parameters": [
           {
-            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
-            "in": "query",
             "name": "actions",
+            "in": "query",
+            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
             "schema": {
-              "default": false,
+              "type": "boolean",
               "example": true,
-              "type": "boolean"
-            },
-            "x-akamai": {
-              "file-path": "parameters/roles-filter-params-actions-actions.yaml"
+              "default": false
             }
           }
         ],
         "responses": {
           "200": {
+            "description": "The response provides the group's details.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -481,78 +593,9 @@
                   ]
                 },
                 "schema": {
-                  "additionalProperties": false,
+                  "type": "object",
                   "description": "Specifies a group.\n",
-                  "properties": {
-                    "actions": {
-                      "additionalProperties": false,
-                      "description": "Specifies activities available for the group.\n",
-                      "properties": {
-                        "delete": {
-                          "description": "Whether you can remove the group from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.\n",
-                          "type": "boolean"
-                        },
-                        "edit": {
-                          "description": "Whether you can modify the group.\n",
-                          "type": "boolean"
-                        }
-                      },
-                      "required": [
-                        "delete",
-                        "edit"
-                      ],
-                      "type": "object"
-                    },
-                    "createdBy": {
-                      "description": "The user who created the group.\n",
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "createdDate": {
-                      "description": "ISO 8601 timestamp indicating when the group was created.\n",
-                      "format": "date-time",
-                      "type": "string"
-                    },
-                    "groupId": {
-                      "description": "Unique identifier for each group.\n",
-                      "minimum": 1,
-                      "type": "integer"
-                    },
-                    "groupName": {
-                      "description": "Descriptive label for the group.\n",
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "modifiedBy": {
-                      "description": "The user who last edited the group.\n",
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "modifiedDate": {
-                      "description": "ISO 8601 timestamp indicating when the group was last updated.\n",
-                      "format": "date-time",
-                      "type": "string"
-                    },
-                    "parentGroupId": {
-                      "description": "Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
-                      "minimum": 0,
-                      "type": "integer"
-                    },
-                    "subGroups": {
-                      "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-                      "items": {
-                        "additionalProperties": true,
-                        "description": "A further nested group.\n",
-                        "properties": {},
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/groups-nested.yaml"
-                        }
-                      },
-                      "minItems": 0,
-                      "type": "array"
-                    }
-                  },
+                  "additionalProperties": false,
                   "required": [
                     "createdBy",
                     "createdDate",
@@ -562,224 +605,115 @@
                     "modifiedDate",
                     "subGroups"
                   ],
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/group-response.yaml"
+                  "properties": {
+                    "actions": {
+                      "type": "object",
+                      "description": "Specifies activities available for the group.\n",
+                      "additionalProperties": false,
+                      "required": [
+                        "delete",
+                        "edit"
+                      ],
+                      "properties": {
+                        "delete": {
+                          "type": "boolean",
+                          "description": "Whether you can remove the group from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.\n"
+                        },
+                        "edit": {
+                          "type": "boolean",
+                          "description": "Whether you can modify the group.\n"
+                        }
+                      }
+                    },
+                    "createdBy": {
+                      "type": "string",
+                      "description": "The user who created the group.\n",
+                      "minLength": 1
+                    },
+                    "createdDate": {
+                      "type": "string",
+                      "description": "ISO 8601 timestamp indicating when the group was created.\n",
+                      "format": "date-time"
+                    },
+                    "groupId": {
+                      "type": "integer",
+                      "description": "Unique identifier for each group.\n",
+                      "minimum": 1
+                    },
+                    "groupName": {
+                      "type": "string",
+                      "description": "Descriptive label for the group.\n",
+                      "minLength": 1
+                    },
+                    "modifiedBy": {
+                      "type": "string",
+                      "description": "The user who last edited the group.\n",
+                      "minLength": 1
+                    },
+                    "modifiedDate": {
+                      "type": "string",
+                      "description": "ISO 8601 timestamp indicating when the group was last updated.\n",
+                      "format": "date-time"
+                    },
+                    "parentGroupId": {
+                      "type": "integer",
+                      "description": "Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
+                      "minimum": 0
+                    },
+                    "subGroups": {
+                      "type": "array",
+                      "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+                      "minItems": 0,
+                      "items": {
+                        "type": "object",
+                        "description": "A further nested group.\n",
+                        "additionalProperties": true,
+                        "properties": {}
+                      }
+                    }
                   }
                 }
               }
-            },
-            "description": "The response provides the group's details.\n"
-          }
-        },
-        "summary": "Get a group",
-        "tags": [
-          "Groups"
-        ]
-      },
-      "parameters": [
-        {
-          "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
-          "in": "path",
-          "name": "groupId",
-          "required": true,
-          "schema": {
-            "example": 54321,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/group-id-path.yaml"
+            }
           }
         }
-      ],
-      "post": {
-        "description": "This operation creates a new group within the specified parent group.\n",
-        "operationId": "post-group",
+      },
+      "put": {
+        "operationId": "put-group",
+        "summary": "Modify a group's name",
+        "tags": [
+          "Groups"
+        ],
+        "description": "This operation changes a group's name.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": {
                 "groupName": "Digital Company"
               },
               "schema": {
-                "additionalProperties": false,
+                "type": "object",
                 "description": "Includes the new `groupName` you're using to replace the old `groupName`.\n",
-                "properties": {
-                  "groupName": {
-                    "description": "Descriptive label for the group.\n",
-                    "maxLength": 50,
-                    "minLength": 1,
-                    "type": "string"
-                  }
-                },
+                "additionalProperties": false,
                 "required": [
                   "groupName"
                 ],
-                "type": "object",
-                "x-akamai": {
-                  "file-path": "schemas/group-request.yaml"
-                }
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "content": {
-              "application/json": {
-                "example": {
-                  "groupId": 32145,
-                  "groupName": "Digital Company",
-                  "parentGroupId": 19807,
-                  "createdDate": "2017-09-18T19:03:28.000Z",
-                  "createdBy": "jkowalski",
-                  "modifiedDate": "2017-09-18T19:03:28.000Z",
-                  "modifiedBy": "adevi",
-                  "subGroups": []
-                },
-                "schema": {
-                  "additionalProperties": false,
-                  "description": "Specifies a group.\n",
-                  "properties": {
-                    "actions": {
-                      "additionalProperties": false,
-                      "description": "Specifies activities available for the group.\n",
-                      "properties": {
-                        "delete": {
-                          "description": "Whether you can remove the group from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.\n",
-                          "type": "boolean"
-                        },
-                        "edit": {
-                          "description": "Whether you can modify the group.\n",
-                          "type": "boolean"
-                        }
-                      },
-                      "required": [
-                        "delete",
-                        "edit"
-                      ],
-                      "type": "object"
-                    },
-                    "createdBy": {
-                      "description": "The user who created the group.\n",
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "createdDate": {
-                      "description": "ISO 8601 timestamp indicating when the group was created.\n",
-                      "format": "date-time",
-                      "type": "string"
-                    },
-                    "groupId": {
-                      "description": "Unique identifier for each group.\n",
-                      "minimum": 1,
-                      "type": "integer"
-                    },
-                    "groupName": {
-                      "description": "Descriptive label for the group.\n",
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "modifiedBy": {
-                      "description": "The user who last edited the group.\n",
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "modifiedDate": {
-                      "description": "ISO 8601 timestamp indicating when the group was last updated.\n",
-                      "format": "date-time",
-                      "type": "string"
-                    },
-                    "parentGroupId": {
-                      "description": "Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
-                      "minimum": 0,
-                      "type": "integer"
-                    },
-                    "subGroups": {
-                      "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-                      "items": {
-                        "additionalProperties": true,
-                        "description": "A further nested group.\n",
-                        "properties": {},
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/groups-nested.yaml"
-                        }
-                      },
-                      "minItems": 0,
-                      "type": "array"
-                    }
-                  },
-                  "required": [
-                    "createdBy",
-                    "createdDate",
-                    "groupId",
-                    "groupName",
-                    "modifiedBy",
-                    "modifiedDate",
-                    "subGroups"
-                  ],
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/group-response.yaml"
+                "properties": {
+                  "groupName": {
+                    "type": "string",
+                    "description": "Descriptive label for the group.\n",
+                    "minLength": 1,
+                    "maxLength": 50
                   }
-                }
-              }
-            },
-            "description": "Group successfully created.\n",
-            "headers": {
-              "Location": {
-                "description": "A URL path to the newly created object.\n",
-                "schema": {
-                  "type": "string"
-                },
-                "x-akamai": {
-                  "file-path": "headers/location.yaml"
                 }
               }
             }
           }
-        },
-        "summary": "Create a new group",
-        "tags": [
-          "Groups"
-        ]
-      },
-      "put": {
-        "description": "This operation changes a group's name.\n",
-        "operationId": "put-group",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "example": {
-                "groupName": "Digital Company"
-              },
-              "schema": {
-                "additionalProperties": false,
-                "description": "Includes the new `groupName` you're using to replace the old `groupName`.\n",
-                "properties": {
-                  "groupName": {
-                    "description": "Descriptive label for the group.\n",
-                    "maxLength": 50,
-                    "minLength": 1,
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "groupName"
-                ],
-                "type": "object",
-                "x-akamai": {
-                  "file-path": "schemas/group-request.yaml"
-                }
-              }
-            }
-          },
-          "required": true
         },
         "responses": {
           "200": {
+            "description": "The response reflects the modified group.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -826,78 +760,9 @@
                   ]
                 },
                 "schema": {
-                  "additionalProperties": false,
+                  "type": "object",
                   "description": "Specifies a group.\n",
-                  "properties": {
-                    "actions": {
-                      "additionalProperties": false,
-                      "description": "Specifies activities available for the group.\n",
-                      "properties": {
-                        "delete": {
-                          "description": "Whether you can remove the group from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.\n",
-                          "type": "boolean"
-                        },
-                        "edit": {
-                          "description": "Whether you can modify the group.\n",
-                          "type": "boolean"
-                        }
-                      },
-                      "required": [
-                        "delete",
-                        "edit"
-                      ],
-                      "type": "object"
-                    },
-                    "createdBy": {
-                      "description": "The user who created the group.\n",
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "createdDate": {
-                      "description": "ISO 8601 timestamp indicating when the group was created.\n",
-                      "format": "date-time",
-                      "type": "string"
-                    },
-                    "groupId": {
-                      "description": "Unique identifier for each group.\n",
-                      "minimum": 1,
-                      "type": "integer"
-                    },
-                    "groupName": {
-                      "description": "Descriptive label for the group.\n",
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "modifiedBy": {
-                      "description": "The user who last edited the group.\n",
-                      "minLength": 1,
-                      "type": "string"
-                    },
-                    "modifiedDate": {
-                      "description": "ISO 8601 timestamp indicating when the group was last updated.\n",
-                      "format": "date-time",
-                      "type": "string"
-                    },
-                    "parentGroupId": {
-                      "description": "Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
-                      "minimum": 0,
-                      "type": "integer"
-                    },
-                    "subGroups": {
-                      "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-                      "items": {
-                        "additionalProperties": true,
-                        "description": "A further nested group.\n",
-                        "properties": {},
-                        "type": "object",
-                        "x-akamai": {
-                          "file-path": "schemas/groups-nested.yaml"
-                        }
-                      },
-                      "minItems": 0,
-                      "type": "array"
-                    }
-                  },
+                  "additionalProperties": false,
                   "required": [
                     "createdBy",
                     "createdDate",
@@ -907,181 +772,161 @@
                     "modifiedDate",
                     "subGroups"
                   ],
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/group-response.yaml"
+                  "properties": {
+                    "actions": {
+                      "type": "object",
+                      "description": "Specifies activities available for the group.\n",
+                      "additionalProperties": false,
+                      "required": [
+                        "delete",
+                        "edit"
+                      ],
+                      "properties": {
+                        "delete": {
+                          "type": "boolean",
+                          "description": "Whether you can remove the group from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.\n"
+                        },
+                        "edit": {
+                          "type": "boolean",
+                          "description": "Whether you can modify the group.\n"
+                        }
+                      }
+                    },
+                    "createdBy": {
+                      "type": "string",
+                      "description": "The user who created the group.\n",
+                      "minLength": 1
+                    },
+                    "createdDate": {
+                      "type": "string",
+                      "description": "ISO 8601 timestamp indicating when the group was created.\n",
+                      "format": "date-time"
+                    },
+                    "groupId": {
+                      "type": "integer",
+                      "description": "Unique identifier for each group.\n",
+                      "minimum": 1
+                    },
+                    "groupName": {
+                      "type": "string",
+                      "description": "Descriptive label for the group.\n",
+                      "minLength": 1
+                    },
+                    "modifiedBy": {
+                      "type": "string",
+                      "description": "The user who last edited the group.\n",
+                      "minLength": 1
+                    },
+                    "modifiedDate": {
+                      "type": "string",
+                      "description": "ISO 8601 timestamp indicating when the group was last updated.\n",
+                      "format": "date-time"
+                    },
+                    "parentGroupId": {
+                      "type": "integer",
+                      "description": "Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
+                      "minimum": 0
+                    },
+                    "subGroups": {
+                      "type": "array",
+                      "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+                      "minItems": 0,
+                      "items": {
+                        "type": "object",
+                        "description": "A further nested group.\n",
+                        "additionalProperties": true,
+                        "properties": {}
+                      }
+                    }
                   }
                 }
               }
-            },
-            "description": "The response reflects the modified group.\n"
+            }
           }
-        },
-        "summary": "Modify a group's name",
+        }
+      },
+      "delete": {
+        "operationId": "delete-group",
+        "summary": "Delete a group",
         "tags": [
           "Groups"
-        ]
-      },
-      "x-akamai": {
-        "file-path": "paths/group.yaml",
-        "path-info": "/user-admin/groups/{groupId}"
+        ],
+        "description": "This operation deletes a group. You can't delete a group that contains subgroups, resources, or users with roles on that group. You need admin access to delete a group.\n",
+        "responses": {
+          "204": {
+            "description": "Group successfully deleted.\n"
+          }
+        }
       }
     }
   },
   "components": {
     "parameters": {
       "roles-filter-params-actions-actions": {
-        "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
-        "in": "query",
         "name": "actions",
+        "in": "query",
+        "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
         "schema": {
-          "default": false,
+          "type": "boolean",
           "example": true,
-          "type": "boolean"
-        },
-        "x-akamai": {
-          "file-path": "parameters/roles-filter-params-actions-actions.yaml"
+          "default": false
         }
       },
       "destination-group-id-path": {
-        "description": "Unique identifier for a group you're putting the other group into. To get this value, run the [List groups](ref:get-groups) operation.\n",
-        "in": "path",
         "name": "destinationGroupId",
+        "in": "path",
+        "description": "Unique identifier for a group you're putting the other group into. To get this value, run the [List groups](ref:get-groups) operation.\n",
         "required": true,
         "schema": {
-          "example": 54321,
-          "type": "integer"
-        },
-        "x-akamai": {
-          "file-path": "parameters/destination-group-id-path.yaml"
+          "type": "integer",
+          "example": 54321
         }
       },
       "source-group-id-path": {
-        "description": "Unique identifier for a group you want to move. To get this value, run the [List groups](ref:get-groups) operation.\n",
-        "in": "path",
         "name": "sourceGroupId",
+        "in": "path",
+        "description": "Unique identifier for a group you want to move. To get this value, run the [List groups](ref:get-groups) operation.\n",
         "required": true,
         "schema": {
-          "example": 32145,
-          "type": "integer"
-        },
-        "x-akamai": {
-          "file-path": "parameters/source-group-id-path.yaml"
+          "type": "integer",
+          "example": 32145
         }
       },
       "user-type-query": {
-        "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.\n",
-        "in": "query",
         "name": "userType",
+        "in": "query",
+        "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.\n",
         "schema": {
+          "type": "string",
+          "example": "lostAccess",
           "enum": [
             "lostAccess",
             "gainAccess"
-          ],
-          "example": "lostAccess",
-          "type": "string"
-        },
-        "x-akamai": {
-          "file-path": "parameters/user-type-query.yaml"
+          ]
         }
       },
       "group-id-path": {
-        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
-        "in": "path",
         "name": "groupId",
+        "in": "path",
+        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
         "required": true,
         "schema": {
-          "example": 54321,
-          "type": "integer"
-        },
-        "x-akamai": {
-          "file-path": "parameters/group-id-path.yaml"
+          "type": "integer",
+          "example": 54321
         }
       }
     },
     "schemas": {
       "groups-nested": {
-        "additionalProperties": true,
-        "description": "A further nested group.\n",
-        "properties": {},
         "type": "object",
-        "x-akamai": {
-          "file-path": "schemas/groups-nested.yaml"
-        }
+        "description": "A further nested group.\n",
+        "additionalProperties": true,
+        "properties": {}
       },
       "group-response": {
-        "additionalProperties": false,
+        "type": "object",
         "description": "Specifies a group.\n",
-        "properties": {
-          "actions": {
-            "additionalProperties": false,
-            "description": "Specifies activities available for the group.\n",
-            "properties": {
-              "delete": {
-                "description": "Whether you can remove the group from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.\n",
-                "type": "boolean"
-              },
-              "edit": {
-                "description": "Whether you can modify the group.\n",
-                "type": "boolean"
-              }
-            },
-            "required": [
-              "delete",
-              "edit"
-            ],
-            "type": "object"
-          },
-          "createdBy": {
-            "description": "The user who created the group.\n",
-            "minLength": 1,
-            "type": "string"
-          },
-          "createdDate": {
-            "description": "ISO 8601 timestamp indicating when the group was created.\n",
-            "format": "date-time",
-            "type": "string"
-          },
-          "groupId": {
-            "description": "Unique identifier for each group.\n",
-            "minimum": 1,
-            "type": "integer"
-          },
-          "groupName": {
-            "description": "Descriptive label for the group.\n",
-            "minLength": 1,
-            "type": "string"
-          },
-          "modifiedBy": {
-            "description": "The user who last edited the group.\n",
-            "minLength": 1,
-            "type": "string"
-          },
-          "modifiedDate": {
-            "description": "ISO 8601 timestamp indicating when the group was last updated.\n",
-            "format": "date-time",
-            "type": "string"
-          },
-          "parentGroupId": {
-            "description": "Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
-            "minimum": 0,
-            "type": "integer"
-          },
-          "subGroups": {
-            "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-            "items": {
-              "additionalProperties": true,
-              "description": "A further nested group.\n",
-              "properties": {},
-              "type": "object",
-              "x-akamai": {
-                "file-path": "schemas/groups-nested.yaml"
-              }
-            },
-            "minItems": 0,
-            "type": "array"
-          }
-        },
+        "additionalProperties": false,
         "required": [
           "createdBy",
           "createdDate",
@@ -1091,86 +936,82 @@
           "modifiedDate",
           "subGroups"
         ],
-        "type": "object",
-        "x-akamai": {
-          "file-path": "schemas/group-response.yaml"
+        "properties": {
+          "actions": {
+            "type": "object",
+            "description": "Specifies activities available for the group.\n",
+            "additionalProperties": false,
+            "required": [
+              "delete",
+              "edit"
+            ],
+            "properties": {
+              "delete": {
+                "type": "boolean",
+                "description": "Whether you can remove the group from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.\n"
+              },
+              "edit": {
+                "type": "boolean",
+                "description": "Whether you can modify the group.\n"
+              }
+            }
+          },
+          "createdBy": {
+            "type": "string",
+            "description": "The user who created the group.\n",
+            "minLength": 1
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "ISO 8601 timestamp indicating when the group was created.\n",
+            "format": "date-time"
+          },
+          "groupId": {
+            "type": "integer",
+            "description": "Unique identifier for each group.\n",
+            "minimum": 1
+          },
+          "groupName": {
+            "type": "string",
+            "description": "Descriptive label for the group.\n",
+            "minLength": 1
+          },
+          "modifiedBy": {
+            "type": "string",
+            "description": "The user who last edited the group.\n",
+            "minLength": 1
+          },
+          "modifiedDate": {
+            "type": "string",
+            "description": "ISO 8601 timestamp indicating when the group was last updated.\n",
+            "format": "date-time"
+          },
+          "parentGroupId": {
+            "type": "integer",
+            "description": "Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
+            "minimum": 0
+          },
+          "subGroups": {
+            "type": "array",
+            "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+            "minItems": 0,
+            "items": {
+              "type": "object",
+              "description": "A further nested group.\n",
+              "additionalProperties": true,
+              "properties": {}
+            }
+          }
         }
       },
       "list-of-group-response": {
+        "type": "array",
         "description": "Encapsulates information about a group.\n",
+        "minItems": 0,
         "items": {
-          "additionalProperties": false,
+          "type": "object",
           "description": "Specifies a group.\n",
-          "properties": {
-            "actions": {
-              "additionalProperties": false,
-              "description": "Specifies activities available for the group.\n",
-              "properties": {
-                "delete": {
-                  "description": "Whether you can remove the group from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.\n",
-                  "type": "boolean"
-                },
-                "edit": {
-                  "description": "Whether you can modify the group.\n",
-                  "type": "boolean"
-                }
-              },
-              "required": [
-                "delete",
-                "edit"
-              ],
-              "type": "object"
-            },
-            "createdBy": {
-              "description": "The user who created the group.\n",
-              "minLength": 1,
-              "type": "string"
-            },
-            "createdDate": {
-              "description": "ISO 8601 timestamp indicating when the group was created.\n",
-              "format": "date-time",
-              "type": "string"
-            },
-            "groupId": {
-              "description": "Unique identifier for each group.\n",
-              "minimum": 1,
-              "type": "integer"
-            },
-            "groupName": {
-              "description": "Descriptive label for the group.\n",
-              "minLength": 1,
-              "type": "string"
-            },
-            "modifiedBy": {
-              "description": "The user who last edited the group.\n",
-              "minLength": 1,
-              "type": "string"
-            },
-            "modifiedDate": {
-              "description": "ISO 8601 timestamp indicating when the group was last updated.\n",
-              "format": "date-time",
-              "type": "string"
-            },
-            "parentGroupId": {
-              "description": "Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
-              "minimum": 0,
-              "type": "integer"
-            },
-            "subGroups": {
-              "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
-              "items": {
-                "additionalProperties": true,
-                "description": "A further nested group.\n",
-                "properties": {},
-                "type": "object",
-                "x-akamai": {
-                  "file-path": "schemas/groups-nested.yaml"
-                }
-              },
-              "minItems": 0,
-              "type": "array"
-            }
-          },
+          "additionalProperties": false,
           "required": [
             "createdBy",
             "createdDate",
@@ -1180,81 +1021,102 @@
             "modifiedDate",
             "subGroups"
           ],
-          "type": "object",
-          "x-akamai": {
-            "file-path": "schemas/group-response.yaml"
+          "properties": {
+            "actions": {
+              "type": "object",
+              "description": "Specifies activities available for the group.\n",
+              "additionalProperties": false,
+              "required": [
+                "delete",
+                "edit"
+              ],
+              "properties": {
+                "delete": {
+                  "type": "boolean",
+                  "description": "Whether you can remove the group from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.\n"
+                },
+                "edit": {
+                  "type": "boolean",
+                  "description": "Whether you can modify the group.\n"
+                }
+              }
+            },
+            "createdBy": {
+              "type": "string",
+              "description": "The user who created the group.\n",
+              "minLength": 1
+            },
+            "createdDate": {
+              "type": "string",
+              "description": "ISO 8601 timestamp indicating when the group was created.\n",
+              "format": "date-time"
+            },
+            "groupId": {
+              "type": "integer",
+              "description": "Unique identifier for each group.\n",
+              "minimum": 1
+            },
+            "groupName": {
+              "type": "string",
+              "description": "Descriptive label for the group.\n",
+              "minLength": 1
+            },
+            "modifiedBy": {
+              "type": "string",
+              "description": "The user who last edited the group.\n",
+              "minLength": 1
+            },
+            "modifiedDate": {
+              "type": "string",
+              "description": "ISO 8601 timestamp indicating when the group was last updated.\n",
+              "format": "date-time"
+            },
+            "parentGroupId": {
+              "type": "integer",
+              "description": "Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.\n",
+              "minimum": 0
+            },
+            "subGroups": {
+              "type": "array",
+              "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
+              "minItems": 0,
+              "items": {
+                "type": "object",
+                "description": "A further nested group.\n",
+                "additionalProperties": true,
+                "properties": {}
+              }
+            }
           }
-        },
-        "minItems": 0,
-        "type": "array",
-        "x-akamai": {
-          "file-path": "schemas/list-of-group-response.yaml"
         }
       },
       "move-group-request": {
-        "additionalProperties": false,
+        "type": "object",
         "description": "Describes the request body to move one group under another group.\n",
-        "properties": {
-          "destinationGroupId": {
-            "description": "Identifies the group where you want to move the `sourceGroupId` within the same parent hierarchy. To get this value, run the [List groups](ref:get-groups) operation.\n",
-            "minimum": 0,
-            "type": "integer"
-          },
-          "sourceGroupId": {
-            "description": "Identifies the nested group you want to move to the `destinationGroupId`. To get this value, run the [List groups](ref:get-groups) operation.\n",
-            "minimum": 0,
-            "type": "integer"
-          }
-        },
+        "additionalProperties": false,
         "required": [
           "sourceGroupId",
           "destinationGroupId"
         ],
-        "type": "object",
-        "x-akamai": {
-          "file-path": "schemas/move-group-request.yaml"
+        "properties": {
+          "destinationGroupId": {
+            "type": "integer",
+            "description": "Identifies the group where you want to move the `sourceGroupId` within the same parent hierarchy. To get this value, run the [List groups](ref:get-groups) operation.\n",
+            "minimum": 0
+          },
+          "sourceGroupId": {
+            "type": "integer",
+            "description": "Identifies the nested group you want to move to the `destinationGroupId`. To get this value, run the [List groups](ref:get-groups) operation.\n",
+            "minimum": 0
+          }
         }
       },
       "list-of-move-user-response": {
+        "type": "array",
+        "minItems": 0,
         "items": {
+          "type": "object",
           "additionalProperties": false,
-          "properties": {
-            "accountId": {
-              "description": "Unique identifier for each account.\n",
-              "minLength": 1,
-              "type": "string"
-            },
-            "email": {
-              "description": "The user's email address.\n",
-              "format": "email",
-              "type": "string"
-            },
-            "firstName": {
-              "description": "The user's first name.\n",
-              "minLength": 1,
-              "type": "string"
-            },
-            "lastLoginDate": {
-              "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
-              "format": "date-time",
-              "type": "string"
-            },
-            "lastName": {
-              "description": "The user's surname.\n",
-              "minLength": 1,
-              "type": "string"
-            },
-            "uiIdentityId": {
-              "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.\n",
-              "minLength": 1,
-              "type": "string"
-            },
-            "uiUserName": {
-              "description": "The user's username in Control Center.\n",
-              "minLength": 1,
-              "type": "string"
-            }
-          },
           "required": [
             "accountId",
             "email",
@@ -1263,31 +1125,59 @@
             "uiIdentityId",
             "uiUserName"
           ],
-          "type": "object"
-        },
-        "minItems": 0,
-        "type": "array",
-        "x-akamai": {
-          "file-path": "schemas/list-of-move-user-response.yaml"
+          "properties": {
+            "accountId": {
+              "type": "string",
+              "description": "Unique identifier for each account.\n",
+              "minLength": 1
+            },
+            "email": {
+              "type": "string",
+              "description": "The user's email address.\n",
+              "format": "email"
+            },
+            "firstName": {
+              "type": "string",
+              "description": "The user's first name.\n",
+              "minLength": 1
+            },
+            "lastLoginDate": {
+              "type": "string",
+              "description": "ISO 8601 timestamp indicating when the user last logged in.\n",
+              "format": "date-time"
+            },
+            "lastName": {
+              "type": "string",
+              "description": "The user's surname.\n",
+              "minLength": 1
+            },
+            "uiIdentityId": {
+              "type": "string",
+              "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.\n",
+              "minLength": 1
+            },
+            "uiUserName": {
+              "type": "string",
+              "description": "The user's username in Control Center.\n",
+              "minLength": 1
+            }
+          }
         }
       },
       "group-request": {
-        "additionalProperties": false,
+        "type": "object",
         "description": "Includes the new `groupName` you're using to replace the old `groupName`.\n",
-        "properties": {
-          "groupName": {
-            "description": "Descriptive label for the group.\n",
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          }
-        },
+        "additionalProperties": false,
         "required": [
           "groupName"
         ],
-        "type": "object",
-        "x-akamai": {
-          "file-path": "schemas/group-request.yaml"
+        "properties": {
+          "groupName": {
+            "type": "string",
+            "description": "Descriptive label for the group.\n",
+            "minLength": 1,
+            "maxLength": 50
+          }
         }
       }
     },
@@ -1296,15 +1186,11 @@
         "description": "A URL path to the newly created object.\n",
         "schema": {
           "type": "string"
-        },
-        "x-akamai": {
-          "file-path": "headers/location.yaml"
         }
       }
     }
   },
   "x-akamai": {
-    "auth-type": "EDGE_GRID",
-    "file-path": "01-groups-api.yaml"
+    "auth-type": "EDGE_GRID"
   }
 }
