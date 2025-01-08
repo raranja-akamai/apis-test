@@ -1,6 +1,9 @@
 type: object
-description: |
+description: |-
   Provides the stream version key with the stream identifier, and details about the latest version of the stream configuration. It returns the descriptions of data set fields selected in this configuration version, properties they collect logs for, the configuration details of the destination where they deliver logs, and the structure of log lines.
+  
+x-akamai:
+  file-path: schemas/save-stream-response.yaml
 additionalProperties: false
 required:
 - streamVersionKey
@@ -30,20 +33,6 @@ properties:
       Identifies the properties that you monitor in the stream.
     items:
       $ref: property.yaml
-  streamVersionKey:
-    type: object
-    description: |
-      Specifies the primary key consisting of the stream and version identifiers.
-    additionalProperties: false
-    properties:
-      streamId:
-        type: integer
-        description: |
-          Identifies the stream.
-      streamVersionId:
-        type: integer
-        description: |
-          Identifies the version of the stream.
   activationStatus:
     type: string
     description: |
@@ -54,6 +43,10 @@ properties:
     - ACTIVATED
     - DEACTIVATING
     - DEACTIVATED
+  collectMidgress:
+    type: boolean
+    description: |
+      Indicates if you have opted to capture midgress traffic within the Akamai platform, such as between two edge serves.
   config:
     type: object
     description: |
@@ -179,13 +172,23 @@ properties:
     type: integer
     description: |
       Identifies the configuration version of the stream.
+  streamVersionKey:
+    type: object
+    description: |
+      Specifies the primary key consisting of the stream and version identifiers.
+    additionalProperties: false
+    properties:
+      streamId:
+        type: integer
+        description: |
+          Identifies the stream.
+      streamVersionId:
+        type: integer
+        description: |
+          Identifies the version of the stream.
   templateName:
     type: string
     description: |
       The name of the template you assigned to the stream. `RAW_LOGS` is the only template currently available.
     enum:
     - RAW_LOGS
-  collectMidgress:
-    type: boolean
-    description: |
-      Indicates if you have opted to capture midgress traffic within the Akamai platform, such as between two edge serves.

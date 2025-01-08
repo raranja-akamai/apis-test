@@ -1,6 +1,9 @@
 type: object
-description: |
+description: |-
   Contains match rule information for Edge Redirector.
+  
+x-akamai:
+  file-path: schemas/match-rule-er.yaml
 title: Edge Redirector
 additionalProperties: false
 required:
@@ -8,13 +11,6 @@ required:
 - redirectURL
 - statusCode
 properties:
-  id:
-    type: integer
-    description: |
-      Akamai internal use only.
-    x-akamai:
-      exclude-reason: INTERNAL
-    nullable: true
   name:
     type: string
     description: |
@@ -32,22 +28,18 @@ properties:
     description: |
       If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
     default: false
-  matchesAlways:
-    type: boolean
-    description: |
-      The match rule always applies when `true`. When `false`, the rule applies within the `start` and `end` time range.
-  start:
-    type: integer
-    description: |
-      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
-    default: 0
-    minimum: 0
   end:
     type: integer
     description: |
       The end time for this match rule in epoch seconds. When `end` is `0`, there is no end time for this match rule.
     default: 0
     minimum: 0
+  matchURL:
+    type: string
+    description: |
+      The URL the Cloudlet uses to match the incoming request.
+    nullable: true
+    maxLength: 8192
   matches:
     type: array
     description: |
@@ -66,18 +58,22 @@ properties:
         - objectMatchValue
         title: matchType and objectMatchValue required
       $ref: match-rule-er-definitions.yaml#/definitions/matchCriteriaType
-  matchURL:
-    type: string
+  matchesAlways:
+    type: boolean
     description: |
-      The URL the Cloudlet uses to match the incoming request.
-    nullable: true
-    maxLength: 8192
+      The match rule always applies when `true`. When `false`, the rule applies within the `start` and `end` time range.
   redirectURL:
     type: string
     description: |
       The URL Edge Redirector redirects the request to. If using `useRelativeUrl`, you can enter a path for the value. If `useRelativeUrl` isn't used or set to `none`, then the `redirectUrl` should be a fully qualified URL.
     minLength: 1
     maxLength: 8192
+  start:
+    type: integer
+    description: |
+      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
+    default: 0
+    minimum: 0
   statusCode:
     type: integer
     description: |

@@ -1,0 +1,149 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Cloudlets",
+    "version": "v3"
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/cloudlets/v3"
+    }
+  ],
+  "paths": {
+    "/cloudlet-info": {
+      "get": {
+        "description": "Returns details for Cloudlets that you can [create a shared policy](ref:post-policy) for, including a Cloudlet name and Cloudlet type.\n",
+        "operationId": "get-cloudlets",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "cloudletName": "API_PRIORITIZATION",
+                    "cloudletType": "AP"
+                  },
+                  {
+                    "cloudletName": "AUDIENCE_SEGMENTATION",
+                    "cloudletType": "AS"
+                  },
+                  {
+                    "cloudletName": "EDGE_REDIRECTOR",
+                    "cloudletType": "ER"
+                  },
+                  {
+                    "cloudletName": "FORWARD_REWRITE",
+                    "cloudletType": "FR"
+                  },
+                  {
+                    "cloudletName": "PHASED_RELEASE",
+                    "cloudletType": "CD"
+                  },
+                  {
+                    "cloudletName": "REQUEST_CONTROL",
+                    "cloudletType": "IG"
+                  }
+                ],
+                "schema": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "cloudletName": {
+                      "description": "The Cloudlet name that the shared policy is for.\n",
+                      "enum": [
+                        "API_PRIORITIZATION",
+                        "AUDIENCE_SEGMENTATION",
+                        "EDGE_REDIRECTOR",
+                        "FORWARD_REWRITE",
+                        "PHASED_RELEASE",
+                        "REQUEST_CONTROL"
+                      ],
+                      "type": "string"
+                    },
+                    "cloudletType": {
+                      "description": "The two-letter code of the Cloudlet that the shared policy is for. Shared policies are available for API Prioritization (`AP`), Edge Redirector (`ER`), Forward Rewrite (`FR`), Audience Segmentation (`AS`), Request Control (`IG`), and Phased Release (`CD`).\n",
+                      "enum": [
+                        "AP",
+                        "AS",
+                        "ER",
+                        "FR",
+                        "CD",
+                        "IG"
+                      ],
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "cloudletName",
+                    "cloudletType"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/get-cloudlet-info-response.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Returns details of a Cloudlet that you can [create a shared policy](ref:post-policy) for, including a Cloudlet name and Cloudlet type.\n"
+          }
+        },
+        "summary": "List Cloudlets",
+        "tags": [
+          "Cloudlets"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/cloudlet.yaml",
+        "path-info": "/cloudlet-info"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "get-cloudlet-info-response": {
+        "additionalProperties": false,
+        "properties": {
+          "cloudletName": {
+            "description": "The Cloudlet name that the shared policy is for.\n",
+            "enum": [
+              "API_PRIORITIZATION",
+              "AUDIENCE_SEGMENTATION",
+              "EDGE_REDIRECTOR",
+              "FORWARD_REWRITE",
+              "PHASED_RELEASE",
+              "REQUEST_CONTROL"
+            ],
+            "type": "string"
+          },
+          "cloudletType": {
+            "description": "The two-letter code of the Cloudlet that the shared policy is for. Shared policies are available for API Prioritization (`AP`), Edge Redirector (`ER`), Forward Rewrite (`FR`), Audience Segmentation (`AS`), Request Control (`IG`), and Phased Release (`CD`).\n",
+            "enum": [
+              "AP",
+              "AS",
+              "ER",
+              "FR",
+              "CD",
+              "IG"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "cloudletName",
+          "cloudletType"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/get-cloudlet-info-response.yaml"
+        }
+      }
+    }
+  },
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "01-cloudlet-info.yaml"
+  }
+}

@@ -1,3 +1,5 @@
+x-akamai:
+  file-path: schemas/match-rule-ig-definitions.yaml
 definitions:
   matchCriteriaType:
     type: object
@@ -14,6 +16,27 @@ definitions:
       - objectMatchValue
       title: matchType and objectMatchValue required
     properties:
+      caseSensitive:
+        type: boolean
+        description: |
+          If `true`, the match is case sensitive.
+      checkIPs:
+        type: string
+        description: |
+          For `clientip`, `continent`, `countrycode`, `proxy`, and `regioncode` match types, the part of the request that determines the IP address to use. Values include the connecting IP address (`CONNECTING_IP`) and the `X-Forwarded-For` header (`XFF_HEADERS`). To select both, enter the two values separated by a space delimiter. When you include both values, the connecting IP address evaluates first.
+        nullable: true
+        enum:
+        - CONNECTING_IP
+        - XFF_HEADERS
+        - CONNECTING_IP XFF_HEADERS
+      matchOperator:
+        type: string
+        description: |
+          This checks the incoming request to see if it `contains` or `equals` the `matchValue`, or if the request `header` you want to match on `exists`. With the exception of `hostname`, when using a wildcard, you need to set `matchOperator` to `contains`. For `hostname`, you don't need `contains`. Asterisks (`*`) in the `hostname` behave as wildcards. For example, `*.example.com` can match many subdomains.
+        enum:
+        - contains
+        - exists
+        - equals
       matchType:
         type: string
         description: |
@@ -43,27 +66,6 @@ definitions:
         type: boolean
         description: |
           Whether the match should be ignored (`negate` is `true`) or if the match should be acted on (`negate` is `false`).
-      caseSensitive:
-        type: boolean
-        description: |
-          If `true`, the match is case sensitive.
-      checkIPs:
-        type: string
-        description: |
-          For `clientip`, `continent`, `countrycode`, `proxy`, and `regioncode` match types, the part of the request that determines the IP address to use. Values include the connecting IP address (`CONNECTING_IP`) and the `X-Forwarded-For` header (`XFF_HEADERS`). To select both, enter the two values separated by a space delimiter. When you include both values, the connecting IP address evaluates first.
-        nullable: true
-        enum:
-        - CONNECTING_IP
-        - XFF_HEADERS
-        - CONNECTING_IP XFF_HEADERS
-      matchOperator:
-        type: string
-        description: |
-          This checks the incoming request to see if it `contains` or `equals` the `matchValue`, or if the request `header` you want to match on `exists`. With the exception of `hostname`, when using a wildcard, you need to set `matchOperator` to `contains`. For `hostname`, you don't need `contains`. Asterisks (`*`) in the `hostname` behave as wildcards. For example, `*.example.com` can match many subdomains.
-        enum:
-        - contains
-        - exists
-        - equals
       objectMatchValue:
         $ref: '#/definitions/objectMatchValueType'
   objectMatchValueObjectSubtype:

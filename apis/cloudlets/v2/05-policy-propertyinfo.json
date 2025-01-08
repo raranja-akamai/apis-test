@@ -1,0 +1,799 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Active properties",
+    "version": "v3"
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/cloudlets/v3"
+    }
+  ],
+  "paths": {
+    "/policies/{policyId}/properties": {
+      "get": {
+        "description": "Returns all active properties that are assigned to the policy.\n",
+        "operationId": "get-policy-properties",
+        "parameters": [
+          {
+            "description": "Specifies a page number for batched results, starting at zero.\n",
+            "in": "query",
+            "name": "page",
+            "required": true,
+            "schema": {
+              "example": 3,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/page-query.yaml"
+            }
+          },
+          {
+            "description": "Specifies the number of objects on a page, at least `10` objects.\n",
+            "in": "query",
+            "name": "size",
+            "required": true,
+            "schema": {
+              "example": 100,
+              "minimum": 10,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/size-query.yaml"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "page": {
+                    "number": 0,
+                    "size": 1000,
+                    "totalElements": 2,
+                    "totalPages": 1
+                  },
+                  "content": [
+                    {
+                      "groupId": 12345,
+                      "id": 1234,
+                      "name": "property",
+                      "network": "PRODUCTION",
+                      "version": 1,
+                      "links": []
+                    },
+                    {
+                      "groupId": 54321,
+                      "id": 1233,
+                      "name": "property",
+                      "network": "STAGING",
+                      "version": 1,
+                      "links": []
+                    }
+                  ],
+                  "links": [
+                    {
+                      "href": "/cloudlets/v3/policies/101/properties?page=0&size=1000",
+                      "rel": "self"
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Contains detailed information about all active properties that are assigned to the policy.\n",
+                  "properties": {
+                    "content": {
+                      "description": "Lists the results of the request.\n",
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Object representing details of property assigned to the policy.\n",
+                        "properties": {
+                          "groupId": {
+                            "description": "Identifies the group which the property belongs to.\n",
+                            "type": "integer"
+                          },
+                          "id": {
+                            "description": "Identifies the property.\n",
+                            "type": "integer"
+                          },
+                          "name": {
+                            "description": "Property name.\n",
+                            "type": "string"
+                          },
+                          "network": {
+                            "description": "The networks where you can activate or deactivate the policy version, either `PRODUCTION` or `STAGING`.\n",
+                            "enum": [
+                              "PRODUCTION",
+                              "STAGING"
+                            ],
+                            "type": "string",
+                            "x-akamai": {
+                              "file-path": "schemas/network-enum.yaml"
+                            }
+                          },
+                          "version": {
+                            "description": "The version number of the property.\n",
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "name",
+                          "id",
+                          "groupId",
+                          "version",
+                          "network"
+                        ],
+                        "title": "policy-property-info.json",
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/policy-property-info.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "links": {
+                      "description": "Hypermedia links to help navigate through the result set.\n",
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Hypermedia links to help navigate through the result set, or to identify the current item whose `rel` is `self`.\n",
+                        "properties": {
+                          "href": {
+                            "description": "A relative path to the currently requested object or a specific page of the result set.\n",
+                            "type": "string"
+                          },
+                          "rel": {
+                            "description": "The relationship between the current and linked result sets. A value of `self` links to the current result set, while `first`, `next`, and `last` link to different sets of paginated data.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "href",
+                          "rel"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array",
+                      "x-akamai": {
+                        "file-path": "schemas/links.yaml"
+                      }
+                    },
+                    "page": {
+                      "additionalProperties": false,
+                      "description": "Contains informational data about pagination.\n",
+                      "properties": {
+                        "number": {
+                          "description": "Specifies the number of the returned page.\n",
+                          "type": "integer"
+                        },
+                        "size": {
+                          "description": "Specifies the number of objects on a page, at least `10` objects.\n",
+                          "type": "integer"
+                        },
+                        "totalElements": {
+                          "description": "Specifies the total number of the available objects.\n",
+                          "type": "integer"
+                        },
+                        "totalPages": {
+                          "description": "Specifies the total number of the available pages.\n",
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "totalPages",
+                        "totalElements",
+                        "number",
+                        "size"
+                      ],
+                      "type": "object",
+                      "x-akamai": {
+                        "file-path": "schemas/page-head.yaml"
+                      }
+                    }
+                  },
+                  "required": [
+                    "content",
+                    "page"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/get-policy-properties-response.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Contains detailed information about all active properties that are assigned to the policy.\n"
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "instance": "cc6e9850-c426-4e17-8e33-cab96beccad8",
+                  "status": 403,
+                  "title": "Access Denied",
+                  "type": "/cloudlets/v3/error-types/access-denied",
+                  "errors": [
+                    {
+                      "title": "Access Denied",
+                      "detail": "User does not have view capability for Edge Redirector Cloudlet in group 120."
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "properties": {
+                    "errors": {
+                      "description": "A nested error object.\n",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "properties": {
+                          "instance": {
+                            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                            "type": "string"
+                          },
+                          "status": {
+                            "description": "HTTP response status code.\n",
+                            "type": "integer"
+                          },
+                          "title": {
+                            "description": "Short descriptive title of the problem response.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "A URI path that identifies the problem type.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "instance",
+                          "status",
+                          "title",
+                          "type",
+                          "errors"
+                        ],
+                        "x-akamai": {
+                          "file-path": "schemas/error-nested.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "HTTP response status code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Short descriptive title of the problem response.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI path that identifies the problem type.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "instance",
+                    "status",
+                    "title",
+                    "type",
+                    "errors"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[No permission to access this resource.](ref:403)\n"
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "instance": "a38da5f6-457c-4189-b4ae-9142623a7d41",
+                  "status": 404,
+                  "title": "Not found",
+                  "type": "/cloudlets/v3/error-types/not-found",
+                  "errors": [
+                    {
+                      "title": "Not found",
+                      "detail": "Policy with id `300001` not found."
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "properties": {
+                    "errors": {
+                      "description": "A nested error object.\n",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true,
+                        "properties": {
+                          "instance": {
+                            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                            "type": "string"
+                          },
+                          "status": {
+                            "description": "HTTP response status code.\n",
+                            "type": "integer"
+                          },
+                          "title": {
+                            "description": "Short descriptive title of the problem response.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "A URI path that identifies the problem type.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "instance",
+                          "status",
+                          "title",
+                          "type",
+                          "errors"
+                        ],
+                        "x-akamai": {
+                          "file-path": "schemas/error-nested.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "instance": {
+                      "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "HTTP response status code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Short descriptive title of the problem response.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A URI path that identifies the problem type.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "instance",
+                    "status",
+                    "title",
+                    "type",
+                    "errors"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/error.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Resource not found.](ref:404)\n"
+          }
+        },
+        "summary": "Get active properties",
+        "tags": [
+          "Properties"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Identifies the shared policy.\n",
+          "in": "path",
+          "name": "policyId",
+          "required": true,
+          "schema": {
+            "example": 1001,
+            "type": "integer"
+          },
+          "x-akamai": {
+            "file-path": "parameters/policy-id-path.yaml"
+          }
+        }
+      ],
+      "x-akamai": {
+        "file-path": "paths/properties.yaml",
+        "path-info": "/policies/{policyId}/properties"
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "policy-id-path": {
+        "description": "Identifies the shared policy.\n",
+        "in": "path",
+        "name": "policyId",
+        "required": true,
+        "schema": {
+          "example": 1001,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/policy-id-path.yaml"
+        }
+      },
+      "page-query": {
+        "description": "Specifies a page number for batched results, starting at zero.\n",
+        "in": "query",
+        "name": "page",
+        "required": true,
+        "schema": {
+          "example": 3,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/page-query.yaml"
+        }
+      },
+      "size-query": {
+        "description": "Specifies the number of objects on a page, at least `10` objects.\n",
+        "in": "query",
+        "name": "size",
+        "required": true,
+        "schema": {
+          "example": 100,
+          "minimum": 10,
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "parameters/size-query.yaml"
+        }
+      }
+    },
+    "schemas": {
+      "network-enum": {
+        "description": "The networks where you can activate or deactivate the policy version, either `PRODUCTION` or `STAGING`.\n",
+        "enum": [
+          "PRODUCTION",
+          "STAGING"
+        ],
+        "type": "string",
+        "x-akamai": {
+          "file-path": "schemas/network-enum.yaml"
+        }
+      },
+      "policy-property-info": {
+        "additionalProperties": false,
+        "description": "Object representing details of property assigned to the policy.\n",
+        "properties": {
+          "groupId": {
+            "description": "Identifies the group which the property belongs to.\n",
+            "type": "integer"
+          },
+          "id": {
+            "description": "Identifies the property.\n",
+            "type": "integer"
+          },
+          "name": {
+            "description": "Property name.\n",
+            "type": "string"
+          },
+          "network": {
+            "description": "The networks where you can activate or deactivate the policy version, either `PRODUCTION` or `STAGING`.\n",
+            "enum": [
+              "PRODUCTION",
+              "STAGING"
+            ],
+            "type": "string",
+            "x-akamai": {
+              "file-path": "schemas/network-enum.yaml"
+            }
+          },
+          "version": {
+            "description": "The version number of the property.\n",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "id",
+          "groupId",
+          "version",
+          "network"
+        ],
+        "title": "policy-property-info.json",
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/policy-property-info.yaml"
+        }
+      },
+      "links": {
+        "description": "Hypermedia links to help navigate through the result set.\n",
+        "items": {
+          "additionalProperties": false,
+          "description": "Hypermedia links to help navigate through the result set, or to identify the current item whose `rel` is `self`.\n",
+          "properties": {
+            "href": {
+              "description": "A relative path to the currently requested object or a specific page of the result set.\n",
+              "type": "string"
+            },
+            "rel": {
+              "description": "The relationship between the current and linked result sets. A value of `self` links to the current result set, while `first`, `next`, and `last` link to different sets of paginated data.\n",
+              "type": "string"
+            }
+          },
+          "required": [
+            "href",
+            "rel"
+          ],
+          "type": "object"
+        },
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/links.yaml"
+        }
+      },
+      "page-head": {
+        "additionalProperties": false,
+        "description": "Contains informational data about pagination.\n",
+        "properties": {
+          "number": {
+            "description": "Specifies the number of the returned page.\n",
+            "type": "integer"
+          },
+          "size": {
+            "description": "Specifies the number of objects on a page, at least `10` objects.\n",
+            "type": "integer"
+          },
+          "totalElements": {
+            "description": "Specifies the total number of the available objects.\n",
+            "type": "integer"
+          },
+          "totalPages": {
+            "description": "Specifies the total number of the available pages.\n",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "totalPages",
+          "totalElements",
+          "number",
+          "size"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/page-head.yaml"
+        }
+      },
+      "get-policy-properties-response": {
+        "additionalProperties": false,
+        "description": "Contains detailed information about all active properties that are assigned to the policy.\n",
+        "properties": {
+          "content": {
+            "description": "Lists the results of the request.\n",
+            "items": {
+              "additionalProperties": false,
+              "description": "Object representing details of property assigned to the policy.\n",
+              "properties": {
+                "groupId": {
+                  "description": "Identifies the group which the property belongs to.\n",
+                  "type": "integer"
+                },
+                "id": {
+                  "description": "Identifies the property.\n",
+                  "type": "integer"
+                },
+                "name": {
+                  "description": "Property name.\n",
+                  "type": "string"
+                },
+                "network": {
+                  "description": "The networks where you can activate or deactivate the policy version, either `PRODUCTION` or `STAGING`.\n",
+                  "enum": [
+                    "PRODUCTION",
+                    "STAGING"
+                  ],
+                  "type": "string",
+                  "x-akamai": {
+                    "file-path": "schemas/network-enum.yaml"
+                  }
+                },
+                "version": {
+                  "description": "The version number of the property.\n",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "name",
+                "id",
+                "groupId",
+                "version",
+                "network"
+              ],
+              "title": "policy-property-info.json",
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/policy-property-info.yaml"
+              }
+            },
+            "type": "array"
+          },
+          "links": {
+            "description": "Hypermedia links to help navigate through the result set.\n",
+            "items": {
+              "additionalProperties": false,
+              "description": "Hypermedia links to help navigate through the result set, or to identify the current item whose `rel` is `self`.\n",
+              "properties": {
+                "href": {
+                  "description": "A relative path to the currently requested object or a specific page of the result set.\n",
+                  "type": "string"
+                },
+                "rel": {
+                  "description": "The relationship between the current and linked result sets. A value of `self` links to the current result set, while `first`, `next`, and `last` link to different sets of paginated data.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "href",
+                "rel"
+              ],
+              "type": "object"
+            },
+            "type": "array",
+            "x-akamai": {
+              "file-path": "schemas/links.yaml"
+            }
+          },
+          "page": {
+            "additionalProperties": false,
+            "description": "Contains informational data about pagination.\n",
+            "properties": {
+              "number": {
+                "description": "Specifies the number of the returned page.\n",
+                "type": "integer"
+              },
+              "size": {
+                "description": "Specifies the number of objects on a page, at least `10` objects.\n",
+                "type": "integer"
+              },
+              "totalElements": {
+                "description": "Specifies the total number of the available objects.\n",
+                "type": "integer"
+              },
+              "totalPages": {
+                "description": "Specifies the total number of the available pages.\n",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "totalPages",
+              "totalElements",
+              "number",
+              "size"
+            ],
+            "type": "object",
+            "x-akamai": {
+              "file-path": "schemas/page-head.yaml"
+            }
+          }
+        },
+        "required": [
+          "content",
+          "page"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/get-policy-properties-response.yaml"
+        }
+      },
+      "error-nested": {
+        "additionalProperties": true,
+        "properties": {
+          "instance": {
+            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+            "type": "string"
+          },
+          "status": {
+            "description": "HTTP response status code.\n",
+            "type": "integer"
+          },
+          "title": {
+            "description": "Short descriptive title of the problem response.\n",
+            "type": "string"
+          },
+          "type": {
+            "description": "A URI path that identifies the problem type.\n",
+            "type": "string"
+          }
+        },
+        "required": [
+          "instance",
+          "status",
+          "title",
+          "type",
+          "errors"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/error-nested.yaml"
+        }
+      },
+      "error": {
+        "additionalProperties": true,
+        "properties": {
+          "errors": {
+            "description": "A nested error object.\n",
+            "items": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "instance": {
+                  "description": "A URI path that identifies the specific occurrence of the problem.\n",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "HTTP response status code.\n",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Short descriptive title of the problem response.\n",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "A URI path that identifies the problem type.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "instance",
+                "status",
+                "title",
+                "type",
+                "errors"
+              ],
+              "x-akamai": {
+                "file-path": "schemas/error-nested.yaml"
+              }
+            },
+            "type": "array"
+          },
+          "instance": {
+            "description": "A URI path that identifies the specific occurrence of the problem.\n",
+            "type": "string"
+          },
+          "status": {
+            "description": "HTTP response status code.\n",
+            "type": "integer"
+          },
+          "title": {
+            "description": "Short descriptive title of the problem response.\n",
+            "type": "string"
+          },
+          "type": {
+            "description": "A URI path that identifies the problem type.\n",
+            "type": "string"
+          }
+        },
+        "required": [
+          "instance",
+          "status",
+          "title",
+          "type",
+          "errors"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/error.yaml"
+        }
+      }
+    }
+  },
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "05-policy-propertyinfo.yaml"
+  }
+}
