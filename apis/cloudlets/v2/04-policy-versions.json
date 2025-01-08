@@ -4665,7 +4665,11 @@
                   }
                 ],
                 "schema": {
+                  "type": "array",
                   "description": "Returns all policy versions.",
+                  "x-akamai": {
+                    "file-path": "schemas/get-policy-versions-response.yaml"
+                  },
                   "items": {
                     "type": "object",
                     "description": "Returns policy version details.",
@@ -7027,10 +7031,6 @@
                         "description": "Flag determining whether the rules are locked or not.\n"
                       }
                     }
-                  },
-                  "type": "array",
-                  "x-akamai": {
-                    "file-path": "schemas/get-policy-versions-response.yaml"
                   }
                 }
               }
@@ -7114,9 +7114,38 @@
                   "matchRules": []
                 },
                 "schema": {
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/get-policy-version-response.yaml"
+                  },
                   "additionalProperties": false,
+                  "required": [
+                    "activations",
+                    "createdBy",
+                    "createDate",
+                    "deleted",
+                    "description",
+                    "lastModifiedBy",
+                    "lastModifiedDate",
+                    "location",
+                    "matchRuleFormat",
+                    "matchRules",
+                    "policyId",
+                    "revisionId",
+                    "rulesLocked",
+                    "version"
+                  ],
                   "properties": {
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the policy version.\n"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "description": "Version of the policy.\n"
+                    },
                     "activations": {
+                      "type": "array",
                       "description": "List of activations related to the policy version.\n",
                       "items": {
                         "additionalProperties": false,
@@ -7268,40 +7297,35 @@
                         "x-akamai": {
                           "file-path": "schemas/policy-activation.yaml"
                         }
-                      },
-                      "type": "array"
+                      }
                     },
                     "createDate": {
-                      "description": "Date of the policy version creation in milliseconds.\n",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Date of the policy version creation in milliseconds.\n"
                     },
                     "createdBy": {
-                      "description": "User name who created the policy version.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "User name who created the policy version.\n"
                     },
                     "deleted": {
-                      "description": "Flag determining whether the policy version is deleted or not.\n",
-                      "type": "boolean"
-                    },
-                    "description": {
-                      "description": "Description of the policy version.\n",
-                      "type": "string"
+                      "type": "boolean",
+                      "description": "Flag determining whether the policy version is deleted or not.\n"
                     },
                     "lastModifiedBy": {
-                      "description": "User name who recently modified the policy version.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "User name who recently modified the policy version.\n"
                     },
                     "lastModifiedDate": {
-                      "description": "Date of the recent policy version modification in milliseconds.\n",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Date of the recent policy version modification in milliseconds.\n"
                     },
                     "location": {
-                      "description": "The navigable endpoint used for the object referred to in the operation.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The navigable endpoint used for the object referred to in the operation.\n"
                     },
                     "matchRuleFormat": {
-                      "description": "The version of the `matchRules` format.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The version of the `matchRules` format.\n"
                     },
                     "matchRules": {
                       "type": "array",
@@ -9437,41 +9461,17 @@
                       }
                     },
                     "policyId": {
-                      "description": "ID of the policy the version is associated to.\n",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "ID of the policy the version is associated to.\n"
                     },
                     "revisionId": {
-                      "description": "ID of the revision.\n",
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "ID of the revision.\n"
                     },
                     "rulesLocked": {
-                      "description": "Flag determining whether the rules are locked or not.\n",
-                      "type": "boolean"
-                    },
-                    "version": {
-                      "description": "Version of the policy.\n",
-                      "type": "integer"
+                      "type": "boolean",
+                      "description": "Flag determining whether the rules are locked or not.\n"
                     }
-                  },
-                  "required": [
-                    "activations",
-                    "createdBy",
-                    "createDate",
-                    "deleted",
-                    "description",
-                    "lastModifiedBy",
-                    "lastModifiedDate",
-                    "location",
-                    "matchRuleFormat",
-                    "matchRules",
-                    "policyId",
-                    "revisionId",
-                    "rulesLocked",
-                    "version"
-                  ],
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/get-policy-version-response.yaml"
                   }
                 }
               }
@@ -16296,55 +16296,82 @@
                   ]
                 },
                 "schema": {
-                  "additionalProperties": false,
+                  "type": "object",
                   "description": "Provides information on the new rule that was added to an existing policy version.",
+                  "x-akamai": {
+                    "file-path": "schemas/post-policy-version-rules-response.yaml"
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "akaRuleId",
+                    "version",
+                    "policyId"
+                  ],
                   "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "The name of the rule.\n"
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "The type of Cloudlet the rule is for. Application Load Balancer is `albMatchRule`, API Prioritization is `apMatchRule`, Audience Segmentation is `asMatchRule`, Phased Release is `cdMatchRule`, Edge Redirector is `erMatchRule`, Forward Rewrite is`frMatchRule`, Request Control is `igMatchRule`, and Visitor Prioritization is  `vpMatchRule`.\n",
+                      "enum": [
+                        "albMatchRule",
+                        "apMatchRule",
+                        "asMatchRule",
+                        "cdMatchRule",
+                        "erMatchRule",
+                        "frMatchRule",
+                        "igMatchRule",
+                        "vpMatchRule"
+                      ]
+                    },
                     "akaRuleId": {
-                      "description": "The rule's unique identifier.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The rule's unique identifier.\n"
                     },
                     "disabled": {
-                      "default": false,
+                      "type": "boolean",
                       "description": "If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.\n",
-                      "type": "boolean"
+                      "default": false
                     },
                     "end": {
+                      "type": "integer",
                       "description": "The end time for this match rule in epoch seconds.\n",
-                      "minimum": 0,
-                      "type": "integer"
+                      "minimum": 0
                     },
                     "forwardSettings": {
-                      "additionalProperties": false,
+                      "type": "object",
                       "description": "Defines data used to construct a new request URL. If all set conditions are true, the edge server returns an HTTP response from the rewritten URL.\n",
+                      "additionalProperties": false,
                       "properties": {
                         "originId": {
+                          "type": "string",
                           "description": "The conditional origin's unique identifier.\n",
-                          "maxLength": 8192,
                           "nullable": true,
-                          "type": "string"
+                          "maxLength": 8192
                         },
                         "pathAndQS": {
+                          "type": "string",
                           "description": "If a value is provided and match conditions are met, this is the URL path to rewrite the incoming request's URL. The URL may include additional query parameters.\n",
-                          "maxLength": 8192,
                           "minLength": 1,
-                          "type": "string"
+                          "maxLength": 8192
                         },
                         "percent": {
+                          "type": "number",
                           "description": "The percent of traffic that is sent to the data center.\n",
-                          "maximum": 100,
                           "minimum": 0,
-                          "type": "number"
+                          "maximum": 100
                         },
                         "useIncomingQueryString": {
-                          "description": "If set to `true`, the Cloudlet includes the requests' query string in the rewritten or forwarded URL.\n",
-                          "type": "boolean"
+                          "type": "boolean",
+                          "description": "If set to `true`, the Cloudlet includes the requests' query string in the rewritten or forwarded URL.\n"
                         }
-                      },
-                      "type": "object"
+                      }
                     },
                     "location": {
-                      "description": "The navigable endpoint used for the object referred to in the operation.\n",
-                      "type": "string"
+                      "type": "string",
+                      "description": "The navigable endpoint used for the object referred to in the operation.\n"
                     },
                     "matches": {
                       "description": "The `matchType` and the `matchValue` or `objectMatchValue` for the rule. Plus additional criteria to match on, like case sensitivity (`caseSensitive`).\n",
@@ -18482,38 +18509,11 @@
                         }
                       }
                     },
-                    "name": {
-                      "description": "The name of the rule.\n",
-                      "type": "string"
-                    },
                     "start": {
+                      "type": "integer",
                       "description": "The start time for this match rule in epoch seconds.\n",
-                      "minimum": 0,
-                      "type": "integer"
-                    },
-                    "type": {
-                      "description": "The type of Cloudlet the rule is for. Application Load Balancer is `albMatchRule`, API Prioritization is `apMatchRule`, Audience Segmentation is `asMatchRule`, Phased Release is `cdMatchRule`, Edge Redirector is `erMatchRule`, Forward Rewrite is`frMatchRule`, Request Control is `igMatchRule`, and Visitor Prioritization is  `vpMatchRule`.\n",
-                      "enum": [
-                        "albMatchRule",
-                        "apMatchRule",
-                        "asMatchRule",
-                        "cdMatchRule",
-                        "erMatchRule",
-                        "frMatchRule",
-                        "igMatchRule",
-                        "vpMatchRule"
-                      ],
-                      "type": "string"
+                      "minimum": 0
                     }
-                  },
-                  "required": [
-                    "akaRuleId",
-                    "version",
-                    "policyId"
-                  ],
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/post-policy-version-rules-response.yaml"
                   }
                 }
               }
@@ -36773,7 +36773,11 @@
         }
       },
       "get-policy-versions-response": {
+        "type": "array",
         "description": "Returns all policy versions.",
+        "x-akamai": {
+          "file-path": "schemas/get-policy-versions-response.yaml"
+        },
         "items": {
           "type": "object",
           "description": "Returns policy version details.",
@@ -39135,10 +39139,6 @@
               "description": "Flag determining whether the rules are locked or not.\n"
             }
           }
-        },
-        "type": "array",
-        "x-akamai": {
-          "file-path": "schemas/get-policy-versions-response.yaml"
         }
       },
       "post-policy-versions-request": {
@@ -43658,9 +43658,38 @@
         }
       },
       "get-policy-version-response": {
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/get-policy-version-response.yaml"
+        },
         "additionalProperties": false,
+        "required": [
+          "activations",
+          "createdBy",
+          "createDate",
+          "deleted",
+          "description",
+          "lastModifiedBy",
+          "lastModifiedDate",
+          "location",
+          "matchRuleFormat",
+          "matchRules",
+          "policyId",
+          "revisionId",
+          "rulesLocked",
+          "version"
+        ],
         "properties": {
+          "description": {
+            "type": "string",
+            "description": "Description of the policy version.\n"
+          },
+          "version": {
+            "type": "integer",
+            "description": "Version of the policy.\n"
+          },
           "activations": {
+            "type": "array",
             "description": "List of activations related to the policy version.\n",
             "items": {
               "additionalProperties": false,
@@ -43812,40 +43841,35 @@
               "x-akamai": {
                 "file-path": "schemas/policy-activation.yaml"
               }
-            },
-            "type": "array"
+            }
           },
           "createDate": {
-            "description": "Date of the policy version creation in milliseconds.\n",
-            "type": "integer"
+            "type": "integer",
+            "description": "Date of the policy version creation in milliseconds.\n"
           },
           "createdBy": {
-            "description": "User name who created the policy version.\n",
-            "type": "string"
+            "type": "string",
+            "description": "User name who created the policy version.\n"
           },
           "deleted": {
-            "description": "Flag determining whether the policy version is deleted or not.\n",
-            "type": "boolean"
-          },
-          "description": {
-            "description": "Description of the policy version.\n",
-            "type": "string"
+            "type": "boolean",
+            "description": "Flag determining whether the policy version is deleted or not.\n"
           },
           "lastModifiedBy": {
-            "description": "User name who recently modified the policy version.\n",
-            "type": "string"
+            "type": "string",
+            "description": "User name who recently modified the policy version.\n"
           },
           "lastModifiedDate": {
-            "description": "Date of the recent policy version modification in milliseconds.\n",
-            "type": "integer"
+            "type": "integer",
+            "description": "Date of the recent policy version modification in milliseconds.\n"
           },
           "location": {
-            "description": "The navigable endpoint used for the object referred to in the operation.\n",
-            "type": "string"
+            "type": "string",
+            "description": "The navigable endpoint used for the object referred to in the operation.\n"
           },
           "matchRuleFormat": {
-            "description": "The version of the `matchRules` format.\n",
-            "type": "string"
+            "type": "string",
+            "description": "The version of the `matchRules` format.\n"
           },
           "matchRules": {
             "type": "array",
@@ -45981,41 +46005,17 @@
             }
           },
           "policyId": {
-            "description": "ID of the policy the version is associated to.\n",
-            "type": "integer"
+            "type": "integer",
+            "description": "ID of the policy the version is associated to.\n"
           },
           "revisionId": {
-            "description": "ID of the revision.\n",
-            "type": "integer"
+            "type": "integer",
+            "description": "ID of the revision.\n"
           },
           "rulesLocked": {
-            "description": "Flag determining whether the rules are locked or not.\n",
-            "type": "boolean"
-          },
-          "version": {
-            "description": "Version of the policy.\n",
-            "type": "integer"
+            "type": "boolean",
+            "description": "Flag determining whether the rules are locked or not.\n"
           }
-        },
-        "required": [
-          "activations",
-          "createdBy",
-          "createDate",
-          "deleted",
-          "description",
-          "lastModifiedBy",
-          "lastModifiedDate",
-          "location",
-          "matchRuleFormat",
-          "matchRules",
-          "policyId",
-          "revisionId",
-          "rulesLocked",
-          "version"
-        ],
-        "type": "object",
-        "x-akamai": {
-          "file-path": "schemas/get-policy-version-response.yaml"
         }
       },
       "put-policy-version-request": {
@@ -50530,55 +50530,82 @@
         }
       },
       "post-policy-version-rules-response": {
-        "additionalProperties": false,
+        "type": "object",
         "description": "Provides information on the new rule that was added to an existing policy version.",
+        "x-akamai": {
+          "file-path": "schemas/post-policy-version-rules-response.yaml"
+        },
+        "additionalProperties": false,
+        "required": [
+          "akaRuleId",
+          "version",
+          "policyId"
+        ],
         "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the rule.\n"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of Cloudlet the rule is for. Application Load Balancer is `albMatchRule`, API Prioritization is `apMatchRule`, Audience Segmentation is `asMatchRule`, Phased Release is `cdMatchRule`, Edge Redirector is `erMatchRule`, Forward Rewrite is`frMatchRule`, Request Control is `igMatchRule`, and Visitor Prioritization is  `vpMatchRule`.\n",
+            "enum": [
+              "albMatchRule",
+              "apMatchRule",
+              "asMatchRule",
+              "cdMatchRule",
+              "erMatchRule",
+              "frMatchRule",
+              "igMatchRule",
+              "vpMatchRule"
+            ]
+          },
           "akaRuleId": {
-            "description": "The rule's unique identifier.\n",
-            "type": "string"
+            "type": "string",
+            "description": "The rule's unique identifier.\n"
           },
           "disabled": {
-            "default": false,
+            "type": "boolean",
             "description": "If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.\n",
-            "type": "boolean"
+            "default": false
           },
           "end": {
+            "type": "integer",
             "description": "The end time for this match rule in epoch seconds.\n",
-            "minimum": 0,
-            "type": "integer"
+            "minimum": 0
           },
           "forwardSettings": {
-            "additionalProperties": false,
+            "type": "object",
             "description": "Defines data used to construct a new request URL. If all set conditions are true, the edge server returns an HTTP response from the rewritten URL.\n",
+            "additionalProperties": false,
             "properties": {
               "originId": {
+                "type": "string",
                 "description": "The conditional origin's unique identifier.\n",
-                "maxLength": 8192,
                 "nullable": true,
-                "type": "string"
+                "maxLength": 8192
               },
               "pathAndQS": {
+                "type": "string",
                 "description": "If a value is provided and match conditions are met, this is the URL path to rewrite the incoming request's URL. The URL may include additional query parameters.\n",
-                "maxLength": 8192,
                 "minLength": 1,
-                "type": "string"
+                "maxLength": 8192
               },
               "percent": {
+                "type": "number",
                 "description": "The percent of traffic that is sent to the data center.\n",
-                "maximum": 100,
                 "minimum": 0,
-                "type": "number"
+                "maximum": 100
               },
               "useIncomingQueryString": {
-                "description": "If set to `true`, the Cloudlet includes the requests' query string in the rewritten or forwarded URL.\n",
-                "type": "boolean"
+                "type": "boolean",
+                "description": "If set to `true`, the Cloudlet includes the requests' query string in the rewritten or forwarded URL.\n"
               }
-            },
-            "type": "object"
+            }
           },
           "location": {
-            "description": "The navigable endpoint used for the object referred to in the operation.\n",
-            "type": "string"
+            "type": "string",
+            "description": "The navigable endpoint used for the object referred to in the operation.\n"
           },
           "matches": {
             "description": "The `matchType` and the `matchValue` or `objectMatchValue` for the rule. Plus additional criteria to match on, like case sensitivity (`caseSensitive`).\n",
@@ -52716,38 +52743,11 @@
               }
             }
           },
-          "name": {
-            "description": "The name of the rule.\n",
-            "type": "string"
-          },
           "start": {
+            "type": "integer",
             "description": "The start time for this match rule in epoch seconds.\n",
-            "minimum": 0,
-            "type": "integer"
-          },
-          "type": {
-            "description": "The type of Cloudlet the rule is for. Application Load Balancer is `albMatchRule`, API Prioritization is `apMatchRule`, Audience Segmentation is `asMatchRule`, Phased Release is `cdMatchRule`, Edge Redirector is `erMatchRule`, Forward Rewrite is`frMatchRule`, Request Control is `igMatchRule`, and Visitor Prioritization is  `vpMatchRule`.\n",
-            "enum": [
-              "albMatchRule",
-              "apMatchRule",
-              "asMatchRule",
-              "cdMatchRule",
-              "erMatchRule",
-              "frMatchRule",
-              "igMatchRule",
-              "vpMatchRule"
-            ],
-            "type": "string"
+            "minimum": 0
           }
-        },
-        "required": [
-          "akaRuleId",
-          "version",
-          "policyId"
-        ],
-        "type": "object",
-        "x-akamai": {
-          "file-path": "schemas/post-policy-version-rules-response.yaml"
         }
       },
       "get-policy-version-rule-response": {

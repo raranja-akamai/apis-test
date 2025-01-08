@@ -1,91 +1,114 @@
-type: object
-description: |-
-  Contains match rule information for Phased Release.
-  
-x-akamai:
-  file-path: schemas/match-rule-cd.yaml
-title: Phased Release
 additionalProperties: false
-required:
-- type
+description: Contains match rule information for Phased Release.
 properties:
-  id:
-    type: integer
-    description: |
-      __Read-only__ Akamai internal use only.
-    nullable: true
-    readOnly: true
-  name:
-    type: string
-    description: |
-      The name of the rule.
-    nullable: true
-    maxLength: 8192
-  type:
-    type: string
-    description: |
-      The type of Cloudlet the rule is for. For example, the string for Phased Release is `cdMatchRule`.
-    enum:
-    - cdMatchRule
   akaRuleId:
-    type: string
-    description: |
-      __Read-only__ The rule's unique identifier within the policy version.
+    description: '__Read-only__ __Read-only__ The rule''s unique identifier within
+      the policy version.
+
+      '
     readOnly: true
+    type: string
   disabled:
-    type: boolean
-    description: |
-      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
     default: false
+    description: 'If `true`, disables a rule so it''s not evaluated against incoming
+      requests. The default setting is `false`.
+
+      '
+    type: boolean
   end:
-    type: integer
-    description: |
-      The end time for this match rule in epoch seconds. When `end` is `0`, there is no end time for this match rule.
     default: 0
+    description: 'The end time for this match rule in epoch seconds. When `end` is
+      `0`, there is no end time for this match rule.
+
+      '
     minimum: 0
+    type: integer
   forwardSettings:
-    type: object
-    description: |
-      Defines data used to construct a new request URL. If all set conditions are true, the edge server returns an HTTP response from the rewritten URL. You can specify any of the following with this object: `originId`, and `percent`.
     additionalProperties: false
+    description: 'Defines data used to construct a new request URL. If all set conditions
+      are true, the edge server returns an HTTP response from the rewritten URL. You
+      can specify any of the following with this object: `originId`, and `percent`.
+
+      '
     properties:
       originId:
-        type: string
-        description: |
-          The conditional origin's unique identifier.
-        nullable: true
+        description: 'The conditional origin''s unique identifier.
+
+          '
         maxLength: 8192
+        nullable: true
+        type: string
       percent:
-        type: number
-        description: |
-          The percentage of visitors directed to a different origin.
-        minimum: 0
+        description: 'The percentage of visitors directed to a different origin.
+
+          '
         maximum: 100
-  location:
-    type: string
-    description: |
-      __Read-only__ The navigable endpoint used for the object referred to in the operation.
+        minimum: 0
+        type: number
+    type: object
+  id:
+    description: '__Read-only__ __Read-only__ Akamai internal use only.
+
+      '
+    nullable: true
     readOnly: true
-  matchURL:
+    type: integer
+  location:
+    description: '__Read-only__ __Read-only__ The navigable endpoint used for the
+      object referred to in the operation.
+
+      '
+    readOnly: true
     type: string
-    description: |
-      The URL the Cloudlet uses to match the incoming request.
-    nullable: true
+  matchURL:
+    description: 'The URL the Cloudlet uses to match the incoming request.
+
+      '
     maxLength: 8192
-  matches:
-    type: array
-    description: |
-      The `matchType` and the `matchValue` or `objectMatchValue` used to conditionally pass through the request. Plus additional criteria to match on, like case sensitivity (`caseSensitive`).
     nullable: true
+    type: string
+  matches:
+    description: 'The `matchType` and the `matchValue` or `objectMatchValue` used
+      to conditionally pass through the request. Plus additional criteria to match
+      on, like case sensitivity (`caseSensitive`).
+
+      '
     items:
       $ref: match-rule-cd-definitions.yaml#/definitions/matchCriteriaType
+    nullable: true
+    type: array
   matchesAlways:
+    description: 'The match rule always applies when `true`. When `false`, the rule
+      applies within the `start` and `end` time range.
+
+      '
     type: boolean
-    description: |
-      The match rule always applies when `true`. When `false`, the rule applies within the `start` and `end` time range.
+  name:
+    description: 'The name of the rule.
+
+      '
+    maxLength: 8192
+    nullable: true
+    type: string
   start:
-    type: integer
-    description: |
-      The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
     default: 0
+    description: 'The start time for this match rule in epoch seconds. When `start`
+      is `0`, the match rule is on.
+
+      '
     minimum: 0
+    type: integer
+  type:
+    description: 'The type of Cloudlet the rule is for. For example, the string for
+      Phased Release is `cdMatchRule`.
+
+      '
+    enum:
+    - cdMatchRule
+    type: string
+required:
+- type
+title: Phased Release
+type: object
+x-akamai:
+  file-path: schemas/match-rule-cd.yaml

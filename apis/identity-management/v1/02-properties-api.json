@@ -1,12 +1,12 @@
 {
   "openapi": "3.0.0",
   "info": {
+    "title": "Properties",
+    "version": "3",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    },
-    "title": "Properties",
-    "version": "3"
+    }
   },
   "servers": [
     {
@@ -25,25 +25,34 @@
   ],
   "paths": {
     "/user-admin/properties": {
+      "x-akamai": {
+        "file-path": "paths/properties.yaml",
+        "path-info": "/user-admin/properties"
+      },
       "get": {
-        "description": "This operation lists the properties and includes for the current account or other managed accounts using the `accountSwitchKey` parameter. Include the `groupId` parameter in your request to filter the results by group. The response returns a list of `propertyId` regardless of whether they represent a property or include in PAPI. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
         "operationId": "get-properties",
+        "summary": "List properties or includes",
+        "tags": [
+          "Assets"
+        ],
+        "description": "This operation lists the properties and includes for the current account or other managed accounts using the `accountSwitchKey` parameter. Include the `groupId` parameter in your request to filter the results by group. The response returns a list of `propertyId` regardless of whether they represent a property or include in PAPI. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
         "parameters": [
           {
-            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
-            "in": "query",
             "name": "groupId",
-            "schema": {
-              "example": 54321,
-              "type": "integer"
-            },
+            "in": "query",
+            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.",
             "x-akamai": {
               "file-path": "parameters/group-id-opt-group-id.yaml"
+            },
+            "schema": {
+              "type": "integer",
+              "example": 54321
             }
           }
         ],
         "responses": {
           "200": {
+            "description": "The response provides the assets.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -133,41 +142,56 @@
                   }
                 }
               }
-            },
-            "description": "The response provides the assets.\n"
+            }
           }
-        },
-        "summary": "List properties or includes",
-        "tags": [
-          "Assets"
-        ]
-      },
-      "x-akamai": {
-        "file-path": "paths/properties.yaml",
-        "path-info": "/user-admin/properties"
+        }
       }
     },
     "/user-admin/properties/{assetId}": {
+      "x-akamai": {
+        "file-path": "paths/property.yaml",
+        "path-info": "/user-admin/properties/{assetId}"
+      },
+      "parameters": [
+        {
+          "name": "assetId",
+          "in": "path",
+          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.",
+          "x-akamai": {
+            "file-path": "parameters/asset-id-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 9678999
+          }
+        }
+      ],
       "get": {
-        "description": "This operation fetches a property's or include's details. The response returns details for `propertyId` regardless of whether it represent a property or include in PAPI. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
         "operationId": "get-property",
+        "summary": "Get a property or include",
+        "tags": [
+          "Assets"
+        ],
+        "description": "This operation fetches a property's or include's details. The response returns details for `propertyId` regardless of whether it represent a property or include in PAPI. To learn more, see [Manage access to properties and includes](ref:manage-access-to-properties-and-includes).\n",
         "parameters": [
           {
-            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
-            "in": "query",
             "name": "groupId",
-            "required": true,
-            "schema": {
-              "example": 32145,
-              "type": "integer"
-            },
+            "in": "query",
+            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.",
             "x-akamai": {
               "file-path": "parameters/group-id-req-qp-group-id.yaml"
+            },
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 32145
             }
           }
         ],
         "responses": {
           "200": {
+            "description": "The response provides the asset's details.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -248,34 +272,19 @@
                   }
                 }
               }
-            },
-            "description": "The response provides the asset's details.\n"
-          }
-        },
-        "summary": "Get a property or include",
-        "tags": [
-          "Assets"
-        ]
-      },
-      "parameters": [
-        {
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
-          "in": "path",
-          "name": "assetId",
-          "required": true,
-          "schema": {
-            "example": 9678999,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/asset-id-path.yaml"
+            }
           }
         }
-      ],
+      },
       "put": {
-        "description": "This operation moves a property or include from one group to another group. You can only move an asset into another group within the same group hierarchy. Depending on your role in the destination group, you may lose access to resources the asset uses. Before moving an asset, run the [List users affected by moving a group](ref:get-move-affected-users) operation to review which users will be affected by the move.\n",
         "operationId": "put-property",
+        "summary": "Move a property or include",
+        "tags": [
+          "Assets"
+        ],
+        "description": "This operation moves a property or include from one group to another group. You can only move an asset into another group within the same group hierarchy. Depending on your role in the destination group, you may lose access to resources the asset uses. Before moving an asset, run the [List users affected by moving a group](ref:get-move-affected-users) operation to review which users will be affected by the move.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -307,45 +316,60 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "204": {
             "description": "Asset successfully moved.\n"
           }
-        },
-        "summary": "Move a property or include",
-        "tags": [
-          "Assets"
-        ]
-      },
-      "x-akamai": {
-        "file-path": "paths/property.yaml",
-        "path-info": "/user-admin/properties/{assetId}"
+        }
       }
     },
     "/user-admin/properties/{assetId}/resources": {
+      "x-akamai": {
+        "file-path": "paths/resources.yaml",
+        "path-info": "/user-admin/properties/{assetId}/resources"
+      },
+      "parameters": [
+        {
+          "name": "assetId",
+          "in": "path",
+          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.",
+          "x-akamai": {
+            "file-path": "parameters/asset-id-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 9678999
+          }
+        }
+      ],
       "get": {
-        "description": "This operation lists resources a property or include uses to deliver your web content across Akamai's edge network. You can think of these resources as objects, like CP codes and configuration files. For example, an ARL (Akamai resource locator) configuration file specifies how Akamai purges versions of an object that you can’t purge using just the URL.\n",
         "operationId": "get-property-resources",
+        "summary": "Get asset's resources",
+        "tags": [
+          "Resources"
+        ],
+        "description": "This operation lists resources a property or include uses to deliver your web content across Akamai's edge network. You can think of these resources as objects, like CP codes and configuration files. For example, an ARL (Akamai resource locator) configuration file specifies how Akamai purges versions of an object that you can’t purge using just the URL.\n",
         "parameters": [
           {
-            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
-            "in": "query",
             "name": "groupId",
-            "required": true,
-            "schema": {
-              "example": 32145,
-              "type": "integer"
-            },
+            "in": "query",
+            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.",
             "x-akamai": {
               "file-path": "parameters/group-id-req-qp-group-id.yaml"
+            },
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "example": 32145
             }
           }
         ],
         "responses": {
           "200": {
+            "description": "The response provides the resources.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -415,59 +439,59 @@
                   }
                 }
               }
-            },
-            "description": "The response provides the resources.\n"
-          }
-        },
-        "summary": "Get asset's resources",
-        "tags": [
-          "Resources"
-        ]
-      },
-      "parameters": [
-        {
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
-          "in": "path",
-          "name": "assetId",
-          "required": true,
-          "schema": {
-            "example": 9678999,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/asset-id-path.yaml"
+            }
           }
         }
-      ],
-      "x-akamai": {
-        "file-path": "paths/resources.yaml",
-        "path-info": "/user-admin/properties/{assetId}/resources"
       }
     },
     "/user-admin/properties/{assetId}/users": {
+      "x-akamai": {
+        "file-path": "paths/users-property.yaml",
+        "path-info": "/user-admin/properties/{assetId}/users"
+      },
+      "parameters": [
+        {
+          "name": "assetId",
+          "in": "path",
+          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.",
+          "x-akamai": {
+            "file-path": "parameters/asset-id-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 9678999
+          }
+        }
+      ],
       "get": {
-        "description": "This operation lists users who can access a property or include.\n",
         "operationId": "get-property-users",
+        "summary": "List users for property or include",
+        "tags": [
+          "Assets"
+        ],
+        "description": "This operation lists users who can access a property or include.\n",
         "parameters": [
           {
-            "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.\n",
-            "in": "query",
             "name": "userType",
+            "in": "query",
+            "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.",
+            "x-akamai": {
+              "file-path": "parameters/user-type-query.yaml"
+            },
             "schema": {
+              "type": "string",
+              "example": "lostAccess",
               "enum": [
                 "lostAccess",
                 "gainAccess"
-              ],
-              "example": "lostAccess",
-              "type": "string"
-            },
-            "x-akamai": {
-              "file-path": "parameters/user-type-query.yaml"
+              ]
             }
           }
         ],
         "responses": {
           "200": {
+            "description": "The response provides the users accessing the property or include.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -536,55 +560,40 @@
                   }
                 }
               }
-            },
-            "description": "The response provides the users accessing the property or include.\n"
-          }
-        },
-        "summary": "List users for property or include",
-        "tags": [
-          "Assets"
-        ]
-      },
-      "parameters": [
-        {
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
-          "in": "path",
-          "name": "assetId",
-          "required": true,
-          "schema": {
-            "example": 9678999,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/asset-id-path.yaml"
+            }
           }
         }
-      ],
-      "x-akamai": {
-        "file-path": "paths/users-property.yaml",
-        "path-info": "/user-admin/properties/{assetId}/users"
       }
     },
     "/user-admin/properties/{assetId}/users/block": {
+      "x-akamai": {
+        "file-path": "paths/block.yaml",
+        "path-info": "/user-admin/properties/{assetId}/users/block"
+      },
       "parameters": [
         {
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
-          "in": "path",
           "name": "assetId",
-          "required": true,
-          "schema": {
-            "example": 9678999,
-            "type": "integer"
-          },
+          "in": "path",
+          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.",
           "x-akamai": {
             "file-path": "parameters/asset-id-path.yaml"
+          },
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 9678999
           }
         }
       ],
       "put": {
-        "description": "This operation blocks the users on a property or include.\n",
         "operationId": "put-property-users-block",
+        "summary": "Block users from a property or include",
+        "tags": [
+          "Assets"
+        ],
+        "description": "This operation blocks the users on a property or include.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": [
@@ -622,11 +631,11 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "The response provides the users blocked from the asset.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -695,75 +704,66 @@
                   }
                 }
               }
-            },
-            "description": "The response provides the users blocked from the asset.\n"
+            }
           }
-        },
-        "summary": "Block users from a property or include",
-        "tags": [
-          "Assets"
-        ]
-      },
-      "x-akamai": {
-        "file-path": "paths/block.yaml",
-        "path-info": "/user-admin/properties/{assetId}/users/block"
+        }
       }
     }
   },
   "components": {
     "parameters": {
       "group-id-opt-group-id": {
-        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
-        "in": "query",
         "name": "groupId",
-        "schema": {
-          "example": 54321,
-          "type": "integer"
-        },
+        "in": "query",
+        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.",
         "x-akamai": {
           "file-path": "parameters/group-id-opt-group-id.yaml"
+        },
+        "schema": {
+          "type": "integer",
+          "example": 54321
         }
       },
       "asset-id-path": {
-        "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
-        "in": "path",
         "name": "assetId",
-        "required": true,
-        "schema": {
-          "example": 9678999,
-          "type": "integer"
-        },
+        "in": "path",
+        "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.",
         "x-akamai": {
           "file-path": "parameters/asset-id-path.yaml"
+        },
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "example": 9678999
         }
       },
       "group-id-req-qp-group-id": {
-        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
-        "in": "query",
         "name": "groupId",
-        "required": true,
-        "schema": {
-          "example": 32145,
-          "type": "integer"
-        },
+        "in": "query",
+        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.",
         "x-akamai": {
           "file-path": "parameters/group-id-req-qp-group-id.yaml"
+        },
+        "required": true,
+        "schema": {
+          "type": "integer",
+          "example": 32145
         }
       },
       "user-type-query": {
-        "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.\n",
-        "in": "query",
         "name": "userType",
+        "in": "query",
+        "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.",
+        "x-akamai": {
+          "file-path": "parameters/user-type-query.yaml"
+        },
         "schema": {
+          "type": "string",
+          "example": "lostAccess",
           "enum": [
             "lostAccess",
             "gainAccess"
-          ],
-          "example": "lostAccess",
-          "type": "string"
-        },
-        "x-akamai": {
-          "file-path": "parameters/user-type-query.yaml"
+          ]
         }
       }
     },

@@ -1,35 +1,53 @@
 openapi: 3.0.0
 info:
   title: DataStream 2 configuration
-  version: '1'
+  version: v3
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-- url: https://{hostname}/datastream-config-api/v1/log
+- url: https://{hostname}/datastream-config-api/v3
 x-akamai:
   auth-type: EDGE_GRID
+  file-path: datastream-config.yaml
 paths:
-  /connectors:
-    $ref: paths/connectors.yaml
-  /datasets/template/{templateName}:
-    $ref: paths/template.yaml
-  /groups:
+  /log/cdn/groups/{groupId}/properties:
+    $ref: paths/properties-dcn.yaml
+  /log/cdn/streams:
+    $ref: paths/streams-cdn.yaml
+  /log/cdn/streams/{streamId}:
+    $ref: paths/stream-cdn.yaml
+  /log/edgeworkers/streams:
+    $ref: paths/streams-ew.yaml
+  /log/edns/contracts/{contractId}/zones:
+    $ref: paths/zones.yaml
+  /log/edns/streams:
+    $ref: paths/streams-edns.yaml
+  /log/edns/streams/{streamId}:
+    $ref: paths/stream-edns.yaml
+  /log/ew/streams/{streamId}:
+    $ref: paths/stream-ew.yaml
+  /log/gtm/contracts/{contractId}/properties:
+    $ref: paths/properties-gtm.yaml
+  /log/gtm/streams:
+    $ref: paths/streams-gtm.yaml
+  /log/gtm/streams/{streamId}:
+    $ref: paths/stream-gtm.yaml
+  /log/streams/metrics:
+    $ref: paths/metrics.yaml
+  /log/{logType}/datasets-fields:
+    $ref: paths/datasets-fields.yaml
+  /log/{logType}/groups:
     $ref: paths/groups.yaml
-  /products:
-    $ref: paths/products.yaml
-  /properties/group/{groupId}:
-    $ref: paths/group.yaml
-  /properties/product/{productId}/group/{groupId}:
-    $ref: paths/group-product.yaml
-  /streamTypes:
-    $ref: paths/stream-types.yaml
-  /streams:
+  /log/{logType}/streams:
     $ref: paths/streams.yaml
-  /streams/{streamId}:
+  /log/{logType}/streams/{streamId}:
     $ref: paths/stream.yaml
-  /streams/{streamId}/activate:
+  /log/{logType}/streams/{streamId}/activate:
     $ref: paths/activate.yaml
-  /streams/{streamId}/activationHistory:
+  /log/{logType}/streams/{streamId}/activation-history:
     $ref: paths/activations.yaml
-  /streams/{streamId}/deactivate:
+  /log/{logType}/streams/{streamId}/deactivate:
     $ref: paths/deactivate.yaml
-  /streams/{streamId}/history:
+  /log/{logType}/streams/{streamId}/history:
     $ref: paths/history.yaml
