@@ -1,9 +1,6 @@
 type: object
-description: |-
+description: |
   Lists the Edge DNS zones on your account.
-  
-x-akamai:
-  file-path: schemas/zones.yaml
 title: EDNS zones
 additionalProperties: false
 required:
@@ -16,6 +13,13 @@ properties:
     description: |
       Identifies the contract that the zones belong to.
     minLength: 1
+  zones:
+    type: array
+    description: |
+      Lists zones within access groups.
+    minItems: 0
+    items:
+      $ref: zone.yaml
   metadata:
     type: object
     description: |
@@ -29,11 +33,6 @@ properties:
         default: 1
         minimum: 1
         maximum: 100
-      page:
-        type: integer
-        description: |
-          The number of pages with zones.
-        minimum: 1
       pageSize:
         type: integer
         description: |
@@ -41,16 +40,14 @@ properties:
         default: 100
         minimum: 1
         maximum: 200
+      page:
+        type: integer
+        description: |
+          The number of pages with zones.
+        minimum: 1
       totalElements:
         type: integer
         description: |
           The total number of zones in the response.
         example: 92
         minimum: 1
-  zones:
-    type: array
-    description: |
-      Lists zones within access groups.
-    minItems: 0
-    items:
-      $ref: zone.yaml
