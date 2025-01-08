@@ -2,7 +2,11 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Groups",
-    "version": "3"
+    "version": "3",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
   },
   "servers": [
     {
@@ -22,6 +26,7 @@
   "paths": {
     "/user-admin/groups": {
       "x-akamai": {
+        "file-path": "paths/groups.yaml",
         "path-info": "/user-admin/groups"
       },
       "get": {
@@ -35,7 +40,10 @@
           {
             "name": "actions",
             "in": "query",
-            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
+            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
+            "x-akamai": {
+              "file-path": "parameters/roles-filter-params-actions-actions.yaml"
+            },
             "schema": {
               "type": "boolean",
               "example": true,
@@ -95,11 +103,17 @@
                 ],
                 "schema": {
                   "type": "array",
-                  "description": "Encapsulates information about a group.\n",
+                  "description": "Encapsulates information about a group.",
+                  "x-akamai": {
+                    "file-path": "schemas/list-of-group-response.yaml"
+                  },
                   "minItems": 0,
                   "items": {
                     "type": "object",
-                    "description": "Specifies a group.\n",
+                    "description": "Specifies a group.",
+                    "x-akamai": {
+                      "file-path": "schemas/group-response.yaml"
+                    },
                     "additionalProperties": false,
                     "required": [
                       "createdBy",
@@ -171,7 +185,10 @@
                         "minItems": 0,
                         "items": {
                           "type": "object",
-                          "description": "A further nested group.\n",
+                          "description": "A further nested group.",
+                          "x-akamai": {
+                            "file-path": "schemas/groups-nested.yaml"
+                          },
                           "additionalProperties": true,
                           "properties": {}
                         }
@@ -187,6 +204,7 @@
     },
     "/user-admin/groups/move": {
       "x-akamai": {
+        "file-path": "paths/move.yaml",
         "path-info": "/user-admin/groups/move"
       },
       "post": {
@@ -206,7 +224,10 @@
               },
               "schema": {
                 "type": "object",
-                "description": "Describes the request body to move one group under another group.\n",
+                "description": "Describes the request body to move one group under another group.",
+                "x-akamai": {
+                  "file-path": "schemas/move-group-request.yaml"
+                },
                 "additionalProperties": false,
                 "required": [
                   "sourceGroupId",
@@ -237,13 +258,17 @@
     },
     "/user-admin/groups/move/{sourceGroupId}/{destinationGroupId}/affected-users": {
       "x-akamai": {
+        "file-path": "paths/affected-users.yaml",
         "path-info": "/user-admin/groups/move/{sourceGroupId}/{destinationGroupId}/affected-users"
       },
       "parameters": [
         {
           "name": "destinationGroupId",
           "in": "path",
-          "description": "Unique identifier for a group you're putting the other group into. To get this value, run the [List groups](ref:get-groups) operation.\n",
+          "description": "Unique identifier for a group you're putting the other group into. To get this value, run the [List groups](ref:get-groups) operation.",
+          "x-akamai": {
+            "file-path": "parameters/destination-group-id-path.yaml"
+          },
           "required": true,
           "schema": {
             "type": "integer",
@@ -253,7 +278,10 @@
         {
           "name": "sourceGroupId",
           "in": "path",
-          "description": "Unique identifier for a group you want to move. To get this value, run the [List groups](ref:get-groups) operation.\n",
+          "description": "Unique identifier for a group you want to move. To get this value, run the [List groups](ref:get-groups) operation.",
+          "x-akamai": {
+            "file-path": "parameters/source-group-id-path.yaml"
+          },
           "required": true,
           "schema": {
             "type": "integer",
@@ -272,7 +300,10 @@
           {
             "name": "userType",
             "in": "query",
-            "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.\n",
+            "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.",
+            "x-akamai": {
+              "file-path": "parameters/user-type-query.yaml"
+            },
             "schema": {
               "type": "string",
               "example": "lostAccess",
@@ -310,6 +341,9 @@
                 ],
                 "schema": {
                   "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/list-of-move-user-response.yaml"
+                  },
                   "minItems": 0,
                   "items": {
                     "type": "object",
@@ -369,13 +403,17 @@
     },
     "/user-admin/groups/{groupId}": {
       "x-akamai": {
+        "file-path": "paths/group.yaml",
         "path-info": "/user-admin/groups/{groupId}"
       },
       "parameters": [
         {
           "name": "groupId",
           "in": "path",
-          "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+          "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.",
+          "x-akamai": {
+            "file-path": "parameters/group-id-path.yaml"
+          },
           "required": true,
           "schema": {
             "type": "integer",
@@ -399,7 +437,10 @@
               },
               "schema": {
                 "type": "object",
-                "description": "Includes the new `groupName` you're using to replace the old `groupName`.\n",
+                "description": "Includes the new `groupName` you're using to replace the old `groupName`.",
+                "x-akamai": {
+                  "file-path": "schemas/group-request.yaml"
+                },
                 "additionalProperties": false,
                 "required": [
                   "groupName"
@@ -421,7 +462,10 @@
             "description": "Group successfully created.\n",
             "headers": {
               "Location": {
-                "description": "A URL path to the newly created object.\n",
+                "description": "A URL path to the newly created object.",
+                "x-akamai": {
+                  "file-path": "headers/location.yaml"
+                },
                 "schema": {
                   "type": "string"
                 }
@@ -441,7 +485,10 @@
                 },
                 "schema": {
                   "type": "object",
-                  "description": "Specifies a group.\n",
+                  "description": "Specifies a group.",
+                  "x-akamai": {
+                    "file-path": "schemas/group-response.yaml"
+                  },
                   "additionalProperties": false,
                   "required": [
                     "createdBy",
@@ -513,7 +560,10 @@
                       "minItems": 0,
                       "items": {
                         "type": "object",
-                        "description": "A further nested group.\n",
+                        "description": "A further nested group.",
+                        "x-akamai": {
+                          "file-path": "schemas/groups-nested.yaml"
+                        },
                         "additionalProperties": true,
                         "properties": {}
                       }
@@ -536,7 +586,10 @@
           {
             "name": "actions",
             "in": "query",
-            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
+            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
+            "x-akamai": {
+              "file-path": "parameters/roles-filter-params-actions-actions.yaml"
+            },
             "schema": {
               "type": "boolean",
               "example": true,
@@ -594,7 +647,10 @@
                 },
                 "schema": {
                   "type": "object",
-                  "description": "Specifies a group.\n",
+                  "description": "Specifies a group.",
+                  "x-akamai": {
+                    "file-path": "schemas/group-response.yaml"
+                  },
                   "additionalProperties": false,
                   "required": [
                     "createdBy",
@@ -666,7 +722,10 @@
                       "minItems": 0,
                       "items": {
                         "type": "object",
-                        "description": "A further nested group.\n",
+                        "description": "A further nested group.",
+                        "x-akamai": {
+                          "file-path": "schemas/groups-nested.yaml"
+                        },
                         "additionalProperties": true,
                         "properties": {}
                       }
@@ -694,7 +753,10 @@
               },
               "schema": {
                 "type": "object",
-                "description": "Includes the new `groupName` you're using to replace the old `groupName`.\n",
+                "description": "Includes the new `groupName` you're using to replace the old `groupName`.",
+                "x-akamai": {
+                  "file-path": "schemas/group-request.yaml"
+                },
                 "additionalProperties": false,
                 "required": [
                   "groupName"
@@ -761,7 +823,10 @@
                 },
                 "schema": {
                   "type": "object",
-                  "description": "Specifies a group.\n",
+                  "description": "Specifies a group.",
+                  "x-akamai": {
+                    "file-path": "schemas/group-response.yaml"
+                  },
                   "additionalProperties": false,
                   "required": [
                     "createdBy",
@@ -833,7 +898,10 @@
                       "minItems": 0,
                       "items": {
                         "type": "object",
-                        "description": "A further nested group.\n",
+                        "description": "A further nested group.",
+                        "x-akamai": {
+                          "file-path": "schemas/groups-nested.yaml"
+                        },
                         "additionalProperties": true,
                         "properties": {}
                       }
@@ -865,7 +933,10 @@
       "roles-filter-params-actions-actions": {
         "name": "actions",
         "in": "query",
-        "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
+        "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
+        "x-akamai": {
+          "file-path": "parameters/roles-filter-params-actions-actions.yaml"
+        },
         "schema": {
           "type": "boolean",
           "example": true,
@@ -875,7 +946,10 @@
       "destination-group-id-path": {
         "name": "destinationGroupId",
         "in": "path",
-        "description": "Unique identifier for a group you're putting the other group into. To get this value, run the [List groups](ref:get-groups) operation.\n",
+        "description": "Unique identifier for a group you're putting the other group into. To get this value, run the [List groups](ref:get-groups) operation.",
+        "x-akamai": {
+          "file-path": "parameters/destination-group-id-path.yaml"
+        },
         "required": true,
         "schema": {
           "type": "integer",
@@ -885,7 +959,10 @@
       "source-group-id-path": {
         "name": "sourceGroupId",
         "in": "path",
-        "description": "Unique identifier for a group you want to move. To get this value, run the [List groups](ref:get-groups) operation.\n",
+        "description": "Unique identifier for a group you want to move. To get this value, run the [List groups](ref:get-groups) operation.",
+        "x-akamai": {
+          "file-path": "parameters/source-group-id-path.yaml"
+        },
         "required": true,
         "schema": {
           "type": "integer",
@@ -895,7 +972,10 @@
       "user-type-query": {
         "name": "userType",
         "in": "query",
-        "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.\n",
+        "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.",
+        "x-akamai": {
+          "file-path": "parameters/user-type-query.yaml"
+        },
         "schema": {
           "type": "string",
           "example": "lostAccess",
@@ -908,7 +988,10 @@
       "group-id-path": {
         "name": "groupId",
         "in": "path",
-        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
+        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.",
+        "x-akamai": {
+          "file-path": "parameters/group-id-path.yaml"
+        },
         "required": true,
         "schema": {
           "type": "integer",
@@ -919,13 +1002,19 @@
     "schemas": {
       "groups-nested": {
         "type": "object",
-        "description": "A further nested group.\n",
+        "description": "A further nested group.",
+        "x-akamai": {
+          "file-path": "schemas/groups-nested.yaml"
+        },
         "additionalProperties": true,
         "properties": {}
       },
       "group-response": {
         "type": "object",
-        "description": "Specifies a group.\n",
+        "description": "Specifies a group.",
+        "x-akamai": {
+          "file-path": "schemas/group-response.yaml"
+        },
         "additionalProperties": false,
         "required": [
           "createdBy",
@@ -997,7 +1086,10 @@
             "minItems": 0,
             "items": {
               "type": "object",
-              "description": "A further nested group.\n",
+              "description": "A further nested group.",
+              "x-akamai": {
+                "file-path": "schemas/groups-nested.yaml"
+              },
               "additionalProperties": true,
               "properties": {}
             }
@@ -1006,11 +1098,17 @@
       },
       "list-of-group-response": {
         "type": "array",
-        "description": "Encapsulates information about a group.\n",
+        "description": "Encapsulates information about a group.",
+        "x-akamai": {
+          "file-path": "schemas/list-of-group-response.yaml"
+        },
         "minItems": 0,
         "items": {
           "type": "object",
-          "description": "Specifies a group.\n",
+          "description": "Specifies a group.",
+          "x-akamai": {
+            "file-path": "schemas/group-response.yaml"
+          },
           "additionalProperties": false,
           "required": [
             "createdBy",
@@ -1082,7 +1180,10 @@
               "minItems": 0,
               "items": {
                 "type": "object",
-                "description": "A further nested group.\n",
+                "description": "A further nested group.",
+                "x-akamai": {
+                  "file-path": "schemas/groups-nested.yaml"
+                },
                 "additionalProperties": true,
                 "properties": {}
               }
@@ -1092,7 +1193,10 @@
       },
       "move-group-request": {
         "type": "object",
-        "description": "Describes the request body to move one group under another group.\n",
+        "description": "Describes the request body to move one group under another group.",
+        "x-akamai": {
+          "file-path": "schemas/move-group-request.yaml"
+        },
         "additionalProperties": false,
         "required": [
           "sourceGroupId",
@@ -1113,6 +1217,9 @@
       },
       "list-of-move-user-response": {
         "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/list-of-move-user-response.yaml"
+        },
         "minItems": 0,
         "items": {
           "type": "object",
@@ -1166,7 +1273,10 @@
       },
       "group-request": {
         "type": "object",
-        "description": "Includes the new `groupName` you're using to replace the old `groupName`.\n",
+        "description": "Includes the new `groupName` you're using to replace the old `groupName`.",
+        "x-akamai": {
+          "file-path": "schemas/group-request.yaml"
+        },
         "additionalProperties": false,
         "required": [
           "groupName"
@@ -1183,7 +1293,10 @@
     },
     "headers": {
       "location": {
-        "description": "A URL path to the newly created object.\n",
+        "description": "A URL path to the newly created object.",
+        "x-akamai": {
+          "file-path": "headers/location.yaml"
+        },
         "schema": {
           "type": "string"
         }
@@ -1191,6 +1304,7 @@
     }
   },
   "x-akamai": {
-    "auth-type": "EDGE_GRID"
+    "auth-type": "EDGE_GRID",
+    "file-path": "01-groups-api.yaml"
   }
 }
