@@ -1,6 +1,9 @@
 type: object
-description: |
+description: |-
   Provides information that you need to specify when creating a stream configuration.
+  
+x-akamai:
+  file-path: schemas/save-stream-request-ew.yaml
 additionalProperties: false
 required:
 - streamName
@@ -9,40 +12,11 @@ required:
 - deliveryConfiguration
 - destination
 properties:
-  streamName:
-    type: string
-    description: |
-      The stream's name.
-    title: Stream name
-    maxLength: 1000
-  groupId:
-    type: integer
-    description: |
-      Identifies the group that has access to the product and this stream configuration.
   contractId:
     type: string
     description: |
       Identifies the contract that has access to the product.
     title: Contract
-  destination:
-    description: |
-      The destination configuration in the stream to send logs. See [Destinations](ref:destinations) for details and features available for each destination.
-    title: Destination
-    oneOf:
-    - $ref: azure.yaml
-    - $ref: s3.yaml
-    - $ref: datadog.yaml
-    - $ref: splunk.yaml
-    - $ref: gcs.yaml
-    - $ref: https.yaml
-    - $ref: sumo-logic.yaml
-    - $ref: ocs.yaml
-    - $ref: loggly.yaml
-    - $ref: s3compatible.yaml
-    - $ref: new-relic.yaml
-    - $ref: elasticsearch.yaml
-    - $ref: traffic-peak.yaml
-    - $ref: dynatrace.yaml
   deliveryConfiguration:
     type: object
     description: |
@@ -84,17 +58,17 @@ properties:
             enum:
             - 30
             - 60
-          sizeInMb:
-            type: integer
-            description: |
-              The maximum log file size in megabytes. When the log file size is larger than `sizeInMb`, DataStream chunks it into separate files.
-            maximum: 4
           numberOfRecords:
             type: integer
             description: |
               The maximum number of records in a single log file. When there are more records than the `numberOfRecords`, DataStream chunks the log file into different parts.
             minimum: 1
             maximum: 32000
+          sizeInMb:
+            type: integer
+            description: |
+              The maximum log file size in megabytes. When the log file size is larger than `sizeInMb`, DataStream chunks it into separate files.
+            maximum: 4
       uploadFilePrefix:
         type: string
         description: |
@@ -104,6 +78,29 @@ properties:
         description: |
           The log filename suffix that you want to send to an object-based destination, up to 10 characters. If unspecified, it defaults to `ds`. This doesn't support [Dynamic time variables](ref:custom-log-field#dynamic-time-variables), and the `.`, `/`, `%`, `?` characters. See [S3 naming conventions](https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-keys.html), [Azure blob naming conventions](https://docs.microsoft.com/en-us/rest/api/storageservices/naming-and-referencing-containers--blobs--and-metadata#:%7E:text=Blob%20Names&text=A%20blob%20name%20can%20contain,up%20to%20256%20characters%20long), and [Google Cloud Storage object naming conventions](https://cloud.google.com/storage/docs/naming-objects).
         maxLength: 10
+  destination:
+    description: |
+      The destination configuration in the stream to send logs. See [Destinations](ref:destinations) for details and features available for each destination.
+    title: Destination
+    oneOf:
+    - $ref: azure.yaml
+    - $ref: s3.yaml
+    - $ref: datadog.yaml
+    - $ref: splunk.yaml
+    - $ref: gcs.yaml
+    - $ref: https.yaml
+    - $ref: sumo-logic.yaml
+    - $ref: ocs.yaml
+    - $ref: loggly.yaml
+    - $ref: s3compatible.yaml
+    - $ref: new-relic.yaml
+    - $ref: elasticsearch.yaml
+    - $ref: traffic-peak.yaml
+    - $ref: dynatrace.yaml
+  groupId:
+    type: integer
+    description: |
+      Identifies the group that has access to the product and this stream configuration.
   notificationEmails:
     type: array
     description: |
@@ -112,3 +109,9 @@ properties:
     minItems: 0
     items:
       type: string
+  streamName:
+    type: string
+    description: |
+      The stream's name.
+    title: Stream name
+    maxLength: 1000
