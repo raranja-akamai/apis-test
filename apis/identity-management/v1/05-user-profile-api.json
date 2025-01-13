@@ -1,12 +1,12 @@
 {
   "openapi": "3.0.0",
   "info": {
+    "title": "Your user profile",
+    "version": "3",
     "license": {
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    },
-    "title": "Your user profile",
-    "version": "3"
+    }
   },
   "servers": [
     {
@@ -26,7 +26,7 @@
         "operationId": "get-user-profile",
         "parameters": [
           {
-            "description": "Includes the list of your group and role assignments, `false` by default.\n",
+            "description": "Includes the list of your group and role assignments, `false` by default.",
             "in": "query",
             "name": "authGrants",
             "required": false,
@@ -40,7 +40,7 @@
             }
           },
           {
-            "description": "Includes product notifications you subscribe to, `false` by default.\n",
+            "description": "Includes product notifications you subscribe to, `false` by default.",
             "in": "query",
             "name": "notifications",
             "schema": {
@@ -53,7 +53,7 @@
             }
           },
           {
-            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
+            "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
             "in": "query",
             "name": "actions",
             "schema": {
@@ -130,7 +130,7 @@
                 },
                 "schema": {
                   "additionalProperties": false,
-                  "description": "Encapsulates information about each user.\n",
+                  "description": "Encapsulates information about each user.",
                   "properties": {
                     "accountId": {
                       "description": "Unique identifier for each account.\n",
@@ -198,7 +198,7 @@
                       "description": "A user's role assignments, per group.\n",
                       "items": {
                         "additionalProperties": false,
-                        "description": "A user's role assignments, per group.\n",
+                        "description": "A user's role assignments, per group.",
                         "properties": {
                           "groupId": {
                             "description": "Unique identifier for each group. It's returned only for group roles.\n",
@@ -233,7 +233,7 @@
                             "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
                             "items": {
                               "additionalProperties": true,
-                              "description": "A further nested group.\n",
+                              "description": "A further nested group.",
                               "properties": {},
                               "type": "object",
                               "x-akamai": {
@@ -696,7 +696,7 @@
                 },
                 "schema": {
                   "additionalProperties": false,
-                  "description": "Encapsulates information about each user.\n",
+                  "description": "Encapsulates information about each user.",
                   "properties": {
                     "accountId": {
                       "description": "Unique identifier for each account.\n",
@@ -764,7 +764,7 @@
                       "description": "A user's role assignments, per group.\n",
                       "items": {
                         "additionalProperties": false,
-                        "description": "A user's role assignments, per group.\n",
+                        "description": "A user's role assignments, per group.",
                         "properties": {
                           "groupId": {
                             "description": "Unique identifier for each group. It's returned only for group roles.\n",
@@ -799,7 +799,7 @@
                             "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
                             "items": {
                               "additionalProperties": true,
-                              "description": "A further nested group.\n",
+                              "description": "A further nested group.",
                               "properties": {},
                               "type": "object",
                               "x-akamai": {
@@ -1025,10 +1025,19 @@
       }
     },
     "/user-profile/change-password": {
+      "x-akamai": {
+        "file-path": "paths/change-password.yaml",
+        "path-info": "/user-profile/change-password"
+      },
       "post": {
-        "description": "This operation changes your password. Include your old password and your new password in the request body. Before you create your new password, run the [View password policy](ref:get-common-password-policy) operation to ensure it adheres to your policy. If you include your existing password incorrectly and make too many login attempts, your account locks.\n",
         "operationId": "post-profile-change-password",
+        "summary": "Rotate your password",
+        "tags": [
+          "User authentication settings"
+        ],
+        "description": "This operation changes your password. Include your old password and your new password in the request body. Before you create your new password, run the [View password policy](ref:get-common-password-policy) operation to ensure it adheres to your policy. If you include your existing password incorrectly and make too many login attempts, your account locks.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -1037,7 +1046,7 @@
               },
               "schema": {
                 "additionalProperties": false,
-                "description": "Uses the old password to authenticate you are who you say you are when you update your password. Includes the new password.\n",
+                "description": "Uses the old password to authenticate you are who you say you are when you update your password. Includes the new password.",
                 "properties": {
                   "currentPassword": {
                     "description": "Your existing password.\n",
@@ -1060,29 +1069,29 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "204": {
             "description": "Password successfully rotated.\n"
           }
-        },
-        "summary": "Rotate your password",
-        "tags": [
-          "User authentication settings"
-        ]
-      },
-      "x-akamai": {
-        "file-path": "paths/change-password.yaml",
-        "path-info": "/user-profile/change-password"
+        }
       }
     },
     "/user-profile/notifications": {
+      "x-akamai": {
+        "file-path": "paths/notifications-profile.yaml",
+        "path-info": "/user-profile/notifications"
+      },
       "put": {
-        "description": "This operation subscribes to notifications emails for password expiration reminders, proactive maintenance emails, and upgrade notification emails.\n",
         "operationId": "put-user-profile-notifications",
+        "summary": "Update your notifications",
+        "tags": [
+          "User notifications"
+        ],
+        "description": "This operation subscribes to notifications emails for password expiration reminders, proactive maintenance emails, and upgrade notification emails.\n",
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "example": {
@@ -1103,7 +1112,7 @@
               },
               "schema": {
                 "additionalProperties": false,
-                "description": "Encapsulates the types of email notifications you can receive.\n",
+                "description": "Encapsulates the types of email notifications you can receive.",
                 "properties": {
                   "enableEmailNotifications": {
                     "description": "Enables email notifications.\n",
@@ -1161,11 +1170,11 @@
                 }
               }
             }
-          },
-          "required": true
+          }
         },
         "responses": {
           "200": {
+            "description": "The response reflects the modified notifications emails.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -1186,7 +1195,7 @@
                 },
                 "schema": {
                   "additionalProperties": false,
-                  "description": "Encapsulates the types of email notifications you can receive.\n",
+                  "description": "Encapsulates the types of email notifications you can receive.",
                   "properties": {
                     "enableEmailNotifications": {
                       "description": "Enables email notifications.\n",
@@ -1247,25 +1256,16 @@
                   }
                 }
               }
-            },
-            "description": "The response reflects the modified notifications emails.\n"
+            }
           }
-        },
-        "summary": "Update your notifications",
-        "tags": [
-          "User notifications"
-        ]
-      },
-      "x-akamai": {
-        "file-path": "paths/notifications-profile.yaml",
-        "path-info": "/user-profile/notifications"
+        }
       }
     }
   },
   "components": {
     "parameters": {
       "auth-grants-query": {
-        "description": "Includes the list of your group and role assignments, `false` by default.\n",
+        "description": "Includes the list of your group and role assignments, `false` by default.",
         "in": "query",
         "name": "authGrants",
         "required": false,
@@ -1279,7 +1279,7 @@
         }
       },
       "notifications-query": {
-        "description": "Includes product notifications you subscribe to, `false` by default.\n",
+        "description": "Includes product notifications you subscribe to, `false` by default.",
         "in": "query",
         "name": "notifications",
         "schema": {
@@ -1292,7 +1292,7 @@
         }
       },
       "qparams-actions-actions": {
-        "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.\n",
+        "description": "Includes information about actions such as `edit` or `delete` that you can take for the object, `false` by default. Don't confuse this with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.",
         "in": "query",
         "name": "actions",
         "schema": {
@@ -1308,7 +1308,7 @@
     "schemas": {
       "groups-nested": {
         "additionalProperties": true,
-        "description": "A further nested group.\n",
+        "description": "A further nested group.",
         "properties": {},
         "type": "object",
         "x-akamai": {
@@ -1317,7 +1317,7 @@
       },
       "auth-grant-response": {
         "additionalProperties": false,
-        "description": "A user's role assignments, per group.\n",
+        "description": "A user's role assignments, per group.",
         "properties": {
           "groupId": {
             "description": "Unique identifier for each group. It's returned only for group roles.\n",
@@ -1352,7 +1352,7 @@
             "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
             "items": {
               "additionalProperties": true,
-              "description": "A further nested group.\n",
+              "description": "A further nested group.",
               "properties": {},
               "type": "object",
               "x-akamai": {
@@ -1374,7 +1374,7 @@
       },
       "user-response": {
         "additionalProperties": false,
-        "description": "Encapsulates information about each user.\n",
+        "description": "Encapsulates information about each user.",
         "properties": {
           "accountId": {
             "description": "Unique identifier for each account.\n",
@@ -1442,7 +1442,7 @@
             "description": "A user's role assignments, per group.\n",
             "items": {
               "additionalProperties": false,
-              "description": "A user's role assignments, per group.\n",
+              "description": "A user's role assignments, per group.",
               "properties": {
                 "groupId": {
                   "description": "Unique identifier for each group. It's returned only for group roles.\n",
@@ -1477,7 +1477,7 @@
                   "description": "Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.\n",
                   "items": {
                     "additionalProperties": true,
-                    "description": "A further nested group.\n",
+                    "description": "A further nested group.",
                     "properties": {},
                     "type": "object",
                     "x-akamai": {
@@ -1819,7 +1819,7 @@
       },
       "change-password-request": {
         "additionalProperties": false,
-        "description": "Uses the old password to authenticate you are who you say you are when you update your password. Includes the new password.\n",
+        "description": "Uses the old password to authenticate you are who you say you are when you update your password. Includes the new password.",
         "properties": {
           "currentPassword": {
             "description": "Your existing password.\n",
@@ -1843,7 +1843,7 @@
       },
       "notifications-request": {
         "additionalProperties": false,
-        "description": "Encapsulates the types of email notifications you can receive.\n",
+        "description": "Encapsulates the types of email notifications you can receive.",
         "properties": {
           "enableEmailNotifications": {
             "description": "Enables email notifications.\n",
@@ -1902,7 +1902,7 @@
       },
       "notifications-response": {
         "additionalProperties": false,
-        "description": "Encapsulates the types of email notifications you can receive.\n",
+        "description": "Encapsulates the types of email notifications you can receive.",
         "properties": {
           "enableEmailNotifications": {
             "description": "Enables email notifications.\n",

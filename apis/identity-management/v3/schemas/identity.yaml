@@ -1,177 +1,236 @@
-type: object
-description: |
-  This object encapsulates the response schema for creating API client.
 additionalProperties: false
+description: This object encapsulates the response schema for creating API client.
 properties:
   authorization:
-    type: object
-    description: |
-      An API client's combination of services and grant scopes that allow you to make calls with that client.
+    description: 'An API client''s combination of services and grant scopes that allow
+      you to make calls with that client.
+
+      '
     properties:
-      name:
-        type: string
-        description: |
-          Name of the authorization.
-      description:
-        type: string
-        description: |
-          Description of the API client's authorization.
       accessToken:
+        description: 'Part of the client secret that identifies your API client and
+          lets you access applications and resources. Tokens are unique per client.
+
+          '
         type: string
-        description: |
-          Part of the client secret that identifies your API client and lets you access applications and resources. Tokens are unique per client.
       authorizationId:
+        description: 'Unique identifier of the authorization.
+
+          '
         type: integer
-        description: |
-          Unique identifier of the authorization.
       baseURL:
-        type: string
-        description: |
-          The base URL for the service.
+        description: 'The base URL for the service.
+
+          '
         format: uri
+        type: string
       ccuParams:
-        type: object
-        description: |
-          Fast Purge (CCU) details, applicable only for users with Fast Purge enabled.
+        description: 'Fast Purge (CCU) details, applicable only for users with Fast
+          Purge enabled.
+
+          '
         properties:
           purgeByCacheTag:
+            description: 'If `purgeByCacheTag` is `true` you can purge by cache tag
+              with your API client.
+
+              '
             type: boolean
-            description: |
-              If `purgeByCacheTag` is `true` you can purge by cache tag with your API client.
           purgeByCpcode:
+            description: 'If `purgeByCpCode` is `true` you can purge that CP code
+              with your API client.
+
+              '
             type: boolean
-            description: |
-              If `purgeByCpCode` is `true` you can purge that CP code with your API client.
           purgeCpcodes:
-            type: array
-            description: |
-              Lists all CP codes that your API client is allowed to purge.
+            description: 'Lists all CP codes that your API client is allowed to purge.
+
+              '
             items:
               type: integer
+            type: array
+        type: object
+      description:
+        description: 'Description of the API client''s authorization.
+
+          '
+        type: string
+      name:
+        description: 'Name of the authorization.
+
+          '
+        type: string
       openIdentityId:
+        description: 'Unique identifier for an API client.
+
+          '
         type: string
-        description: |
-          Unique identifier for an API client.
       serviceProviderId:
+        description: 'A unique identifier for a service provider.
+
+          '
         type: integer
-        description: |
-          A unique identifier for a service provider.
       serviceProviderName:
+        description: 'The name of the service provider, like DNS or CCU.
+
+          '
         type: string
-        description: |
-          The name of the service provider, like DNS or CCU.
       services:
-        type: array
-        description: |
-          Lists APIs you'd like to use, like Property Manager.
+        description: 'Lists APIs you''d like to use, like Property Manager.
+
+          '
         items:
-          type: object
           properties:
             description:
+              description: 'The description of a service.
+
+                '
               type: string
-              description: |
-                The description of a service.
             endPoint:
+              description: 'The endpoint to access a service.
+
+                '
               type: string
-              description: |
-                The endpoint to access a service.
             grantScopes:
-              type: array
-              description: |
-                The amount of access you give to an API client on a per-service basis.
+              description: 'The amount of access you give to an API client on a per-service
+                basis.
+
+                '
               items:
-                type: object
                 properties:
-                  name:
-                    type: string
-                    description: |
-                      The name of a grant scope.
                   description:
+                    description: 'The description of a grant scope.
+
+                      '
                     type: string
-                    description: |
-                      The description of a grant scope.
+                  name:
+                    description: 'The name of a grant scope.
+
+                      '
+                    type: string
+                type: object
+              type: array
             serviceId:
+              description: 'A unique identifier for a service.
+
+                '
               type: integer
-              description: |
-                A unique identifier for a service.
             serviceName:
+              description: 'The name of a service, like Edge Diagnostics, or Identity
+                Management: API.
+
+                '
               type: string
-              description: |
-                The name of a service, like Edge Diagnostics, or Identity Management: API.
+          type: object
+        type: array
+    type: object
   groupAccess:
-    type: array
-    description: |
-      List group access.
+    description: 'List group access.
+
+      '
     items:
       $ref: group-access.yaml#/definitions/groupAccess
+    type: array
   identity:
-    type: object
-    description: |
-      The API client. API clients contain a set of permissions and tokens, providing a user with access to specific APIs.
+    description: 'The API client. API clients contain a set of permissions and tokens,
+      providing a user with access to specific APIs.
+
+      '
     properties:
       actions:
-        type: object
-        description: |
-          Encapsulates the different ways you can edit an API client, such as changing its owner, changing its access rights to Control Center services or resources, or by deleting it.
+        description: 'Encapsulates the different ways you can edit an API client,
+          such as changing its owner, changing its access rights to Control Center
+          services or resources, or by deleting it.
+
+          '
         properties:
-          delete:
-            type: boolean
-            description: |
-              If `true`, you can delete the API client. Otherwise, contact an admin on your account to have them delete the client.
           deactivateAll:
+            description: 'If the client''s `deactivateAll` is `true`, you can deactivate
+              all credentials for the API client at once. Otherwise, you need to deactivate
+              the credentials individually.
+
+              '
             type: boolean
-            description: |
-              If the client's `deactivateAll` is `true`, you can deactivate all credentials for the API client at once. Otherwise, you need to deactivate the credentials individually.
+          delete:
+            description: 'If `true`, you can delete the API client. Otherwise, contact
+              an admin on your account to have them delete the client.
+
+              '
+            type: boolean
           editAuth:
+            description: 'If the client''s `editAuth` is `true`,  you can change the
+              client''s group and role assignments, and which API services it can
+              access.
+
+              '
             type: boolean
-            description: |
-              If the client's `editAuth` is `true`,  you can change the client's group and role assignments, and which API services it can access.
           lock:
+            description: 'If the client''s `lock` is `true`, you can lock the client
+              to prevent anyone from using it to access services on Control Center.
+
+              '
             type: boolean
-            description: |
-              If the client's `lock` is `true`, you can lock the client to prevent anyone from using it to access services on Control Center.
           transfer:
+            description: 'If the client''s `transfer` is `true`, you can give this
+              API client to a different user.
+
+              '
             type: boolean
-            description: |
-              If the client's `transfer` is `true`, you can give this API client to a different user.
+        type: object
       activeCredentialCount:
+        description: 'Number of credentials active for the API client.
+
+          '
         type: integer
-        description: |
-          Number of credentials active for the API client.
       allowAccountSwitch:
+        description: 'If you can use the API client to manage more than one account.
+
+          '
         type: boolean
-        description: |
-          If you can use the API client to manage more than one account.
       clientDescription:
+        description: 'Description of the API client.
+
+          '
         type: string
-        description: |
-          Description of the API client.
       clientName:
+        description: 'The API client''s human-readable name.
+
+          '
         type: string
-        description: |
-          The API client's human-readable name.
       createdBy:
+        description: 'The user who created the API client.
+
+          '
         type: string
-        description: |
-          The user who created the API client.
       createdDate:
-        type: string
-        description: |
-          The date the API client was made.
+        description: 'The date the API client was made.
+
+          '
         format: date-time
+        type: string
       openIdentityId:
+        description: 'Unique identifier for an API client.
+
+          '
         type: string
-        description: |
-          Unique identifier for an API client.
       uiIdentityId:
+        description: 'The unique identifier of the user the API client is being created
+          for.
+
+          '
         type: string
-        description: |
-          The unique identifier of the user the API client is being created for.
       uiUserName:
+        description: 'The human-readable username of the person who owns the API client.
+
+          '
         type: string
-        description: |
-          The human-readable username of the person who owns the API client.
       useLunaUserAccess:
+        description: 'If the API client''s permissions are tied to a Control Center
+          user''s permissions.
+
+          '
         type: boolean
-        description: |
-          If the API client's permissions are tied to a Control Center user's permissions.
+    type: object
+type: object
+x-akamai:
+  file-path: schemas/identity.yaml
