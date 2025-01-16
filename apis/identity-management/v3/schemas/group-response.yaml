@@ -1,88 +1,55 @@
+type: object
+description: |
+  Encapsulates information about a group.
 additionalProperties: false
-description: Specifies a group.
 properties:
   actions:
+    type: object
+    description: |
+      Encapsulates permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.
     additionalProperties: false
-    description: 'Specifies activities available for the group.
-
-      '
     properties:
       delete:
-        description: 'Whether you can remove the group from the account. You can''t
-          remove a group that contains resources or subgroups, or if users have roles
-          on that group.
-
-          '
         type: boolean
+        description: |
+          Indicates whether the user can remove items from the group.
       edit:
-        description: 'Whether you can modify the group.
-
-          '
         type: boolean
-    required:
-    - delete
-    - edit
-    type: object
+        description: |
+          Indicates whether the user can modify items in the group.
   createdBy:
-    description: 'The user who created the group.
-
-      '
-    minLength: 1
     type: string
+    description: |
+      The username of the person who created the group.
   createdDate:
-    description: 'ISO 8601 timestamp indicating when the group was created.
-
-      '
-    format: date-time
     type: string
+    description: |
+      ISO 8601 timestamp indicating when the group was originally created.
+    format: date-time
   groupId:
-    description: 'Unique identifier for each group.
-
-      '
-    minimum: 1
     type: integer
+    description: |
+      A unique identifier for each group.
   groupName:
-    description: 'Descriptive label for the group.
-
-      '
-    minLength: 1
     type: string
+    description: |
+      A group's name.
   modifiedBy:
-    description: 'The user who last edited the group.
-
-      '
-    minLength: 1
     type: string
+    description: |
+      The username of the last person to edit the group.
   modifiedDate:
-    description: 'ISO 8601 timestamp indicating when the group was last updated.
-
-      '
-    format: date-time
     type: string
+    description: |
+      ISO 8601 timestamp indicating when the group was last updated.
+    format: date-time
   parentGroupId:
-    description: 'Unique identifier for the parent group within the group tree. If
-      you''re viewing group info for a root-level group, you may not see this member.
-
-      '
-    minimum: 0
     type: integer
+    description: |
+      For nested groups, identifies the parent group to which the current group belongs.
   subGroups:
-    description: 'Children of the parent group. Permissions cascade downward from
-      parent to child unless the child group''s `isBlocked` is `true`.
-
-      '
-    items:
-      $ref: groups-nested.yaml
-    minItems: 0
     type: array
-required:
-- createdBy
-- createdDate
-- groupId
-- groupName
-- modifiedBy
-- modifiedDate
-- subGroups
-type: object
-x-akamai:
-  file-path: schemas/group-response.yaml
+    description: |
+      Array of nested groups.
+    items:
+      type: object

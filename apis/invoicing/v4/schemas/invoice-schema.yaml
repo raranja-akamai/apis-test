@@ -35,17 +35,30 @@ properties:
       additionalProperties: false
       required:
       - fileName
-      - fileFormat
       - fileVersion
+      - fileCreationDate
+      - sourceType
+      - fileLink
+      - contentType
       properties:
-        fileFormat:
+        contentType:
           type: string
           description: |
-            The format of the file, either `PDF`, `CSV`, or `JSON`.
+            The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.
           enum:
-          - PDF
-          - CSV
-          - JSON
+          - application/json
+          - application/pdf
+          - text/csv
+        fileCreationDate:
+          type: string
+          description: |
+            The date when the file was created.
+          format: date
+        fileLink:
+          type: string
+          description: |
+            The link to download the file.
+          format: uri-reference
         fileName:
           type: string
           description: |
@@ -56,6 +69,13 @@ properties:
           description: |
             The version of the file.
           minimum: 1
+        sourceType:
+          type: string
+          description: |
+            The source type of the file, either `REGULAR` or `COMPUTE`.
+          enum:
+          - REGULAR
+          - COMPUTE
   invoiceCurrency:
     type: string
     description: |
