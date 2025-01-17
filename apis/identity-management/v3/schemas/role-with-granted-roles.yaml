@@ -18,28 +18,33 @@ properties:
   type:
     type: string
     description: |
-      Indicates whether it's a `standard` role provided by Akamai or a `custom` role for you to manage.
+      Whether it's a `standard` or `account` role defined by Akamai, or a `custom` role created by one of your account's users. You can only modify or delete `custom` roles. To learn more, see [About roles](https://techdocs.akamai.com/iam/docs/about-roles-permissions).
     enum:
     - custom
     - standard
+    - account
   actions:
     type: object
     description: |
-      Encapsulates permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter that applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.
+      Specifies activities available for the role.
     additionalProperties: false
+    required:
+    - delete
+    - edit
     properties:
       delete:
         type: boolean
         description: |
-          Indicates whether the user can remove items from the group.
+          Whether you can remove the role.
       edit:
         type: boolean
         description: |
-          Indicates whether the user can modify items in the group.
+          Whether you can modify the role.
   createdBy:
     type: string
     description: |
-      The username of the person who created the granted role.
+      The user who created the granted role.
+    minLength: 1
   createdDate:
     type: string
     description: |
@@ -48,7 +53,8 @@ properties:
   grantedRoles:
     type: array
     description: |
-      Within the role, there's a list of granted roles, giving the user access to objects in a group.
+      Granted roles for the account.
+    minItems: 0
     items:
       type: object
       additionalProperties: false
@@ -59,19 +65,23 @@ properties:
         grantedRoleDescription:
           type: string
           description: |
-            The description you supply for the granted role.
+            Descriptive label for the role to convey its use.
+          minLength: 1
         grantedRoleId:
           type: integer
           description: |
-            A unique identifier for each granted role.
+            Unique identifier for each granted role.
+          minimum: 1
         grantedRoleName:
           type: string
           description: |
-            The name you supply for the granted role.
+            Descriptive label for the granted role.
+          minLength: 1
   modifiedBy:
     type: string
     description: |
-      The username of the last person to edit the granted role.
+      The user who last edited the granted role.
+    minLength: 1
   modifiedDate:
     type: string
     description: |
@@ -80,19 +90,23 @@ properties:
   roleDescription:
     type: string
     description: |
-      Descriptive text for the role.
+      Descriptive label for the role to convey its use.
+    minLength: 1
   roleId:
     type: integer
     description: |
-      A unique identifier for each role.
+      Unique identifier for each role.
+    minimum: 1
   roleName:
     type: string
     description: |
-      The role's name.
+      Descriptive label for the role.
+    minLength: 1
   users:
     type: array
     description: |
-      List of users who share the same role.
+      Users on the account who share the same role.
+    minItems: 0
     items:
       type: object
       additionalProperties: false
@@ -106,7 +120,8 @@ properties:
         accountId:
           type: string
           description: |
-            A unique identifier for each account.
+            Unique identifier for each account.
+          minLength: 1
         email:
           type: string
           description: |
@@ -116,6 +131,7 @@ properties:
           type: string
           description: |
             The user's first name.
+          minLength: 1
         lastLoginDate:
           type: string
           description: |
@@ -124,8 +140,10 @@ properties:
         lastName:
           type: string
           description: |
-            The user's last name.
+            The user's surname.
+          minLength: 1
         uiIdentityId:
           type: string
           description: |
-            A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.
+            Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.
+          minLength: 1
