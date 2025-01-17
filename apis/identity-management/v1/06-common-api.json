@@ -6,29 +6,38 @@
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
     "title": "Common resources, for administrators",
-    "version": "v2"
+    "version": "3"
   },
   "servers": [
     {
-      "url": "https://{hostname}/identity-management/v2"
+      "url": "https://{hostname}/identity-management/v3"
+    }
+  ],
+  "tags": [
+    {
+      "description": "List contact types you can use when creating a user account.\n",
+      "name": "Contact types"
+    },
+    {
+      "description": "List locale information you can use when creating a user account.\n",
+      "name": "Locale"
+    },
+    {
+      "description": "List products information you can use when creating a user account.\n",
+      "name": "Products"
+    },
+    {
+      "description": "List policies you can use when creating a user account.\n",
+      "name": "Policies"
     }
   ],
   "paths": {
     "/user-admin/common/contact-types": {
-      "x-akamai": {
-        "file-path": "paths/contact-types-user-admin.yaml",
-        "path-info": "/user-admin/common/contact-types"
-      },
       "get": {
+        "description": "This operation lists the supported contact types. Administrators should use the values from this operation to add or update a user's `contactType`. Users should run the [View contact types for a user profile](ref:get-user-contact-types) operation before modifying their contact type.\n",
         "operationId": "get-common-contact-types",
-        "summary": "View contact types",
-        "tags": [
-          "Contact types"
-        ],
-        "description": "List all the possible contact types that Akamai supports. Use the values from this operation to add or update a user's `contactType`. Administrators use this operation to set a user's contact type. Users who modify it need to run [View contact types for a user profile](ref:get-user-contact-types).\n",
         "responses": {
           "200": {
-            "description": "The response lists contact types.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -38,347 +47,89 @@
                   "Security"
                 ],
                 "schema": {
-                  "description": "Lists available values.",
                   "items": {
-                    "description": "Available value.\n",
+                    "minLength": 1,
                     "type": "string"
                   },
+                  "minItems": 0,
                   "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/list-of-string.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response provides the supported contact types.\n"
           }
-        }
+        },
+        "summary": "View contact types",
+        "tags": [
+          "Contact types"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/contact-types-admin.yaml",
+        "path-info": "/user-admin/common/contact-types"
       }
     },
     "/user-admin/common/countries": {
-      "x-akamai": {
-        "file-path": "paths/countries-user-admin.yaml",
-        "path-info": "/user-admin/common/countries"
-      },
       "get": {
+        "description": "This operation lists the supported countries. Administrators should use the values from this operation to add or update a user's `country`. Users should run the [View supported countries for a user profile](ref:get-user-countries) operation before modifying their country.\n",
         "operationId": "get-common-countries",
-        "summary": "View supported countries",
-        "tags": [
-          "Locale"
-        ],
-        "description": "Return all the possible countries that Akamai supports. Use the values from this operation to add or update a user's country information. Administrators use this operation to set a user's country. Users who modify it need to run [View supported countries for a user profile](ref:get-user-countries).\n",
         "responses": {
           "200": {
-            "description": "The response lists countries.\n",
             "content": {
               "application/json": {
                 "example": [
-                  "Papua New Guinea",
-                  "Cambodia",
-                  "Heard and Mc Donald Islands",
-                  "Kazakhstan",
-                  "Paraguay",
-                  "South Georgia and the South Sa",
-                  "Bahamas",
-                  "Solomon Islands",
-                  "Montserrat",
-                  "Mali",
-                  "Marshall Islands",
-                  "Guadeloupe",
-                  "Panama",
-                  "Laos",
-                  "Tanzania, United Republic of",
-                  "Argentina",
-                  "Seychelles",
-                  "Congo, Democratic Republic of",
-                  "Belize",
-                  "Zambia",
-                  "Bahrain",
-                  "Congo",
-                  "Namibia",
-                  "Faroe Islands",
-                  "Finland",
-                  "Comoros",
-                  "Netherlands Antilles",
-                  "Georgia",
-                  "Saint Kitts and Nevis",
-                  "Yemen",
-                  "St. Vincent and Grenadines",
-                  "Puerto Rico",
-                  "Eritrea",
-                  "Madagascar",
-                  "Aruba",
-                  "Ivory Coast",
-                  "Sweden",
-                  "Cocos (Keeling) Islands",
-                  "Malawi",
-                  "Andorra",
-                  "Liechtenstein",
-                  "Poland",
-                  "Jordan",
-                  "Bulgaria",
-                  "Tunisia",
-                  "Wallis and Futuna Islands",
-                  "Channel Islands",
-                  "United Arab Emirates",
-                  "Tuvalu",
-                  "Kenya",
-                  "French Polynesia",
-                  "Lebanon",
-                  "Djibouti",
-                  "Azerbaijan",
-                  "Cuba",
-                  "Czech Republic",
-                  "Saint Lucia",
-                  "Mauritania",
-                  "Mayotte",
-                  "San Marino",
-                  "Israel",
-                  "Australia",
-                  "Tajikistan",
-                  "Myanmar",
-                  "Cameroon",
-                  "Gibraltar",
-                  "Cyprus",
-                  "Northern Mariana Islands",
-                  "Ascension Island",
-                  "France, Metropolitan",
-                  "Malaysia",
-                  "Oman",
-                  "Iceland",
-                  "Macedonia, The Former Yugoslav",
-                  "Armenia",
-                  "Gabon",
-                  "Yugoslavia",
-                  "Saint Vincent and the Grenadin",
-                  "Luxembourg",
-                  "Brazil",
-                  "Turks and Caicos Islands",
-                  "Algeria",
-                  "Slovenia",
-                  "Antigua and Barbuda",
-                  "Colombia",
-                  "Ecuador",
-                  "Iran (Islamic Republic of)",
-                  "Vanuatu",
-                  "Honduras",
-                  "Italy",
-                  "Antarctica",
-                  "Nauru",
-                  "Guinea-bissau",
-                  "Haiti",
-                  "Burundi",
-                  "Afghanistan",
-                  "Russian Federation",
-                  "Singapore",
-                  "French Guiana",
-                  "St. Lucia",
-                  "American Samoa",
-                  "Christmas Island",
-                  "Russia",
-                  "Netherlands",
-                  "China",
-                  "Martinique",
-                  "Kyrgyzstan",
-                  "Korea",
-                  "Reunion",
-                  "Bhutan",
-                  "Romania",
-                  "United States Minor Outlying I",
-                  "Falkland Islands (Malvinas)",
-                  "Togo",
-                  "Philippines",
-                  "Uzbekistan",
-                  "Holy See (Vatican City State)",
-                  "Pitcairn",
-                  "St. Pierre and Miquelon",
-                  "Zimbabwe",
-                  "British Indian Ocean Territory",
-                  "Montenegro",
-                  "Dominica",
-                  "Indonesia",
-                  "Benin",
-                  "Angola",
-                  "Micronesia, Federated States o",
-                  "Virgin Islands (British)",
-                  "Sudan",
-                  "East Timor",
-                  "Brunei Darussalam",
-                  "Portugal",
-                  "New Caledonia",
-                  "Grenada",
-                  "Cayman Islands",
-                  "Greece",
-                  "Latvia",
-                  "Mongolia",
-                  "Morocco",
-                  "Iran",
-                  "Guatemala",
-                  "Guyana",
-                  "Iraq",
-                  "Chile",
-                  "Cote D'ivoire",
-                  "Nepal",
-                  "Ukraine",
-                  "Ghana",
-                  "Anguilla",
-                  "India",
-                  "Canada",
-                  "Maldives",
-                  "Turkey",
-                  "Belgium",
-                  "Taiwan",
-                  "Trinidad and Tobago",
-                  "South Africa",
-                  "Bermuda",
-                  "Central African Republic",
-                  "Jamaica",
-                  "Peru",
-                  "Turkmenistan",
-                  "Germany",
-                  "Fiji",
-                  "Tokelau",
-                  "Hong Kong",
-                  "Guinea",
-                  "Chad",
-                  "Somalia",
-                  "Sao Tome and Principe",
-                  "Thailand",
-                  "Kiribati",
-                  "Equatorial Guinea",
-                  "St. Martin",
-                  "Costa Rica",
-                  "Vietnam",
-                  "Kuwait",
-                  "Nigeria",
-                  "Croatia",
-                  "USA",
-                  "Syrian Arab Republic",
-                  "Uruguay",
-                  "Cook Islands",
-                  "Sri Lanka",
-                  "United Kingdom",
-                  "Switzerland",
-                  "Samoa",
-                  "Palestinian Authority",
-                  "Spain",
-                  "Venezuela",
-                  "Liberia",
-                  "Burkina Faso",
-                  "Swaziland",
-                  "Palau",
-                  "Estonia",
-                  "Libyan Arab Jamahiriya",
-                  "Niue",
-                  "Austria",
-                  "South Korea",
-                  "St. Helena",
-                  "Mozambique",
-                  "El Salvador",
-                  "Monaco",
-                  "TBD",
-                  "Guam",
-                  "Lesotho",
-                  "Tonga",
-                  "Western Sahara",
-                  "Hungary",
-                  "Japan",
-                  "Slovakia (Slovak Republic)",
-                  "Belarus",
-                  "Curacao",
-                  "Mauritius",
-                  "Bouvet Island",
-                  "Albania",
-                  "Norfolk Island",
-                  "Virgin Islands (U.S.)",
-                  "New Zealand",
-                  "St. Kitts and Nevis",
-                  "Senegal",
-                  "Congo, The Democratic Republic",
-                  "Moldova, Republic of",
-                  "Svalbard and Jan Mayen Islands",
-                  "Ethiopia",
-                  "Egypt",
-                  "Macau",
-                  "Sierra Leone",
-                  "Bolivia",
-                  "Malta",
-                  "Saudi Arabia",
-                  "Cape Verde",
-                  "Pakistan",
-                  "Gambia",
-                  "Qatar",
-                  "Ireland",
-                  "Serbia and Montenegro",
-                  "Slovakia",
-                  "France",
-                  "Serbia",
-                  "Lithuania",
-                  "Bosnia and Herzegovina",
-                  "Korea, Democratic People's Rep",
-                  "Niger",
-                  "Rwanda",
                   "Lao People's Democratic Republ",
-                  "French Southern Territories",
-                  "Bangladesh",
-                  "Nicaragua",
-                  "Barbados",
-                  "St. Maarten",
-                  "Norway",
-                  "Botswana",
-                  "Denmark",
-                  "Dominican Republic",
-                  "Uganda",
-                  "Mexico",
-                  "Suriname",
-                  "Greenland"
+                  "Greece",
+                  "Greenland",
+                  "Grenada",
+                  "Tanzania, United Republic of",
+                  "Thailand",
+                  "Togo",
+                  "Tokelau",
+                  "Tonga",
+                  "Djibouti",
+                  "Dominica",
+                  "Christmas Island",
+                  "Cocos (Keeling) Islands",
+                  "Colombia",
+                  "Comoros",
+                  "Curacao"
                 ],
                 "schema": {
-                  "description": "Lists available values.",
                   "items": {
-                    "description": "Available value.\n",
+                    "minLength": 1,
                     "type": "string"
                   },
+                  "minItems": 0,
                   "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/list-of-string.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response provides the supported countries.\n"
           }
-        }
+        },
+        "summary": "View countries",
+        "tags": [
+          "Locale"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/countries-admin.yaml",
+        "path-info": "/user-admin/common/countries"
       }
     },
     "/user-admin/common/countries/{country}/states": {
-      "x-akamai": {
-        "file-path": "paths/states-user-admin.yaml",
-        "path-info": "/user-admin/common/countries/{country}/states"
-      },
-      "parameters": [
-        {
-          "description": "Filters the results by country, but only returns lists of states and provinces for `USA` and `Canada`.",
-          "in": "path",
-          "name": "country",
-          "required": true,
-          "schema": {
-            "example": "Canada",
-            "type": "string"
-          },
-          "x-akamai": {
-            "file-path": "parameters/country-path.yaml"
-          }
-        }
-      ],
       "get": {
+        "description": "This operation lists the supported U.S. states or Canadian provinces. Administrators should use the values from this operation to add or update a user's `state`. If a user's state or province is unknown, use `TBD`. Users should run the [View states for a user profile](ref:get-user-states) operation before modifying their state.\n",
         "operationId": "get-common-states",
-        "summary": "View states",
-        "tags": [
-          "Locale"
-        ],
-        "description": "List U.S. states or Canadian provinces. If `country=USA` you may enter a value of `TBD` if you don't know a user's state. Administrators use this operation to set a user's state. Users who modify it need to run [View states for a user profile](ref:get-user-states).\n",
         "responses": {
           "200": {
-            "description": "The response lists states.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -399,37 +150,52 @@
                   "ON"
                 ],
                 "schema": {
-                  "description": "Lists available values.",
                   "items": {
-                    "description": "Available value.\n",
+                    "minLength": 1,
                     "type": "string"
                   },
+                  "minItems": 0,
                   "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/list-of-string.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response provides the supported U.S. states or Canadian provinces.\n"
+          }
+        },
+        "summary": "View states",
+        "tags": [
+          "Locale"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Filters the results by country, but only returns lists of states and provinces for `USA` and `Canada`.\n",
+          "in": "path",
+          "name": "country",
+          "required": true,
+          "schema": {
+            "example": "canada",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/country-path.yaml"
           }
         }
+      ],
+      "x-akamai": {
+        "file-path": "paths/states-admin.yaml",
+        "path-info": "/user-admin/common/countries/{country}/states"
       }
     },
     "/user-admin/common/notification-products": {
-      "x-akamai": {
-        "file-path": "paths/notification-products-user-admin.yaml",
-        "path-info": "/user-admin/common/notification-products"
-      },
       "get": {
+        "description": "This operation lists the products a user can subscribe to and receive notifications for on the account. The tokens in your API client determine the account. Administrators should use the values from this operation to set a user's product notifications. Users should run the [View products for a user profile](ref:get-user-notification-products) operation before setting their product notifications.\n",
         "operationId": "get-common-notification-products",
-        "summary": "View products",
-        "tags": [
-          "Products"
-        ],
-        "description": "Return all products a user can subscribe to and receive notifications for on the account. The account is determined by the tokens in your API client. Administrators use this operation to set the products for which users receive notifications. Users who modify this set need to run [View products for a user profile](ref:get-user-notification-products).\n",
         "responses": {
           "200": {
-            "description": "The response lists products.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -446,37 +212,37 @@
                   "NetStorage"
                 ],
                 "schema": {
-                  "description": "Lists available values.",
                   "items": {
-                    "description": "Available value.\n",
+                    "minLength": 1,
                     "type": "string"
                   },
+                  "minItems": 0,
                   "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/list-of-string.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response provides the supported products.\n"
           }
-        }
+        },
+        "summary": "View products",
+        "tags": [
+          "Products"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/notification-products-admin.yaml",
+        "path-info": "/user-admin/common/notification-products"
       }
     },
     "/user-admin/common/password-policy": {
-      "x-akamai": {
-        "file-path": "paths/password-policy-user-admin.yaml",
-        "path-info": "/user-admin/common/password-policy"
-      },
       "get": {
+        "description": "This operation lists the password policy for the account. The tokens in your API client determine the account. Administrators should use the values from this operation to set a user's password policy. Users should run the [View password policy for a user profile](ref:get-user-password-policy) operation before setting their password policy.\n",
         "operationId": "get-common-password-policy",
-        "summary": "View password policy",
-        "tags": [
-          "Policies"
-        ],
-        "description": "Return the password policy for the current account. The current account is determined by the tokens in your API client. Administrators use this operation to set a user's password policy. Users who modify it need to run [View password policy for a user profile](ref:get-user-password-policy).\n",
         "responses": {
           "200": {
-            "description": "The response returns the password policy.\n",
             "content": {
               "application/json": {
                 "example": {
@@ -492,42 +258,51 @@
                 },
                 "schema": {
                   "additionalProperties": false,
-                  "description": "Encapsulates all information for a password policy.",
+                  "description": "Encapsulates all information for a password policy.\n",
                   "properties": {
                     "caseDif": {
-                      "description": "The minimum number of characters with a different case. For example, a value of 1 means at least one letter needs to be uppercase if the rest are lowercase.\n",
+                      "description": "The number of characters that, at minimum, need to be in a different case. For example, a value of 1 means at least one letter needs to be uppercase if the rest are lowercase.\n",
+                      "minimum": 0,
                       "type": "integer"
                     },
                     "maxRepeating": {
                       "description": "The maximum allowed number of repeating characters.\n",
+                      "minimum": 0,
                       "type": "integer"
                     },
                     "minDigits": {
                       "description": "The minimum number of digits in a password.\n",
+                      "minimum": 0,
                       "type": "integer"
                     },
                     "minLength": {
                       "description": "The minimum length of a password.\n",
+                      "minimum": 0,
                       "type": "integer"
                     },
                     "minLetters": {
                       "description": "The minimum number of letters in a password.\n",
+                      "minimum": 0,
                       "type": "integer"
                     },
                     "minNonAlpha": {
                       "description": "The minimum number of non-alphabetic characters in a password.\n",
+                      "minimum": 0,
                       "type": "integer"
                     },
                     "minReuse": {
                       "description": "The minimum number of previous passwords to retain to prevent password reuse.\n",
+                      "minimum": 0,
                       "type": "integer"
                     },
                     "pwclass": {
-                      "description": "A unique identifier for a password policy.\n",
+                      "description": "Unique identifier for a password policy.\n",
+                      "minLength": 1,
                       "type": "string"
                     },
                     "rotateFrequency": {
                       "description": "The number of days a password is valid.\n",
+                      "minimum": 0,
                       "type": "integer"
                     }
                   },
@@ -547,26 +322,26 @@
                   }
                 }
               }
-            }
+            },
+            "description": "The response provides the password policy.\n"
           }
-        }
+        },
+        "summary": "View password policy",
+        "tags": [
+          "Policies"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/password-policy-admin.yaml",
+        "path-info": "/user-admin/common/password-policy"
       }
     },
     "/user-admin/common/supported-languages": {
-      "x-akamai": {
-        "file-path": "paths/supported-languages-user-admin.yaml",
-        "path-info": "/user-admin/common/supported-languages"
-      },
       "get": {
+        "description": "This operation lists the supported languages. Administrators should use the values from this operation to set a user's `preferredLanguage`. Users should run the [View languages for a user profile](ref:get-user-languages) operation before setting their preferred language.\n",
         "operationId": "get-common-languages",
-        "summary": "View languages",
-        "tags": [
-          "Locale"
-        ],
-        "description": "List all the possible languages Akamai supports. Use the values from this API to set the preferred `language` for a user. Users should see Control Center in the language you set for them. Administrators use this operation to set a user's preferred language. Users who modify it need to run [View languages for a user profile](ref:get-user-languages).\n",
         "responses": {
           "200": {
-            "description": "The response lists languages.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -583,37 +358,37 @@
                   "한국어"
                 ],
                 "schema": {
-                  "description": "Lists available values.",
                   "items": {
-                    "description": "Available value.\n",
+                    "minLength": 1,
                     "type": "string"
                   },
+                  "minItems": 0,
                   "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/list-of-string.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response provides the supported languages.\n"
           }
-        }
+        },
+        "summary": "View languages",
+        "tags": [
+          "Locale"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/supported-languages-admin.yaml",
+        "path-info": "/user-admin/common/supported-languages"
       }
     },
     "/user-admin/common/timeout-policies": {
-      "x-akamai": {
-        "file-path": "paths/user-admin-timeout-policies.yaml",
-        "path-info": "/user-admin/common/timeout-policies"
-      },
       "get": {
+        "description": "This operation returns the supported session timeout policies an administrator can use when [creating](ref:post-ui-identity) and [updating](ref:put-ui-identity-basic-info) user profiles. The `name` for each timeout period is in minutes, and the time `value` is in seconds. Make sure to select a value that's equal or smaller to the **Max session timeout** value, set for your account in the Identity and Access Management interface's [Settings](https://techdocs.akamai.com/iam/docs/account-settings) tab. Users should run the [View timeout policies for a user profile](ref:get-user-timeout-policies) operation before setting their timeout policy.\n",
         "operationId": "get-common-timeout-policies",
-        "summary": "View timeout policies",
-        "tags": [
-          "Policies"
-        ],
-        "description": "Lists all the possible session timeout policies that Akamai supports. Use the values from this operation to set the `sessionTimeout` for a user. The `name` for each timeout period is in minutes, and the time `value` is in seconds. Administrators use this operation to set a user's timeout policy. Users who modify it need to run [View timeout policies for a user profile](ref:get-user-timeout-policies).\n",
         "responses": {
           "200": {
-            "description": "The response returns timeout policies.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -647,17 +422,19 @@
                   }
                 ],
                 "schema": {
-                  "description": "Specifies session timeout policy options that can be assigned to each user.",
+                  "description": "Specifies session timeout policy options that can be assigned to each user.\n",
                   "items": {
                     "additionalProperties": false,
-                    "description": "Specifies session timeout policy options that can be assigned to each user.",
+                    "description": "Specifies session timeout policy options that can be assigned to users.\n",
                     "properties": {
                       "name": {
-                        "description": "The unit of time in which the timeout is measured. The timeout is measured in seconds.\n",
+                        "description": "Descriptive name for the timeout.\n",
+                        "minLength": 1,
                         "type": "string"
                       },
                       "value": {
-                        "description": "The number of seconds until the timeout.\n",
+                        "description": "Number of seconds until session timeout.\n",
+                        "minimum": 0,
                         "type": "integer"
                       }
                     },
@@ -670,32 +447,33 @@
                       "file-path": "schemas/session-timeout-policy.yaml"
                     }
                   },
+                  "minItems": 0,
                   "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/list-of-session-timeout-policy.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "This operation lists the supported session timeout policies.\n"
           }
-        }
+        },
+        "summary": "View timeout policies",
+        "tags": [
+          "Policies"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/timeout-policies-admin.yaml",
+        "path-info": "/user-admin/common/timeout-policies"
       }
     },
     "/user-admin/common/timezones": {
-      "x-akamai": {
-        "file-path": "paths/user-admin-timezones.yaml",
-        "path-info": "/user-admin/common/timezones"
-      },
       "get": {
+        "description": "This operation lists the supported time zones in the ISO 8601 format. Administrators should use the values from this operation to set a user's `timeZone`. Users should run the [View time zones for a user profile](ref:get-user-timezones) operation before setting their time zone.\n",
         "operationId": "get-common-timezones",
-        "summary": "View time zones",
-        "tags": [
-          "Locale"
-        ],
-        "description": "List all time zones Akamai supports. Time zones are in ISO 8601 format. Use the values from this operation to set the `timeZone` for a user. Administrators use this operation to set a user's time zone. Users who modify it need to run [View time zones for a user profile](ref:get-user-timezones).\n",
         "responses": {
           "200": {
-            "description": "The response lists time zones.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -719,25 +497,29 @@
                   }
                 ],
                 "schema": {
-                  "description": "Specifies time zones that can be assigned to each user.",
+                  "description": "Specifies time zones that can be assigned to each user.\n",
                   "items": {
                     "additionalProperties": false,
-                    "description": "Specifies time zones that can be assigned to each user.",
+                    "description": "Specifies time zones that can be assigned to each user.\n",
                     "properties": {
                       "description": {
-                        "description": "The description of a time zone, including the GMT +/-.\n",
+                        "description": "Descriptive label for the time zone, including the `+` or `-` offset from GMT.\n",
+                        "minLength": 1,
                         "type": "string"
                       },
                       "offset": {
                         "description": "The time zone offset from GMT.\n",
+                        "minLength": 1,
                         "type": "string"
                       },
                       "posix": {
                         "description": "The time zone posix.\n",
+                        "minLength": 1,
                         "type": "string"
                       },
                       "timezone": {
                         "description": "The time zone ID.\n",
+                        "minLength": 1,
                         "type": "string"
                       }
                     },
@@ -750,26 +532,36 @@
                       "file-path": "schemas/time-zone.yaml"
                     }
                   },
+                  "minItems": 1,
                   "type": "array",
                   "x-akamai": {
                     "file-path": "schemas/list-of-time-zones.yaml"
                   }
                 }
               }
-            }
+            },
+            "description": "The response provides the supported time zones.\n"
           }
-        }
+        },
+        "summary": "View time zones",
+        "tags": [
+          "Locale"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/timezones-admin.yaml",
+        "path-info": "/user-admin/common/timezones"
       }
     }
   },
   "components": {
     "schemas": {
       "list-of-string": {
-        "description": "Lists available values.",
         "items": {
-          "description": "Available value.\n",
+          "minLength": 1,
           "type": "string"
         },
+        "minItems": 0,
         "type": "array",
         "x-akamai": {
           "file-path": "schemas/list-of-string.yaml"
@@ -777,42 +569,51 @@
       },
       "portal-password-class": {
         "additionalProperties": false,
-        "description": "Encapsulates all information for a password policy.",
+        "description": "Encapsulates all information for a password policy.\n",
         "properties": {
           "caseDif": {
-            "description": "The minimum number of characters with a different case. For example, a value of 1 means at least one letter needs to be uppercase if the rest are lowercase.\n",
+            "description": "The number of characters that, at minimum, need to be in a different case. For example, a value of 1 means at least one letter needs to be uppercase if the rest are lowercase.\n",
+            "minimum": 0,
             "type": "integer"
           },
           "maxRepeating": {
             "description": "The maximum allowed number of repeating characters.\n",
+            "minimum": 0,
             "type": "integer"
           },
           "minDigits": {
             "description": "The minimum number of digits in a password.\n",
+            "minimum": 0,
             "type": "integer"
           },
           "minLength": {
             "description": "The minimum length of a password.\n",
+            "minimum": 0,
             "type": "integer"
           },
           "minLetters": {
             "description": "The minimum number of letters in a password.\n",
+            "minimum": 0,
             "type": "integer"
           },
           "minNonAlpha": {
             "description": "The minimum number of non-alphabetic characters in a password.\n",
+            "minimum": 0,
             "type": "integer"
           },
           "minReuse": {
             "description": "The minimum number of previous passwords to retain to prevent password reuse.\n",
+            "minimum": 0,
             "type": "integer"
           },
           "pwclass": {
-            "description": "A unique identifier for a password policy.\n",
+            "description": "Unique identifier for a password policy.\n",
+            "minLength": 1,
             "type": "string"
           },
           "rotateFrequency": {
             "description": "The number of days a password is valid.\n",
+            "minimum": 0,
             "type": "integer"
           }
         },
@@ -833,14 +634,16 @@
       },
       "session-timeout-policy": {
         "additionalProperties": false,
-        "description": "Specifies session timeout policy options that can be assigned to each user.",
+        "description": "Specifies session timeout policy options that can be assigned to users.\n",
         "properties": {
           "name": {
-            "description": "The unit of time in which the timeout is measured. The timeout is measured in seconds.\n",
+            "description": "Descriptive name for the timeout.\n",
+            "minLength": 1,
             "type": "string"
           },
           "value": {
-            "description": "The number of seconds until the timeout.\n",
+            "description": "Number of seconds until session timeout.\n",
+            "minimum": 0,
             "type": "integer"
           }
         },
@@ -854,17 +657,19 @@
         }
       },
       "list-of-session-timeout-policy": {
-        "description": "Specifies session timeout policy options that can be assigned to each user.",
+        "description": "Specifies session timeout policy options that can be assigned to each user.\n",
         "items": {
           "additionalProperties": false,
-          "description": "Specifies session timeout policy options that can be assigned to each user.",
+          "description": "Specifies session timeout policy options that can be assigned to users.\n",
           "properties": {
             "name": {
-              "description": "The unit of time in which the timeout is measured. The timeout is measured in seconds.\n",
+              "description": "Descriptive name for the timeout.\n",
+              "minLength": 1,
               "type": "string"
             },
             "value": {
-              "description": "The number of seconds until the timeout.\n",
+              "description": "Number of seconds until session timeout.\n",
+              "minimum": 0,
               "type": "integer"
             }
           },
@@ -877,6 +682,7 @@
             "file-path": "schemas/session-timeout-policy.yaml"
           }
         },
+        "minItems": 0,
         "type": "array",
         "x-akamai": {
           "file-path": "schemas/list-of-session-timeout-policy.yaml"
@@ -884,22 +690,26 @@
       },
       "time-zone": {
         "additionalProperties": false,
-        "description": "Specifies time zones that can be assigned to each user.",
+        "description": "Specifies time zones that can be assigned to each user.\n",
         "properties": {
           "description": {
-            "description": "The description of a time zone, including the GMT +/-.\n",
+            "description": "Descriptive label for the time zone, including the `+` or `-` offset from GMT.\n",
+            "minLength": 1,
             "type": "string"
           },
           "offset": {
             "description": "The time zone offset from GMT.\n",
+            "minLength": 1,
             "type": "string"
           },
           "posix": {
             "description": "The time zone posix.\n",
+            "minLength": 1,
             "type": "string"
           },
           "timezone": {
             "description": "The time zone ID.\n",
+            "minLength": 1,
             "type": "string"
           }
         },
@@ -913,25 +723,29 @@
         }
       },
       "list-of-time-zones": {
-        "description": "Specifies time zones that can be assigned to each user.",
+        "description": "Specifies time zones that can be assigned to each user.\n",
         "items": {
           "additionalProperties": false,
-          "description": "Specifies time zones that can be assigned to each user.",
+          "description": "Specifies time zones that can be assigned to each user.\n",
           "properties": {
             "description": {
-              "description": "The description of a time zone, including the GMT +/-.\n",
+              "description": "Descriptive label for the time zone, including the `+` or `-` offset from GMT.\n",
+              "minLength": 1,
               "type": "string"
             },
             "offset": {
               "description": "The time zone offset from GMT.\n",
+              "minLength": 1,
               "type": "string"
             },
             "posix": {
               "description": "The time zone posix.\n",
+              "minLength": 1,
               "type": "string"
             },
             "timezone": {
               "description": "The time zone ID.\n",
+              "minLength": 1,
               "type": "string"
             }
           },
@@ -944,6 +758,7 @@
             "file-path": "schemas/time-zone.yaml"
           }
         },
+        "minItems": 1,
         "type": "array",
         "x-akamai": {
           "file-path": "schemas/list-of-time-zones.yaml"
@@ -952,12 +767,12 @@
     },
     "parameters": {
       "country-path": {
-        "description": "Filters the results by country, but only returns lists of states and provinces for `USA` and `Canada`.",
+        "description": "Filters the results by country, but only returns lists of states and provinces for `USA` and `Canada`.\n",
         "in": "path",
         "name": "country",
         "required": true,
         "schema": {
-          "example": "Canada",
+          "example": "canada",
           "type": "string"
         },
         "x-akamai": {

@@ -1,6 +1,9 @@
 type: object
-description: |
+description: |-
   Specifies the API client.
+  
+x-akamai:
+  file-path: schemas/api-client-detail-v3.yaml
 additionalProperties: false
 required:
 - accessToken
@@ -94,10 +97,6 @@ properties:
     type: boolean
     description: |
       Whether the API client can manage more than one account. For details, see [Manage many accounts with one API client](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client).
-  canAutoCreateCredential:
-    type: boolean
-    description: |
-      Whether the API client can create a credential for a new API client.
   apiAccess:
     type: object
     description: |
@@ -132,6 +131,11 @@ properties:
               description: |
                 Descriptive label for the API.
               minLength: 1
+            accessLevel:
+              type: string
+              description: |
+                The API client's access level on a per API basis, either `READ-ONLY` or `READ-WRITE`.
+              minLength: 1
             apiId:
               type: integer
               description: |
@@ -152,11 +156,6 @@ properties:
               description: |
                 Specifies where the API can access resources.
               minLength: 1
-            accessLevel:
-              type: string
-              description: |
-                The API client's access level on a per API basis, either `READ-ONLY` or `READ-WRITE`.
-              minLength: 1
   authorizedUsers:
     type: array
     description: |
@@ -170,45 +169,10 @@ properties:
     description: |
       The base URL for the service.
     minLength: 1
-  purgeOptions:
-    type: object
+  canAutoCreateCredential:
+    type: boolean
     description: |
-      Configures the API client for access to the [Fast Purge API](https://techdocs.akamai.com/purge-cache/reference/api). It's returned only if the `apis` object includes an `apiName` of `CCU APIs`.
-    additionalProperties: false
-    required:
-    - canPurgeByCacheTag
-    - canPurgeByCpcode
-    - cpcodeAccess
-    properties:
-      canPurgeByCacheTag:
-        type: boolean
-        description: |
-          Whether the API client can purge content by cache tag.
-      canPurgeByCpcode:
-        type: boolean
-        description: |
-          Whether the API client can purge content by CP code.
-      cpcodeAccess:
-        type: object
-        description: |
-          CP codes the API client can purge.
-        additionalProperties: false
-        required:
-        - allCurrentAndNewCpcodes
-        - cpcodes
-        properties:
-          allCurrentAndNewCpcodes:
-            type: boolean
-            description: |
-              Whether the API client can purge content by cache tag.
-          cpcodes:
-            type: array
-            description: |
-              CP codes the API client can purge.
-            minItems: 0
-            items:
-              type: integer
-              minimum: 0
+      Whether the API client can create a credential for a new API client.
   clientDescription:
     type: string
     description: |
@@ -219,6 +183,11 @@ properties:
     description: |
       Unique identifier for each API client.
     minLength: 1
+  clientName:
+    type: string
+    description: |
+      Descriptive label for the API client.
+    minLength: 1
   clientType:
     type: string
     description: |
@@ -226,11 +195,6 @@ properties:
     enum:
     - CLIENT
     - USER_CLIENT
-  clientName:
-    type: string
-    description: |
-      Descriptive label for the API client.
-    minLength: 1
   createdBy:
     type: string
     description: |
@@ -352,10 +316,6 @@ properties:
     - enable
     - cidr
     properties:
-      enable:
-        type: boolean
-        description: |
-          Enables API client's access to the IP ACL.
       cidr:
         type: array
         description: |
@@ -364,6 +324,10 @@ properties:
         items:
           type: string
           minLength: 1
+      enable:
+        type: boolean
+        description: |
+          Enables API client's access to the IP ACL.
   isLocked:
     type: boolean
     description: |
@@ -376,6 +340,45 @@ properties:
     items:
       type: string
       minLength: 1
+  purgeOptions:
+    type: object
+    description: |
+      Configures the API client for access to the [Fast Purge API](https://techdocs.akamai.com/purge-cache/reference/api). It's returned only if the `apis` object includes an `apiName` of `CCU APIs`.
+    additionalProperties: false
+    required:
+    - canPurgeByCacheTag
+    - canPurgeByCpcode
+    - cpcodeAccess
+    properties:
+      canPurgeByCacheTag:
+        type: boolean
+        description: |
+          Whether the API client can purge content by cache tag.
+      canPurgeByCpcode:
+        type: boolean
+        description: |
+          Whether the API client can purge content by CP code.
+      cpcodeAccess:
+        type: object
+        description: |
+          CP codes the API client can purge.
+        additionalProperties: false
+        required:
+        - allCurrentAndNewCpcodes
+        - cpcodes
+        properties:
+          allCurrentAndNewCpcodes:
+            type: boolean
+            description: |
+              Whether the API client can purge content by cache tag.
+          cpcodes:
+            type: array
+            description: |
+              CP codes the API client can purge.
+            minItems: 0
+            items:
+              type: integer
+              minimum: 0
   serviceProviderId:
     type: integer
     description: |

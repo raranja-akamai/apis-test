@@ -1,29 +1,46 @@
 type: object
-description: |
-  Specifies an available role.
+description: |-
+  Encapsulates information about multiple roles.
+  
 x-akamai:
   file-path: schemas/role-list-item.yaml
 additionalProperties: false
+required:
+- type
+- roleId
+- roleName
+- roleDescription
 properties:
   type:
     type: string
     description: |
-      Indicates whether it's a `standard` role provided by Akamai or a `custom` role for you to manage.
+      Whether it's a `standard` or `account` role defined by Akamai, or a `custom` role created by one of your account's users. You can only modify or delete `custom` roles. To learn more, see [About roles](https://techdocs.akamai.com/iam/docs/about-roles-permissions).
     enum:
-    - standard
     - custom
+    - standard
+    - account
   actions:
     type: object
     description: |
-      Encapsulates permissions available to the user for this group.
-    additionalProperties:
-      type: boolean
-      description: |
-        The actions you can take on this role. A value of `true`  for `edit` means the role can be edited. You can edit a role even if it's already assigned to users. Enabling `delete` means the role can be deleted. You can only delete a role that's not assigned to any users. Disabling `delete` indicates the role can't be deleted because it's assigned to at least one user.
+      Specifies activities available for the role.
+    additionalProperties: false
+    required:
+    - delete
+    - edit
+    properties:
+      delete:
+        type: boolean
+        description: |
+          Whether you can remove the role from the account. You can't remove a group that contains resources or subgroups, or if users have roles on that group.
+      edit:
+        type: boolean
+        description: |
+          Whether you can modify the role.
   createdBy:
     type: string
     description: |
-      The username or email of the person who created the role.
+      The user who created the role.
+    minLength: 1
   createdDate:
     type: string
     description: |
@@ -32,7 +49,8 @@ properties:
   modifiedBy:
     type: string
     description: |
-      The username or email of the last person to edit the role.
+      The user who last edited the role.
+    minLength: 1
   modifiedDate:
     type: string
     description: |
@@ -41,31 +59,44 @@ properties:
   numUsers:
     type: integer
     description: |
-      The number of users who use the role.
+      The number of users who have the role.
+    minimum: 0
   roleDescription:
     type: string
     description: |
-      The description for a role. The description should be meaningful and convey what you use the role for.
+      Descriptive label for the role to convey its use.
+    minLength: 1
   roleId:
     type: integer
     description: |
-      A unique identifier for each role.
+      Unique identifier for each role.
+    minimum: 1
   roleName:
     type: string
     description: |
-      The role's name.
+      Descriptive label for the role.
+    minLength: 1
   users:
     type: array
     description: |
-      User details.
+      User details. They appear only when you set the `users` query parameter to `true`.
+    minItems: 0
     items:
       type: object
       additionalProperties: false
+      required:
+      - uiIdentityId
+      - firstName
+      - lastName
+      - accountId
+      - email
+      - lastLoginDate
       properties:
         accountId:
           type: string
           description: |
-            A unique identifier for each account.
+            Unique identifier for each account.
+          minLength: 1
         email:
           type: string
           description: |
@@ -75,6 +106,7 @@ properties:
           type: string
           description: |
             The user's first name.
+          minLength: 1
         lastLoginDate:
           type: string
           description: |
@@ -83,8 +115,10 @@ properties:
         lastName:
           type: string
           description: |
-            The user's last name.
+            The user's surname.
+          minLength: 1
         uiIdentityId:
           type: string
           description: |
-            A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.
+            Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.
+          minLength: 1

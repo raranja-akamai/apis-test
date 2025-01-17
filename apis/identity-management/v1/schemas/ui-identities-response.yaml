@@ -1,6 +1,7 @@
 type: object
-description: |
+description: |-
   Encapsulates information about each user.
+  
 x-akamai:
   file-path: schemas/ui-identities-response.yaml
 additionalProperties: false
@@ -11,19 +12,21 @@ required:
 - uiUserName
 - email
 - accountId
-- lastLoginDate
+- additionalAuthentication
+- additionalAuthenticationConfigured
+- isLocked
 - tfaEnabled
 - tfaConfigured
-- isLocked
 properties:
   accountId:
     type: string
     description: |
-      A unique identifier for each account.
+      Unique identifier for each account.
+    minLength: 1
   actions:
     type: object
     description: |
-      Encapsulates permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter, which applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.
+      Specifies permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter that applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.
     additionalProperties: false
     required:
     - delete
@@ -42,11 +45,19 @@ properties:
       apiClient:
         type: boolean
         description: |
-          Allows the administrator to create an API client.
+          Enables the administrator to create an API client.
+      canEditMFA:
+        type: boolean
+        description: |
+          With a `true` value, the user can turn their MFA setting on or off.
+      canEditNone:
+        type: boolean
+        description: |
+          With a `true` value, the user can turn their None setting on or off.
       canEditTFA:
         type: boolean
         description: |
-          If `true`, logged in users can turn their TFA settings on or off.
+          With a `true` value, the user can turn their TFA setting on or off.
       edit:
         type: boolean
         description: |
@@ -54,23 +65,36 @@ properties:
       editProfile:
         type: boolean
         description: |
-          If `true`, the user profile can be edited by the logged in user.
+          With a `true` value, the user can edit their user profile.
       isCloneable:
         type: boolean
         description: |
-          If `true`, an admin can create a new user with the same permissions as this user.
+          Enables an administrator to create a new user with permissions cloned from this user.
       resetPassword:
         type: boolean
         description: |
-          Allows an administrator to send a user a password by email or see a one-time token.
+          Enables an administrator to send a user a password by email or see a one-time token.
       thirdPartyAccess:
         type: boolean
         description: |
-          Allows the administrator to manage extended access.
+          Enables the administrator to manage extended access.
+  additionalAuthentication:
+    type: string
+    description: |
+      Specifies the user's multi-factor authentication method, confirming their identity. Either `TFA`, `MFA`, or `NONE`, which offers no additional authentication.
+    enum:
+    - TFA
+    - MFA
+    - NONE
+  additionalAuthenticationConfigured:
+    type: boolean
+    description: |
+      Whether the user has multi-factor authentication configured.
   authGrants:
     type: array
     description: |
-      A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.
+      A user's role assignments, per group. 
+    minItems: 1
     items:
       $ref: auth-grant-response.yaml
   email:
@@ -82,10 +106,11 @@ properties:
     type: string
     description: |
       The user's first name.
+    minLength: 1
   isLocked:
     type: boolean
     description: |
-      The user's lock status.
+      Whether the user's account is locked. To learn more, see [Temporary account lockout](https://techdocs.akamai.com/iam/docs/tmp-account-lockout).
   lastLoginDate:
     type: string
     description: |
@@ -94,20 +119,23 @@ properties:
   lastName:
     type: string
     description: |
-      The user's last name.
+      The user's surname.
+    minLength: 1
   tfaConfigured:
     type: boolean
     description: |
-      The TFA is configured.
+      Whether TFA is configured.
   tfaEnabled:
     type: boolean
     description: |
-      Indicates if TFA is enabled.
+      Whether TFA is enabled.
   uiIdentityId:
     type: string
     description: |
-      A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.
+      Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.
+    minLength: 1
   uiUserName:
     type: string
     description: |
-      A user's `loginId`. Typically, a user's email address.
+      The user's username in Control Center.
+    minLength: 1
