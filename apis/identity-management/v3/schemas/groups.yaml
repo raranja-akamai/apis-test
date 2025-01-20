@@ -1,8 +1,5 @@
-description: |-
-  Lists groups.
-  
-x-akamai:
-  file-path: schemas/groups.yaml
+description: |
+  List of Groups.
 additionalProperties: false
 definitions:
   type: object
@@ -10,46 +7,40 @@ definitions:
   groups:
     type: object
     description: |
-      Groups the API client can access.
+      The groups an API client can access.
     additionalProperties: false
-    required:
-    - roleId
-    - groupId
     properties:
-      groupId:
-        type: integer
-        description: |
-          Unique identifier for each group. To get this value, run the [List accessible groups](ref:get-api-clients-users-group-access) operation.
       groupName:
         type: string
         description: |
-          Descriptive label for the group.
-        minLength: 1
-      isBlocked:
-        type: boolean
-        description: |
-          Blocks the API client access to the group's child groups.
-      parentGroupId:
+          A group's name.
+      groupId:
         type: integer
         description: |
-          Unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.
-      roleDescription:
-        type: string
-        description: |
-          Descriptive label for the role to convey its use.
-        minLength: 1
+          A unique identifier for each group.
       roleId:
         type: integer
         description: |
-          Unique identifier for each role. To get this value, run the [List roles](ref:get-roles) operation.
+          A unique identifier for each role.
       roleName:
         type: string
         description: |
-          Descriptive label for the role.
-        minLength: 1
+          The role's name.
+      roleDescription:
+        type: string
+        description: |
+          The human-readable description for a role.
+      parentGroupId:
+        type: string
+        description: |
+          The unique identifier for the parent group within the group tree. If you're viewing group info for a root-level group, you may not see this member.
+      isBlocked:
+        type: boolean
+        description: |
+          If `true`, the API client has access to the group's parent, but can't access the child group.
       subGroups:
         type: array
         description: |
-          Children of the parent group. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.
+          Children of the parent group, represented as an array of groups. Permissions cascade downward from parent to child unless the child group's `isBlocked` is `true`.
         items:
           $ref: groups-nested.yaml

@@ -1,62 +1,35 @@
 openapi: 3.0.0
 info:
   title: Users, for administrators
-  version: '3'
+  version: v2
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
 servers:
-- url: https://{hostname}/identity-management/v3
-tags:
-- description: |
-    If you're an administrator, use these operations to create and manage
-    users on your account.
-  name: Users
-- description: |
-    If you're an administrator, use these operations to manage the list
-    of properties and includes blocked for a user.
-  name: Blocked assets
-- description: |
-    Use these operations to manage your or, if you're an administrator,
-    other users' authentication settings.
-  name: User authentication settings
-- description: |
-    If you're an administrator, use these operations to manage a user's
-    multi-factor authentication.
-  name: User access
-- description: |
-    If you're an administrator, use these operations to Set up email notifications
-    to remind users about maintenance tasks.
-  name: User notifications
-- description: |
-    If you're an administrator, use these operations toManage a user's
-    group and role assignments.
-  name: User authorization settings
+- url: https://{hostname}/identity-management/v2
 x-akamai:
   auth-type: EDGE_GRID
   file-path: 04-user-api.yaml
 paths:
   /user-admin/ui-identities:
-    $ref: paths/identities.yaml
+    $ref: paths/ui-identities.yaml
   /user-admin/ui-identities/{uiIdentityId}:
-    $ref: paths/identity.yaml
-  /user-admin/ui-identities/{uiIdentityId}/additionalAuthentication:
-    $ref: paths/additional-authentication-identity.yaml
-  /user-admin/ui-identities/{uiIdentityId}/additionalAuthentication/reset:
-    $ref: paths/reset-auth-admin.yaml
+    $ref: paths/ui-identity.yaml
   /user-admin/ui-identities/{uiIdentityId}/auth-grants:
     $ref: paths/auth-grants.yaml
   /user-admin/ui-identities/{uiIdentityId}/basic-info:
-    $ref: paths/basic-info-identity.yaml
+    $ref: paths/basic-info-user-admin.yaml
   /user-admin/ui-identities/{uiIdentityId}/groups/{groupId}/blocked-properties:
     $ref: paths/blocked-properties.yaml
   /user-admin/ui-identities/{uiIdentityId}/lock:
-    $ref: paths/lock-identity.yaml
+    $ref: paths/lock.yaml
   /user-admin/ui-identities/{uiIdentityId}/notifications:
-    $ref: paths/notifications-admin.yaml
+    $ref: paths/notifications-user-admin.yaml
   /user-admin/ui-identities/{uiIdentityId}/reset-password:
     $ref: paths/reset-password.yaml
   /user-admin/ui-identities/{uiIdentityId}/set-password:
     $ref: paths/set-password.yaml
+  /user-admin/ui-identities/{uiIdentityId}/tfa:
+    $ref: paths/user-admin-tfa.yaml
   /user-admin/ui-identities/{uiIdentityId}/unlock:
-    $ref: paths/unlock-identity.yaml
+    $ref: paths/unlock.yaml
