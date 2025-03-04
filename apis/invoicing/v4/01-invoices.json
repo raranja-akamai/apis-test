@@ -32,6 +32,7 @@
             "required": true,
             "schema": {
               "example": "2020-07",
+              "format": "date",
               "type": "string"
             },
             "x-akamai": {
@@ -56,13 +57,19 @@
                     "files": [
                       {
                         "fileName": "InvoiceName_1-XYZ_1-ABCD_1234567890_FINAL_1.pdf",
-                        "fileFormat": "PDF",
-                        "fileVersion": 1
+                        "fileVersion": 1,
+                        "fileCreationDate": "2021-01-01",
+                        "sourceType": "REGULAR",
+                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "contentType": "application/pdf"
                       },
                       {
                         "fileName": "1234567890_1.csv",
-                        "fileFormat": "CSV",
-                        "fileVersion": 1
+                        "fileVersion": 1,
+                        "fileCreationDate": "2021-01-01",
+                        "sourceType": "REGULAR",
+                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "contentType": "text/csv"
                       }
                     ]
                   },
@@ -77,14 +84,20 @@
                     "accountId": "A-CCT9012",
                     "files": [
                       {
-                        "fileName": "CreditMemoName_1-XYZ_1-ABCD_8234567890_FINAL_1.pdf",
-                        "fileFormat": "PDF",
-                        "fileVersion": 2
+                        "fileName": "CreditMemoName_1-XYZ_1-ABCD_8234567890_FINAL_COMPUTE_1.pdf",
+                        "fileVersion": 2,
+                        "fileCreationDate": "2021-01-01",
+                        "sourceType": "COMPUTE",
+                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "contentType": "application/pdf"
                       },
                       {
-                        "fileName": "8234567890_1.csv",
-                        "fileFormat": "CSV",
-                        "fileVersion": 2
+                        "fileName": "8234567890_COMPUTE_1.csv",
+                        "fileVersion": 2,
+                        "fileCreationDate": "2021-01-01",
+                        "sourceType": "COMPUTE",
+                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "contentType": "text/csv"
                       }
                     ]
                   }
@@ -110,13 +123,23 @@
                         "items": {
                           "additionalProperties": false,
                           "properties": {
-                            "fileFormat": {
-                              "description": "The format of the file, either `PDF`, `CSV`, or `JSON`.\n",
+                            "contentType": {
+                              "description": "The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.\n",
                               "enum": [
-                                "PDF",
-                                "CSV",
-                                "JSON"
+                                "application/json",
+                                "application/pdf",
+                                "text/csv"
                               ],
+                              "type": "string"
+                            },
+                            "fileCreationDate": {
+                              "description": "The date when the file was created.\n",
+                              "format": "date",
+                              "type": "string"
+                            },
+                            "fileLink": {
+                              "description": "The link to download the file.\n",
+                              "format": "uri-reference",
                               "type": "string"
                             },
                             "fileName": {
@@ -128,12 +151,23 @@
                               "description": "The version of the file.\n",
                               "minimum": 1,
                               "type": "integer"
+                            },
+                            "sourceType": {
+                              "description": "The source type of the file, either `REGULAR` or `COMPUTE`.\n",
+                              "enum": [
+                                "REGULAR",
+                                "COMPUTE"
+                              ],
+                              "type": "string"
                             }
                           },
                           "required": [
                             "fileName",
-                            "fileFormat",
-                            "fileVersion"
+                            "fileVersion",
+                            "fileCreationDate",
+                            "sourceType",
+                            "fileLink",
+                            "contentType"
                           ],
                           "type": "object"
                         },
@@ -432,7 +466,7 @@
                   "errors": [
                     {
                       "type": "/billing/error-types/3",
-                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc"
+                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc"
                     }
                   ]
                 },
@@ -730,30 +764,91 @@
     },
     "/contracts/{contractId}/invoices/{invoiceId}/download": {
       "get": {
-        "description": "Returns the content of the selected contract's invoice or credit memo file. The downloadable file is available in the response body. The `Content-Type` depends on the format of the file you're downloading.\n",
+        "description": "Returns the content of the selected contract's invoice, credit memo file, or usage data for Cloud Computing services.\nThe downloadable file is available in the response body. The format of the file\ndepends on the value of the `Accept` header. Available formats are `CSV`, `PDF`,\nand `JSON`.\n",
         "operationId": "get-contract-invoice-download",
         "parameters": [
           {
-            "description": "File format of the invoice. These are the available values: `PDF`, `CSV`, and `JSON`.\n",
+            "description": "Source type of the invoice, either `REGULAR` for Control Center services, or `COMPUTE` for the Cloud Computing usage data. For\nthe `COMPUTE` source type, data is available in the CSV format only, for invoices\nfrom February 2024 onwards.\n",
             "in": "query",
-            "name": "fileFormat",
-            "required": true,
+            "name": "sourceType",
             "schema": {
+              "default": "REGULAR",
               "enum": [
-                "PDF",
-                "CSV",
-                "JSON"
+                "REGULAR",
+                "COMPUTE"
               ],
-              "example": "PDF",
+              "example": "COMPUTE",
               "type": "string"
             },
             "x-akamai": {
-              "file-path": "parameters/file-format-query.yaml"
+              "file-path": "parameters/source-type-query.yaml"
             }
           }
         ],
         "responses": {
           "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "example": {
+                    "INVOICE": {
+                      "INVOICE_ID": 1234567890,
+                      "ACCOUNT_ID": "A-CCT7890",
+                      "ACCOUNT_NAME": "Main Street Corporation",
+                      "INVOICE_ORDER_ID": "1-23ABC4",
+                      "INVOICE_CURRENCY": "USD",
+                      "INVOICE_TYPE": "Standard Invoice",
+                      "INVOICE_VERSION": 1,
+                      "FINALIZED_DATE": "2021-02-01",
+                      "INVOICE_DATE": "2021-02-01",
+                      "PO_NUMBER": "1234567890",
+                      "END_CUSTOMER": [
+                        {
+                          "END_CUSTOMER_ACCOUNT_ID": "A-CCT7890",
+                          "END_CUSTOMER_ACCOUNT_NAME": "Main Street Corporation",
+                          "END_CUSTOMER_ORDER_ID": "1-23ABC4",
+                          "END_CUSTOMER_EXTERNAL_REFERENCE": "1234567890",
+                          "INVOICE_LINE": [
+                            {
+                              "ITEM_START_DATE": "2021-01-01",
+                              "ITEM_END_DATE": "2021-01-31",
+                              "UNIT_MEASURE": "GB",
+                              "PRODUCT": "Access Control",
+                              "PRODUCT_ID": "9-8ZYX76",
+                              "ITEM_TYPE": "U",
+                              "ITEM_DESC": "1 GB of Access Control Usage ",
+                              "ITEM_UNITS": 1,
+                              "ITEM_UNIT_PRICE": 0.01,
+                              "ITEM_TOTAL_SERVICES": 0.02,
+                              "ITEM_TOTAL_TAXES": 0,
+                              "ITEM_TOTAL": 0.03,
+                              "EFFECTIVE_END_DATE": "2022-01-31",
+                              "CREDITED_INVOICE_NUMBER": null,
+                              "CREDITED_INVOICE_LINE_NUMBER": null,
+                              "PO_NUMBER": "1234567890"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "type": "object"
+                }
+              },
+              "application/pdf": {
+                "schema": {
+                  "format": "binary",
+                  "type": "string"
+                }
+              },
+              "text/csv": {
+                "schema": {
+                  "example": "ACCOUNT_ID,ACCOUNT_NAME,INVOICE_START_DATE,INVOICE_ID,ITEM_START_DATE,ITEM_END_DATE,UNIT_MEASURE,PRODUCT_LINE,PRODUCT,PRODUCT_ID,ITEMTYPE,ITEM_DESC,ITEM_SPEC,CUST_CURRENCY,ITEM_CURRENCY,ITEM_UNITS,CUST_UNIT_PRICE,ITEM_UNIT_PRICE,CUST_TOTAL_SERVICES,ITEM_TOTAL_SERVICES,CUST_TAXES,CUST_TOTAL,ITEM_TOTAL,ORDER_ID,EFFECTIVE_END_DATE,PARTNER_PROVIDED_IDENTIFIER\nA-CCT7890,Main Street Corporation,02/01/2021,1234567890,01/01/2021,01/31/2021,GB,Cache,Cache control,9-8ZYX76,U,Advanced Cache Control,Committed,,USD,1,,0.01,,0.02,0,,0.03,1-23ABC4,01/31/2022,1234567890",
+                  "type": "string"
+                }
+              }
+            },
             "description": "The response provides requested file.\n"
           },
           "204": {
@@ -990,7 +1085,7 @@
                   "errors": [
                     {
                       "type": "/billing/error-types/3",
-                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc"
+                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc"
                     }
                   ]
                 },
@@ -1311,6 +1406,7 @@
             "required": true,
             "schema": {
               "example": "2020-07",
+              "format": "date",
               "type": "string"
             },
             "x-akamai": {
@@ -1335,13 +1431,19 @@
                     "files": [
                       {
                         "fileName": "InvoiceName_1-XYZ_1-ABCD_1234567890_FINAL_1.pdf",
-                        "fileFormat": "PDF",
-                        "fileVersion": 1
+                        "fileVersion": 1,
+                        "fileCreationDate": "2021-01-01",
+                        "sourceType": "REGULAR",
+                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "contentType": "application/pdf"
                       },
                       {
                         "fileName": "1234567890_1.csv",
-                        "fileFormat": "CSV",
-                        "fileVersion": 1
+                        "fileVersion": 1,
+                        "fileCreationDate": "2021-01-01",
+                        "sourceType": "REGULAR",
+                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "contentType": "text/csv"
                       }
                     ]
                   },
@@ -1356,14 +1458,20 @@
                     "accountId": "A-CCT9012",
                     "files": [
                       {
-                        "fileName": "CreditMemoName_1-XYZ_1-ABCD_8234567890_FINAL_1.pdf",
-                        "fileFormat": "PDF",
-                        "fileVersion": 2
+                        "fileName": "CreditMemoName_1-XYZ_1-ABCD_8234567890_FINAL_COMPUTE_1.pdf",
+                        "fileVersion": 2,
+                        "fileCreationDate": "2021-01-01",
+                        "sourceType": "COMPUTE",
+                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "contentType": "application/pdf"
                       },
                       {
-                        "fileName": "8234567890_1.csv",
-                        "fileFormat": "CSV",
-                        "fileVersion": 2
+                        "fileName": "8234567890_COMPUTE_1.csv",
+                        "fileVersion": 2,
+                        "fileCreationDate": "2021-01-01",
+                        "sourceType": "COMPUTE",
+                        "fileLink": "/invoicing-api/v4/contracts/C-0N7RAC7/invoices/8234567890/download",
+                        "contentType": "text/csv"
                       }
                     ]
                   }
@@ -1389,13 +1497,23 @@
                         "items": {
                           "additionalProperties": false,
                           "properties": {
-                            "fileFormat": {
-                              "description": "The format of the file, either `PDF`, `CSV`, or `JSON`.\n",
+                            "contentType": {
+                              "description": "The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.\n",
                               "enum": [
-                                "PDF",
-                                "CSV",
-                                "JSON"
+                                "application/json",
+                                "application/pdf",
+                                "text/csv"
                               ],
+                              "type": "string"
+                            },
+                            "fileCreationDate": {
+                              "description": "The date when the file was created.\n",
+                              "format": "date",
+                              "type": "string"
+                            },
+                            "fileLink": {
+                              "description": "The link to download the file.\n",
+                              "format": "uri-reference",
                               "type": "string"
                             },
                             "fileName": {
@@ -1407,12 +1525,23 @@
                               "description": "The version of the file.\n",
                               "minimum": 1,
                               "type": "integer"
+                            },
+                            "sourceType": {
+                              "description": "The source type of the file, either `REGULAR` or `COMPUTE`.\n",
+                              "enum": [
+                                "REGULAR",
+                                "COMPUTE"
+                              ],
+                              "type": "string"
                             }
                           },
                           "required": [
                             "fileName",
-                            "fileFormat",
-                            "fileVersion"
+                            "fileVersion",
+                            "fileCreationDate",
+                            "sourceType",
+                            "fileLink",
+                            "contentType"
                           ],
                           "type": "object"
                         },
@@ -1711,7 +1840,7 @@
                   "errors": [
                     {
                       "type": "/billing/error-types/3",
-                      "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc"
+                      "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc"
                     }
                   ]
                 },
@@ -2015,6 +2144,7 @@
         "required": true,
         "schema": {
           "example": "2020-07",
+          "format": "date",
           "type": "string"
         },
         "x-akamai": {
@@ -2034,22 +2164,21 @@
           "file-path": "parameters/invoice-id-path.yaml"
         }
       },
-      "file-format-query": {
-        "description": "File format of the invoice. These are the available values: `PDF`, `CSV`, and `JSON`.\n",
+      "source-type-query": {
+        "description": "Source type of the invoice, either `REGULAR` for Control Center services, or `COMPUTE` for the Cloud Computing usage data. For\nthe `COMPUTE` source type, data is available in the CSV format only, for invoices\nfrom February 2024 onwards.\n",
         "in": "query",
-        "name": "fileFormat",
-        "required": true,
+        "name": "sourceType",
         "schema": {
+          "default": "REGULAR",
           "enum": [
-            "PDF",
-            "CSV",
-            "JSON"
+            "REGULAR",
+            "COMPUTE"
           ],
-          "example": "PDF",
+          "example": "COMPUTE",
           "type": "string"
         },
         "x-akamai": {
-          "file-path": "parameters/file-format-query.yaml"
+          "file-path": "parameters/source-type-query.yaml"
         }
       }
     },
@@ -2073,13 +2202,23 @@
             "items": {
               "additionalProperties": false,
               "properties": {
-                "fileFormat": {
-                  "description": "The format of the file, either `PDF`, `CSV`, or `JSON`.\n",
+                "contentType": {
+                  "description": "The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.\n",
                   "enum": [
-                    "PDF",
-                    "CSV",
-                    "JSON"
+                    "application/json",
+                    "application/pdf",
+                    "text/csv"
                   ],
+                  "type": "string"
+                },
+                "fileCreationDate": {
+                  "description": "The date when the file was created.\n",
+                  "format": "date",
+                  "type": "string"
+                },
+                "fileLink": {
+                  "description": "The link to download the file.\n",
+                  "format": "uri-reference",
                   "type": "string"
                 },
                 "fileName": {
@@ -2091,12 +2230,23 @@
                   "description": "The version of the file.\n",
                   "minimum": 1,
                   "type": "integer"
+                },
+                "sourceType": {
+                  "description": "The source type of the file, either `REGULAR` or `COMPUTE`.\n",
+                  "enum": [
+                    "REGULAR",
+                    "COMPUTE"
+                  ],
+                  "type": "string"
                 }
               },
               "required": [
                 "fileName",
-                "fileFormat",
-                "fileVersion"
+                "fileVersion",
+                "fileCreationDate",
+                "sourceType",
+                "fileLink",
+                "contentType"
               ],
               "type": "object"
             },
@@ -2172,13 +2322,23 @@
               "items": {
                 "additionalProperties": false,
                 "properties": {
-                  "fileFormat": {
-                    "description": "The format of the file, either `PDF`, `CSV`, or `JSON`.\n",
+                  "contentType": {
+                    "description": "The content type of the file, either `application/json`, `application/pdf`, or `text/csv`.\n",
                     "enum": [
-                      "PDF",
-                      "CSV",
-                      "JSON"
+                      "application/json",
+                      "application/pdf",
+                      "text/csv"
                     ],
+                    "type": "string"
+                  },
+                  "fileCreationDate": {
+                    "description": "The date when the file was created.\n",
+                    "format": "date",
+                    "type": "string"
+                  },
+                  "fileLink": {
+                    "description": "The link to download the file.\n",
+                    "format": "uri-reference",
                     "type": "string"
                   },
                   "fileName": {
@@ -2190,12 +2350,23 @@
                     "description": "The version of the file.\n",
                     "minimum": 1,
                     "type": "integer"
+                  },
+                  "sourceType": {
+                    "description": "The source type of the file, either `REGULAR` or `COMPUTE`.\n",
+                    "enum": [
+                      "REGULAR",
+                      "COMPUTE"
+                    ],
+                    "type": "string"
                   }
                 },
                 "required": [
                   "fileName",
-                  "fileFormat",
-                  "fileVersion"
+                  "fileVersion",
+                  "fileCreationDate",
+                  "sourceType",
+                  "fileLink",
+                  "contentType"
                 ],
                 "type": "object"
               },
@@ -2659,7 +2830,7 @@
               "errors": [
                 {
                   "type": "/billing/error-types/3",
-                  "title": "No handler found for GET /billing/v1/contracts/1-ABCDEF/products-abc"
+                  "title": "No handler found for GET /billing/v1/contracts/C-0N7RAC7/products-abc"
                 }
               ]
             },
