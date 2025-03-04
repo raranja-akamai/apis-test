@@ -1,6 +1,7 @@
 type: object
-description: |
+description: |-
   Encapsulates information about each user.
+  
 x-akamai:
   file-path: schemas/user-response.yaml
 additionalProperties: false
@@ -9,18 +10,21 @@ required:
 - firstName
 - lastName
 - email
-- tfaEnabled
+- additionalAuthentication
 - country
-- phone
+- address
+- timeZone
+- additionalAuthenticationConfigured
 properties:
   accountId:
     type: string
     description: |
-      A unique identifier for each account.
+      Unique identifier for each account.
+    minLength: 1
   actions:
     type: object
     description: |
-      Encapsulates permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter that applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.
+      Specifies permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter that applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.
     additionalProperties: false
     required:
     - delete
@@ -33,66 +37,89 @@ properties:
       delete:
         type: boolean
         description: |
-          Indicates whether the user is deletable.
+          Whether the user is deletable.
       apiClient:
         type: boolean
         description: |
-          Allows the administrator to create an API client.
+          Enables the administrator to create an API client.
       edit:
         type: boolean
         description: |
-          Indicates whether the user is editable.
+          Whether the user is editable.
       isCloneable:
         type: boolean
         description: |
-          If `true`, an administrator can create a new user with the same permissions as this user.
+          Enables an administrator to create a new user with permissions cloned from this user.
       resetPassword:
         type: boolean
         description: |
-          Allows an administrator to send a user a password by email or see a one-time token.
+          Enables an administrator to send a user a password by email or see a one-time token.
       thirdPartyAccess:
         type: boolean
         description: |
-          Allows the administrator to manage extended access.
+          Enables the administrator to manage extended access.
+  additionalAuthentication:
+    type: string
+    description: |
+      Specifies the user's multi-factor authentication method, confirming their identity. Either `TFA`, `MFA`, or `NONE`, which offers no additional authentication.
+    enum:
+    - TFA
+    - MFA
+    - NONE
+  additionalAuthenticationConfigured:
+    type: boolean
+    description: |
+      Whether the user has multi-factor authentication configured.
   address:
     type: string
     description: |
       The user's street address.
+    minLength: 1
   authGrants:
     type: array
     description: |
-      A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.
+      A user's role assignments, per group.
+    minItems: 0
     items:
       $ref: auth-grant-response.yaml
   city:
     type: string
     description: |
       The user's city.
+    minLength: 1
   contactType:
     type: string
     description: |
-      To help characterize the user, the value can be any that are available from the [View contact types](ref:get-common-contact-types) operation.
+      User's contact type.
+    minLength: 1
   country:
     type: string
     description: |
-      Part of the user's location. This can be any value available from the [View supported countries](ref:get-common-countries) operation.
+      User's country.
+    minLength: 1
   email:
     type: string
     description: |
       The user's email address.
     format: email
+  emailUpdatePending:
+    type: boolean
+    description: |
+      Whether there are any pending changes to the email address.
   firstName:
     type: string
     description: |
       The user's first name.
+    minLength: 1
   isLocked:
     type: boolean
     description: |
-      The user's lock status.
+      Whether the user's account is locked. To learn more, see [Temporary account lockout](https://techdocs.akamai.com/iam/docs/tmp-account-lockout).
   jobTitle:
     type: string
     description: |
-      The user's job title.
+      The user's position at the company.
+    minLength: 1
   lastLoginDate:
     type: string
     description: |
@@ -101,47 +128,66 @@ properties:
   lastName:
     type: string
     description: |
-      The user's last name.
+      The user's surname.
+    minLength: 1
   mobilePhone:
     type: string
     description: |
-      The user's mobile phone number, represented as a 10-digit integer within a string.
+      The user's mobile phone number in ITU-T E.164 format, that is, `+country code-area code-subscriber number`.
+    minLength: 1
   notifications:
     type: object
     description: |
-      The notification emails the user receives for products.
+      Specifies email notifications the user receives for products.
     additionalProperties: false
+    required:
+    - options
+    - enableEmailNotifications
     properties:
       options:
         type: object
         description: |
-          The types of notification emails the user receives.
+          Specifies email notifications settings.
         additionalProperties: false
+        required:
+        - upgrade
+        - proactive
+        - passwordExpiry
+        - newUserNotification
+        - apiClientCredentialExpiryNotification
         properties:
+          apiClientCredentialExpiryNotification:
+            type: boolean
+            description: |
+              Whether the user gets notifications for expiring API client credentials.
           newUserNotification:
             type: boolean
             description: |
-              Send emails to group administrators when new users are created.
+              Whether group administrators get notifications when the user creates other new users.
           passwordExpiry:
             type: boolean
             description: |
-              Send emails regarding password expiration.
+              Whether the user gets notifications for password expiration.
           proactive:
             type: array
             description: |
-              Lists products for which the user receives notification emails about service issues.
+              Products for which the user gets notifications for service issues.
+            minItems: 0
             items:
               type: string
+              minLength: 1
           upgrade:
             type: array
             description: |
-              Lists products for which the user receives notification emails about upgrades.
+              Products for which the user receives notifications for upgrades.
+            minItems: 0
             items:
               type: string
+              minLength: 1
       enableEmailNotifications:
         type: boolean
         description: |
-          Indicates if email notifications are enabled.
+          Enables email notifications.
   passwordExpiryDate:
     type: string
     description: |
@@ -150,11 +196,13 @@ properties:
   phone:
     type: string
     description: |
-      The user's main phone number, represented as a ten-digit integer within a string.
+      The user's mobile phone number in ITU-T E.164 format, that is, `+country code-area code-subscriber number`.
+    minLength: 1
   preferredLanguage:
     type: string
     description: |
-      The value can be any that are available from the [View languages](ref:get-common-languages) operation.
+      The user's language.
+    minLength: 1
   secondaryEmail:
     type: string
     description: |
@@ -163,28 +211,38 @@ properties:
   sessionTimeOut:
     type: integer
     description: |
-      The number of seconds it takes for the user's Control Center session to time out if there hasn't been any activity. This corresponds to the `value` output of the [View timeout policies](ref:get-common-timeout-policies) operation.
+      The number of seconds it takes for the user's Control Center session to time out after no activity.
+    minimum: 0
   state:
     type: string
     description: |
-      The user's state.
+      The user's state or province if user's country is USA or Canada.
+    minLength: 1
+  tfaConfigured:
+    type: boolean
+    description: |
+      Whether TFA is configured.
   tfaEnabled:
     type: boolean
     description: |
-      Indicates if TFA is enabled.
+      Whether TFA is enabled.
   timeZone:
     type: string
     description: |
-      The user's time zone. The value can be any that are available from the [View time zones](ref:get-common-timezones) operation.
+      The user's time zone. To get the available values, run the [View time zones](ref:get-common-timezones) operation.
+    minLength: 1
   uiIdentityId:
     type: string
     description: |
-      A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.
+      Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.
+    minLength: 1
   uiUserName:
     type: string
     description: |
-      A user's `loginId`. Typically, a user's email address.
+      The user's username in Control Center.
+    minLength: 1
   zipCode:
     type: string
     description: |
-      The user's five-digit ZIP code, represented as a string.
+      The user's five-digit postal code, represented as a string.
+    minLength: 1

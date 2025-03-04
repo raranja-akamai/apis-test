@@ -1,6 +1,9 @@
 type: object
-description: |
+description: |-
   Describes the range of query options available for each report.
+  
+x-akamai:
+  file-path: schemas/report-list-row-schema.yaml
 additionalProperties: false
 required:
 - name
@@ -88,12 +91,6 @@ properties:
       This indicates names of columns by which reported data is grouped. It's reflected in the generated report's metadata.
     items:
       type: string
-  intervals:
-    type: array
-    description: |
-      Specifies the set of available spans of time to aggregate data by. Use one of these values as the `interval` query parameter when executing the report.
-    items:
-      type: string
   groupOutlyingValues:
     type: object
     description: |
@@ -106,16 +103,22 @@ properties:
         type: boolean
         description: |
           Indicates whether this report allows you to group outlying values.
-      groupThreshold:
-        type: integer
-        description: |
-          Indicates the default number of categories to report on separately before grouping under a single category. You can provide your own threshold value to override this default.
-        default: 9
       groupName:
         type: string
         description: |
           Indicates the default category name under which outlying values group within a single category. You can provide your own name to override this default.
         default: Other
+      groupThreshold:
+        type: integer
+        description: |
+          Indicates the default number of categories to report on separately before grouping under a single category. You can provide your own threshold value to override this default.
+        default: 9
+  intervals:
+    type: array
+    description: |
+      Specifies the set of available spans of time to aggregate data by. Use one of these values as the `interval` query parameter when executing the report.
+    items:
+      type: string
   limit:
     type: integer
     description: |
