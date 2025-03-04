@@ -1,9 +1,6 @@
 type: object
-description: |-
+description: |
   Contains match rule information for Request Control.
-  
-x-akamai:
-  file-path: schemas/match-rule-ig.yaml
 title: Request Control
 additionalProperties: false
 required:
@@ -13,7 +10,7 @@ properties:
   id:
     type: integer
     description: |
-      __Read-only__ Akamai internal use only.
+      Akamai internal use only.
     nullable: true
     readOnly: true
   name:
@@ -28,42 +25,16 @@ properties:
       The type of Cloudlet the rule is for. For example, the string for Request Control is `igMatchRule`.
     enum:
     - igMatchRule
-  akaRuleId:
-    type: string
-    description: |
-      __Read-only__ The rule's unique identifier within the policy version.
-    readOnly: true
-  allowDeny:
-    type: string
-    description: |
-      If set to `allow`, the request is sent to origin when all conditions are true. If `deny`, the request is denied when all conditions are true. If `denybranded`, the request is denied and rerouted according to the configuration of the [Request Control behavior](https://techdocs.akamai.com/property-mgr/reference/latest-request-control).
-    enum:
-    - allow
-    - deny
-    - denybranded
-  disabled:
-    type: boolean
-    description: |
-      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
-    default: false
-  end:
-    type: integer
-    description: |
-      The end time for this match rule in epoch seconds. When `end` is `0`, there is no end time for this match rule.
-    default: 0
-    minimum: 0
   location:
     type: string
     description: |
-      __Read-only__ The navigable endpoint used for the object referred to in the operation.
+      The navigable endpoint used for the object referred to in the operation.
     readOnly: true
-  matches:
-    type: array
+  akaRuleId:
+    type: string
     description: |
-      The `matchType` and the `matchValue` or `objectMatchValue` used to conditionally pass through the request. Plus additional criteria to match on, like case sensitivity (`caseSensitive`).
-    nullable: true
-    items:
-      $ref: match-rule-ig-definitions.yaml#/definitions/matchCriteriaType
+      The rule's unique identifier within the policy version.
+    readOnly: true
   matchesAlways:
     type: boolean
     description: |
@@ -74,3 +45,29 @@ properties:
       The start time for this match rule in epoch seconds. When `start` is `0`, the match rule is on.
     default: 0
     minimum: 0
+  end:
+    type: integer
+    description: |
+      The end time for this match rule in epoch seconds. When `end` is `0`, there is no end time for this match rule.
+    default: 0
+    minimum: 0
+  matches:
+    type: array
+    description: |
+      The `matchType` and the `matchValue` or `objectMatchValue` used to conditionally pass through the request. Plus additional criteria to match on, like case sensitivity (`caseSensitive`).
+    nullable: true
+    items:
+      $ref: match-rule-ig-definitions.yaml#/definitions/matchCriteriaType
+  disabled:
+    type: boolean
+    description: |
+      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
+    default: false
+  allowDeny:
+    type: string
+    description: |
+      If set to `allow`, the request is sent to origin when all conditions are true. If `deny`, the request is denied when all conditions are true. If `denybranded`, the request is denied and rerouted according to the configuration of the [Request Control behavior](https://techdocs.akamai.com/property-mgr/reference/latest-request-control).
+    enum:
+    - allow
+    - deny
+    - denybranded
