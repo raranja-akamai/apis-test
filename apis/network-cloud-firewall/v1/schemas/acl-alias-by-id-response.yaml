@@ -5,15 +5,31 @@ description: |-
 x-akamai:
   file-path: schemas/acl-alias-by-id-response.yaml
 additionalProperties: false
+required:
+- aliasId
+- accountId
+- aliasName
+- aliasListType
+- ipVersion
+- entriesCount
+- createdBy
+- createdTimestamp
+- updatedBy
+- updatedTimestamp
+- hasCountryCodes
+- isCustomerEditable
+- enabled
 properties:
   accountId:
     type: string
     description: |
       Account ID of the customer.
+    minLength: 1
   aliasId:
     type: integer
     description: |
       Unique identifier of alias.
+    minimum: 1
   aliasListType:
     type: string
     description: |
@@ -26,14 +42,17 @@ properties:
     type: string
     description: |
       Alias name needs to be unique to an account. An alias name needs to start with a lowercase letter and can't have any uppercase letters. Allowed characters are letters, numbers, dashes, and underscores.
+    minLength: 1
   createdBy:
     type: string
     description: |
       User who created the alias.
+    minLength: 1
   createdTimestamp:
     type: string
     description: |
       ISO 8601 timestamp marking when the alias was created.
+    minLength: 1
   enabled:
     type: boolean
     description: |
@@ -42,12 +61,15 @@ properties:
     type: array
     description: |
       Entries within the alias. Only allowed values are IP subnets belonging to the account and ISO standard country codes. If a subnet mask isn't included, defaults /32 for IPv4 or /128 for IPv6.
+    minItems: 0
     items:
       type: string
+      minLength: 1
   entriesCount:
     type: integer
     description: |
       Number of entries within the alias.
+    minimum: 0
   hasCountryCodes:
     type: boolean
     description: |
@@ -67,7 +89,9 @@ properties:
     type: string
     description: |
       User who last updated the alias.
+    minLength: 1
   updatedTimestamp:
     type: string
     description: |
       ISO 8601 timestamp marking the alias' last update.
+    minLength: 1

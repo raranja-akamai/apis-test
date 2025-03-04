@@ -212,19 +212,22 @@ properties:
         description: |
           CP codes the API client can purge.
         additionalProperties: false
-        required:
-        - allCurrentAndNewCpcodes
-        - cpcodes
-        properties:
-          allCurrentAndNewCpcodes:
-            type: boolean
-            description: |
-              Whether the API client can purge content by cache tag.
-          cpcodes:
-            type: array
-            description: |
-              CP codes the API client can purge. To get these values, run the [List allowed CP codes](ref:post-api-clients-users-allowed-cpcodes) operation.
-            minItems: 0
-            items:
-              type: integer
-              minimum: 0
+        oneOf:
+        - additionalProperties: false
+          title: All CP codes
+          properties:
+            allCurrentAndNewCpcodes:
+              type: boolean
+              description: |
+                Whether the API client can purge content by cache tag.
+        - additionalProperties: false
+          title: Selected CP codes
+          properties:
+            cpcodes:
+              type: array
+              description: |
+                CP codes the API client can purge. To get these values, run the [List allowed CP codes](ref:post-api-clients-users-allowed-cpcodes) operation.
+              minItems: 0
+              items:
+                type: integer
+                minimum: 0

@@ -1,6 +1,9 @@
 type: object
-description: |
+description: |-
   Details the latest configuration version of a stream. It provides descriptions of the data set fields selected in the version, identifiers of properties they collect logs for, configuration of the destination where they deliver logs, and structure of these log lines. It also informs whether this version is active.
+  
+x-akamai:
+  file-path: schemas/stream-detail-ew.yaml
 title: EdgeWorkers stream details
 additionalProperties: false
 required:
@@ -18,42 +21,19 @@ required:
 - streamStatus
 - streamVersion
 properties:
-  streamId:
-    type: integer
-    description: |
-      Identifies the stream.
-  streamName:
-    type: string
-    description: |
-      The stream's name.
-  streamVersion:
-    type: integer
-    description: |
-      Identifies the stream's configuration version.
-  groupId:
-    type: integer
-    description: |
-      Identifies the group with access to the product, which you created the stream configuration for. You can write this data only once, when you initially create the stream.
   contractId:
     type: string
     description: |
       Identifies the contract the stream belongs to.
-  destination:
+  createdBy:
+    type: string
     description: |
-      Details the destination's configuration in the stream to send logs.
-    oneOf:
-    - $ref: azure-saved-destination.yaml
-    - $ref: s3saved-destination.yaml
-    - $ref: datadog-saved-destination.yaml
-    - $ref: splunk-saved-destination.yaml
-    - $ref: gcs-saved-destination.yaml
-    - $ref: https-saved-destination.yaml
-    - $ref: ocs-saved-destination.yaml
-    - $ref: sumo-logic-saved-destination.yaml
-    - $ref: loggly-saved-destination.yaml
-    - $ref: s3compatible-saved-destination.yaml
-    - $ref: traffic-peak-saved-destination.yaml
-    - $ref: dynatrace-saved-destination.yaml
+      The username who created the stream.
+  createdDate:
+    type: string
+    description: |
+      An ISO 8601 timestamp marking when the stream was created.
+    format: date-time
   deliveryConfiguration:
     type: object
     description: |
@@ -104,29 +84,30 @@ properties:
           The log filename suffix that you want to send to an object-based destination, up to 10 characters. This data supports [Dynamic time variables](ref:custom-log-field#dynamic-time-variables). If unspecified, it defaults to `ds`.
         default: ds
         maxLength: 10
+  destination:
+    description: |
+      Details the destination's configuration in the stream to send logs.
+    oneOf:
+    - $ref: azure-saved-destination.yaml
+    - $ref: s3saved-destination.yaml
+    - $ref: datadog-saved-destination.yaml
+    - $ref: splunk-saved-destination.yaml
+    - $ref: gcs-saved-destination.yaml
+    - $ref: https-saved-destination.yaml
+    - $ref: ocs-saved-destination.yaml
+    - $ref: sumo-logic-saved-destination.yaml
+    - $ref: loggly-saved-destination.yaml
+    - $ref: s3compatible-saved-destination.yaml
+    - $ref: traffic-peak-saved-destination.yaml
+    - $ref: dynatrace-saved-destination.yaml
+  groupId:
+    type: integer
+    description: |
+      Identifies the group with access to the product, which you created the stream configuration for. You can write this data only once, when you initially create the stream.
   latestVersion:
     type: integer
     description: |
       Identifies the stream's latest configuration version.
-  streamStatus:
-    type: string
-    description: |
-      Indicates if the stream is `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`.
-    enum:
-    - INACTIVE
-    - ACTIVATING
-    - ACTIVATED
-    - DEACTIVATING
-    - DEACTIVATED
-  createdBy:
-    type: string
-    description: |
-      The username who created the stream.
-  createdDate:
-    type: string
-    description: |
-      An ISO 8601 timestamp marking when the stream was created.
-    format: date-time
   modifiedBy:
     type: string
     description: |
@@ -143,3 +124,25 @@ properties:
     minItems: 0
     items:
       type: string
+  streamId:
+    type: integer
+    description: |
+      Identifies the stream.
+  streamName:
+    type: string
+    description: |
+      The stream's name.
+  streamStatus:
+    type: string
+    description: |
+      Indicates if the stream is `INACTIVE`, `ACTIVATING`, `ACTIVATED`, `DEACTIVATING`, or `DEACTIVATED`.
+    enum:
+    - INACTIVE
+    - ACTIVATING
+    - ACTIVATED
+    - DEACTIVATING
+    - DEACTIVATED
+  streamVersion:
+    type: integer
+    description: |
+      Identifies the stream's configuration version.

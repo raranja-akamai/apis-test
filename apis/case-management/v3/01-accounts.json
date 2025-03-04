@@ -1,0 +1,261 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Accounts",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/case-management/v3"
+    }
+  ],
+  "tags": [
+    {
+      "description": "List accounts you can create a case for.",
+      "name": "Accounts"
+    }
+  ],
+  "paths": {
+    "/accounts-with-categories": {
+      "get": {
+        "description": "Lists accounts you can access. The list also includes types of cases you can create for each account. You need this data to [Get a case category details](ref:get-category) and [Create a case](ref:post-cases).\n",
+        "operationId": "get-accounts",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "accountId": "A-CCT7890",
+                    "accountName": "Internet Company",
+                    "categories": [
+                      {
+                        "categoryId": "SECURITY",
+                        "categoryName": "Managed Security Support",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "href": "/case-management/v3/categories/SECURITY?accountId=F-AC-000000"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "accountId": "A-CCT9012",
+                    "accountName": "Main Street Corporation",
+                    "categories": [
+                      {
+                        "categoryId": "BILLING",
+                        "categoryName": "Billing Support Issue or Question",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "href": "/case-management/v3/categories/BILLING?accountId=F-AC-000001"
+                          }
+                        ]
+                      },
+                      {
+                        "categoryId": "TECHNICAL",
+                        "categoryName": "Technical Support Issue",
+                        "links": [
+                          {
+                            "rel": "self",
+                            "href": "/case-management/v3/categories/TECHNICAL?accountId=F-AC-000001"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ],
+                "schema": {
+                  "description": "Lists accounts you can access and can create a support case for. The list also includes types of cases available for each account.\n",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Details about available accounts and types of cases you can create.\n",
+                    "properties": {
+                      "accountId": {
+                        "description": "Identifier for the account.\n",
+                        "type": "string"
+                      },
+                      "accountName": {
+                        "description": "Name of the account.\n",
+                        "type": "string"
+                      },
+                      "categories": {
+                        "description": "Lists basic data about case categories you can use to create a case for the account.\n",
+                        "items": {
+                          "additionalProperties": false,
+                          "description": "Categories of cases you can create a case for the particular account for.\n",
+                          "properties": {
+                            "categoryId": {
+                              "description": "Identifier for the category. The possible options are `SECURITY`, `BUSINESS_SUPPORT`, `PROFESSIONAL_SERVICES`, `BILLING`, or `TECHNICAL`.\n",
+                              "enum": [
+                                "SECURITY",
+                                "BUSINESS_SUPPORT",
+                                "PROFESSIONAL_SERVICES",
+                                "BILLING",
+                                "TECHNICAL"
+                              ],
+                              "type": "string"
+                            },
+                            "categoryName": {
+                              "description": "Name of the case category.\n",
+                              "type": "string"
+                            },
+                            "links": {
+                              "description": "Lists [navigable hypermedia links](ref:hypermedia) to resources.\n",
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "href": {
+                                    "description": "Relative path to the resource.\n",
+                                    "type": "string"
+                                  },
+                                  "rel": {
+                                    "description": "Type of resource you can GET.\n",
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "type": "array",
+                              "x-akamai": {
+                                "file-path": "schemas/hypermedia.yaml"
+                              }
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/get-accounts-response.yaml"
+                  }
+                }
+              }
+            },
+            "description": "The response lists available accounts.\n"
+          }
+        },
+        "summary": "List available accounts",
+        "tags": [
+          "Accounts"
+        ],
+        "x-akamai": {
+          "supports-account-switch-key": false
+        }
+      },
+      "x-akamai": {
+        "file-path": "paths/accounts-with-categories.yaml",
+        "path-info": "/accounts-with-categories"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "hypermedia": {
+        "description": "Lists [navigable hypermedia links](ref:hypermedia) to resources.\n",
+        "items": {
+          "additionalProperties": false,
+          "properties": {
+            "href": {
+              "description": "Relative path to the resource.\n",
+              "type": "string"
+            },
+            "rel": {
+              "description": "Type of resource you can GET.\n",
+              "type": "string"
+            }
+          },
+          "type": "object"
+        },
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/hypermedia.yaml"
+        }
+      },
+      "get-accounts-response": {
+        "description": "Lists accounts you can access and can create a support case for. The list also includes types of cases available for each account.\n",
+        "items": {
+          "additionalProperties": false,
+          "description": "Details about available accounts and types of cases you can create.\n",
+          "properties": {
+            "accountId": {
+              "description": "Identifier for the account.\n",
+              "type": "string"
+            },
+            "accountName": {
+              "description": "Name of the account.\n",
+              "type": "string"
+            },
+            "categories": {
+              "description": "Lists basic data about case categories you can use to create a case for the account.\n",
+              "items": {
+                "additionalProperties": false,
+                "description": "Categories of cases you can create a case for the particular account for.\n",
+                "properties": {
+                  "categoryId": {
+                    "description": "Identifier for the category. The possible options are `SECURITY`, `BUSINESS_SUPPORT`, `PROFESSIONAL_SERVICES`, `BILLING`, or `TECHNICAL`.\n",
+                    "enum": [
+                      "SECURITY",
+                      "BUSINESS_SUPPORT",
+                      "PROFESSIONAL_SERVICES",
+                      "BILLING",
+                      "TECHNICAL"
+                    ],
+                    "type": "string"
+                  },
+                  "categoryName": {
+                    "description": "Name of the case category.\n",
+                    "type": "string"
+                  },
+                  "links": {
+                    "description": "Lists [navigable hypermedia links](ref:hypermedia) to resources.\n",
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "href": {
+                          "description": "Relative path to the resource.\n",
+                          "type": "string"
+                        },
+                        "rel": {
+                          "description": "Type of resource you can GET.\n",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    },
+                    "type": "array",
+                    "x-akamai": {
+                      "file-path": "schemas/hypermedia.yaml"
+                    }
+                  }
+                },
+                "type": "object"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object"
+        },
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/get-accounts-response.yaml"
+        }
+      }
+    }
+  },
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "01-accounts.yaml"
+  }
+}

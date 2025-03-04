@@ -1,0 +1,2187 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "IP verification and location",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/edge-diagnostics/v1"
+    }
+  ],
+  "tags": [
+    {
+      "description": "Check whether a specific IP address is part of the ​Akamai​ edge network. It also provides geolocation data for the IP's network.",
+      "name": "IP verification and location"
+    }
+  ],
+  "paths": {
+    "/verify-locate-ip": {
+      "post": {
+        "description": "Verifies if an IP belongs to an edge server and gets the geolocation data of its network. For IPs verified positively, you can continue gathering diagnostic data with [Request content with cURL](ref:post-curl), [Get domain details with dig](ref:post-dig), or [Test network connectivity with MTR](ref:post-mtr) operations.\n",
+        "operationId": "post-verify-locate-ip",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "ipAddress": "192.0.2.12"
+              },
+              "schema": {
+                "additionalProperties": false,
+                "description": "Specifies the IP address you want to [verify](ref:post-verify-edge-ip) or get the [location data](ref:post-locate-ip) for, or [both](ref:post-verify-locate-ip).\n",
+                "properties": {
+                  "ipAddress": {
+                    "description": "IP address you want to get the data for.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "ipAddress"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/verify-locate-ip-request.yaml"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "createdTime": "2021-10-04T15:01:46Z",
+                  "createdBy": "jsmith",
+                  "executionStatus": "SUCCESS",
+                  "request": {
+                    "ipAddress": "192.0.2.12"
+                  },
+                  "result": {
+                    "isEdgeIp": false,
+                    "geoLocation": {
+                      "countryCode": "CN",
+                      "regionCode": "BJ",
+                      "city": "BEIJING",
+                      "latitude": 39.9,
+                      "longitude": 116.41,
+                      "continent": "AS",
+                      "timeZone": "GMT+8",
+                      "network": "chinaunicom",
+                      "throughput": "vhigh",
+                      "asNumber": 4808
+                    }
+                  }
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Specifies the IP's network location, verification results, and details about the request.\n",
+                  "properties": {
+                    "createdBy": {
+                      "description": "Username who submitted the request.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "createdTime": {
+                      "description": "ISO 8601 timestamp indicating when the request was submitted.\n",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "executionStatus": {
+                      "description": "Status of the request's execution, either `SUCCESS` or `FAILURE`.\n",
+                      "enum": [
+                        "SUCCESS",
+                        "FAILURE"
+                      ],
+                      "type": "string"
+                    },
+                    "request": {
+                      "description": "IP address you want to get the data for.\n",
+                      "additionalProperties": false,
+                      "properties": {
+                        "ipAddress": {
+                          "description": "IP address you want to get the data for.\n",
+                          "minLength": 1,
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "ipAddress"
+                      ],
+                      "type": "object",
+                      "x-akamai": {
+                        "file-path": "schemas/verify-locate-ip-request.yaml"
+                      }
+                    },
+                    "result": {
+                      "description": "Specifies the IP's network location and verification results.\n",
+                      "additionalProperties": false,
+                      "properties": {
+                        "geoLocation": {
+                          "description": "Specifies the IP's network location. To learn more about the results, check [Verify and Locate IP results](doc:verify-locate-ip#results).\n",
+                          "additionalProperties": false,
+                          "properties": {
+                            "areaCode": {
+                              "description": "List of comma-delimited area codes the IP's network maps to.\n",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "asNumber": {
+                              "description": "Autonomous System Number the IP's network maps to.\n",
+                              "minimum": 0,
+                              "type": "integer"
+                            },
+                            "city": {
+                              "description": "Closest city within a 50-mile radius the IP's network maps to.\n",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "continent": {
+                              "description": "ISO 3166 continent code the IP's network maps to.\n",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "countryCode": {
+                              "description": "ISO 3166 country code the IP's network maps to.\n",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "county": {
+                              "description": "Counties the IP's network maps to. Multiple values are separated with `+`.\n",
+                              "minLength": 0,
+                              "type": "string"
+                            },
+                            "dma": {
+                              "description": "Designated Market Area code the IP's network maps to.\n",
+                              "minimum": 0,
+                              "type": "integer"
+                            },
+                            "fips": {
+                              "description": "Federal Information Processing Standards code the IP's network maps to.\n",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "latitude": {
+                              "description": "The latitude the IP's network maps to.\n",
+                              "maximum": 90,
+                              "minimum": -90,
+                              "type": "number"
+                            },
+                            "longitude": {
+                              "description": "The longitude the IP's network maps to.\n",
+                              "maximum": 180,
+                              "minimum": -180,
+                              "type": "number"
+                            },
+                            "msa": {
+                              "description": "Metropolitan Statistical Area code the IP's network maps to.\n",
+                              "minimum": 0,
+                              "type": "integer"
+                            },
+                            "network": {
+                              "description": "Network the IP maps to. The value may be `null` when edge servers lack that data.\n",
+                              "minLength": 1,
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "networkType": {
+                              "description": "Network type the IP maps to. The value may be `null` when edge servers lack that data.\n",
+                              "minLength": 1,
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "pmsa": {
+                              "description": "Primary Metropolitan Statistical Area code the IP's network maps to.\n",
+                              "minimum": 0,
+                              "type": "integer"
+                            },
+                            "proxy": {
+                              "description": "Proxy the IP maps to. The value may be `null` when the IP address is not a proxy.\n",
+                              "minLength": 1,
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "regionCode": {
+                              "description": "ISO 3166 region code the IP's network maps to.\n",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "throughput": {
+                              "description": "Connection speed of the IP's network. Possible values are `low`, `medium`, `high`, or `vhigh`. IPv6 traffic is always `low`.\n",
+                              "enum": [
+                                "low",
+                                "medium",
+                                "high",
+                                "vhigh"
+                              ],
+                              "type": "string"
+                            },
+                            "timeZone": {
+                              "description": "Time zone used by the IP's network.\n",
+                              "minLength": 1,
+                              "type": "string"
+                            },
+                            "zipCode": {
+                              "description": "Zip code the IP's network maps to. Multiple values are separated with `+` and ranges are separated with `-`.\n",
+                              "minLength": 1,
+                              "type": "string"
+                            }
+                          },
+                          "type": "object",
+                          "x-akamai": {
+                            "file-path": "schemas/geo-location.yaml"
+                          }
+                        },
+                        "isEdgeIp": {
+                          "description": "Results of the verification.\n",
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "isEdgeIp",
+                        "geoLocation"
+                      ],
+                      "type": "object",
+                      "x-akamai": {
+                        "file-path": "schemas/verify-locate-ip-data.yaml"
+                      }
+                    }
+                  },
+                  "required": [
+                    "request",
+                    "createdBy",
+                    "createdTime",
+                    "executionStatus",
+                    "result"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/verify-locate-ip.yaml"
+                  }
+                }
+              }
+            },
+            "description": "The response provides the verification results, network location data, and details about the request.\n",
+            "headers": {
+              "X-RateLimit-Limit": {
+                "description": "The rate limit ceiling for this endpoint.\n",
+                "example": 10,
+                "schema": {
+                  "type": "integer"
+                },
+                "x-akamai": {
+                  "file-path": "headers/x-rate-limit-limit.yaml"
+                }
+              },
+              "X-RateLimit-Remaining": {
+                "description": "The number of requests left for the time window.\n",
+                "example": 5,
+                "schema": {
+                  "type": "integer"
+                },
+                "x-akamai": {
+                  "file-path": "headers/x-rate-limit-remaining.yaml"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "bad.request.error",
+                  "title": "Incorrect request.",
+                  "status": 400,
+                  "detail": "Provide only one of these members, either `edgeLocationId` or `edgeIp`.",
+                  "errors": [
+                    {
+                      "type": "field.conflict",
+                      "title": "Conflicting values.",
+                      "requestField": "edgeLocationId"
+                    },
+                    {
+                      "type": "field.conflict",
+                      "title": "Conflicting values.",
+                      "requestField": "edgeIp"
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies the errors.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "Detail about the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies the error that occurred.\n",
+                        "properties": {
+                          "requestField": {
+                            "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                            "type": "string"
+                          },
+                          "requestValues": {
+                            "description": "Lists values corresponding to the `requestField`.\n",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "title": "String",
+                                  "type": "string"
+                                },
+                                {
+                                  "title": "Integer",
+                                  "type": "integer"
+                                },
+                                {
+                                  "title": "Object",
+                                  "type": "object"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          },
+                          "title": {
+                            "description": "Title of the error.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of error.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "title"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/sub-problem.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "requestField": {
+                      "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                      "type": "string"
+                    },
+                    "requestValues": {
+                      "description": "Lists values corresponding to the `requestField`.\n",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "title": "String",
+                            "type": "string"
+                          },
+                          {
+                            "title": "Integer",
+                            "type": "integer"
+                          },
+                          {
+                            "title": "Object",
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "type": "array"
+                    },
+                    "status": {
+                      "description": "HTTP response code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Title of the error.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "Type of error.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Validation error](ref:400).\n",
+            "x-akamai": {
+              "file-path": "errors/400.yaml"
+            }
+          },
+          "401": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "https://problems.luna.akamaiapis.net/-/pep-authn/deny",
+                  "title": "Not authorized",
+                  "status": 401,
+                  "detail": "Inactive client token",
+                  "instance": "https://akab-nedrvuylepskzabx-lv3dgceqqktx3i5b.luna.akamaiapis.net/edge-diagnostics/v1/grep/requests"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies the errors.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "Detail about the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies the error that occurred.\n",
+                        "properties": {
+                          "requestField": {
+                            "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                            "type": "string"
+                          },
+                          "requestValues": {
+                            "description": "Lists values corresponding to the `requestField`.\n",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "title": "String",
+                                  "type": "string"
+                                },
+                                {
+                                  "title": "Integer",
+                                  "type": "integer"
+                                },
+                                {
+                                  "title": "Object",
+                                  "type": "object"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          },
+                          "title": {
+                            "description": "Title of the error.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of error.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "title"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/sub-problem.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "requestField": {
+                      "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                      "type": "string"
+                    },
+                    "requestValues": {
+                      "description": "Lists values corresponding to the `requestField`.\n",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "title": "String",
+                            "type": "string"
+                          },
+                          {
+                            "title": "Integer",
+                            "type": "integer"
+                          },
+                          {
+                            "title": "Object",
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "type": "array"
+                    },
+                    "status": {
+                      "description": "HTTP response code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Title of the error.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "Type of error.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Authorization error](ref:401).\n",
+            "x-akamai": {
+              "file-path": "errors/401.yaml"
+            }
+          },
+          "403": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "forbidden.request.error",
+                  "title": "Forbidden request.",
+                  "status": 403,
+                  "errors": [
+                    {
+                      "type": "field.access.denied",
+                      "title": "Field access denied.",
+                      "detail": "You don't have access to the requested URL. Contact your Admin to request access.",
+                      "requestField": "url"
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies the errors.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "Detail about the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies the error that occurred.\n",
+                        "properties": {
+                          "requestField": {
+                            "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                            "type": "string"
+                          },
+                          "requestValues": {
+                            "description": "Lists values corresponding to the `requestField`.\n",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "title": "String",
+                                  "type": "string"
+                                },
+                                {
+                                  "title": "Integer",
+                                  "type": "integer"
+                                },
+                                {
+                                  "title": "Object",
+                                  "type": "object"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          },
+                          "title": {
+                            "description": "Title of the error.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of error.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "title"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/sub-problem.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "requestField": {
+                      "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                      "type": "string"
+                    },
+                    "requestValues": {
+                      "description": "Lists values corresponding to the `requestField`.\n",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "title": "String",
+                            "type": "string"
+                          },
+                          {
+                            "title": "Integer",
+                            "type": "integer"
+                          },
+                          {
+                            "title": "Object",
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "type": "array"
+                    },
+                    "status": {
+                      "description": "HTTP response code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Title of the error.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "Type of error.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Permission error](ref:403).\n",
+            "x-akamai": {
+              "file-path": "errors/403.yaml"
+            }
+          },
+          "405": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "method.not.allowed",
+                  "title": "Method not allowed"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies the errors.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "Detail about the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies the error that occurred.\n",
+                        "properties": {
+                          "requestField": {
+                            "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                            "type": "string"
+                          },
+                          "requestValues": {
+                            "description": "Lists values corresponding to the `requestField`.\n",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "title": "String",
+                                  "type": "string"
+                                },
+                                {
+                                  "title": "Integer",
+                                  "type": "integer"
+                                },
+                                {
+                                  "title": "Object",
+                                  "type": "object"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          },
+                          "title": {
+                            "description": "Title of the error.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of error.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "title"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/sub-problem.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "requestField": {
+                      "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                      "type": "string"
+                    },
+                    "requestValues": {
+                      "description": "Lists values corresponding to the `requestField`.\n",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "title": "String",
+                            "type": "string"
+                          },
+                          {
+                            "title": "Integer",
+                            "type": "integer"
+                          },
+                          {
+                            "title": "Object",
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "type": "array"
+                    },
+                    "status": {
+                      "description": "HTTP response code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Title of the error.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "Type of error.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Method not allowed](ref:405).\n",
+            "x-akamai": {
+              "file-path": "errors/405.yaml"
+            }
+          },
+          "429": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "type": "requests.exceeded.error",
+                  "title": "Too Many Requests",
+                  "detail": "You have exceeded total number of requests configured for this API.",
+                  "status": 429
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies the errors.\n",
+                  "properties": {
+                    "detail": {
+                      "description": "Detail about the problem.\n",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "errors": {
+                      "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies the error that occurred.\n",
+                        "properties": {
+                          "requestField": {
+                            "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                            "type": "string"
+                          },
+                          "requestValues": {
+                            "description": "Lists values corresponding to the `requestField`.\n",
+                            "items": {
+                              "anyOf": [
+                                {
+                                  "title": "String",
+                                  "type": "string"
+                                },
+                                {
+                                  "title": "Integer",
+                                  "type": "integer"
+                                },
+                                {
+                                  "title": "Object",
+                                  "type": "object"
+                                }
+                              ]
+                            },
+                            "type": "array"
+                          },
+                          "title": {
+                            "description": "Title of the error.\n",
+                            "type": "string"
+                          },
+                          "type": {
+                            "description": "Type of error.\n",
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "type",
+                          "title"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/sub-problem.yaml"
+                        }
+                      },
+                      "type": "array"
+                    },
+                    "requestField": {
+                      "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                      "type": "string"
+                    },
+                    "requestValues": {
+                      "description": "Lists values corresponding to the `requestField`.\n",
+                      "items": {
+                        "anyOf": [
+                          {
+                            "title": "String",
+                            "type": "string"
+                          },
+                          {
+                            "title": "Integer",
+                            "type": "integer"
+                          },
+                          {
+                            "title": "Object",
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "type": "array"
+                    },
+                    "status": {
+                      "description": "HTTP response code.\n",
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "Title of the error.\n",
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "Type of error.\n",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/problem.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Too many requests](ref:429).\n",
+            "x-akamai": {
+              "file-path": "errors/429.yaml"
+            }
+          }
+        },
+        "summary": "Verify and locate an IP",
+        "tags": [
+          "IP verification and location"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/verify-locate-ip.yaml",
+        "path-info": "/verify-locate-ip"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "verify-locate-ip-request": {
+        "additionalProperties": false,
+        "description": "Specifies the IP address you want to [verify](ref:post-verify-edge-ip) or get the [location data](ref:post-locate-ip) for, or [both](ref:post-verify-locate-ip).\n",
+        "properties": {
+          "ipAddress": {
+            "description": "IP address you want to get the data for.\n",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "ipAddress"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/verify-locate-ip-request.yaml"
+        }
+      },
+      "geo-location": {
+        "additionalProperties": false,
+        "description": "Specifies the IP's network location. To learn more about the results, check [Verify and Locate IP results](doc:verify-locate-ip#results).\n",
+        "properties": {
+          "areaCode": {
+            "description": "List of comma-delimited area codes the IP's network maps to.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "asNumber": {
+            "description": "Autonomous System Number the IP's network maps to.\n",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "city": {
+            "description": "Closest city within a 50-mile radius the IP's network maps to.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "continent": {
+            "description": "ISO 3166 continent code the IP's network maps to.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "countryCode": {
+            "description": "ISO 3166 country code the IP's network maps to.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "county": {
+            "description": "Counties the IP's network maps to. Multiple values are separated with `+`.\n",
+            "minLength": 0,
+            "type": "string"
+          },
+          "dma": {
+            "description": "Designated Market Area code the IP's network maps to.\n",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "fips": {
+            "description": "Federal Information Processing Standards code the IP's network maps to.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "latitude": {
+            "description": "The latitude the IP's network maps to.\n",
+            "maximum": 90,
+            "minimum": -90,
+            "type": "number"
+          },
+          "longitude": {
+            "description": "The longitude the IP's network maps to.\n",
+            "maximum": 180,
+            "minimum": -180,
+            "type": "number"
+          },
+          "msa": {
+            "description": "Metropolitan Statistical Area code the IP's network maps to.\n",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "network": {
+            "description": "Network the IP maps to. The value may be `null` when edge servers lack that data.\n",
+            "minLength": 1,
+            "nullable": true,
+            "type": "string"
+          },
+          "networkType": {
+            "description": "Network type the IP maps to. The value may be `null` when edge servers lack that data.\n",
+            "minLength": 1,
+            "nullable": true,
+            "type": "string"
+          },
+          "pmsa": {
+            "description": "Primary Metropolitan Statistical Area code the IP's network maps to.\n",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "proxy": {
+            "description": "Proxy the IP maps to. The value may be `null` when the IP address is not a proxy.\n",
+            "minLength": 1,
+            "nullable": true,
+            "type": "string"
+          },
+          "regionCode": {
+            "description": "ISO 3166 region code the IP's network maps to.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "throughput": {
+            "description": "Connection speed of the IP's network. Possible values are `low`, `medium`, `high`, or `vhigh`. IPv6 traffic is always `low`.\n",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "vhigh"
+            ],
+            "type": "string"
+          },
+          "timeZone": {
+            "description": "Time zone used by the IP's network.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "zipCode": {
+            "description": "Zip code the IP's network maps to. Multiple values are separated with `+` and ranges are separated with `-`.\n",
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/geo-location.yaml"
+        }
+      },
+      "verify-locate-ip-data": {
+        "additionalProperties": false,
+        "description": "Specifies the IP's network location and verification results.\n",
+        "properties": {
+          "geoLocation": {
+            "description": "Specifies the IP's network location. To learn more about the results, check [Verify and Locate IP results](doc:verify-locate-ip#results).\n",
+            "additionalProperties": false,
+            "properties": {
+              "areaCode": {
+                "description": "List of comma-delimited area codes the IP's network maps to.\n",
+                "minLength": 1,
+                "type": "string"
+              },
+              "asNumber": {
+                "description": "Autonomous System Number the IP's network maps to.\n",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "city": {
+                "description": "Closest city within a 50-mile radius the IP's network maps to.\n",
+                "minLength": 1,
+                "type": "string"
+              },
+              "continent": {
+                "description": "ISO 3166 continent code the IP's network maps to.\n",
+                "minLength": 1,
+                "type": "string"
+              },
+              "countryCode": {
+                "description": "ISO 3166 country code the IP's network maps to.\n",
+                "minLength": 1,
+                "type": "string"
+              },
+              "county": {
+                "description": "Counties the IP's network maps to. Multiple values are separated with `+`.\n",
+                "minLength": 0,
+                "type": "string"
+              },
+              "dma": {
+                "description": "Designated Market Area code the IP's network maps to.\n",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "fips": {
+                "description": "Federal Information Processing Standards code the IP's network maps to.\n",
+                "minLength": 1,
+                "type": "string"
+              },
+              "latitude": {
+                "description": "The latitude the IP's network maps to.\n",
+                "maximum": 90,
+                "minimum": -90,
+                "type": "number"
+              },
+              "longitude": {
+                "description": "The longitude the IP's network maps to.\n",
+                "maximum": 180,
+                "minimum": -180,
+                "type": "number"
+              },
+              "msa": {
+                "description": "Metropolitan Statistical Area code the IP's network maps to.\n",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "network": {
+                "description": "Network the IP maps to. The value may be `null` when edge servers lack that data.\n",
+                "minLength": 1,
+                "nullable": true,
+                "type": "string"
+              },
+              "networkType": {
+                "description": "Network type the IP maps to. The value may be `null` when edge servers lack that data.\n",
+                "minLength": 1,
+                "nullable": true,
+                "type": "string"
+              },
+              "pmsa": {
+                "description": "Primary Metropolitan Statistical Area code the IP's network maps to.\n",
+                "minimum": 0,
+                "type": "integer"
+              },
+              "proxy": {
+                "description": "Proxy the IP maps to. The value may be `null` when the IP address is not a proxy.\n",
+                "minLength": 1,
+                "nullable": true,
+                "type": "string"
+              },
+              "regionCode": {
+                "description": "ISO 3166 region code the IP's network maps to.\n",
+                "minLength": 1,
+                "type": "string"
+              },
+              "throughput": {
+                "description": "Connection speed of the IP's network. Possible values are `low`, `medium`, `high`, or `vhigh`. IPv6 traffic is always `low`.\n",
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "vhigh"
+                ],
+                "type": "string"
+              },
+              "timeZone": {
+                "description": "Time zone used by the IP's network.\n",
+                "minLength": 1,
+                "type": "string"
+              },
+              "zipCode": {
+                "description": "Zip code the IP's network maps to. Multiple values are separated with `+` and ranges are separated with `-`.\n",
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "type": "object",
+            "x-akamai": {
+              "file-path": "schemas/geo-location.yaml"
+            }
+          },
+          "isEdgeIp": {
+            "description": "Results of the verification.\n",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "isEdgeIp",
+          "geoLocation"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/verify-locate-ip-data.yaml"
+        }
+      },
+      "verify-locate-ip": {
+        "additionalProperties": false,
+        "description": "Specifies the IP's network location, verification results, and details about the request.\n",
+        "properties": {
+          "createdBy": {
+            "description": "Username who submitted the request.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "createdTime": {
+            "description": "ISO 8601 timestamp indicating when the request was submitted.\n",
+            "format": "date-time",
+            "type": "string"
+          },
+          "executionStatus": {
+            "description": "Status of the request's execution, either `SUCCESS` or `FAILURE`.\n",
+            "enum": [
+              "SUCCESS",
+              "FAILURE"
+            ],
+            "type": "string"
+          },
+          "request": {
+            "description": "IP address you want to get the data for.\n",
+            "additionalProperties": false,
+            "properties": {
+              "ipAddress": {
+                "description": "IP address you want to get the data for.\n",
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "ipAddress"
+            ],
+            "type": "object",
+            "x-akamai": {
+              "file-path": "schemas/verify-locate-ip-request.yaml"
+            }
+          },
+          "result": {
+            "description": "Specifies the IP's network location and verification results.\n",
+            "additionalProperties": false,
+            "properties": {
+              "geoLocation": {
+                "description": "Specifies the IP's network location. To learn more about the results, check [Verify and Locate IP results](doc:verify-locate-ip#results).\n",
+                "additionalProperties": false,
+                "properties": {
+                  "areaCode": {
+                    "description": "List of comma-delimited area codes the IP's network maps to.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "asNumber": {
+                    "description": "Autonomous System Number the IP's network maps to.\n",
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "city": {
+                    "description": "Closest city within a 50-mile radius the IP's network maps to.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "continent": {
+                    "description": "ISO 3166 continent code the IP's network maps to.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "countryCode": {
+                    "description": "ISO 3166 country code the IP's network maps to.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "county": {
+                    "description": "Counties the IP's network maps to. Multiple values are separated with `+`.\n",
+                    "minLength": 0,
+                    "type": "string"
+                  },
+                  "dma": {
+                    "description": "Designated Market Area code the IP's network maps to.\n",
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "fips": {
+                    "description": "Federal Information Processing Standards code the IP's network maps to.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "latitude": {
+                    "description": "The latitude the IP's network maps to.\n",
+                    "maximum": 90,
+                    "minimum": -90,
+                    "type": "number"
+                  },
+                  "longitude": {
+                    "description": "The longitude the IP's network maps to.\n",
+                    "maximum": 180,
+                    "minimum": -180,
+                    "type": "number"
+                  },
+                  "msa": {
+                    "description": "Metropolitan Statistical Area code the IP's network maps to.\n",
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "network": {
+                    "description": "Network the IP maps to. The value may be `null` when edge servers lack that data.\n",
+                    "minLength": 1,
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "networkType": {
+                    "description": "Network type the IP maps to. The value may be `null` when edge servers lack that data.\n",
+                    "minLength": 1,
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "pmsa": {
+                    "description": "Primary Metropolitan Statistical Area code the IP's network maps to.\n",
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "proxy": {
+                    "description": "Proxy the IP maps to. The value may be `null` when the IP address is not a proxy.\n",
+                    "minLength": 1,
+                    "nullable": true,
+                    "type": "string"
+                  },
+                  "regionCode": {
+                    "description": "ISO 3166 region code the IP's network maps to.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "throughput": {
+                    "description": "Connection speed of the IP's network. Possible values are `low`, `medium`, `high`, or `vhigh`. IPv6 traffic is always `low`.\n",
+                    "enum": [
+                      "low",
+                      "medium",
+                      "high",
+                      "vhigh"
+                    ],
+                    "type": "string"
+                  },
+                  "timeZone": {
+                    "description": "Time zone used by the IP's network.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "zipCode": {
+                    "description": "Zip code the IP's network maps to. Multiple values are separated with `+` and ranges are separated with `-`.\n",
+                    "minLength": 1,
+                    "type": "string"
+                  }
+                },
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/geo-location.yaml"
+                }
+              },
+              "isEdgeIp": {
+                "description": "Results of the verification.\n",
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "isEdgeIp",
+              "geoLocation"
+            ],
+            "type": "object",
+            "x-akamai": {
+              "file-path": "schemas/verify-locate-ip-data.yaml"
+            }
+          }
+        },
+        "required": [
+          "request",
+          "createdBy",
+          "createdTime",
+          "executionStatus",
+          "result"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/verify-locate-ip.yaml"
+        }
+      },
+      "sub-problem": {
+        "additionalProperties": true,
+        "description": "Specifies the error that occurred.\n",
+        "properties": {
+          "requestField": {
+            "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+            "type": "string"
+          },
+          "requestValues": {
+            "description": "Lists values corresponding to the `requestField`.\n",
+            "items": {
+              "anyOf": [
+                {
+                  "title": "String",
+                  "type": "string"
+                },
+                {
+                  "title": "Integer",
+                  "type": "integer"
+                },
+                {
+                  "title": "Object",
+                  "type": "object"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "title": {
+            "description": "Title of the error.\n",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of error.\n",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/sub-problem.yaml"
+        }
+      },
+      "problem": {
+        "additionalProperties": true,
+        "description": "Specifies the errors.\n",
+        "properties": {
+          "detail": {
+            "description": "Detail about the problem.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "errors": {
+            "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+            "items": {
+              "additionalProperties": true,
+              "description": "Specifies the error that occurred.\n",
+              "properties": {
+                "requestField": {
+                  "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                  "type": "string"
+                },
+                "requestValues": {
+                  "description": "Lists values corresponding to the `requestField`.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "title": "String",
+                        "type": "string"
+                      },
+                      {
+                        "title": "Integer",
+                        "type": "integer"
+                      },
+                      {
+                        "title": "Object",
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                },
+                "title": {
+                  "description": "Title of the error.\n",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of error.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/sub-problem.yaml"
+              }
+            },
+            "type": "array"
+          },
+          "requestField": {
+            "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+            "type": "string"
+          },
+          "requestValues": {
+            "description": "Lists values corresponding to the `requestField`.\n",
+            "items": {
+              "anyOf": [
+                {
+                  "title": "String",
+                  "type": "string"
+                },
+                {
+                  "title": "Integer",
+                  "type": "integer"
+                },
+                {
+                  "title": "Object",
+                  "type": "object"
+                }
+              ]
+            },
+            "type": "array"
+          },
+          "status": {
+            "description": "HTTP response code.\n",
+            "type": "integer"
+          },
+          "title": {
+            "description": "Title of the error.\n",
+            "type": "string"
+          },
+          "type": {
+            "description": "Type of error.\n",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "title"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/problem.yaml"
+        }
+      }
+    },
+    "headers": {
+      "x-rate-limit-limit": {
+        "description": "The rate limit ceiling for this endpoint.\n",
+        "example": 10,
+        "schema": {
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "headers/x-rate-limit-limit.yaml"
+        }
+      },
+      "x-rate-limit-remaining": {
+        "description": "The number of requests left for the time window.\n",
+        "example": 5,
+        "schema": {
+          "type": "integer"
+        },
+        "x-akamai": {
+          "file-path": "headers/x-rate-limit-remaining.yaml"
+        }
+      }
+    },
+    "responses": {
+      "400": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "type": "bad.request.error",
+              "title": "Incorrect request.",
+              "status": 400,
+              "detail": "Provide only one of these members, either `edgeLocationId` or `edgeIp`.",
+              "errors": [
+                {
+                  "type": "field.conflict",
+                  "title": "Conflicting values.",
+                  "requestField": "edgeLocationId"
+                },
+                {
+                  "type": "field.conflict",
+                  "title": "Conflicting values.",
+                  "requestField": "edgeIp"
+                }
+              ]
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "Specifies the errors.\n",
+              "properties": {
+                "detail": {
+                  "description": "Detail about the problem.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "errors": {
+                  "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Specifies the error that occurred.\n",
+                    "properties": {
+                      "requestField": {
+                        "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                        "type": "string"
+                      },
+                      "requestValues": {
+                        "description": "Lists values corresponding to the `requestField`.\n",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "title": "String",
+                              "type": "string"
+                            },
+                            {
+                              "title": "Integer",
+                              "type": "integer"
+                            },
+                            {
+                              "title": "Object",
+                              "type": "object"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      },
+                      "title": {
+                        "description": "Title of the error.\n",
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Type of error.\n",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "title"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/sub-problem.yaml"
+                    }
+                  },
+                  "type": "array"
+                },
+                "requestField": {
+                  "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                  "type": "string"
+                },
+                "requestValues": {
+                  "description": "Lists values corresponding to the `requestField`.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "title": "String",
+                        "type": "string"
+                      },
+                      {
+                        "title": "Integer",
+                        "type": "integer"
+                      },
+                      {
+                        "title": "Object",
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                },
+                "status": {
+                  "description": "HTTP response code.\n",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title of the error.\n",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of error.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/problem.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Validation error](ref:400).\n",
+        "x-akamai": {
+          "file-path": "errors/400.yaml"
+        }
+      },
+      "401": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "type": "https://problems.luna.akamaiapis.net/-/pep-authn/deny",
+              "title": "Not authorized",
+              "status": 401,
+              "detail": "Inactive client token",
+              "instance": "https://akab-nedrvuylepskzabx-lv3dgceqqktx3i5b.luna.akamaiapis.net/edge-diagnostics/v1/grep/requests"
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "Specifies the errors.\n",
+              "properties": {
+                "detail": {
+                  "description": "Detail about the problem.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "errors": {
+                  "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Specifies the error that occurred.\n",
+                    "properties": {
+                      "requestField": {
+                        "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                        "type": "string"
+                      },
+                      "requestValues": {
+                        "description": "Lists values corresponding to the `requestField`.\n",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "title": "String",
+                              "type": "string"
+                            },
+                            {
+                              "title": "Integer",
+                              "type": "integer"
+                            },
+                            {
+                              "title": "Object",
+                              "type": "object"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      },
+                      "title": {
+                        "description": "Title of the error.\n",
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Type of error.\n",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "title"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/sub-problem.yaml"
+                    }
+                  },
+                  "type": "array"
+                },
+                "requestField": {
+                  "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                  "type": "string"
+                },
+                "requestValues": {
+                  "description": "Lists values corresponding to the `requestField`.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "title": "String",
+                        "type": "string"
+                      },
+                      {
+                        "title": "Integer",
+                        "type": "integer"
+                      },
+                      {
+                        "title": "Object",
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                },
+                "status": {
+                  "description": "HTTP response code.\n",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title of the error.\n",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of error.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/problem.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Authorization error](ref:401).\n",
+        "x-akamai": {
+          "file-path": "errors/401.yaml"
+        }
+      },
+      "403": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "type": "forbidden.request.error",
+              "title": "Forbidden request.",
+              "status": 403,
+              "errors": [
+                {
+                  "type": "field.access.denied",
+                  "title": "Field access denied.",
+                  "detail": "You don't have access to the requested URL. Contact your Admin to request access.",
+                  "requestField": "url"
+                }
+              ]
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "Specifies the errors.\n",
+              "properties": {
+                "detail": {
+                  "description": "Detail about the problem.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "errors": {
+                  "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Specifies the error that occurred.\n",
+                    "properties": {
+                      "requestField": {
+                        "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                        "type": "string"
+                      },
+                      "requestValues": {
+                        "description": "Lists values corresponding to the `requestField`.\n",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "title": "String",
+                              "type": "string"
+                            },
+                            {
+                              "title": "Integer",
+                              "type": "integer"
+                            },
+                            {
+                              "title": "Object",
+                              "type": "object"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      },
+                      "title": {
+                        "description": "Title of the error.\n",
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Type of error.\n",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "title"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/sub-problem.yaml"
+                    }
+                  },
+                  "type": "array"
+                },
+                "requestField": {
+                  "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                  "type": "string"
+                },
+                "requestValues": {
+                  "description": "Lists values corresponding to the `requestField`.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "title": "String",
+                        "type": "string"
+                      },
+                      {
+                        "title": "Integer",
+                        "type": "integer"
+                      },
+                      {
+                        "title": "Object",
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                },
+                "status": {
+                  "description": "HTTP response code.\n",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title of the error.\n",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of error.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/problem.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Permission error](ref:403).\n",
+        "x-akamai": {
+          "file-path": "errors/403.yaml"
+        }
+      },
+      "405": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "type": "method.not.allowed",
+              "title": "Method not allowed"
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "Specifies the errors.\n",
+              "properties": {
+                "detail": {
+                  "description": "Detail about the problem.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "errors": {
+                  "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Specifies the error that occurred.\n",
+                    "properties": {
+                      "requestField": {
+                        "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                        "type": "string"
+                      },
+                      "requestValues": {
+                        "description": "Lists values corresponding to the `requestField`.\n",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "title": "String",
+                              "type": "string"
+                            },
+                            {
+                              "title": "Integer",
+                              "type": "integer"
+                            },
+                            {
+                              "title": "Object",
+                              "type": "object"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      },
+                      "title": {
+                        "description": "Title of the error.\n",
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Type of error.\n",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "title"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/sub-problem.yaml"
+                    }
+                  },
+                  "type": "array"
+                },
+                "requestField": {
+                  "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                  "type": "string"
+                },
+                "requestValues": {
+                  "description": "Lists values corresponding to the `requestField`.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "title": "String",
+                        "type": "string"
+                      },
+                      {
+                        "title": "Integer",
+                        "type": "integer"
+                      },
+                      {
+                        "title": "Object",
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                },
+                "status": {
+                  "description": "HTTP response code.\n",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title of the error.\n",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of error.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/problem.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Method not allowed](ref:405).\n",
+        "x-akamai": {
+          "file-path": "errors/405.yaml"
+        }
+      },
+      "429": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "type": "requests.exceeded.error",
+              "title": "Too Many Requests",
+              "detail": "You have exceeded total number of requests configured for this API.",
+              "status": 429
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "Specifies the errors.\n",
+              "properties": {
+                "detail": {
+                  "description": "Detail about the problem.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "errors": {
+                  "description": "[HTTP Problem Details](https://tools.ietf.org/html/rfc9457) objects indicating causes of failure.\n",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Specifies the error that occurred.\n",
+                    "properties": {
+                      "requestField": {
+                        "description": "Request field name the error refers to. It can be a URL path or query parameter or any request payload field name.\n",
+                        "type": "string"
+                      },
+                      "requestValues": {
+                        "description": "Lists values corresponding to the `requestField`.\n",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "title": "String",
+                              "type": "string"
+                            },
+                            {
+                              "title": "Integer",
+                              "type": "integer"
+                            },
+                            {
+                              "title": "Object",
+                              "type": "object"
+                            }
+                          ]
+                        },
+                        "type": "array"
+                      },
+                      "title": {
+                        "description": "Title of the error.\n",
+                        "type": "string"
+                      },
+                      "type": {
+                        "description": "Type of error.\n",
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "title"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/sub-problem.yaml"
+                    }
+                  },
+                  "type": "array"
+                },
+                "requestField": {
+                  "description": "Request field name the error refers to. It can be a path or query parameter of the URL or any request payload field name.\n",
+                  "type": "string"
+                },
+                "requestValues": {
+                  "description": "Lists values corresponding to the `requestField`.\n",
+                  "items": {
+                    "anyOf": [
+                      {
+                        "title": "String",
+                        "type": "string"
+                      },
+                      {
+                        "title": "Integer",
+                        "type": "integer"
+                      },
+                      {
+                        "title": "Object",
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                },
+                "status": {
+                  "description": "HTTP response code.\n",
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "Title of the error.\n",
+                  "type": "string"
+                },
+                "type": {
+                  "description": "Type of error.\n",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/problem.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Too many requests](ref:429).\n",
+        "x-akamai": {
+          "file-path": "errors/429.yaml"
+        }
+      }
+    }
+  },
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "04-verify-locate-ip.yaml"
+  }
+}

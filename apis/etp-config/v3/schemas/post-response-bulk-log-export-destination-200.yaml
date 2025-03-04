@@ -1,0 +1,47 @@
+type: object
+description: |-
+  A bulk log export destination.
+  
+x-akamai:
+  file-path: schemas/post-response-bulk-log-export-destination-200.yaml
+additionalProperties: true
+properties:
+  id:
+    type: integer
+    description: |
+      The log export schedule ID.
+  type:
+    type: string
+    description: |
+      The cloud storage destination type. Either `AzureBlob` or `LinodeS3`.
+    enum:
+    - AzureBlob
+    - LinodeS3
+  parameters:
+    oneOf:
+    - $ref: post-response-azure-bulk-log-export-destination-200.yaml
+      title: Azure destination response
+    - $ref: post-response-linode-bulk-log-export-destination-200.yaml
+      title: Linode destination response
+  createdBy:
+    type: string
+    description: |
+      User who created the destination.
+  createdDate:
+    type: string
+    description: |
+      ISO 8601 timestamp when the destination was created.
+    format: date-time
+  etpConfigId:
+    type: integer
+    description: |
+      The ETP/SIA configuration ID.
+  modifiedBy:
+    type: string
+    description: |
+      User who last modified the destination.
+  modifiedDate:
+    type: string
+    description: |
+      ISO 8601 timestamp when the change was made.
+    format: date-time

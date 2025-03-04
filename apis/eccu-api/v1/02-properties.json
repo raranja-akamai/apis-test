@@ -1,0 +1,200 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Properties",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/eccu-api/v1"
+    }
+  ],
+  "paths": {
+    "/properties": {
+      "get": {
+        "description": "Returns the digital properties that you can apply ECCU refresh requests to.\n",
+        "operationId": "get-properties",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "properties": [
+                    {
+                      "propertyName": "www.example.com",
+                      "propertyType": "HOST_HEADER",
+                      "propertyNameExactMatch": true
+                    },
+                    {
+                      "propertyName": "www.another-example.com",
+                      "propertyType": "ARL_TOKEN",
+                      "propertyNameExactMatch": false
+                    },
+                    {
+                      "propertyName": "example2.com",
+                      "propertyType": "ARL_TOKEN",
+                      "propertyNameExactMatch": true
+                    }
+                  ]
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Contains a collection of properties.\n",
+                  "properties": {
+                    "properties": {
+                      "description": "Collects data about each digital property under your account that you need to make an ECCU request for.\n",
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Collects data about each digital property under your account that you need to make an ECCU request for.\n",
+                        "properties": {
+                          "propertyName": {
+                            "description": "Identifies the digital property whose content you want to refresh.\n",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "propertyNameExactMatch": {
+                            "description": "Specifies whether to exactly match the full string of the `propertyName`, or to perform an inexact right hand side (RHS) substring match. For example, with `propertyNameExactMatch` enabled, `example.com` does not match `www.example.com`.\n",
+                            "type": "boolean"
+                          },
+                          "propertyType": {
+                            "description": "Specifies the type of digital property. Either `ARL_TOKEN` or `HOST_HEADER`. This tells the edge network whether the purge information is contained in the ARL, or in a configuration file. The ARL is similar to the URL, but the ARL is specifically defined for objects to be served by the edge network. There are two types of ARLs, v1 and v2. For details, see the [Purge Cache documentation](https://techdocs.akamai.com/purge-cache/docs/digital-props).\n",
+                            "enum": [
+                              "ARL_TOKEN",
+                              "HOST_HEADER"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "propertyName",
+                          "propertyNameExactMatch",
+                          "propertyType"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/property.yaml"
+                        }
+                      },
+                      "minItems": 0,
+                      "type": "array"
+                    }
+                  },
+                  "required": [
+                    "properties"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/properties.yaml"
+                  }
+                }
+              }
+            },
+            "description": "List properties.\n"
+          }
+        },
+        "summary": "List properties",
+        "tags": [
+          "Properties"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/properties.yaml",
+        "path-info": "/properties"
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "property": {
+        "additionalProperties": false,
+        "description": "Collects data about each digital property under your account that you need to make an ECCU request for.\n",
+        "properties": {
+          "propertyName": {
+            "description": "Identifies the digital property whose content you want to refresh.\n",
+            "minLength": 1,
+            "type": "string"
+          },
+          "propertyNameExactMatch": {
+            "description": "Specifies whether to exactly match the full string of the `propertyName`, or to perform an inexact right hand side (RHS) substring match. For example, with `propertyNameExactMatch` enabled, `example.com` does not match `www.example.com`.\n",
+            "type": "boolean"
+          },
+          "propertyType": {
+            "description": "Specifies the type of digital property. Either `ARL_TOKEN` or `HOST_HEADER`. This tells the edge network whether the purge information is contained in the ARL, or in a configuration file. The ARL is similar to the URL, but the ARL is specifically defined for objects to be served by the edge network. There are two types of ARLs, v1 and v2. For details, see the [Purge Cache documentation](https://techdocs.akamai.com/purge-cache/docs/digital-props).\n",
+            "enum": [
+              "ARL_TOKEN",
+              "HOST_HEADER"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "propertyName",
+          "propertyNameExactMatch",
+          "propertyType"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/property.yaml"
+        }
+      },
+      "properties": {
+        "additionalProperties": false,
+        "description": "Contains a collection of properties.\n",
+        "properties": {
+          "properties": {
+            "description": "Collects data about each digital property under your account that you need to make an ECCU request for.\n",
+            "items": {
+              "additionalProperties": false,
+              "description": "Collects data about each digital property under your account that you need to make an ECCU request for.\n",
+              "properties": {
+                "propertyName": {
+                  "description": "Identifies the digital property whose content you want to refresh.\n",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "propertyNameExactMatch": {
+                  "description": "Specifies whether to exactly match the full string of the `propertyName`, or to perform an inexact right hand side (RHS) substring match. For example, with `propertyNameExactMatch` enabled, `example.com` does not match `www.example.com`.\n",
+                  "type": "boolean"
+                },
+                "propertyType": {
+                  "description": "Specifies the type of digital property. Either `ARL_TOKEN` or `HOST_HEADER`. This tells the edge network whether the purge information is contained in the ARL, or in a configuration file. The ARL is similar to the URL, but the ARL is specifically defined for objects to be served by the edge network. There are two types of ARLs, v1 and v2. For details, see the [Purge Cache documentation](https://techdocs.akamai.com/purge-cache/docs/digital-props).\n",
+                  "enum": [
+                    "ARL_TOKEN",
+                    "HOST_HEADER"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "propertyName",
+                "propertyNameExactMatch",
+                "propertyType"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/property.yaml"
+              }
+            },
+            "minItems": 0,
+            "type": "array"
+          }
+        },
+        "required": [
+          "properties"
+        ],
+        "type": "object",
+        "x-akamai": {
+          "file-path": "schemas/properties.yaml"
+        }
+      }
+    }
+  },
+  "x-akamai": {
+    "auth-type": "EDGE_GRID",
+    "file-path": "02-properties.yaml"
+  }
+}

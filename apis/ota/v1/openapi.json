@@ -15,7 +15,7 @@
               "description": "Specifies an error response returned by the IoT OTA Updates API.",
               "properties": {
                 "code": {
-                  "description": "Unique code for an error.",
+                  "description": "The unique code for an error.",
                   "minLength": 1,
                   "type": "string"
                 },
@@ -25,12 +25,12 @@
                   "type": "string"
                 },
                 "solution": {
-                  "description": "A short, human-readable problem solution.",
+                  "description": "A human-readable solution to a problem.",
                   "minLength": 1,
                   "type": "string"
                 },
                 "title": {
-                  "description": "A short, human-readable summary of the problem type.",
+                  "description": "A human-readable summary of the problem type.",
                   "minLength": 1,
                   "type": "string"
                 }
@@ -51,21 +51,21 @@
           "file-path": "errors/401.yaml"
         }
       },
-      "405": {
+      "403": {
         "content": {
           "application/problem+json": {
             "example": {
-              "code": "METHOD_NOT_ALLOWED",
-              "incidentId": "865ed61f-6f9a-40a2-b11d-c8dc4292dd33",
-              "title": "Request method 'POST' is not supported",
-              "type": "/ota-api/error-types/METHOD_NOT_ALLOWED"
+              "code": "weeperf.ota.access.denied",
+              "incidentId": "f5e53705-0764-4afe-aff3-823dc15c818a",
+              "title": "Access Denied",
+              "type": "/ota-api/error-types/weeperf.ota.access.denied"
             },
             "schema": {
               "additionalProperties": true,
               "description": "Specifies an error response returned by the IoT OTA Updates API.",
               "properties": {
                 "code": {
-                  "description": "Unique code for an error.",
+                  "description": "The unique code for an error.",
                   "minLength": 1,
                   "type": "string"
                 },
@@ -75,27 +75,27 @@
                   "type": "string"
                 },
                 "details": {
-                  "description": "A list of HTTP problem details. This field exists if there are many problems with a single request and you want to call them each out explicitly.",
+                  "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
                   "items": {
                     "additionalProperties": true,
                     "description": "Specifies nested details of an error response.",
                     "properties": {
                       "code": {
-                        "description": "Unique code for each error.",
+                        "description": "The unique code for an error.",
                         "minLength": 1,
                         "type": "string"
                       },
                       "data": {
-                        "description": "Object map with details about rejected values.",
+                        "description": "An object map with details about rejected values.",
                         "type": "object"
                       },
                       "field": {
-                        "description": "Request parameter, path variable, or request body field that caused an error.",
+                        "description": "A request parameter, path variable, or request body field that caused an error.",
                         "minLength": 1,
                         "type": "string"
                       },
                       "message": {
-                        "description": "A short, human-readable summary of the problem type.",
+                        "description": "A human-readable summary of the problem type.",
                         "minLength": 1,
                         "type": "string"
                       }
@@ -128,7 +128,7 @@
                   "type": "integer"
                 },
                 "title": {
-                  "description": "A short, human-readable summary of the problem type.",
+                  "description": "A human-readable summary of the problem type.",
                   "minLength": 1,
                   "type": "string"
                 },
@@ -149,7 +149,213 @@
             }
           }
         },
-        "description": "[Method Not Allowed](https://techdocs.akamai.com/iot-ota-updates/reference/405). Invalid method used to access resource.",
+        "description": "[Forbidden](https://techdocs.akamai.com/iot-ota-updates/reference/403).",
+        "x-akamai": {
+          "file-path": "errors/403.yaml"
+        }
+      },
+      "404": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "code": "NOT_FOUND",
+              "incidentId": "e5065f8a-e727-48cc-bfd2-b80e735f65d4",
+              "title": "No static resource v1/download-notifications/cp/12345.",
+              "type": "/ota-api/error-types/NOT_FOUND"
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "Specifies an error response returned by the IoT OTA Updates API.",
+              "properties": {
+                "code": {
+                  "description": "The unique code for an error.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "detail": {
+                  "description": "A human-readable explanation specific to the problem.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "details": {
+                  "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Specifies nested details of an error response.",
+                    "properties": {
+                      "code": {
+                        "description": "The unique code for an error.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "data": {
+                        "description": "An object map with details about rejected values.",
+                        "type": "object"
+                      },
+                      "field": {
+                        "description": "A request parameter, path variable, or request body field that caused an error.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "message": {
+                        "description": "A human-readable summary of the problem type.",
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "message"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/http-problem-details-nested.yaml"
+                    }
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "incidentId": {
+                  "description": "A logging key useful when communicating about problems with Technical Support representatives.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "instance": {
+                  "description": "A non-navigable URI that identifies each error instance.",
+                  "format": "uri",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "The HTTP error code.",
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "A human-readable summary of the problem type.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "description": "A non-navigable URI that identifies each error case.",
+                  "format": "uri",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/http-problem-details.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Not found](https://techdocs.akamai.com/iot-ota-updates/reference/404).",
+        "x-akamai": {
+          "file-path": "errors/404.yaml"
+        }
+      },
+      "405": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "code": "METHOD_NOT_ALLOWED",
+              "incidentId": "865ed61f-6f9a-40a2-b11d-c8dc4292dd33",
+              "title": "Request method 'POST' is not supported",
+              "type": "/ota-api/error-types/METHOD_NOT_ALLOWED"
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "Specifies an error response returned by the IoT OTA Updates API.",
+              "properties": {
+                "code": {
+                  "description": "The unique code for an error.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "detail": {
+                  "description": "A human-readable explanation specific to the problem.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "details": {
+                  "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Specifies nested details of an error response.",
+                    "properties": {
+                      "code": {
+                        "description": "The unique code for an error.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "data": {
+                        "description": "An object map with details about rejected values.",
+                        "type": "object"
+                      },
+                      "field": {
+                        "description": "A request parameter, path variable, or request body field that caused an error.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "message": {
+                        "description": "A human-readable summary of the problem type.",
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "message"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/http-problem-details-nested.yaml"
+                    }
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "incidentId": {
+                  "description": "A logging key useful when communicating about problems with Technical Support representatives.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "instance": {
+                  "description": "A non-navigable URI that identifies each error instance.",
+                  "format": "uri",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "The HTTP error code.",
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "A human-readable summary of the problem type.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "description": "A non-navigable URI that identifies each error case.",
+                  "format": "uri",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/http-problem-details.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Method not allowed](https://techdocs.akamai.com/iot-ota-updates/reference/405).",
         "x-akamai": {
           "file-path": "errors/405.yaml"
         }
@@ -168,7 +374,7 @@
               "description": "Specifies an error response returned by the IoT OTA Updates API.",
               "properties": {
                 "code": {
-                  "description": "Unique code for an error.",
+                  "description": "The unique code for an error.",
                   "minLength": 1,
                   "type": "string"
                 },
@@ -178,27 +384,27 @@
                   "type": "string"
                 },
                 "details": {
-                  "description": "A list of HTTP problem details. This field exists if there are many problems with a single request and you want to call them each out explicitly.",
+                  "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
                   "items": {
                     "additionalProperties": true,
                     "description": "Specifies nested details of an error response.",
                     "properties": {
                       "code": {
-                        "description": "Unique code for each error.",
+                        "description": "The unique code for an error.",
                         "minLength": 1,
                         "type": "string"
                       },
                       "data": {
-                        "description": "Object map with details about rejected values.",
+                        "description": "An object map with details about rejected values.",
                         "type": "object"
                       },
                       "field": {
-                        "description": "Request parameter, path variable, or request body field that caused an error.",
+                        "description": "A request parameter, path variable, or request body field that caused an error.",
                         "minLength": 1,
                         "type": "string"
                       },
                       "message": {
-                        "description": "A short, human-readable summary of the problem type.",
+                        "description": "A human-readable summary of the problem type.",
                         "minLength": 1,
                         "type": "string"
                       }
@@ -231,7 +437,7 @@
                   "type": "integer"
                 },
                 "title": {
-                  "description": "A short, human-readable summary of the problem type.",
+                  "description": "A human-readable summary of the problem type.",
                   "minLength": 1,
                   "type": "string"
                 },
@@ -252,9 +458,112 @@
             }
           }
         },
-        "description": "[Not Acceptable](https://techdocs.akamai.com/iot-ota-updates/reference/406). Wrong `Accept` header.",
+        "description": "[Not acceptable](https://techdocs.akamai.com/iot-ota-updates/reference/406).",
         "x-akamai": {
           "file-path": "errors/406.yaml"
+        }
+      },
+      "500": {
+        "content": {
+          "application/problem+json": {
+            "example": {
+              "code": "INTERNAL_OTA_ERROR",
+              "incidentId": "d42412df-2b9b-434b-8480-e88143b338c8",
+              "title": "Internal OTA Error",
+              "type": "/ota-api/error-types/INTERNAL_OTA_ERROR"
+            },
+            "schema": {
+              "additionalProperties": true,
+              "description": "Specifies an error response returned by the IoT OTA Updates API.",
+              "properties": {
+                "code": {
+                  "description": "The unique code for an error.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "detail": {
+                  "description": "A human-readable explanation specific to the problem.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "details": {
+                  "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
+                  "items": {
+                    "additionalProperties": true,
+                    "description": "Specifies nested details of an error response.",
+                    "properties": {
+                      "code": {
+                        "description": "The unique code for an error.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "data": {
+                        "description": "An object map with details about rejected values.",
+                        "type": "object"
+                      },
+                      "field": {
+                        "description": "A request parameter, path variable, or request body field that caused an error.",
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      "message": {
+                        "description": "A human-readable summary of the problem type.",
+                        "minLength": 1,
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "message"
+                    ],
+                    "type": "object",
+                    "x-akamai": {
+                      "file-path": "schemas/http-problem-details-nested.yaml"
+                    }
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "incidentId": {
+                  "description": "A logging key useful when communicating about problems with Technical Support representatives.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "instance": {
+                  "description": "A non-navigable URI that identifies each error instance.",
+                  "format": "uri",
+                  "type": "string"
+                },
+                "status": {
+                  "description": "The HTTP error code.",
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "title": {
+                  "description": "A human-readable summary of the problem type.",
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "type": {
+                  "description": "A non-navigable URI that identifies each error case.",
+                  "format": "uri",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "title"
+              ],
+              "type": "object",
+              "x-akamai": {
+                "file-path": "schemas/http-problem-details.yaml"
+              }
+            }
+          }
+        },
+        "description": "[Internal server error](https://techdocs.akamai.com/iot-ota-updates/reference/500).",
+        "x-akamai": {
+          "file-path": "errors/500.yaml"
         }
       }
     },
@@ -320,7 +629,7 @@
         "description": "Specifies an error response returned by the IoT OTA Updates API.",
         "properties": {
           "code": {
-            "description": "Unique code for an error.",
+            "description": "The unique code for an error.",
             "minLength": 1,
             "type": "string"
           },
@@ -330,27 +639,27 @@
             "type": "string"
           },
           "details": {
-            "description": "A list of HTTP problem details. This field exists if there are many problems with a single request and you want to call them each out explicitly.",
+            "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
             "items": {
               "additionalProperties": true,
               "description": "Specifies nested details of an error response.",
               "properties": {
                 "code": {
-                  "description": "Unique code for each error.",
+                  "description": "The unique code for an error.",
                   "minLength": 1,
                   "type": "string"
                 },
                 "data": {
-                  "description": "Object map with details about rejected values.",
+                  "description": "An object map with details about rejected values.",
                   "type": "object"
                 },
                 "field": {
-                  "description": "Request parameter, path variable, or request body field that caused an error.",
+                  "description": "A request parameter, path variable, or request body field that caused an error.",
                   "minLength": 1,
                   "type": "string"
                 },
                 "message": {
-                  "description": "A short, human-readable summary of the problem type.",
+                  "description": "A human-readable summary of the problem type.",
                   "minLength": 1,
                   "type": "string"
                 }
@@ -383,7 +692,7 @@
             "type": "integer"
           },
           "title": {
-            "description": "A short, human-readable summary of the problem type.",
+            "description": "A human-readable summary of the problem type.",
             "minLength": 1,
             "type": "string"
           },
@@ -407,21 +716,21 @@
         "description": "Specifies nested details of an error response.",
         "properties": {
           "code": {
-            "description": "Unique code for each error.",
+            "description": "The unique code for an error.",
             "minLength": 1,
             "type": "string"
           },
           "data": {
-            "description": "Object map with details about rejected values.",
+            "description": "An object map with details about rejected values.",
             "type": "object"
           },
           "field": {
-            "description": "Request parameter, path variable, or request body field that caused an error.",
+            "description": "A request parameter, path variable, or request body field that caused an error.",
             "minLength": 1,
             "type": "string"
           },
           "message": {
-            "description": "A short, human-readable summary of the problem type.",
+            "description": "A human-readable summary of the problem type.",
             "minLength": 1,
             "type": "string"
           }
@@ -440,7 +749,7 @@
         "description": "Specifies an error response returned by the IoT OTA Updates API.",
         "properties": {
           "code": {
-            "description": "Unique code for an error.",
+            "description": "The unique code for an error.",
             "minLength": 1,
             "type": "string"
           },
@@ -450,12 +759,12 @@
             "type": "string"
           },
           "solution": {
-            "description": "A short, human-readable problem solution.",
+            "description": "A human-readable solution to a problem.",
             "minLength": 1,
             "type": "string"
           },
           "title": {
-            "description": "A short, human-readable summary of the problem type.",
+            "description": "A human-readable summary of the problem type.",
             "minLength": 1,
             "type": "string"
           }
@@ -488,7 +797,7 @@
   "paths": {
     "/cpcodes": {
       "get": {
-        "description": "Lists all content provider codes assigned to the Internet of Things product. Use one of the identifiers as input to the [List download notifications](https://techdocs.akamai.com/iot-ota-updates/reference/get-download-notifications) operation.",
+        "description": "Lists all content provider codes assigned to the IoT product. Use one of the identifiers as input to the [List download notifications](https://techdocs.akamai.com/iot-ota-updates/reference/get-download-notifications) operation.",
         "externalDocs": {
           "description": "See documentation for this operation in Akamai's IoT OTA Updates API",
           "url": "https://techdocs.akamai.com/iot-ota-updates/reference/get-cpcodes"
@@ -555,7 +864,7 @@
                 }
               }
             },
-            "description": "Successful response."
+            "description": "The response lists CP codes."
           },
           "401": {
             "content": {
@@ -571,7 +880,7 @@
                   "description": "Specifies an error response returned by the IoT OTA Updates API.",
                   "properties": {
                     "code": {
-                      "description": "Unique code for an error.",
+                      "description": "The unique code for an error.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -581,12 +890,12 @@
                       "type": "string"
                     },
                     "solution": {
-                      "description": "A short, human-readable problem solution.",
+                      "description": "A human-readable solution to a problem.",
                       "minLength": 1,
                       "type": "string"
                     },
                     "title": {
-                      "description": "A short, human-readable summary of the problem type.",
+                      "description": "A human-readable summary of the problem type.",
                       "minLength": 1,
                       "type": "string"
                     }
@@ -607,21 +916,21 @@
               "file-path": "errors/401.yaml"
             }
           },
-          "405": {
+          "403": {
             "content": {
               "application/problem+json": {
                 "example": {
-                  "code": "METHOD_NOT_ALLOWED",
-                  "incidentId": "865ed61f-6f9a-40a2-b11d-c8dc4292dd33",
-                  "title": "Request method 'POST' is not supported",
-                  "type": "/ota-api/error-types/METHOD_NOT_ALLOWED"
+                  "code": "weeperf.ota.access.denied",
+                  "incidentId": "f5e53705-0764-4afe-aff3-823dc15c818a",
+                  "title": "Access Denied",
+                  "type": "/ota-api/error-types/weeperf.ota.access.denied"
                 },
                 "schema": {
                   "additionalProperties": true,
                   "description": "Specifies an error response returned by the IoT OTA Updates API.",
                   "properties": {
                     "code": {
-                      "description": "Unique code for an error.",
+                      "description": "The unique code for an error.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -631,27 +940,27 @@
                       "type": "string"
                     },
                     "details": {
-                      "description": "A list of HTTP problem details. This field exists if there are many problems with a single request and you want to call them each out explicitly.",
+                      "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
                       "items": {
                         "additionalProperties": true,
                         "description": "Specifies nested details of an error response.",
                         "properties": {
                           "code": {
-                            "description": "Unique code for each error.",
+                            "description": "The unique code for an error.",
                             "minLength": 1,
                             "type": "string"
                           },
                           "data": {
-                            "description": "Object map with details about rejected values.",
+                            "description": "An object map with details about rejected values.",
                             "type": "object"
                           },
                           "field": {
-                            "description": "Request parameter, path variable, or request body field that caused an error.",
+                            "description": "A request parameter, path variable, or request body field that caused an error.",
                             "minLength": 1,
                             "type": "string"
                           },
                           "message": {
-                            "description": "A short, human-readable summary of the problem type.",
+                            "description": "A human-readable summary of the problem type.",
                             "minLength": 1,
                             "type": "string"
                           }
@@ -684,7 +993,7 @@
                       "type": "integer"
                     },
                     "title": {
-                      "description": "A short, human-readable summary of the problem type.",
+                      "description": "A human-readable summary of the problem type.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -705,7 +1014,213 @@
                 }
               }
             },
-            "description": "[Method Not Allowed](https://techdocs.akamai.com/iot-ota-updates/reference/405). Invalid method used to access resource.",
+            "description": "[Forbidden](https://techdocs.akamai.com/iot-ota-updates/reference/403).",
+            "x-akamai": {
+              "file-path": "errors/403.yaml"
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "code": "NOT_FOUND",
+                  "incidentId": "e5065f8a-e727-48cc-bfd2-b80e735f65d4",
+                  "title": "No static resource v1/download-notifications/cp/12345.",
+                  "type": "/ota-api/error-types/NOT_FOUND"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies an error response returned by the IoT OTA Updates API.",
+                  "properties": {
+                    "code": {
+                      "description": "The unique code for an error.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "details": {
+                      "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies nested details of an error response.",
+                        "properties": {
+                          "code": {
+                            "description": "The unique code for an error.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "data": {
+                            "description": "An object map with details about rejected values.",
+                            "type": "object"
+                          },
+                          "field": {
+                            "description": "A request parameter, path variable, or request body field that caused an error.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "message": {
+                            "description": "A human-readable summary of the problem type.",
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-details-nested.yaml"
+                        }
+                      },
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "incidentId": {
+                      "description": "A logging key useful when communicating about problems with Technical Support representatives.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "instance": {
+                      "description": "A non-navigable URI that identifies each error instance.",
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP error code.",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A human-readable summary of the problem type.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A non-navigable URI that identifies each error case.",
+                      "format": "uri",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem-details.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Not found](https://techdocs.akamai.com/iot-ota-updates/reference/404).",
+            "x-akamai": {
+              "file-path": "errors/404.yaml"
+            }
+          },
+          "405": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "code": "METHOD_NOT_ALLOWED",
+                  "incidentId": "865ed61f-6f9a-40a2-b11d-c8dc4292dd33",
+                  "title": "Request method 'POST' is not supported",
+                  "type": "/ota-api/error-types/METHOD_NOT_ALLOWED"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies an error response returned by the IoT OTA Updates API.",
+                  "properties": {
+                    "code": {
+                      "description": "The unique code for an error.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "details": {
+                      "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies nested details of an error response.",
+                        "properties": {
+                          "code": {
+                            "description": "The unique code for an error.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "data": {
+                            "description": "An object map with details about rejected values.",
+                            "type": "object"
+                          },
+                          "field": {
+                            "description": "A request parameter, path variable, or request body field that caused an error.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "message": {
+                            "description": "A human-readable summary of the problem type.",
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-details-nested.yaml"
+                        }
+                      },
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "incidentId": {
+                      "description": "A logging key useful when communicating about problems with Technical Support representatives.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "instance": {
+                      "description": "A non-navigable URI that identifies each error instance.",
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP error code.",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A human-readable summary of the problem type.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A non-navigable URI that identifies each error case.",
+                      "format": "uri",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem-details.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Method not allowed](https://techdocs.akamai.com/iot-ota-updates/reference/405).",
             "x-akamai": {
               "file-path": "errors/405.yaml"
             }
@@ -724,7 +1239,7 @@
                   "description": "Specifies an error response returned by the IoT OTA Updates API.",
                   "properties": {
                     "code": {
-                      "description": "Unique code for an error.",
+                      "description": "The unique code for an error.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -734,27 +1249,27 @@
                       "type": "string"
                     },
                     "details": {
-                      "description": "A list of HTTP problem details. This field exists if there are many problems with a single request and you want to call them each out explicitly.",
+                      "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
                       "items": {
                         "additionalProperties": true,
                         "description": "Specifies nested details of an error response.",
                         "properties": {
                           "code": {
-                            "description": "Unique code for each error.",
+                            "description": "The unique code for an error.",
                             "minLength": 1,
                             "type": "string"
                           },
                           "data": {
-                            "description": "Object map with details about rejected values.",
+                            "description": "An object map with details about rejected values.",
                             "type": "object"
                           },
                           "field": {
-                            "description": "Request parameter, path variable, or request body field that caused an error.",
+                            "description": "A request parameter, path variable, or request body field that caused an error.",
                             "minLength": 1,
                             "type": "string"
                           },
                           "message": {
-                            "description": "A short, human-readable summary of the problem type.",
+                            "description": "A human-readable summary of the problem type.",
                             "minLength": 1,
                             "type": "string"
                           }
@@ -787,7 +1302,7 @@
                       "type": "integer"
                     },
                     "title": {
-                      "description": "A short, human-readable summary of the problem type.",
+                      "description": "A human-readable summary of the problem type.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -808,9 +1323,112 @@
                 }
               }
             },
-            "description": "[Not Acceptable](https://techdocs.akamai.com/iot-ota-updates/reference/406). Wrong `Accept` header.",
+            "description": "[Not acceptable](https://techdocs.akamai.com/iot-ota-updates/reference/406).",
             "x-akamai": {
               "file-path": "errors/406.yaml"
+            }
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "code": "INTERNAL_OTA_ERROR",
+                  "incidentId": "d42412df-2b9b-434b-8480-e88143b338c8",
+                  "title": "Internal OTA Error",
+                  "type": "/ota-api/error-types/INTERNAL_OTA_ERROR"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies an error response returned by the IoT OTA Updates API.",
+                  "properties": {
+                    "code": {
+                      "description": "The unique code for an error.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "details": {
+                      "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies nested details of an error response.",
+                        "properties": {
+                          "code": {
+                            "description": "The unique code for an error.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "data": {
+                            "description": "An object map with details about rejected values.",
+                            "type": "object"
+                          },
+                          "field": {
+                            "description": "A request parameter, path variable, or request body field that caused an error.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "message": {
+                            "description": "A human-readable summary of the problem type.",
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-details-nested.yaml"
+                        }
+                      },
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "incidentId": {
+                      "description": "A logging key useful when communicating about problems with Technical Support representatives.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "instance": {
+                      "description": "A non-navigable URI that identifies each error instance.",
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP error code.",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A human-readable summary of the problem type.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A non-navigable URI that identifies each error case.",
+                      "format": "uri",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem-details.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Internal server error](https://techdocs.akamai.com/iot-ota-updates/reference/500).",
+            "x-akamai": {
+              "file-path": "errors/500.yaml"
             }
           }
         },
@@ -818,6 +1436,10 @@
         "tags": [
           "CP codes"
         ]
+      },
+      "x-akamai": {
+        "file-path": "paths/cp-codes.yaml",
+        "path-for-file": "/cpcodes"
       }
     },
     "/download-notifications/{cpcode}": {
@@ -882,7 +1504,7 @@
                   "description": "Encapsulates a collection of download notifications, with additional pagination context.",
                   "properties": {
                     "nextPageStart": {
-                      "description": "The timestamp in milliseconds that indicates the `start` of the next page of notifications.",
+                      "description": "The Unix timestamp in milliseconds that indicates the `start` of the next page of notifications.",
                       "minimum": 1,
                       "type": "integer"
                     },
@@ -898,7 +1520,7 @@
                             "type": "integer"
                           },
                           "downloadTime": {
-                            "description": "The time a download event occurred on a Ghost server.",
+                            "description": "The ISO 8601 timestamp indicating when a download event occurred on an edge server.",
                             "format": "date-time",
                             "type": "string"
                           },
@@ -941,7 +1563,7 @@
                 }
               }
             },
-            "description": "Successful response."
+            "description": "The response lists download notifications."
           },
           "400": {
             "content": {
@@ -967,7 +1589,7 @@
                   "description": "Specifies an error response returned by the IoT OTA Updates API.",
                   "properties": {
                     "code": {
-                      "description": "Unique code for an error.",
+                      "description": "The unique code for an error.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -977,27 +1599,27 @@
                       "type": "string"
                     },
                     "details": {
-                      "description": "A list of HTTP problem details. This field exists if there are many problems with a single request and you want to call them each out explicitly.",
+                      "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
                       "items": {
                         "additionalProperties": true,
                         "description": "Specifies nested details of an error response.",
                         "properties": {
                           "code": {
-                            "description": "Unique code for each error.",
+                            "description": "The unique code for an error.",
                             "minLength": 1,
                             "type": "string"
                           },
                           "data": {
-                            "description": "Object map with details about rejected values.",
+                            "description": "An object map with details about rejected values.",
                             "type": "object"
                           },
                           "field": {
-                            "description": "Request parameter, path variable, or request body field that caused an error.",
+                            "description": "A request parameter, path variable, or request body field that caused an error.",
                             "minLength": 1,
                             "type": "string"
                           },
                           "message": {
-                            "description": "A short, human-readable summary of the problem type.",
+                            "description": "A human-readable summary of the problem type.",
                             "minLength": 1,
                             "type": "string"
                           }
@@ -1030,7 +1652,7 @@
                       "type": "integer"
                     },
                     "title": {
-                      "description": "A short, human-readable summary of the problem type.",
+                      "description": "A human-readable summary of the problem type.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -1051,7 +1673,7 @@
                 }
               }
             },
-            "description": "[Bad request](https://techdocs.akamai.com/iot-ota-updates/reference/400). Request is badly formed or has constraint violations.",
+            "description": "[Bad request](https://techdocs.akamai.com/iot-ota-updates/reference/400).",
             "x-akamai": {
               "file-path": "errors/400.yaml"
             }
@@ -1070,7 +1692,7 @@
                   "description": "Specifies an error response returned by the IoT OTA Updates API.",
                   "properties": {
                     "code": {
-                      "description": "Unique code for an error.",
+                      "description": "The unique code for an error.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -1080,12 +1702,12 @@
                       "type": "string"
                     },
                     "solution": {
-                      "description": "A short, human-readable problem solution.",
+                      "description": "A human-readable solution to a problem.",
                       "minLength": 1,
                       "type": "string"
                     },
                     "title": {
-                      "description": "A short, human-readable summary of the problem type.",
+                      "description": "A human-readable summary of the problem type.",
                       "minLength": 1,
                       "type": "string"
                     }
@@ -1120,7 +1742,7 @@
                   "description": "Specifies an error response returned by the IoT OTA Updates API.",
                   "properties": {
                     "code": {
-                      "description": "Unique code for an error.",
+                      "description": "The unique code for an error.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -1130,27 +1752,27 @@
                       "type": "string"
                     },
                     "details": {
-                      "description": "A list of HTTP problem details. This field exists if there are many problems with a single request and you want to call them each out explicitly.",
+                      "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
                       "items": {
                         "additionalProperties": true,
                         "description": "Specifies nested details of an error response.",
                         "properties": {
                           "code": {
-                            "description": "Unique code for each error.",
+                            "description": "The unique code for an error.",
                             "minLength": 1,
                             "type": "string"
                           },
                           "data": {
-                            "description": "Object map with details about rejected values.",
+                            "description": "An object map with details about rejected values.",
                             "type": "object"
                           },
                           "field": {
-                            "description": "Request parameter, path variable, or request body field that caused an error.",
+                            "description": "A request parameter, path variable, or request body field that caused an error.",
                             "minLength": 1,
                             "type": "string"
                           },
                           "message": {
-                            "description": "A short, human-readable summary of the problem type.",
+                            "description": "A human-readable summary of the problem type.",
                             "minLength": 1,
                             "type": "string"
                           }
@@ -1183,7 +1805,7 @@
                       "type": "integer"
                     },
                     "title": {
-                      "description": "A short, human-readable summary of the problem type.",
+                      "description": "A human-readable summary of the problem type.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -1204,9 +1826,112 @@
                 }
               }
             },
-            "description": "[Forbidden](https://techdocs.akamai.com/iot-ota-updates/reference/403). Not authorized to access the data that the request was made against.",
+            "description": "[Forbidden](https://techdocs.akamai.com/iot-ota-updates/reference/403).",
             "x-akamai": {
               "file-path": "errors/403.yaml"
+            }
+          },
+          "404": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "code": "NOT_FOUND",
+                  "incidentId": "e5065f8a-e727-48cc-bfd2-b80e735f65d4",
+                  "title": "No static resource v1/download-notifications/cp/12345.",
+                  "type": "/ota-api/error-types/NOT_FOUND"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies an error response returned by the IoT OTA Updates API.",
+                  "properties": {
+                    "code": {
+                      "description": "The unique code for an error.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "details": {
+                      "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies nested details of an error response.",
+                        "properties": {
+                          "code": {
+                            "description": "The unique code for an error.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "data": {
+                            "description": "An object map with details about rejected values.",
+                            "type": "object"
+                          },
+                          "field": {
+                            "description": "A request parameter, path variable, or request body field that caused an error.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "message": {
+                            "description": "A human-readable summary of the problem type.",
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-details-nested.yaml"
+                        }
+                      },
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "incidentId": {
+                      "description": "A logging key useful when communicating about problems with Technical Support representatives.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "instance": {
+                      "description": "A non-navigable URI that identifies each error instance.",
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP error code.",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A human-readable summary of the problem type.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A non-navigable URI that identifies each error case.",
+                      "format": "uri",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem-details.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Not found](https://techdocs.akamai.com/iot-ota-updates/reference/404).",
+            "x-akamai": {
+              "file-path": "errors/404.yaml"
             }
           },
           "405": {
@@ -1223,7 +1948,7 @@
                   "description": "Specifies an error response returned by the IoT OTA Updates API.",
                   "properties": {
                     "code": {
-                      "description": "Unique code for an error.",
+                      "description": "The unique code for an error.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -1233,27 +1958,27 @@
                       "type": "string"
                     },
                     "details": {
-                      "description": "A list of HTTP problem details. This field exists if there are many problems with a single request and you want to call them each out explicitly.",
+                      "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
                       "items": {
                         "additionalProperties": true,
                         "description": "Specifies nested details of an error response.",
                         "properties": {
                           "code": {
-                            "description": "Unique code for each error.",
+                            "description": "The unique code for an error.",
                             "minLength": 1,
                             "type": "string"
                           },
                           "data": {
-                            "description": "Object map with details about rejected values.",
+                            "description": "An object map with details about rejected values.",
                             "type": "object"
                           },
                           "field": {
-                            "description": "Request parameter, path variable, or request body field that caused an error.",
+                            "description": "A request parameter, path variable, or request body field that caused an error.",
                             "minLength": 1,
                             "type": "string"
                           },
                           "message": {
-                            "description": "A short, human-readable summary of the problem type.",
+                            "description": "A human-readable summary of the problem type.",
                             "minLength": 1,
                             "type": "string"
                           }
@@ -1286,7 +2011,7 @@
                       "type": "integer"
                     },
                     "title": {
-                      "description": "A short, human-readable summary of the problem type.",
+                      "description": "A human-readable summary of the problem type.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -1307,7 +2032,7 @@
                 }
               }
             },
-            "description": "[Method Not Allowed](https://techdocs.akamai.com/iot-ota-updates/reference/405). Invalid method used to access resource.",
+            "description": "[Method not allowed](https://techdocs.akamai.com/iot-ota-updates/reference/405).",
             "x-akamai": {
               "file-path": "errors/405.yaml"
             }
@@ -1326,7 +2051,7 @@
                   "description": "Specifies an error response returned by the IoT OTA Updates API.",
                   "properties": {
                     "code": {
-                      "description": "Unique code for an error.",
+                      "description": "The unique code for an error.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -1336,27 +2061,27 @@
                       "type": "string"
                     },
                     "details": {
-                      "description": "A list of HTTP problem details. This field exists if there are many problems with a single request and you want to call them each out explicitly.",
+                      "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
                       "items": {
                         "additionalProperties": true,
                         "description": "Specifies nested details of an error response.",
                         "properties": {
                           "code": {
-                            "description": "Unique code for each error.",
+                            "description": "The unique code for an error.",
                             "minLength": 1,
                             "type": "string"
                           },
                           "data": {
-                            "description": "Object map with details about rejected values.",
+                            "description": "An object map with details about rejected values.",
                             "type": "object"
                           },
                           "field": {
-                            "description": "Request parameter, path variable, or request body field that caused an error.",
+                            "description": "A request parameter, path variable, or request body field that caused an error.",
                             "minLength": 1,
                             "type": "string"
                           },
                           "message": {
-                            "description": "A short, human-readable summary of the problem type.",
+                            "description": "A human-readable summary of the problem type.",
                             "minLength": 1,
                             "type": "string"
                           }
@@ -1389,7 +2114,7 @@
                       "type": "integer"
                     },
                     "title": {
-                      "description": "A short, human-readable summary of the problem type.",
+                      "description": "A human-readable summary of the problem type.",
                       "minLength": 1,
                       "type": "string"
                     },
@@ -1410,9 +2135,112 @@
                 }
               }
             },
-            "description": "[Not Acceptable](https://techdocs.akamai.com/iot-ota-updates/reference/406). Wrong `Accept` header.",
+            "description": "[Not acceptable](https://techdocs.akamai.com/iot-ota-updates/reference/406).",
             "x-akamai": {
               "file-path": "errors/406.yaml"
+            }
+          },
+          "500": {
+            "content": {
+              "application/problem+json": {
+                "example": {
+                  "code": "INTERNAL_OTA_ERROR",
+                  "incidentId": "d42412df-2b9b-434b-8480-e88143b338c8",
+                  "title": "Internal OTA Error",
+                  "type": "/ota-api/error-types/INTERNAL_OTA_ERROR"
+                },
+                "schema": {
+                  "additionalProperties": true,
+                  "description": "Specifies an error response returned by the IoT OTA Updates API.",
+                  "properties": {
+                    "code": {
+                      "description": "The unique code for an error.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "detail": {
+                      "description": "A human-readable explanation specific to the problem.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "details": {
+                      "description": "For errors with more than one detected problem, this represents a list of Problem Details objects. Each object provides details of a specific problem.",
+                      "items": {
+                        "additionalProperties": true,
+                        "description": "Specifies nested details of an error response.",
+                        "properties": {
+                          "code": {
+                            "description": "The unique code for an error.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "data": {
+                            "description": "An object map with details about rejected values.",
+                            "type": "object"
+                          },
+                          "field": {
+                            "description": "A request parameter, path variable, or request body field that caused an error.",
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          "message": {
+                            "description": "A human-readable summary of the problem type.",
+                            "minLength": 1,
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "message"
+                        ],
+                        "type": "object",
+                        "x-akamai": {
+                          "file-path": "schemas/http-problem-details-nested.yaml"
+                        }
+                      },
+                      "minItems": 1,
+                      "type": "array"
+                    },
+                    "incidentId": {
+                      "description": "A logging key useful when communicating about problems with Technical Support representatives.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "instance": {
+                      "description": "A non-navigable URI that identifies each error instance.",
+                      "format": "uri",
+                      "type": "string"
+                    },
+                    "status": {
+                      "description": "The HTTP error code.",
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "title": {
+                      "description": "A human-readable summary of the problem type.",
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": {
+                      "description": "A non-navigable URI that identifies each error case.",
+                      "format": "uri",
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "title"
+                  ],
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/http-problem-details.yaml"
+                  }
+                }
+              }
+            },
+            "description": "[Internal server error](https://techdocs.akamai.com/iot-ota-updates/reference/500).",
+            "x-akamai": {
+              "file-path": "errors/500.yaml"
             }
           }
         },
@@ -1423,7 +2251,7 @@
       },
       "parameters": [
         {
-          "description": "The content provider code assigned to the Internet of Things product. Run the [List content provider codes](https://techdocs.akamai.com/iot-ota-updates/reference/get-cpcodes) operation to get an identifier.",
+          "description": "The content provider code assigned to the IoT product. Run the [List content provider codes](https://techdocs.akamai.com/iot-ota-updates/reference/get-cpcodes) operation to get an identifier.",
           "example": "{{cpcode}}",
           "in": "path",
           "name": "cpcode",
@@ -1436,7 +2264,11 @@
             "file-path": "parameters/cpcode-path.yaml"
           }
         }
-      ]
+      ],
+      "x-akamai": {
+        "file-path": "paths/download-notifications.yaml",
+        "path-for-file": "/download-notifications/{cpcode}"
+      }
     }
   },
   "servers": [
@@ -1444,7 +2276,16 @@
       "url": "https://{hostname}/ota/v1"
     }
   ],
-  "tags": [],
+  "tags": [
+    {
+      "description": "Get information about CP codes assigned to the IoT product.",
+      "name": "CP codes"
+    },
+    {
+      "description": "Get information about notifications for completed downloads to specific vehicles.",
+      "name": "Download notifications"
+    }
+  ],
   "x-readme": {
     "samples-languages": [
       "curl",

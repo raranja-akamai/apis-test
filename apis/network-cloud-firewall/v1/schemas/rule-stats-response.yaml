@@ -5,44 +5,64 @@ description: |-
 x-akamai:
   file-path: schemas/rule-stats-response.yaml
 additionalProperties: false
+required:
+- rulesetName
+- rulesetType
+- rules
 properties:
   rules:
     type: array
     description: |
       The rules in the rule set.
+    minItems: 0
     items:
       type: object
       additionalProperties: false
+      required:
+      - ruleId
+      - matches
+      - bytes
+      - lastUpdated
+      - firstMatch
+      - lastMatch
       properties:
         bytes:
           type: integer
           description: |
             The rule size in bytes.
+          minimum: 0
         firstMatch:
           type: string
           description: |
             The first rule match.
+          minLength: 1
         lastMatch:
           type: string
           description: |
             The last rule match.
+          minLength: 1
         lastUpdated:
           type: string
           description: |
             The user who last updated the rule.
+          minLength: 1
         matches:
           type: integer
           description: |
             The rule matches.
+          minimum: 0
         ruleId:
           type: string
           description: |
             The rule ID.
+          minLength: 1
   rulesetName:
     type: string
     description: |
       The rule set name.
+    minLength: 1
   rulesetType:
     type: string
     description: |
       The rule set type.
+    minLength: 1
