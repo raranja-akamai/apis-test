@@ -1,3 +1,5 @@
+x-akamai:
+  file-path: schemas/origin-version-definitions.yaml
 definitions:
   dataCenter:
     type: object
@@ -89,20 +91,49 @@ definitions:
     description: |
       The name of the HTTP header you want to include in liveness test requests.
     maxLength: 256
-  notEmptyHostHeaderValue:
-    type: string
+  httpProblem:
+    type: object
     description: |
-      The value of the HTTP header you want to include in liveness test requests.
-    minLength: 1
-    maxLength: 256
+      Provides error response data to help diagnose the problem that led to the error.
+    additionalProperties: false
+    required:
+    - detail
+    - title
+    - type
+    properties:
+      type:
+        type: string
+        description: |
+          The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.
+      title:
+        type: string
+        description: |
+          The descriptive label for the overall problem.
+      detail:
+        type: string
+        description: |
+          Provides actionable instructions to diagnose the problem that caused the error.
+      errors:
+        type: array
+        description: |
+          Error objects that provide information for debugging.
+        items:
+          $ref: http-problem-nested.yaml
+      jsonPointer:
+        type: string
+        description: |
+          The pointer to the error response JSON body.
+        maxLength: 128
+      status:
+        type: integer
+        description: |
+          HTTP response status code.
   livenessSettings:
     additionalProperties: false
     required:
     - port
     - protocol
     properties:
-      hostHeader:
-        $ref: '#/definitions/notEmptyHostHeaderValue'
       additionalHeaders:
         type: object
         description: |
@@ -113,6 +144,8 @@ definitions:
             $ref: '#/definitions/hostHeaderValue'
           host:
             $ref: '#/definitions/notEmptyHostHeaderValue'
+      hostHeader:
+        $ref: '#/definitions/notEmptyHostHeaderValue'
       interval:
         type: integer
         description: |
@@ -160,6 +193,12 @@ definitions:
           The number of seconds the system waits before failing the liveness test. The default is 25 seconds.
         minimum: 0.001
         maximum: 60
+  notEmptyHostHeaderValue:
+    type: string
+    description: |
+      The value of the HTTP header you want to include in liveness test requests.
+    minLength: 1
+    maxLength: 256
   warning:
     type: object
     description: |
@@ -188,43 +227,6 @@ definitions:
           Error objects that provide information for debugging.
         items:
           $ref: '#/definitions/httpProblem'
-      jsonPointer:
-        type: string
-        description: |
-          The pointer to the error response JSON body.
-        maxLength: 128
-      status:
-        type: integer
-        description: |
-          HTTP response status code.
-  httpProblem:
-    type: object
-    description: |
-      Provides error response data to help diagnose the problem that led to the error.
-    additionalProperties: false
-    required:
-    - detail
-    - title
-    - type
-    properties:
-      type:
-        type: string
-        description: |
-          The error `type` uniquely identifies each distinct error case. An error can have multiple `types`.
-      title:
-        type: string
-        description: |
-          The descriptive label for the overall problem.
-      detail:
-        type: string
-        description: |
-          Provides actionable instructions to diagnose the problem that caused the error.
-      errors:
-        type: array
-        description: |
-          Error objects that provide information for debugging.
-        items:
-          $ref: http-problem-nested.yaml
       jsonPointer:
         type: string
         description: |
