@@ -1,11 +1,23 @@
 type: object
-description: |-
+description: |
   Provides log file upload metrics for streams.
-  
-x-akamai:
-  file-path: schemas/streams-metrics.yaml
 additionalProperties: false
 properties:
+  totalUploadCount:
+    type: integer
+    description: |
+      The total number of log uploads between the `start` and `end` date.
+    minimum: 0
+  totalSuccessCount:
+    type: integer
+    description: |
+      The total number of successful log uploads between the `start` and `end` date.
+    minimum: 0
+  totalErrorCount:
+    type: integer
+    description: |
+      The total number log upload failures between the `start` and `end` date.
+    minimum: 0
   fileUploadMetrics:
     type: array
     description: |
@@ -24,6 +36,15 @@ properties:
           description: |
             The start time of the metrics aggregation time interval in the ISO 8601 format. For example, for an `aggregationInterval` set to `FIVE_MINUTE`, `aggregationTime` returns `2022-05-10T10:05:00` for metrics between `2022-05-10T10:05:00` and `2022-05-10T10:09:59`.
           format: date-time
+        streamId:
+          type: integer
+          description: |
+            Uniquely identifies the stream you want to view metrics for.
+        successUploadsCount:
+          type: integer
+          description: |
+            The number of successful log uploads in the aggregation time interval.
+          minimum: 0
         failedUploadAttempts:
           type: array
           description: |
@@ -68,25 +89,6 @@ properties:
                 type: integer
                 description: |
                   The number of records delivered within the specified latency range.
-        recordsAttemptedUpload:
-          type: integer
-          description: |
-            The total number of log records attempted to upload.
-          minimum: 0
-        recordsFailedUpload:
-          type: integer
-          description: |
-            The number of log records that failed to upload.
-          minimum: 0
-        streamId:
-          type: integer
-          description: |
-            Uniquely identifies the stream you want to view metrics for.
-        successUploadsCount:
-          type: integer
-          description: |
-            The number of successful log uploads in the aggregation time interval.
-          minimum: 0
         uploadBuckets:
           type: array
           description: |
@@ -98,11 +100,6 @@ properties:
             - uploadTimeInMilliseconds
             - recordsCount
             properties:
-              recordsCount:
-                type: integer
-                description: |
-                  The number of records uploaded during the `uploadTimeInMilliseconds`. This is the minimum value in a range, for example, `60` indicates between `60` and `120` records.
-                minimum: 0
               uploadTimeInMilliseconds:
                 type: integer
                 description: |
@@ -115,23 +112,23 @@ properties:
                 - 300000
                 - 600000
                 - 1800000
+              recordsCount:
+                type: integer
+                description: |
+                  The number of records uploaded during the `uploadTimeInMilliseconds`. This is the minimum value in a range, for example, `60` indicates between `60` and `120` records.
+                minimum: 0
+        recordsAttemptedUpload:
+          type: integer
+          description: |
+            The total number of log records attempted to upload.
+          minimum: 0
+        recordsFailedUpload:
+          type: integer
+          description: |
+            The number of log records that failed to upload.
+          minimum: 0
         uploadedBytes:
           type: integer
           description: |
             The volume of uploaded data in bytes.
           minimum: 0
-  totalErrorCount:
-    type: integer
-    description: |
-      The total number log upload failures between the `start` and `end` date.
-    minimum: 0
-  totalSuccessCount:
-    type: integer
-    description: |
-      The total number of successful log uploads between the `start` and `end` date.
-    minimum: 0
-  totalUploadCount:
-    type: integer
-    description: |
-      The total number of log uploads between the `start` and `end` date.
-    minimum: 0

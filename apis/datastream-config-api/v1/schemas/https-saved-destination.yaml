@@ -1,9 +1,6 @@
 type: object
-description: |-
+description: |
   Provides details about the custom HTTPS endpoint destination in a stream. If you choose this destination, the stream pushes a sample POST request to the endpoint to validate write access. For `STRUCTURED` logs, the data is sent as `0,access_validation`, and for `JSON` it's `{"access_validation":true}`. You can see the data only if the destination validates, and you can access the destination storage.
-  
-x-akamai:
-  file-path: schemas/https-saved-destination.yaml
 title: HTTPS
 additionalProperties: false
 required:
@@ -13,6 +10,12 @@ required:
 - endpoint
 - compressLogs
 properties:
+  destinationType:
+    type: string
+    description: |
+      The destination type's name. Set it to `HTTPS` for this destination type.
+    enum:
+    - HTTPS
   authenticationType:
     type: string
     description: |
@@ -20,11 +23,27 @@ properties:
     enum:
     - NONE
     - BASIC
+  displayName:
+    type: string
+    description: |
+      The destination's name.
+  endpoint:
+    type: string
+    description: |
+      Enter the secure URL where you want to send and store your logs. You can use hostnames served over the Akamai network as endpoint URLs. See [Stream logs to a custom HTTPS endpoint](doc:stream-custom-https#akamaized-hostname-as-endpoint).
   compressLogs:
     type: boolean
     description: |
       Enables gzip compression for a log file sent to a destination. The value is `false` by default.
     default: false
+  tlsHostname:
+    type: string
+    description: |
+      The hostname that verifies the server's certificate and matches the Subject Alternative Names (SANs) in the certificate. If not provided, DataStream fetches the hostname from the endpoint URL.
+  mTlsEnabled:
+    type: boolean
+    description: |
+      Identifies if the stream has the mTLS authentication enabled. The response returns this field only if you set the `clientCert` and `clientKey` members while creating or editing a stream.
   contentType:
     type: string
     description: |
@@ -37,25 +56,3 @@ properties:
     type: string
     description: |
       The custom header's contents passed with the request that contains information about the client connection.
-  destinationType:
-    type: string
-    description: |
-      The destination type's name. Set it to `HTTPS` for this destination type.
-    enum:
-    - HTTPS
-  displayName:
-    type: string
-    description: |
-      The destination's name.
-  endpoint:
-    type: string
-    description: |
-      Enter the secure URL where you want to send and store your logs. You can use hostnames served over the Akamai network as endpoint URLs. See [Stream logs to a custom HTTPS endpoint](doc:stream-custom-https#akamaized-hostname-as-endpoint).
-  mTlsEnabled:
-    type: boolean
-    description: |
-      Identifies if the stream has the mTLS authentication enabled. The response returns this field only if you set the `clientCert` and `clientKey` members while creating or editing a stream.
-  tlsHostname:
-    type: string
-    description: |
-      The hostname that verifies the server's certificate and matches the Subject Alternative Names (SANs) in the certificate. If not provided, DataStream fetches the hostname from the endpoint URL.

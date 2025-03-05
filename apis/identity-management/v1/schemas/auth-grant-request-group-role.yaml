@@ -1,15 +1,22 @@
 type: object
-description: |-
+description: |
   The user's role assignments, per group. Provide either this or the `cloneFrom`.
-  
-x-akamai:
-  file-path: schemas/auth-grant-request-group-role.yaml
 title: Group role
 additionalProperties: false
 required:
 - roleId
 - groupId
 properties:
+  isBlocked:
+    type: boolean
+    description: |
+      Blocks a user's access to a group.
+  roleId:
+    type: integer
+    description: |
+      Unique identifier for each role. To get this value, run the [List roles](ref:get-roles) operation. You need to assign at least one role to a user. Setting the value to `null` in POST leaves the default role: either unassigned or cascaded from a parent group. For `PUT`, it clears the current assignment and reverts it to the default role.
+    nullable: true
+    minimum: 1
   groupId:
     type: integer
     description: |
@@ -20,25 +27,15 @@ properties:
     description: |
       Descriptive label for the group.
     minLength: 1
-  isBlocked:
-    type: boolean
-    description: |
-      Blocks a user's access to a group.
-  roleDescription:
-    type: string
-    description: |
-      Descriptive label for the role to convey its use.
-    minLength: 1
-  roleId:
-    type: integer
-    description: |
-      Unique identifier for each role. To get this value, run the [List roles](ref:get-roles) operation. You need to assign at least one role to a user. Setting the value to `null` in POST leaves the default role: either unassigned or cascaded from a parent group. For `PUT`, it clears the current assignment and reverts it to the default role.
-    nullable: true
-    minimum: 1
   roleName:
     type: string
     description: |
       Descriptive label for the role.
+    minLength: 1
+  roleDescription:
+    type: string
+    description: |
+      Descriptive label for the role to convey its use.
     minLength: 1
   subGroups:
     type: array
