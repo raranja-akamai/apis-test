@@ -30,15 +30,12 @@
         "operationId": "get-properties",
         "parameters": [
           {
-            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
-            "in": "query",
             "name": "groupId",
+            "in": "query",
+            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
             "schema": {
-              "example": 54321,
-              "type": "integer"
-            },
-            "x-akamai": {
-              "file-path": "parameters/group-id-opt-group-id.yaml"
+              "type": "integer",
+              "example": 54321
             }
           }
         ],
@@ -48,21 +45,21 @@
               "application/json": {
                 "example": [
                   {
-                    "groupName": "Internet Company",
-                    "groupId": 32145,
+                    "groupName": "Digital Company",
+                    "groupId": 12345,
                     "propertyId": 99999999,
                     "propertyTypeDescription": "On Demand Media",
-                    "propertyName": "0rb-internet-company-01.com",
+                    "propertyName": "0rb-digital-company-01.com",
                     "actions": {
                       "move": true
                     }
                   },
                   {
-                    "groupName": "Digital Company",
-                    "groupId": 12345,
+                    "groupName": "Internet Company",
+                    "groupId": 32145,
                     "propertyId": 88888888,
                     "propertyTypeDescription": "On Demand Media",
-                    "propertyName": "0rb-digital-company-01.com",
+                    "propertyName": "0rb-internet-company-01.com",
                     "actions": {
                       "move": true
                     }
@@ -153,16 +150,13 @@
         "operationId": "get-property",
         "parameters": [
           {
-            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
-            "in": "query",
             "name": "groupId",
+            "in": "query",
+            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
             "required": true,
             "schema": {
-              "example": 32145,
-              "type": "integer"
-            },
-            "x-akamai": {
-              "file-path": "parameters/group-id-req-qp-group-id.yaml"
+              "type": "integer",
+              "example": 32145
             }
           }
         ],
@@ -259,16 +253,13 @@
       },
       "parameters": [
         {
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
-          "in": "path",
           "name": "assetId",
+          "in": "path",
+          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
           "required": true,
           "schema": {
-            "example": 9678999,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/asset-id-path.yaml"
+            "type": "integer",
+            "example": 9678999
           }
         }
       ],
@@ -331,16 +322,13 @@
         "operationId": "get-property-resources",
         "parameters": [
           {
-            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
-            "in": "query",
             "name": "groupId",
+            "in": "query",
+            "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
             "required": true,
             "schema": {
-              "example": 32145,
-              "type": "integer"
-            },
-            "x-akamai": {
-              "file-path": "parameters/group-id-req-qp-group-id.yaml"
+              "type": "integer",
+              "example": 32145
             }
           }
         ],
@@ -426,16 +414,13 @@
       },
       "parameters": [
         {
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
-          "in": "path",
           "name": "assetId",
+          "in": "path",
+          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
           "required": true,
           "schema": {
-            "example": 9678999,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/asset-id-path.yaml"
+            "type": "integer",
+            "example": 9678999
           }
         }
       ],
@@ -445,9 +430,28 @@
       }
     },
     "/user-admin/properties/{assetId}/users": {
+      "x-akamai": {
+        "path-info": "/user-admin/properties/{assetId}/users"
+      },
+      "parameters": [
+        {
+          "name": "assetId",
+          "in": "path",
+          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "example": 9678999
+          }
+        }
+      ],
       "get": {
-        "description": "This operation lists users who can access a property or include.\n",
         "operationId": "get-property-users",
+        "summary": "List users for property or include",
+        "tags": [
+          "Assets"
+        ],
+        "description": "This operation lists users who can access a property or include.\n",
         "parameters": [
           {
             "description": "Filters the list by users who have `lostAccess` or the reverse `gainAccess`.\n",
@@ -468,6 +472,7 @@
         ],
         "responses": {
           "200": {
+            "description": "The response provides the users accessing the property or include.\n",
             "content": {
               "application/json": {
                 "example": [
@@ -536,48 +541,21 @@
                   }
                 }
               }
-            },
-            "description": "The response provides the users accessing the property or include.\n"
-          }
-        },
-        "summary": "List users for property or include",
-        "tags": [
-          "Assets"
-        ]
-      },
-      "parameters": [
-        {
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
-          "in": "path",
-          "name": "assetId",
-          "required": true,
-          "schema": {
-            "example": 9678999,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/asset-id-path.yaml"
+            }
           }
         }
-      ],
-      "x-akamai": {
-        "file-path": "paths/users-property.yaml",
-        "path-info": "/user-admin/properties/{assetId}/users"
       }
     },
     "/user-admin/properties/{assetId}/users/block": {
       "parameters": [
         {
-          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
-          "in": "path",
           "name": "assetId",
+          "in": "path",
+          "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
           "required": true,
           "schema": {
-            "example": 9678999,
-            "type": "integer"
-          },
-          "x-akamai": {
-            "file-path": "parameters/asset-id-path.yaml"
+            "type": "integer",
+            "example": 9678999
           }
         }
       ],
@@ -596,29 +574,23 @@
                 }
               ],
               "schema": {
+                "type": "array",
                 "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
+                "minItems": 0,
                 "items": {
-                  "additionalProperties": false,
+                  "type": "object",
                   "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
-                  "properties": {
-                    "uiIdentityId": {
-                      "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs. To get this value, run the [List users for property or include](ref:get-property-users) operation.\n",
-                      "minLength": 1,
-                      "type": "string"
-                    }
-                  },
+                  "additionalProperties": false,
                   "required": [
                     "uiIdentityId"
                   ],
-                  "type": "object",
-                  "x-akamai": {
-                    "file-path": "schemas/user-block-uiidentities.yaml"
+                  "properties": {
+                    "uiIdentityId": {
+                      "type": "string",
+                      "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs. To get this value, run the [List users for property or include](ref:get-property-users) operation.\n",
+                      "minLength": 1
+                    }
                   }
-                },
-                "minItems": 0,
-                "type": "array",
-                "x-akamai": {
-                  "file-path": "schemas/users-block-uiidentities.yaml"
                 }
               }
             }
@@ -713,41 +685,32 @@
   "components": {
     "parameters": {
       "group-id-opt-group-id": {
-        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
-        "in": "query",
         "name": "groupId",
+        "in": "query",
+        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
         "schema": {
-          "example": 54321,
-          "type": "integer"
-        },
-        "x-akamai": {
-          "file-path": "parameters/group-id-opt-group-id.yaml"
+          "type": "integer",
+          "example": 54321
         }
       },
       "asset-id-path": {
-        "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
-        "in": "path",
         "name": "assetId",
+        "in": "path",
+        "description": "Unique identifier for each asset, either a property or an include. To get this value, run the [List properties or includes](ref:get-properties) operation.\n",
         "required": true,
         "schema": {
-          "example": 9678999,
-          "type": "integer"
-        },
-        "x-akamai": {
-          "file-path": "parameters/asset-id-path.yaml"
+          "type": "integer",
+          "example": 9678999
         }
       },
       "group-id-req-qp-group-id": {
-        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
-        "in": "query",
         "name": "groupId",
+        "in": "query",
+        "description": "Unique identifier for each group. To get this value, run the [List groups](ref:get-groups) operation.\n",
         "required": true,
         "schema": {
-          "example": 32145,
-          "type": "integer"
-        },
-        "x-akamai": {
-          "file-path": "parameters/group-id-req-qp-group-id.yaml"
+          "type": "integer",
+          "example": 32145
         }
       },
       "user-type-query": {
@@ -1165,47 +1128,38 @@
         }
       },
       "user-block-uiidentities": {
-        "additionalProperties": false,
+        "type": "object",
         "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
-        "properties": {
-          "uiIdentityId": {
-            "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs. To get this value, run the [List users for property or include](ref:get-property-users) operation.\n",
-            "minLength": 1,
-            "type": "string"
-          }
-        },
+        "additionalProperties": false,
         "required": [
           "uiIdentityId"
         ],
-        "type": "object",
-        "x-akamai": {
-          "file-path": "schemas/user-block-uiidentities.yaml"
+        "properties": {
+          "uiIdentityId": {
+            "type": "string",
+            "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs. To get this value, run the [List users for property or include](ref:get-property-users) operation.\n",
+            "minLength": 1
+          }
         }
       },
       "users-block-uiidentities": {
+        "type": "array",
         "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
+        "minItems": 0,
         "items": {
-          "additionalProperties": false,
+          "type": "object",
           "description": "Encapsulates all the users who needs to be blocked based on UI identities.\n",
-          "properties": {
-            "uiIdentityId": {
-              "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs. To get this value, run the [List users for property or include](ref:get-property-users) operation.\n",
-              "minLength": 1,
-              "type": "string"
-            }
-          },
+          "additionalProperties": false,
           "required": [
             "uiIdentityId"
           ],
-          "type": "object",
-          "x-akamai": {
-            "file-path": "schemas/user-block-uiidentities.yaml"
+          "properties": {
+            "uiIdentityId": {
+              "type": "string",
+              "description": "Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs. To get this value, run the [List users for property or include](ref:get-property-users) operation.\n",
+              "minLength": 1
+            }
           }
-        },
-        "minItems": 0,
-        "type": "array",
-        "x-akamai": {
-          "file-path": "schemas/users-block-uiidentities.yaml"
         }
       }
     }
