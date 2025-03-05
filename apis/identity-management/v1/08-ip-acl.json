@@ -2,11 +2,7 @@
   "openapi": "3.0.0",
   "info": {
     "title": "IP access control lists",
-    "version": "3",
-    "license": {
-      "name": "Apache 2.0",
-      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    "version": "3"
   },
   "servers": [
     {
@@ -26,7 +22,6 @@
   "paths": {
     "/user-admin/ip-acl/allowlist": {
       "x-akamai": {
-        "file-path": "paths/cidr-blocks.yaml",
         "path-info": "/user-admin/ip-acl/allowlist"
       },
       "post": {
@@ -47,10 +42,7 @@
               },
               "schema": {
                 "type": "object",
-                "description": "Encapsulates all data sent while creating or updating a CIDR block.",
-                "x-akamai": {
-                  "file-path": "schemas/post-ip-acl.yaml"
-                },
+                "description": "Encapsulates all data sent while creating or updating a CIDR block.\n",
                 "additionalProperties": false,
                 "required": [
                   "enabled",
@@ -81,10 +73,7 @@
             "description": "CIDR block successfully created.\n",
             "headers": {
               "Location": {
-                "description": "A URL path to the newly created object.",
-                "x-akamai": {
-                  "file-path": "headers/location.yaml"
-                },
+                "description": "A URL path to the newly created object.\n",
                 "schema": {
                   "type": "string"
                 }
@@ -108,10 +97,7 @@
                 },
                 "schema": {
                   "type": "object",
-                  "description": "Encapsulates all members for a CIDR block in the IP allowlist data structure.",
-                  "x-akamai": {
-                    "file-path": "schemas/ip-acl-200.yaml"
-                  },
+                  "description": "Encapsulates all members for a CIDR block in the IP allowlist data structure.\n",
                   "additionalProperties": false,
                   "required": [
                     "cidrBlockId",
@@ -197,16 +183,16 @@
         "description": "This operation lists all CIDR blocks on your current account's allowlist or other managed accounts using the `accountSwitchKey` parameter. Your API client designates the allowlist for the account.\n",
         "parameters": [
           {
-            "name": "actions",
+            "description": "Includes actions you can perform on the object, `false` by default.\n",
             "in": "query",
-            "description": "Includes actions you can perform on the object, `false` by default.",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
             "x-akamai": {
               "file-path": "parameters/actions-query.yaml"
-            },
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
             }
           }
         ],
@@ -247,10 +233,7 @@
                 ],
                 "schema": {
                   "type": "array",
-                  "description": "This object encapsulates a collection of CIDR blocks.",
-                  "x-akamai": {
-                    "file-path": "schemas/ip-acls-200.yaml"
-                  },
+                  "description": "This object encapsulates a collection of CIDR blocks.\n",
                   "minItems": 0,
                   "items": {
                     "type": "object",
@@ -335,7 +318,6 @@
     },
     "/user-admin/ip-acl/allowlist/disable": {
       "x-akamai": {
-        "file-path": "paths/disable.yaml",
         "path-info": "/user-admin/ip-acl/allowlist/disable"
       },
       "post": {
@@ -354,7 +336,6 @@
     },
     "/user-admin/ip-acl/allowlist/enable": {
       "x-akamai": {
-        "file-path": "paths/enable.yaml",
         "path-info": "/user-admin/ip-acl/allowlist/enable"
       },
       "post": {
@@ -373,7 +354,6 @@
     },
     "/user-admin/ip-acl/allowlist/status": {
       "x-akamai": {
-        "file-path": "paths/status.yaml",
         "path-info": "/user-admin/ip-acl/allowlist/status"
       },
       "get": {
@@ -393,10 +373,7 @@
                 },
                 "schema": {
                   "type": "object",
-                  "description": "Encapsulates the status of IP allowlist on the account.",
-                  "x-akamai": {
-                    "file-path": "schemas/account-status.yaml"
-                  },
+                  "description": "Encapsulates the status of IP allowlist on the account.\n",
                   "additionalProperties": false,
                   "required": [
                     "enabled"
@@ -416,7 +393,6 @@
     },
     "/user-admin/ip-acl/allowlist/validate": {
       "x-akamai": {
-        "file-path": "paths/validate.yaml",
         "path-info": "/user-admin/ip-acl/allowlist/validate"
       },
       "get": {
@@ -430,10 +406,7 @@
           {
             "name": "cidrblock",
             "in": "query",
-            "description": "CIDR block or any IP address value you want to validate. Encode any slash characters as `%2F`. This isn't the same as a `cidrBlockId`.",
-            "x-akamai": {
-              "file-path": "parameters/cidr-block-query.yaml"
-            },
+            "description": "CIDR block or any IP address value you want to validate. Encode any slash characters as `%2F`. This isn't the same as a `cidrBlockId`.\n",
             "required": true,
             "schema": {
               "type": "string",
@@ -450,17 +423,13 @@
     },
     "/user-admin/ip-acl/allowlist/{cidrBlockId}": {
       "x-akamai": {
-        "file-path": "paths/cidr-block.yaml",
         "path-info": "/user-admin/ip-acl/allowlist/{cidrBlockId}"
       },
       "parameters": [
         {
           "name": "cidrBlockId",
           "in": "path",
-          "description": "Unique identifier for each CIDR block. To get this value, run the [List CIDR blocks](ref:get-allowlist) operation.",
-          "x-akamai": {
-            "file-path": "parameters/cidr-block-id-path.yaml"
-          },
+          "description": "Unique identifier for each CIDR block. To get this value, run the [List CIDR blocks](ref:get-allowlist) operation.\n",
           "required": true,
           "schema": {
             "type": "integer",
@@ -477,16 +446,16 @@
         "description": "This operation retrieves a CIDR block's details.\n",
         "parameters": [
           {
-            "name": "actions",
+            "description": "Includes actions you can perform on the object, `false` by default.\n",
             "in": "query",
-            "description": "Includes actions you can perform on the object, `false` by default.",
+            "name": "actions",
+            "schema": {
+              "default": false,
+              "example": true,
+              "type": "boolean"
+            },
             "x-akamai": {
               "file-path": "parameters/actions-query.yaml"
-            },
-            "schema": {
-              "type": "boolean",
-              "example": true,
-              "default": false
             }
           }
         ],
@@ -511,10 +480,7 @@
                 },
                 "schema": {
                   "type": "object",
-                  "description": "Encapsulates all members for a CIDR block in the IP allowlist data structure.",
-                  "x-akamai": {
-                    "file-path": "schemas/ip-acl-200.yaml"
-                  },
+                  "description": "Encapsulates all members for a CIDR block in the IP allowlist data structure.\n",
                   "additionalProperties": false,
                   "required": [
                     "cidrBlockId",
@@ -609,10 +575,7 @@
               },
               "schema": {
                 "type": "object",
-                "description": "Encapsulates all data sent while creating or updating a CIDR block.",
-                "x-akamai": {
-                  "file-path": "schemas/post-ip-acl.yaml"
-                },
+                "description": "Encapsulates all data sent while creating or updating a CIDR block.\n",
                 "additionalProperties": false,
                 "required": [
                   "enabled",
@@ -659,10 +622,7 @@
                 },
                 "schema": {
                   "type": "object",
-                  "description": "Encapsulates all members for a CIDR block in the IP allowlist data structure.",
-                  "x-akamai": {
-                    "file-path": "schemas/ip-acl-200.yaml"
-                  },
+                  "description": "Encapsulates all members for a CIDR block in the IP allowlist data structure.\n",
                   "additionalProperties": false,
                   "required": [
                     "cidrBlockId",
@@ -757,25 +717,22 @@
   "components": {
     "parameters": {
       "actions-query": {
-        "name": "actions",
+        "description": "Includes actions you can perform on the object, `false` by default.\n",
         "in": "query",
-        "description": "Includes actions you can perform on the object, `false` by default.",
+        "name": "actions",
+        "schema": {
+          "default": false,
+          "example": true,
+          "type": "boolean"
+        },
         "x-akamai": {
           "file-path": "parameters/actions-query.yaml"
-        },
-        "schema": {
-          "type": "boolean",
-          "example": true,
-          "default": false
         }
       },
       "cidr-block-query": {
         "name": "cidrblock",
         "in": "query",
-        "description": "CIDR block or any IP address value you want to validate. Encode any slash characters as `%2F`. This isn't the same as a `cidrBlockId`.",
-        "x-akamai": {
-          "file-path": "parameters/cidr-block-query.yaml"
-        },
+        "description": "CIDR block or any IP address value you want to validate. Encode any slash characters as `%2F`. This isn't the same as a `cidrBlockId`.\n",
         "required": true,
         "schema": {
           "type": "string",
@@ -785,10 +742,7 @@
       "cidr-block-id-path": {
         "name": "cidrBlockId",
         "in": "path",
-        "description": "Unique identifier for each CIDR block. To get this value, run the [List CIDR blocks](ref:get-allowlist) operation.",
-        "x-akamai": {
-          "file-path": "parameters/cidr-block-id-path.yaml"
-        },
+        "description": "Unique identifier for each CIDR block. To get this value, run the [List CIDR blocks](ref:get-allowlist) operation.\n",
         "required": true,
         "schema": {
           "type": "integer",
@@ -799,10 +753,7 @@
     "schemas": {
       "ip-acls-200": {
         "type": "array",
-        "description": "This object encapsulates a collection of CIDR blocks.",
-        "x-akamai": {
-          "file-path": "schemas/ip-acls-200.yaml"
-        },
+        "description": "This object encapsulates a collection of CIDR blocks.\n",
         "minItems": 0,
         "items": {
           "type": "object",
@@ -881,10 +832,7 @@
       },
       "post-ip-acl": {
         "type": "object",
-        "description": "Encapsulates all data sent while creating or updating a CIDR block.",
-        "x-akamai": {
-          "file-path": "schemas/post-ip-acl.yaml"
-        },
+        "description": "Encapsulates all data sent while creating or updating a CIDR block.\n",
         "additionalProperties": false,
         "required": [
           "enabled",
@@ -909,10 +857,7 @@
       },
       "ip-acl-200": {
         "type": "object",
-        "description": "Encapsulates all members for a CIDR block in the IP allowlist data structure.",
-        "x-akamai": {
-          "file-path": "schemas/ip-acl-200.yaml"
-        },
+        "description": "Encapsulates all members for a CIDR block in the IP allowlist data structure.\n",
         "additionalProperties": false,
         "required": [
           "cidrBlockId",
@@ -986,10 +931,7 @@
       },
       "account-status": {
         "type": "object",
-        "description": "Encapsulates the status of IP allowlist on the account.",
-        "x-akamai": {
-          "file-path": "schemas/account-status.yaml"
-        },
+        "description": "Encapsulates the status of IP allowlist on the account.\n",
         "additionalProperties": false,
         "required": [
           "enabled"
@@ -1004,10 +946,7 @@
     },
     "headers": {
       "location": {
-        "description": "A URL path to the newly created object.",
-        "x-akamai": {
-          "file-path": "headers/location.yaml"
-        },
+        "description": "A URL path to the newly created object.\n",
         "schema": {
           "type": "string"
         }
@@ -1015,7 +954,6 @@
     }
   },
   "x-akamai": {
-    "auth-type": "EDGE_GRID",
-    "file-path": "08-ip-acl.yaml"
+    "auth-type": "EDGE_GRID"
   }
 }
