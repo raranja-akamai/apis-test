@@ -1,33 +1,42 @@
-type: object
-description: |
-  Specifies a new role.
 additionalProperties: false
 properties:
   grantedRoles:
-    type: array
-    description: |
-      A list of grantable role IDs.
+    description: 'Granted roles for the account.
+
+      '
     items:
-      type: object
-      description: |
-        Collection of grantable roles.
       additionalProperties: false
-      required:
-      - grantedRoleId
       properties:
         grantedRoleId:
+          description: 'Unique identifier for the grantable role. To get this value,
+            run the [List grantable roles](ref:get-grantable-roles) operation.
+
+            '
+          minimum: 1
           type: integer
-          description: |
-            A unique identifier for each granted role.
+      required:
+      - grantedRoleId
+      type: object
+    minItems: 0
+    type: array
   roleDescription:
-    type: string
-    description: |
-      A meaningful description for the role.
-    minLength: 1
+    description: 'Descriptive label for the role to convey its use.
+
+      '
     maxLength: 250
-  roleName:
-    type: string
-    description: |
-      The role's name.
     minLength: 1
+    type: string
+  roleName:
+    description: 'Descriptive label for the role.
+
+      '
     maxLength: 70
+    minLength: 1
+    type: string
+required:
+- roleName
+- roleDescription
+- grantedRoles
+type: object
+x-akamai:
+  file-path: schemas/role-request-post.yaml

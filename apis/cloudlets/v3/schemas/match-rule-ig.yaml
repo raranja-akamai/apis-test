@@ -11,9 +11,8 @@ properties:
     type: integer
     description: |
       Akamai internal use only.
-    x-akamai:
-      exclude-reason: INTERNAL
     nullable: true
+    readOnly: true
   name:
     type: string
     description: |
@@ -26,11 +25,16 @@ properties:
       The type of Cloudlet the rule is for. For example, the string for Request Control is `igMatchRule`.
     enum:
     - igMatchRule
-  disabled:
-    type: boolean
+  location:
+    type: string
     description: |
-      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
-    default: false
+      The navigable endpoint used for the object referred to in the operation.
+    readOnly: true
+  akaRuleId:
+    type: string
+    description: |
+      The rule's unique identifier within the policy version.
+    readOnly: true
   matchesAlways:
     type: boolean
     description: |
@@ -53,8 +57,12 @@ properties:
       The `matchType` and the `matchValue` or `objectMatchValue` used to conditionally pass through the request. Plus additional criteria to match on, like case sensitivity (`caseSensitive`).
     nullable: true
     items:
-      type: object
       $ref: match-rule-ig-definitions.yaml#/definitions/matchCriteriaType
+  disabled:
+    type: boolean
+    description: |
+      If `true`, disables a rule so it's not evaluated against incoming requests. The default setting is `false`.
+    default: false
   allowDeny:
     type: string
     description: |
