@@ -1,52 +1,46 @@
-description: |-
-  Encapsulates the types of email notifications you can receive.
-  
+additionalProperties: false
+description: 'Encapsulates the types of email notifications you can receive.
+
+  '
+properties:
+  enableEmailNotifications:
+    description: 'Enables email notifications.
+
+      '
+    type: boolean
+  options:
+    additionalProperties: false
+    description: 'Specific notification types users can subscribe to.
+
+      '
+    properties:
+      newUserNotification:
+        description: 'If `true`, send emails to group admins. This notification informs
+          the admin a new user was created and granted access to their group.
+
+          '
+        type: boolean
+      passwordExpiry:
+        description: 'Send emails regarding password expiration.
+
+          '
+        type: boolean
+      proactive:
+        description: 'A list of products subscribed to for proactive notification
+          emails.
+
+          '
+        items:
+          type: string
+        type: array
+      upgrade:
+        description: 'A list of products subscribed to for upgrade notification emails.
+
+          '
+        items:
+          type: string
+        type: array
+    type: object
+type: object
 x-akamai:
   file-path: schemas/notifications-request.yaml
-additionalProperties: false
-required:
-- enableEmailNotifications
-- options
-properties:
-  options:
-    type: object
-    description: |
-      Specifies email notifications settings.
-    additionalProperties: false
-    required:
-    - passwordExpiry
-    - proactive
-    - upgrade
-    properties:
-      apiClientCredentialExpiryNotification:
-        type: boolean
-        description: |
-          Enables notifications for expiring API client credentials.
-      newUserNotification:
-        type: boolean
-        description: |
-          Enables notifications for group administrators when the user creates other new users.
-      passwordExpiry:
-        type: boolean
-        description: |
-          Enables notifications for expiring passwords.
-      proactive:
-        type: array
-        description: |
-          Products for which the user gets notifications for service issues.
-        minItems: 0
-        items:
-          type: string
-          minLength: 1
-      upgrade:
-        type: array
-        description: |
-          Products for which the user receives notifications for upgrades.
-        minItems: 0
-        items:
-          type: string
-          minLength: 1
-  enableEmailNotifications:
-    type: boolean
-    description: |
-      Enables email notifications.
