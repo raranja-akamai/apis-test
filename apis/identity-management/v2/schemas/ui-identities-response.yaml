@@ -1,65 +1,33 @@
+type: object
+description: |-
+  Encapsulates information about each user.
+  
+x-akamai:
+  file-path: schemas/ui-identities-response.yaml
 additionalProperties: false
-description: 'Encapsulates information about each user.
-
-  '
+required:
+- uiIdentityId
+- firstName
+- lastName
+- uiUserName
+- email
+- accountId
+- additionalAuthentication
+- additionalAuthenticationConfigured
+- isLocked
+- tfaEnabled
+- tfaConfigured
 properties:
   accountId:
-    description: 'A unique identifier for each account.
-
-      '
     type: string
+    description: |
+      Unique identifier for each account.
+    minLength: 1
   actions:
+    type: object
+    description: |
+      Specifies permissions available to the user for this group. This data is available when you specify the `actions` parameter of the same name, not to be confused with the `action` parameter that applies to the [Set two-factor authentication](ref:put-user-profile-tfa) operation.
     additionalProperties: false
-    description: 'Encapsulates permissions available to the user for this group. This
-      data is available when you specify the `actions` parameter of the same name,
-      not to be confused with the `action` parameter, which applies to the [Set two-factor
-      authentication](ref:put-user-profile-tfa) operation.
-
-      '
-    properties:
-      apiClient:
-        description: 'Allows the administrator to create an API client.
-
-          '
-        type: boolean
-      canEditTFA:
-        description: 'If `true`, logged in users can turn their TFA settings on or
-          off.
-
-          '
-        type: boolean
-      delete:
-        description: 'Whether the user is deletable.
-
-          '
-        type: boolean
-      edit:
-        description: 'Whether the user is editable.
-
-          '
-        type: boolean
-      editProfile:
-        description: 'If `true`, the user profile can be edited by the logged in user.
-
-          '
-        type: boolean
-      isCloneable:
-        description: 'If `true`, an admin can create a new user with the same permissions
-          as this user.
-
-          '
-        type: boolean
-      resetPassword:
-        description: 'Allows an administrator to send a user a password by email or
-          see a one-time token.
-
-          '
-        type: boolean
-      thirdPartyAccess:
-        description: 'Allows the administrator to manage extended access.
-
-          '
-        type: boolean
     required:
     - delete
     - edit
@@ -69,74 +37,105 @@ properties:
     - apiClient
     - editProfile
     - canEditTFA
-    type: object
+    properties:
+      delete:
+        type: boolean
+        description: |
+          Whether the user is deletable.
+      apiClient:
+        type: boolean
+        description: |
+          Enables the administrator to create an API client.
+      canEditMFA:
+        type: boolean
+        description: |
+          With a `true` value, the user can turn their MFA setting on or off.
+      canEditNone:
+        type: boolean
+        description: |
+          With a `true` value, the user can turn their None setting on or off.
+      canEditTFA:
+        type: boolean
+        description: |
+          With a `true` value, the user can turn their TFA setting on or off.
+      edit:
+        type: boolean
+        description: |
+          Whether the user is editable.
+      editProfile:
+        type: boolean
+        description: |
+          With a `true` value, the user can edit their user profile.
+      isCloneable:
+        type: boolean
+        description: |
+          Enables an administrator to create a new user with permissions cloned from this user.
+      resetPassword:
+        type: boolean
+        description: |
+          Enables an administrator to send a user a password by email or see a one-time token.
+      thirdPartyAccess:
+        type: boolean
+        description: |
+          Enables the administrator to manage extended access.
+  additionalAuthentication:
+    type: string
+    description: |
+      Specifies the user's multi-factor authentication method, confirming their identity. Either `TFA`, `MFA`, or `NONE`, which offers no additional authentication.
+    enum:
+    - TFA
+    - MFA
+    - NONE
+  additionalAuthenticationConfigured:
+    type: boolean
+    description: |
+      Whether the user has multi-factor authentication configured.
   authGrants:
-    description: 'A user''s role assignments, per group. If you provide this member
-      in a POST request, don''t include the `cloneFrom` member in the request too.
-
-      '
+    type: array
+    description: |
+      A user's role assignments, per group. 
+    minItems: 1
     items:
       $ref: auth-grant-response.yaml
-    type: array
   email:
-    description: 'The user''s email address.
-
-      '
+    type: string
+    description: |
+      The user's email address.
     format: email
-    type: string
   firstName:
-    description: 'The user''s first name.
-
-      '
     type: string
+    description: |
+      The user's first name.
+    minLength: 1
   isLocked:
-    description: 'The user''s lock status.
-
-      '
     type: boolean
+    description: |
+      Whether the user's account is locked. To learn more, see [Temporary account lockout](https://techdocs.akamai.com/iam/docs/tmp-account-lockout).
   lastLoginDate:
-    description: 'ISO 8601 timestamp indicating when the user last logged in.
-
-      '
+    type: string
+    description: |
+      ISO 8601 timestamp indicating when the user last logged in.
     format: date-time
-    type: string
   lastName:
-    description: 'The user''s last name.
-
-      '
     type: string
+    description: |
+      The user's surname.
+    minLength: 1
   tfaConfigured:
-    description: 'The TFA is configured.
-
-      '
     type: boolean
+    description: |
+      Whether TFA is configured.
   tfaEnabled:
-    description: 'Indicates if TFA is enabled.
-
-      '
     type: boolean
+    description: |
+      Whether TFA is enabled.
   uiIdentityId:
-    description: 'A unique identifier for a user''s profile, which corresponds to
-      a user''s actual profile or client ID.
-
-      '
     type: string
+    description: |
+      Unique identifier for each user, which corresponds to their Control Center profile or client ID. Also known as a `contactId` in other APIs.
+    minLength: 1
   uiUserName:
-    description: 'A user''s `loginId`. Typically, a user''s email address.
-
-      '
     type: string
-required:
-- uiIdentityId
-- firstName
-- lastName
-- uiUserName
-- email
-- accountId
-- lastLoginDate
-- tfaEnabled
-- tfaConfigured
-- isLocked
-type: object
-x-akamai:
-  file-path: schemas/ui-identities-response.yaml
+    description: |
+      The user's username in Control Center.
+    minLength: 1

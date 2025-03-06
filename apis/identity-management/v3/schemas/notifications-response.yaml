@@ -5,34 +5,51 @@ description: |-
 x-akamai:
   file-path: schemas/notifications-response.yaml
 additionalProperties: false
+required:
+- options
+- enableEmailNotifications
 properties:
   options:
     type: object
     description: |
-      Specific notification types users can subscribe to.
+      Specifies email notifications settings.
     additionalProperties: false
+    required:
+    - newUserNotification
+    - passwordExpiry
+    - proactive
+    - upgrade
+    - apiClientCredentialExpiryNotification
     properties:
+      apiClientCredentialExpiryNotification:
+        type: boolean
+        description: |
+          Whether the user gets notifications for expiring API client credentials.
       newUserNotification:
         type: boolean
         description: |
-          Send emails to group admins regarding new user creation.
+          Whether group administrators get notifications when the user creates other new users.
       passwordExpiry:
         type: boolean
         description: |
-          Send emails regarding password expiration.
+          Whether the user gets notifications for password expiration.
       proactive:
         type: array
         description: |
-          A list of products subscribed to for proactive notification emails.
+          Products for which the user gets notifications for service issues.
+        minItems: 0
         items:
           type: string
+          minLength: 1
       upgrade:
         type: array
         description: |
-          A list of products subscribed to for upgrade notification emails.
+          Products for which the user receives notifications for upgrades.
+        minItems: 0
         items:
           type: string
+          minLength: 1
   enableEmailNotifications:
     type: boolean
     description: |
-      Indicates if email notifications are enabled.
+      Enables email notifications.
