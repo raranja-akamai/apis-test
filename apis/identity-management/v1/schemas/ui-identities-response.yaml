@@ -1,9 +1,6 @@
 type: object
-description: |-
+description: |
   Encapsulates information about each user.
-  
-x-akamai:
-  file-path: schemas/ui-identities-response.yaml
 additionalProperties: false
 required:
 - uiIdentityId
@@ -17,10 +14,49 @@ required:
 - tfaConfigured
 - isLocked
 properties:
+  uiIdentityId:
+    type: string
+    description: |
+      A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.
+  firstName:
+    type: string
+    description: |
+      The user's first name.
+  lastName:
+    type: string
+    description: |
+      The user's last name.
+  uiUserName:
+    type: string
+    description: |
+      A user's `loginId`. Typically, a user's email address.
+  email:
+    type: string
+    description: |
+      The user's email address.
+    format: email
   accountId:
     type: string
     description: |
       A unique identifier for each account.
+  isLocked:
+    type: boolean
+    description: |
+      The user's lock status.
+  tfaEnabled:
+    type: boolean
+    description: |
+      Indicates if TFA is enabled.
+  tfaConfigured:
+    type: boolean
+    description: |
+      The TFA is configured.
+  authGrants:
+    type: array
+    description: |
+      A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.
+    items:
+      $ref: auth-grant-response.yaml
   actions:
     type: object
     description: |
@@ -40,75 +76,36 @@ properties:
         type: boolean
         description: |
           Whether the user is deletable.
-      apiClient:
-        type: boolean
-        description: |
-          Allows the administrator to create an API client.
-      canEditTFA:
-        type: boolean
-        description: |
-          If `true`, logged in users can turn their TFA settings on or off.
       edit:
         type: boolean
         description: |
           Whether the user is editable.
-      editProfile:
-        type: boolean
-        description: |
-          If `true`, the user profile can be edited by the logged in user.
-      isCloneable:
-        type: boolean
-        description: |
-          If `true`, an admin can create a new user with the same permissions as this user.
       resetPassword:
         type: boolean
         description: |
           Allows an administrator to send a user a password by email or see a one-time token.
+      isCloneable:
+        type: boolean
+        description: |
+          If `true`, an admin can create a new user with the same permissions as this user.
       thirdPartyAccess:
         type: boolean
         description: |
           Allows the administrator to manage extended access.
-  authGrants:
-    type: array
-    description: |
-      A user's role assignments, per group. If you provide this member in a POST request, don't include the `cloneFrom` member in the request too.
-    items:
-      $ref: auth-grant-response.yaml
-  email:
-    type: string
-    description: |
-      The user's email address.
-    format: email
-  firstName:
-    type: string
-    description: |
-      The user's first name.
-  isLocked:
-    type: boolean
-    description: |
-      The user's lock status.
+      apiClient:
+        type: boolean
+        description: |
+          Allows the administrator to create an API client.
+      editProfile:
+        type: boolean
+        description: |
+          If `true`, the user profile can be edited by the logged in user.
+      canEditTFA:
+        type: boolean
+        description: |
+          If `true`, logged in users can turn their TFA settings on or off.
   lastLoginDate:
     type: string
     description: |
       ISO 8601 timestamp indicating when the user last logged in.
     format: date-time
-  lastName:
-    type: string
-    description: |
-      The user's last name.
-  tfaConfigured:
-    type: boolean
-    description: |
-      The TFA is configured.
-  tfaEnabled:
-    type: boolean
-    description: |
-      Indicates if TFA is enabled.
-  uiIdentityId:
-    type: string
-    description: |
-      A unique identifier for a user's profile, which corresponds to a user's actual profile or client ID.
-  uiUserName:
-    type: string
-    description: |
-      A user's `loginId`. Typically, a user's email address.
