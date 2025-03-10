@@ -1,144 +1,125 @@
+type: object
+description: |-
+  Describes available options to generate the report.
+  
+x-akamai:
+  file-path: schemas/report-metadata-response.yaml
 additionalProperties: false
-description: 'Describes available options to generate the report.
-
-  '
-properties:
-  defaults:
-    additionalProperties: false
-    description: 'Specifies the default settings to apply when you don''t provide
-      properties in the request.
-
-      '
-    properties:
-      defaultDimensions:
-        description: 'The default dimensions.
-
-          '
-        items:
-          minLength: 1
-          type: string
-        minItems: 0
-        type: array
-      defaultMetrics:
-        description: 'The default metrics.
-
-          '
-        items:
-          minLength: 1
-          type: string
-        minItems: 0
-        type: array
-      defaultSortBys:
-        description: 'The default metrics and dimensions fo sorting the results.
-
-          '
-        items:
-          $ref: sort-by.yaml
-        minItems: 0
-        type: array
-      defaultTimeRange:
-        additionalProperties: false
-        description: 'The default time range.
-
-          '
-        properties:
-          end:
-            description: 'The ending point of the time range.
-
-              '
-            minLength: 1
-            type: string
-          start:
-            description: 'The starting point of the time range.
-
-              '
-            minLength: 1
-            type: string
-        type: object
-    type: object
-  description:
-    description: 'A description of the report.
-
-      '
-    minLength: 1
-    type: string
-  dimensions:
-    description: 'Supported dimensions.
-
-      '
-    items:
-      $ref: dimension.yaml
-    minItems: 0
-    type: array
-  limits:
-    additionalProperties: false
-    description: 'Specifies limits used for validating the request.
-
-      '
-    properties:
-      dataPointsLimit:
-        description: 'Maximum number of data points in a report.
-
-          '
-        minimum: 1
-        type: integer
-      inListFilterMaxValues:
-        description: 'Maximum number of expressions you can use in a filter.
-
-          '
-        minimum: 1
-        type: integer
-      maxDateRangeInDays:
-        description: 'Maximum number of days from which you can get the data.
-
-          '
-        minimum: 1
-        type: integer
-      maxDimensions:
-        description: 'Maximum number of dimensions you can use in a request.
-
-          '
-        minimum: 1
-        type: integer
-      maxRetentionInDays:
-        description: 'The number of days for which the report''s data is available.
-
-          '
-        minimum: 1
-        type: integer
-      textFilterMaxLength:
-        description: 'Maximum length of expression you can use in a filter.
-
-          '
-        minimum: 1
-        type: integer
-    type: object
-  links:
-    $ref: links.yaml
-  metrics:
-    description: 'Supported metrics.
-
-      '
-    items:
-      $ref: metric.yaml
-    minItems: 0
-    type: array
-  name:
-    description: 'Report name.
-
-      '
-    minLength: 1
-    type: string
-  predefinedTimeRanges:
-    $ref: predefined-time-ranges.yaml
-  status:
-    $ref: status-enum.yaml
 required:
 - name
 - status
 - metrics
 - dimensions
 - links
-type: object
-x-akamai:
-  file-path: schemas/report-metadata-response.yaml
+properties:
+  name:
+    type: string
+    description: |
+      Report name.
+    minLength: 1
+  description:
+    type: string
+    description: |
+      A description of the report.
+    minLength: 1
+  defaults:
+    type: object
+    description: |
+      Specifies the default settings to apply when you don't provide properties in the request.
+    additionalProperties: false
+    properties:
+      defaultDimensions:
+        type: array
+        description: |
+          The default dimensions.
+        minItems: 0
+        items:
+          type: string
+          minLength: 1
+      defaultMetrics:
+        type: array
+        description: |
+          The default metrics.
+        minItems: 0
+        items:
+          type: string
+          minLength: 1
+      defaultSortBys:
+        type: array
+        description: |
+          The default metrics and dimensions fo sorting the results.
+        minItems: 0
+        items:
+          $ref: sort-by.yaml
+      defaultTimeRange:
+        type: object
+        description: |
+          The default time range.
+        additionalProperties: false
+        properties:
+          end:
+            type: string
+            description: |
+              The ending point of the time range.
+            minLength: 1
+          start:
+            type: string
+            description: |
+              The starting point of the time range.
+            minLength: 1
+  dimensions:
+    type: array
+    description: |
+      Supported dimensions.
+    minItems: 0
+    items:
+      $ref: dimension.yaml
+  limits:
+    type: object
+    description: |
+      Specifies limits used for validating the request.
+    additionalProperties: false
+    properties:
+      dataPointsLimit:
+        type: integer
+        description: |
+          Maximum number of data points in a report.
+        minimum: 1
+      inListFilterMaxValues:
+        type: integer
+        description: |
+          Maximum number of expressions you can use in a filter.
+        minimum: 1
+      maxDateRangeInDays:
+        type: integer
+        description: |
+          Maximum number of days from which you can get the data.
+        minimum: 1
+      maxDimensions:
+        type: integer
+        description: |
+          Maximum number of dimensions you can use in a request.
+        minimum: 1
+      maxRetentionInDays:
+        type: integer
+        description: |
+          The number of days for which the report's data is available.
+        minimum: 1
+      textFilterMaxLength:
+        type: integer
+        description: |
+          Maximum length of expression you can use in a filter.
+        minimum: 1
+  links:
+    $ref: links.yaml
+  metrics:
+    type: array
+    description: |
+      Supported metrics.
+    minItems: 0
+    items:
+      $ref: metric.yaml
+  predefinedTimeRanges:
+    $ref: predefined-time-ranges.yaml
+  status:
+    $ref: status-enum.yaml
