@@ -1,0 +1,40 @@
+type: object
+description: |-
+  Result of a bulk zone delete operation. This object is only available after offline processing has completed.
+  
+x-akamai:
+  file-path: schemas/delete-request-result.yaml
+additionalProperties: false
+required:
+- requestId
+properties:
+  failedZones:
+    type: array
+    description: |
+      Zones that failed to be deleted.
+    items:
+      type: object
+      additionalProperties: false
+      required:
+      - zone
+      - failureReason
+      properties:
+        failureReason:
+          type: string
+          description: |
+            "The reason for the proxy zone deletion failure. Either `MALFORMED_ZONE`, `INTERNAL_ERROR`, `PROXY_ZONE_LIMIT_EXCEEDED`,
+            `PROXY_ZONE_ALREADY_EXISTS`, or `PROXY_DOES_NOT_EXIST`. \n"
+        zone:
+          type: string
+          description: |
+            The name of a zone that failed to be deleted.
+  requestId:
+    type: string
+    description: |
+      The ID of the request.
+  successfullyDeletedZones:
+    type: array
+    description: |
+      The names of all zones that were successfully deleted.
+    items:
+      type: string

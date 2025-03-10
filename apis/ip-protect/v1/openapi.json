@@ -1,0 +1,1865 @@
+{
+  "components": {
+    "schemas": {
+      "mip-output": {
+        "description": "Akamai Management IP addresses.",
+        "items": {
+          "description": "IP addresses for the Akamai Management IPs.",
+          "type": "string"
+        },
+        "type": "array",
+        "x-akamai": {
+          "file-path": "schemas/mip-output.yaml"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "See documentation for Akamai's Prolexic IP Protect Configuration API",
+    "url": "https://techdocs.akamai.com/ip-protect/reference"
+  },
+  "info": {
+    "description": "Shield your site from DDoS attacks by diverting traffic and\nscrubbing network packets.\n",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "title": "Akamai: Prolexic IP Protect Configuration API",
+    "version": "v1"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/mips": {
+      "get": {
+        "description": "Returns IP address ranges for the Akamai Management IP  subnets. The Management IPs forward sanitized traffic from an Akamai scrubbing center to your network.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Prolexic IP Protect Configuration API",
+          "url": "https://techdocs.akamai.com/ip-protect/reference/get-mips"
+        },
+        "operationId": "get-mips",
+        "parameters": [
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  "192.0.2.46/24",
+                  "192.0.2.221/24",
+                  "192.0.2.231/24"
+                ],
+                "schema": {
+                  "description": "Akamai Management IP addresses.",
+                  "items": {
+                    "description": "IP addresses for the Akamai Management IPs.",
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/mip-output.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "List mapped IP addresses",
+        "tags": [
+          "Mapped IP addresses"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/mips.yaml",
+        "path-info": "/mips"
+      }
+    },
+    "/policy-domains": {
+      "get": {
+        "description": "Policy domain summary information including domain configurations and subnets.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Prolexic IP Protect Configuration API",
+          "url": "https://techdocs.akamai.com/ip-protect/reference/get-policy-domains"
+        },
+        "operationId": "get-policy-domains",
+        "parameters": [
+          {
+            "description": "Returns only the latest set of configuration values for the policy domain. Omit this parameter or set it to `false` to return all the available configuration value sets for the domain.",
+            "example": "{{latest}}",
+            "in": "query",
+            "name": "latest",
+            "required": true,
+            "schema": {
+              "example": true,
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/latest-query.yaml"
+            }
+          },
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "configVersions": [
+                      {
+                        "configVersionId": 265,
+                        "createdBy": "jkowalski",
+                        "createdTimestamp": "2020-05-13T22:08:58.272+0000",
+                        "deployState": "deployed",
+                        "ipsAllocated": 40,
+                        "ipsConfigured": 17,
+                        "pdSubnets": [
+                          {
+                            "legacyPdSubnet": false,
+                            "pdSubnet": "192.0.2.16/24",
+                            "pdSubnetId": 308,
+                            "vips": []
+                          },
+                          {
+                            "legacyPdSubnet": false,
+                            "pdSubnet": "192.0.2.204/24",
+                            "pdSubnetId": 307,
+                            "vips": [
+                              247,
+                              248
+                            ]
+                          }
+                        ],
+                        "updatedBy": null,
+                        "updatedTimestamp": "2020-04-29T21:02:02.942+0000"
+                      }
+                    ],
+                    "createdBy": "jsmith",
+                    "createdTimestamp": "2020-05-08T15:45:48.242+0000",
+                    "pdId": 10731,
+                    "policyDomainName": "documentation_na",
+                    "portsLimit": 150,
+                    "updatedBy": null,
+                    "updatedTimestamp": "2020-05-13T22:08:58.272+0000",
+                    "vipsLimit": 100
+                  }
+                ],
+                "schema": {
+                  "description": "Policy domains.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Policy domain.",
+                    "properties": {
+                      "configVersions": {
+                        "description": "Configurations.",
+                        "items": {
+                          "additionalProperties": false,
+                          "description": "Configuration versions.",
+                          "properties": {
+                            "configVersionId": {
+                              "description": "Unique identifier for the configuration version.",
+                              "type": "integer"
+                            },
+                            "createdBy": {
+                              "description": "Username of the person responsible for creating the configuration.",
+                              "type": "string"
+                            },
+                            "createdTimestamp": {
+                              "description": "ISO 8061 timestamp indicating the creation time for the configuration.",
+                              "format": "date-time",
+                              "type": "string"
+                            },
+                            "deployState": {
+                              "description": "Current deployment state of the configuration version. The value `edited` indicates that changes have been made to policy domain, but that those changes haven't been deployed yet. `deploying` indicates that the configuration is in the midst of the deployment process, while `deployed` indicates that there are no outstanding changes that need deploying.",
+                              "enum": [
+                                "deployed",
+                                "deploying",
+                                "edited"
+                              ],
+                              "type": "string"
+                            },
+                            "ipsAllocated": {
+                              "description": "Total number of virtual IP addresses allocated to the policy domain.",
+                              "type": "integer"
+                            },
+                            "ipsConfigured": {
+                              "description": "Total number of virtual IP addresses configured for the policy domain.",
+                              "type": "integer"
+                            },
+                            "pdSubnets": {
+                              "description": "Subnets.",
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "legacyPdSubnet": {
+                                    "description": "Indicates whether Prolexic Proxy created the subnet.",
+                                    "type": "boolean"
+                                  },
+                                  "pdSubnet": {
+                                    "description": "IP address of the subnet.",
+                                    "type": "string"
+                                  },
+                                  "pdSubnetId": {
+                                    "description": "Unique identifier of the subnet.",
+                                    "type": "integer"
+                                  },
+                                  "vips": {
+                                    "description": "Virtual IP addresses.",
+                                    "items": {
+                                      "description": "Unique identifier of the virtual IP address.",
+                                      "type": "integer"
+                                    },
+                                    "type": "array"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "updatedBy": {
+                              "description": "Username of the person responsible for the most recent update of the configuration.",
+                              "nullable": true,
+                              "type": "string"
+                            },
+                            "updatedTimestamp": {
+                              "description": "ISO 8061 timestamp indicating the time of the most recent update for the configuration.",
+                              "format": "date-time",
+                              "type": "string"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "createdBy": {
+                        "description": "Username of the person responsible for creating the policy domain.",
+                        "type": "string"
+                      },
+                      "createdTimestamp": {
+                        "description": "ISO 8061 timestamp indicating the creation time of the policy domain.",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "pdId": {
+                        "description": "Unique identifier of the policy domain.",
+                        "type": "integer"
+                      },
+                      "policyDomainName": {
+                        "description": "Unique name of the policy domain.",
+                        "type": "string"
+                      },
+                      "portsLimit": {
+                        "description": "Maximum number of open TCP/UDP ports allowed on a single virtual IP address.",
+                        "type": "integer"
+                      },
+                      "updatedBy": {
+                        "description": "Username of the person responsible for the most recent update of the policy domain.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "updatedTimestamp": {
+                        "description": "ISO 8061 timestamp indicating the time of the most recent update to the policy domain.",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "vipsLimit": {
+                        "description": "Total number of virtual IP addresses available to the policy domain.",
+                        "type": "integer"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/open-summary.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "List policy domains",
+        "tags": [
+          "Policy domains"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/policy-domains.yaml",
+        "path-info": "/policy-domains"
+      }
+    },
+    "/policy-domains/vips": {
+      "post": {
+        "description": "Returns information about the specified virtual IP addresses. Include the IDs of those virtual IP addresses in the `vipIds` array in the request body.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Prolexic IP Protect Configuration API",
+          "url": "https://techdocs.akamai.com/ip-protect/reference/post-policy-domains-vips"
+        },
+        "operationId": "post-policy-domains-vips",
+        "parameters": [
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "vipIds": [
+                  1781,
+                  1782,
+                  1783
+                ]
+              },
+              "schema": {
+                "additionalProperties": false,
+                "description": "Virtual IP addresses.",
+                "properties": {
+                  "vipIds": {
+                    "description": "Comma-delimited list of the unique identifiers of the virtual IP addresses to add.",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "type": "array"
+                  }
+                },
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/vip-id-input.yaml"
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "akamaiFrontend": "192.0.2.49/24",
+                    "createdBy": "alfulani",
+                    "createdTimestamp": "2020-11-18T23:36:45.183+00:00",
+                    "customerBackend": "192.0.2.220/24",
+                    "legacyVip": false,
+                    "pdSubnet": "192.0.2.42/24",
+                    "pdSubnetId": 3126,
+                    "ports": "80,IP/AH,IP/ESP,IP/GRE,IP/ICMP",
+                    "serviceType": "PASSTHROUGH",
+                    "sourceIpProtocol": "PROXY_PROTOCOL_V2",
+                    "updatedBy": "adevi",
+                    "updatedTimestamp": "2020-11-18T23:36:45.183+00:00",
+                    "vipId": 1781
+                  },
+                  {
+                    "akamaiFrontend": "192.0.2.76/24",
+                    "createdBy": "hgildong",
+                    "createdTimestamp": "2020-11-18T23:36:45.184+00:00",
+                    "customerBackend": "192.0.2.66/24",
+                    "legacyVip": false,
+                    "pdSubnet": "192.0.2.193/24",
+                    "pdSubnetId": 3126,
+                    "ports": "80,IP/AH,IP/ESP,IP/GRE,IP/ICMP",
+                    "serviceType": "PASSTHROUGH",
+                    "sourceIpProtocol": "PROXY_PROTOCOL_V1",
+                    "updatedBy": "jdupont",
+                    "updatedTimestamp": "2020-11-18T23:36:45.184+00:00",
+                    "vipId": 1782
+                  },
+                  {
+                    "akamaiFrontend": "192.0.2.183/24",
+                    "createdBy": "hgildong",
+                    "createdTimestamp": "2020-11-18T23:36:45.185+00:00",
+                    "customerBackend": "192.0.2.64/24",
+                    "legacyVip": false,
+                    "pdSubnet": "192.0.2.207/24",
+                    "pdSubnetId": 3127,
+                    "ports": "1-51,IP/AH,IP/ESP,IP/GRE,IP/ICMP",
+                    "serviceType": "PASSTHROUGH",
+                    "sourceIpProtocol": "NA",
+                    "updatedBy": "mrossi",
+                    "updatedTimestamp": "2020-11-18T23:36:45.185+00:00",
+                    "vipId": 1783
+                  }
+                ],
+                "schema": {
+                  "description": "The virtual IP addresses that IP Protect uses to redirect Internet traffic.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Virtual IP addresses.",
+                    "properties": {
+                      "akamaiFrontend": {
+                        "description": "The Akamai virtual IP address that's been mapped to a back-end server or subnet.",
+                        "type": "string"
+                      },
+                      "createdBy": {
+                        "description": "Username of the person responsible for allocating the virtual IP address.",
+                        "type": "string"
+                      },
+                      "createdTimestamp": {
+                        "description": "ISO 8601 timestamp indicating the creation time of the virtual IP address.",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "customerBackend": {
+                        "description": "IP address of a customer's server or subnet.",
+                        "type": "string"
+                      },
+                      "legacyVip": {
+                        "description": "Indicates whether Prolexic Proxy created the virtual IP address.",
+                        "type": "boolean"
+                      },
+                      "pdSubnet": {
+                        "description": "Virtual IP address of the subnet.",
+                        "type": "string"
+                      },
+                      "pdSubnetId": {
+                        "description": "Unique identifier of the virtual IP subnet.",
+                        "type": "integer"
+                      },
+                      "ports": {
+                        "description": "Comma-delimited string of ports open to Internet traffic.",
+                        "type": "string"
+                      },
+                      "serviceType": {
+                        "description": "The type of IP address or subnet service configured.",
+                        "type": "string"
+                      },
+                      "sourceIpProtocol": {
+                        "description": "Specifies the source IP for network packets received at a customer's back-end server or subnet. By default, packets are set to `NA`, identifying Akamai as the source IP. Other source IP options are `NAT46`, `CIP`, `PROXY_PROTOCOL_V1`, `PROXY_PROTOCOL_V2`, and `OPTION_28`. `NAT46` is only available if the virtual IP address has an IPv4 address and the back-end IP has an IPv6 address. The remaining options require the virtual IP address to be running on a TCP network.",
+                        "enum": [
+                          "CIP",
+                          "PROXY_PROTOCOL_V1",
+                          "PROXY_PROTOCOL_V2",
+                          "OPTION_28",
+                          "NAT46",
+                          "NA"
+                        ],
+                        "type": "string"
+                      },
+                      "updatedBy": {
+                        "description": "Username of the person responsible for the most recent update of the virtual IP address.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "updatedTimestamp": {
+                        "description": "ISO 8601 timestamp indicating the most recent update of the virtual IP address.",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "vipId": {
+                        "description": "Unique identifier of the virtual IP address.",
+                        "type": "integer"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/vip-id-output.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "List virtual IP addresses",
+        "tags": [
+          "Virtual IP addresses"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/vips.yaml",
+        "path-info": "/policy-domains/vips"
+      }
+    },
+    "/policy-domains/vips/health-stats": {
+      "post": {
+        "description": "\"Returns the health status for the specified policy domains in UNIX epoch milliseconds. Akamai retains health statistics for\nseven days. \\\\nList domain names in the `customers` array in the request body.\nYou can also use `startTime` and `endTime` to define a health status time interval,\nbeginning with the `startTime` and ending with the `endTime`. If you don't include\n`endTime` the time interval automatically extends to the current time. \\n\"",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Prolexic IP Protect Configuration API",
+          "url": "https://techdocs.akamai.com/ip-protect/reference/post-policy-domains-vips-health-stats"
+        },
+        "operationId": "post-policy-domains-vips-health-stats",
+        "parameters": [
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "customers": [
+                  "documentation_na"
+                ],
+                "endTime": 1599152699000,
+                "startTime": 1599152694000
+              },
+              "schema": {
+                "additionalProperties": false,
+                "description": "Health status.",
+                "properties": {
+                  "customers": {
+                    "description": "Policy domains.",
+                    "items": {
+                      "description": "Unique identifier of the policy domain.",
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "endTime": {
+                    "description": "Timestamp in Unix epoch milliseconds of the latest set of health statistics to retrieve. If omitted, the health statistics interval automatically extends to the current time.",
+                    "example": "{{endTime}}",
+                    "type": "integer"
+                  },
+                  "startTime": {
+                    "description": "Timestamp in Unix epoch milliseconds of the earliest set of health statistics to retrieve. Akamai maintains health statistics for seven days.",
+                    "example": "{{startTime}}",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "customers"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/backend-status-input.yaml"
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "policyDomainName": "documentation_na",
+                    "vips": [
+                      {
+                        "akamaiFrontEnd": "192.0.2.185/24",
+                        "backendIps": [
+                          {
+                            "backendIp": "192.0.2.9",
+                            "status": "down"
+                          },
+                          {
+                            "backendIp": "192.0.2.120",
+                            "status": "healthy"
+                          }
+                        ],
+                        "customerBackend": "192.0.2.48/24",
+                        "vipId": 836
+                      },
+                      {
+                        "akamaiFrontEnd": "192.0.2.245/24",
+                        "backendIps": [
+                          {
+                            "backendIp": "192.0.2.61",
+                            "status": "unknown"
+                          },
+                          {
+                            "backendIp": "192.0.2.56",
+                            "status": "unknown"
+                          }
+                        ],
+                        "customerBackend": "192.0.2.255/24",
+                        "vipId": 835
+                      }
+                    ]
+                  }
+                ],
+                "schema": {
+                  "description": "Health status.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Reports the health status of the back-end IP addresses in your policy domains.",
+                    "properties": {
+                      "policyDomainName": {
+                        "description": "Unique name of the policy domain.",
+                        "type": "string"
+                      },
+                      "vips": {
+                        "description": "Virtual IP addresses.",
+                        "items": {
+                          "additionalProperties": false,
+                          "description": "Virtual IP addresses. IP Protect routes traffic to these virtual IP addresses.",
+                          "properties": {
+                            "akamaiFrontEnd": {
+                              "description": "The Akamai virtual IP address that's been mapped to a back-end server or subnet.",
+                              "type": "string"
+                            },
+                            "backendIps": {
+                              "description": "IP addresses of a customer's servers and subnets.",
+                              "items": {
+                                "additionalProperties": false,
+                                "description": "IP addresses of a customer's servers and subnets.",
+                                "properties": {
+                                  "backendIp": {
+                                    "description": "IP addresses of a customer's server or subnet.",
+                                    "type": "string"
+                                  },
+                                  "status": {
+                                    "description": "Current state of the back-end IP. Either `healthy`, `possible_connectivity_issues`, `connectivity_issues`, `down`, or `unknown`. IP Protect calculates health status by determining the percentage of active locations for a back-end IP address.",
+                                    "enum": [
+                                      "healthy",
+                                      "possible_connectivity_issues",
+                                      "connectivity_issues",
+                                      "down",
+                                      "unknown"
+                                    ],
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "customerBackend": {
+                              "description": "IP address of the customer's server or subnet.",
+                              "type": "string"
+                            },
+                            "vipId": {
+                              "description": "Unique identifier of the Akamai virtual IP address.",
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/backend-status-output.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "Get health status",
+        "tags": [
+          "Health status"
+        ]
+      },
+      "x-akamai": {
+        "file-path": "paths/health-stats-vips.yaml",
+        "path-info": "/policy-domains/vips/health-stats"
+      }
+    },
+    "/policy-domains/{pdName}": {
+      "get": {
+        "description": "Returns summary information for the specified policy domain. Use the `extended` parameter to return information about the number of virtual IP addresses available to, and configured for, the domain.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Prolexic IP Protect Configuration API",
+          "url": "https://techdocs.akamai.com/ip-protect/reference/get-policy-domains-pdname"
+        },
+        "operationId": "get-policy-domains-pdname",
+        "parameters": [
+          {
+            "description": "Enables inclusion of `ipsAllocated` and `ipsConfigured` values in the query response. These parameters are omitted from the API response if you don't include `extended` or set its value to `false`.",
+            "example": "{{extended}}",
+            "in": "query",
+            "name": "extended",
+            "required": true,
+            "schema": {
+              "example": true,
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/extended-query.yaml"
+            }
+          },
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "configVersions": [
+                    {
+                      "configVersionId": 27,
+                      "ipsAllocated": 4,
+                      "ipsConfigured": 2
+                    }
+                  ],
+                  "createdBy": "jkowalski",
+                  "createdTimestamp": "2020-04-29T21:02:02.942+0000",
+                  "pdId": 52,
+                  "policyDomainName": "documentation_na",
+                  "portsLimit": 150,
+                  "updatedBy": "afero",
+                  "updatedTimestamp": "2020-04-29T21:02:22.570+0000",
+                  "vipsLimit": 303
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Administrative partitions for IP Protect.",
+                  "properties": {
+                    "configVersions": {
+                      "description": "Policy domain configurations.",
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Virtual IP address allocations and configurations for the policy domain.",
+                        "properties": {
+                          "configVersionId": {
+                            "description": "Unique identifier of the configuration version.",
+                            "type": "integer"
+                          },
+                          "ipsAllocated": {
+                            "description": "Number of virtual IP addresses allocated for the policy domain.",
+                            "type": "integer"
+                          },
+                          "ipsConfigured": {
+                            "description": "Number of virtual IP addresses configured for the policy domain.",
+                            "type": "integer"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "createdBy": {
+                      "description": "Username of the person responsible for creating the policy domain.",
+                      "type": "string"
+                    },
+                    "createdTimestamp": {
+                      "description": "ISO 8061 timestamp indicating the creation time of the policy domain.",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "pdId": {
+                      "description": "Unique identifier of the policy domain.",
+                      "type": "integer"
+                    },
+                    "policyDomainName": {
+                      "description": "Unique name of the policy domain.",
+                      "type": "string"
+                    },
+                    "portsLimit": {
+                      "description": "Maximum number of TCP or UDP ports configurable on a single virtual IP address.",
+                      "type": "integer"
+                    },
+                    "updatedBy": {
+                      "description": "Username of the person responsible for the most recent update of the policy domain.",
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "updatedTimestamp": {
+                      "description": "ISO 8061 timestamp indicating the most recent update time of the policy domain.",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "vipsLimit": {
+                      "description": "Number of virtual IP addresses available to the policy domain.",
+                      "type": "integer"
+                    }
+                  },
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/setting-update-open-output.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "Get a policy domain",
+        "tags": [
+          "Policy domains"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Unique name of the policy domain.",
+          "example": "{{pdName}}",
+          "in": "path",
+          "name": "pdName",
+          "required": true,
+          "schema": {
+            "example": "documentation_na",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/pd-name-path.yaml"
+          }
+        }
+      ],
+      "x-akamai": {
+        "file-path": "paths/policy-domain.yaml",
+        "path-info": "/policy-domains/{pdName}"
+      }
+    },
+    "/policy-domains/{pdName}/configs": {
+      "post": {
+        "description": "Adds new virtual IP addresses (VIPs) and creates or deletes subnets as needed for the specified policy domain. /nThe request body also requires the previously deployed configuration. Include the previous configuration's `pdSubnet`, `vips`, `vipId`, `customerBackend`, `akamaiFrontend`, `ports`, `sourceIpProtocol`, `probeType`, and `probePort` values to avoid the previous configuration being removed. To find the previous configuration, run [List policy configurations](https://techdocs.akamai.com/ip-protect/reference/get-policy-domains-pdname-configs).",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Prolexic IP Protect Configuration API",
+          "url": "https://techdocs.akamai.com/ip-protect/reference/post-policy-domains-pdname-configs"
+        },
+        "operationId": "post-policy-domains-pdname-configs",
+        "parameters": [
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "pdSubnets": [
+                  {
+                    "legacyPdSubnet": false,
+                    "pdSubnet": "192.0.2.68/24",
+                    "vips": [
+                      {
+                        "akamaiFrontend": "192.0.2.156/24",
+                        "customerBackend": "192.0.2.200/24",
+                        "legacyVip": false,
+                        "ports": "80, 443",
+                        "sourceIpProtocol": "PROXY_PROTOCOL_V2"
+                      },
+                      {
+                        "akamaiFrontend": "192.0.2.171/24",
+                        "customerBackend": "192.0.2.52/24",
+                        "legacyVip": false,
+                        "ports": "TCP/80-100,120-150,IP/AH",
+                        "sourceIpProtocol": "PROXY_PROTOCOL_V1"
+                      }
+                    ]
+                  },
+                  {
+                    "legacyPdSubnet": false,
+                    "pdSubnet": "192.0.2.11/24"
+                  },
+                  {
+                    "legacyPdSubnet": true,
+                    "pdSubnet": "192.0.2.20/24",
+                    "vips": [
+                      {
+                        "akamaiFrontend": "192.0.2.161/24",
+                        "customerBackend": "192.0.2.146/24",
+                        "legacyVip": true,
+                        "ports": "TCP/80-100,UDP/1000-2000,120-150,IP/AH,",
+                        "sourceIpProtocol": "NA"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "schema": {
+                "additionalProperties": false,
+                "description": "Policy domain configuration.",
+                "properties": {
+                  "pdSubnets": {
+                    "description": "Virtual subnets.",
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "legacyPdSubnet": {
+                          "description": "Indicates whether Prolexic Proxy created the subnet.",
+                          "type": "boolean"
+                        },
+                        "pdSubnet": {
+                          "description": "Virtual IP address of the subnet.",
+                          "type": "string"
+                        },
+                        "vips": {
+                          "description": "Virtual IP addresses.",
+                          "items": {
+                            "additionalProperties": false,
+                            "description": "Virtual IP address.",
+                            "properties": {
+                              "akamaiFrontend": {
+                                "description": "Akamai virtualmIP address that's mapped to the back-end IP address.",
+                                "type": "string"
+                              },
+                              "customerBackend": {
+                                "description": "IP address of a customer's server or subnet that's been mapped to the virtual IP address.",
+                                "type": "string"
+                              },
+                              "legacyVip": {
+                                "description": "Indicates whether Prolexic Proxy created the virtual IP address.",
+                                "type": "boolean"
+                              },
+                              "ports": {
+                                "description": "Comma-delimited string of virtual IP address ports open to Internet traffic.",
+                                "type": "string"
+                              },
+                              "sourceIpProtocol": {
+                                "description": "Specifies the source IP for network packets received at a customer's back-end server or subnet. By default, packets are set to `NA`, identifying Akamai as the source IP. Other source IP options are `NAT46`, `CIP`, `PROXY_PROTOCOL_V1`, `PROXY_PROTOCOL_V2`, and `OPTION_28`. `NAT46` is only available if the VIP has an IPv4 address and the back-end IP server or subnet has an IPv6 address. The remaining options require the VIP to be running on a TCP network.",
+                                "enum": [
+                                  "CIP",
+                                  "PROXY_PROTOCOL_V1",
+                                  "PROXY_PROTOCOL_V2",
+                                  "OPTION_28",
+                                  "NAT46",
+                                  "NA"
+                                ],
+                                "type": "string"
+                              },
+                              "type": {
+                                "description": "The type of IP address or subnet service configured.",
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "ports",
+                              "akamaiFrontend",
+                              "customerBackend",
+                              "sourceIpProtocol"
+                            ],
+                            "type": "object"
+                          },
+                          "nullable": true,
+                          "type": "array"
+                        }
+                      },
+                      "required": [
+                        "pdSubnet"
+                      ],
+                      "type": "object"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "pdSubnets"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/create-or-deploy-config-open.yaml"
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "createdBy": "jkowalski",
+                  "createdTimestamp": "2020-11-13T16:04:27.905+00:00",
+                  "deployState": "deploying",
+                  "pdName": "documentation_na",
+                  "pdSubnets": [
+                    {
+                      "legacyPdSubnet": false,
+                      "pdSubnet": "192.0.2.128/24",
+                      "pdSubnetId": 2951,
+                      "vips": [
+                        {
+                          "akamaiFrontend": "192.0.2.41/24",
+                          "customerBackend": "192.0.2.42/24",
+                          "legacyVip": false,
+                          "ports": "80,443",
+                          "sourceIpProtocol": "PROXY_PROTOCOL_V2",
+                          "type": "PASSTHROUGH",
+                          "vipId": 1678
+                        },
+                        {
+                          "akamaiFrontend": "192.0.2.95/24",
+                          "customerBackend": "192.0.2.28/24",
+                          "legacyVip": false,
+                          "ports": "120-150,IP/AH,TCP/80-100",
+                          "sourceIpProtocol": "PROXY_PROTOCOL_V1",
+                          "type": "PASSTHROUGH",
+                          "vipId": 1679
+                        }
+                      ]
+                    },
+                    {
+                      "legacyPdSubnet": false,
+                      "pdSubnet": "192.0.2.62/24",
+                      "pdSubnetId": 2952,
+                      "vips": null
+                    },
+                    {
+                      "legacyPdSubnet": false,
+                      "pdSubnet": "192.0.2.93/24",
+                      "pdSubnetId": 2953,
+                      "vips": [
+                        {
+                          "akamaiFrontend": "192.0.2.171/24",
+                          "customerBackend": "192.0.2.157/24",
+                          "legacyVip": false,
+                          "ports": "120-150,IP/AH,TCP/80-100,UDP/1000-2000",
+                          "sourceIpProtocol": "NA",
+                          "type": "PASSTHROUGH",
+                          "vipId": 1680
+                        }
+                      ]
+                    }
+                  ],
+                  "updatedBy": "adevi",
+                  "updatedTimestamp": "2020-11-13T16:04:27.905+00:00"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Policy domain.",
+                  "properties": {
+                    "createdBy": {
+                      "description": "Username of the person responsible for creating the policy domain.",
+                      "type": "string"
+                    },
+                    "createdTimestamp": {
+                      "description": "ISO 8601 timestamp indicating the creation time of the policy domain.",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "deployState": {
+                      "description": "Current deployment state of the configuration version. The value `edited` indicates that changes have been made to policy domain, but that those changes haven't been deployed. `deploying` indicates that the configuration is in the midst of the deployment process, while `deployed` indicates that there are no outstanding changes that need deploying.",
+                      "enum": [
+                        "deployed",
+                        "deploying",
+                        "edited"
+                      ],
+                      "type": "string"
+                    },
+                    "pdName": {
+                      "description": "Unique name of the policy domain.",
+                      "type": "string"
+                    },
+                    "pdSubnets": {
+                      "description": "Subnets.",
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "legacyPdSubnet": {
+                            "description": "Indicates whether Prolexic Proxy created the subnet.",
+                            "type": "boolean"
+                          },
+                          "pdSubnet": {
+                            "description": "IP address of the subnet.",
+                            "type": "string"
+                          },
+                          "pdSubnetId": {
+                            "description": "Unique identifier of the subnet.",
+                            "type": "integer"
+                          },
+                          "vips": {
+                            "description": "Virtual IP addresses.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "akamaiFrontend": {
+                                  "description": "IP address of an Akamai virtual IP address that's been mapped to a back-end IP.",
+                                  "type": "string"
+                                },
+                                "customerBackend": {
+                                  "description": "IP address of a customer's server or subnet mapped to a virtual IP address.",
+                                  "type": "string"
+                                },
+                                "legacyVip": {
+                                  "description": "Indicates whether Prolexic Proxy created the virtual IP address.",
+                                  "type": "boolean"
+                                },
+                                "ports": {
+                                  "description": "Comma-delimited string of virtual IO address ports open to Internet traffic.",
+                                  "type": "string"
+                                },
+                                "sourceIpProtocol": {
+                                  "description": "Specifies the source IP for network packets received at a customer's back-end server or subnet. By default, packets are set to `NA`, identifying Akamai as the source IP. Other source IP options are `NAT46`, `CIP`, `PROXY_PROTOCOL_V1`, `PROXY_PROTOCOL_V2`, and `OPTION_28`. `NAT46` is only available if the virtual IP address has an IPv4 address and the back-end IP has an IPv6 address. The remaining options require the virtual IP address to be running on a TCP network.",
+                                  "enum": [
+                                    "CIP",
+                                    "PROXY_PROTOCOL_V1",
+                                    "PROXY_PROTOCOL_V2",
+                                    "OPTION_28",
+                                    "NAT46",
+                                    "NA"
+                                  ],
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "description": "The type of IP address or subnet service configured.",
+                                  "type": "string"
+                                },
+                                "vipId": {
+                                  "description": "Unique identifier of the virtual IP address.",
+                                  "type": "integer"
+                                }
+                              },
+                              "required": [
+                                "ports",
+                                "akamaiFrontend",
+                                "customerBackend",
+                                "sourceIpProtocol",
+                                "legacyVip"
+                              ],
+                              "type": "object"
+                            },
+                            "nullable": true,
+                            "type": "array"
+                          }
+                        },
+                        "required": [
+                          "pdSubnet"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "updatedBy": {
+                      "description": "Username of the person responsible for the most recent updating of the policy domain.",
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "updatedTimestamp": {
+                      "description": "ISO 8601 timestamp indicating the most recent update time for the policy domain.",
+                      "format": "date-time",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/deploy-output-open.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "Create a new configuration version",
+        "tags": [
+          "Policy configurations"
+        ]
+      },
+      "get": {
+        "description": "Returns configuration information for the specified policy domain. By default, this operation returns all the available configuration sets. Use the `latest` parameter to return only the most recent set of configuration values.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Prolexic IP Protect Configuration API",
+          "url": "https://techdocs.akamai.com/ip-protect/reference/get-policy-domains-pdname-configs"
+        },
+        "operationId": "get-policy-domains-pdname-configs",
+        "parameters": [
+          {
+            "description": "Returns only the latest set of configuration values for the policy domain. Omit this parameter or set it to `false` to return all the available configuration value sets for the domain.",
+            "example": "{{latest}}",
+            "in": "query",
+            "name": "latest",
+            "required": true,
+            "schema": {
+              "example": true,
+              "type": "boolean"
+            },
+            "x-akamai": {
+              "file-path": "parameters/latest-query.yaml"
+            }
+          },
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "configVersionId": 1,
+                    "createdBy": "jsmith",
+                    "createdTimestamp": "2020-04-29T21:02:02.942+0000",
+                    "deployState": "edited",
+                    "ipsAllocated": 32,
+                    "ipsConfigured": 20,
+                    "pdSubnets": [
+                      {
+                        "configVersionId": 1,
+                        "legacyPdSubnet": false,
+                        "pdSubnet": "1.1.1.4/26",
+                        "pdSubnetId": 1,
+                        "vips": [
+                          {
+                            "akamaiFrontend": "1.1.1.4/28",
+                            "customerBackend": "2.2.2.2/28",
+                            "legacyVip": false,
+                            "ports": "80, 443",
+                            "sourceIpProtocol": "PROXY_PROTOCOL_V2",
+                            "type": "PASSTHROUGH",
+                            "vipId": 1
+                          }
+                        ]
+                      }
+                    ],
+                    "updatedBy": null,
+                    "updatedTimestamp": "2020-04-29T21:02:02.942+0000"
+                  }
+                ],
+                "schema": {
+                  "description": "Policy domain configurations.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Configurations.",
+                    "properties": {
+                      "configVersionId": {
+                        "description": "Unique identifier of the configuration version. Higher values are more recent versions.",
+                        "type": "integer"
+                      },
+                      "createdBy": {
+                        "description": "Username of the person responsible for creating the configuration version.",
+                        "type": "string"
+                      },
+                      "createdTimestamp": {
+                        "description": "ISO 8601 timestamp indicating the creation time for the configuration version.",
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      "deployState": {
+                        "description": "The configuration version's current deployment state. The `edited` state indicates that changes have been made but haven't been deployed. `deploying` indicates that the config is in the deployment process, while `deployed` indicates that all changes have been deployed.",
+                        "enum": [
+                          "deployed",
+                          "deploying",
+                          "edited"
+                        ],
+                        "type": "string"
+                      },
+                      "ipsAllocated": {
+                        "description": "Total number of virtual IP addresses allocated for the policy domain.",
+                        "type": "integer"
+                      },
+                      "ipsConfigured": {
+                        "description": "Total number of virtual IP addresses configured for the policy domain.",
+                        "type": "integer"
+                      },
+                      "pdSubnets": {
+                        "description": "Subnets.",
+                        "items": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "configVersionId": {
+                              "description": "Unique identifier of the configuration version.",
+                              "type": "integer"
+                            },
+                            "legacyPdSubnet": {
+                              "description": "Indicates whether Prolexic Proxy created the subnet.",
+                              "type": "boolean"
+                            },
+                            "pdSubnet": {
+                              "description": "Virtual IP address of the subnet.",
+                              "type": "string"
+                            },
+                            "pdSubnetId": {
+                              "description": "Unique identifier of the subnet.",
+                              "type": "integer"
+                            },
+                            "vips": {
+                              "description": "Virtual IP addresses.",
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "akamaiFrontend": {
+                                    "description": "The Akamai virtual IP address that's been mapped to a back-end server or subnet.",
+                                    "type": "string"
+                                  },
+                                  "customerBackend": {
+                                    "description": "IP address of a customer's server or subnet that's been mapped to a virtual IP address.",
+                                    "type": "string"
+                                  },
+                                  "legacyVip": {
+                                    "description": "Indicates whether Prolexic Proxy created the virtual IP address.",
+                                    "type": "boolean"
+                                  },
+                                  "ports": {
+                                    "description": "Comma-delimited string of virtual IP address ports open to Internet traffic.",
+                                    "type": "string"
+                                  },
+                                  "sourceIpProtocol": {
+                                    "description": "Specifies the source IP for network packets received at a customer's back-end server or subnet. By default, packets are set to `NA`, identifying Akamai as the source IP. Other source IP options are `NAT46`, `CIP`, `PROXY_PROTOCOL_V1`, `PROXY_PROTOCOL_V2`, and `OPTION_28`. `NAT46` is only available if the virtual IP address has an IPv4 address and the back-end IP has an IPv6 address. The remaining options require the virtual IP address to be running on a TCP network.",
+                                    "enum": [
+                                      "CIP",
+                                      "PROXY_PROTOCOL_V1",
+                                      "PROXY_PROTOCOL_V2",
+                                      "OPTION_28",
+                                      "NAT46",
+                                      "NA"
+                                    ],
+                                    "type": "string"
+                                  },
+                                  "type": {
+                                    "description": "The type of IP address or subnet service configured.",
+                                    "type": "string"
+                                  },
+                                  "vipId": {
+                                    "description": "Unique identifier of the virtual IP address.",
+                                    "type": "integer"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "nullable": true,
+                              "type": "array"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      },
+                      "updatedBy": {
+                        "description": "Username of the person for the most recent update of the configuration version.",
+                        "nullable": true,
+                        "type": "string"
+                      },
+                      "updatedTimestamp": {
+                        "description": "ISO 8601 timestamp indicating the time of the most recent update of the configuration version.",
+                        "format": "date-time",
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/all-config-open-output.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "List policy configurations",
+        "tags": [
+          "Policy configurations"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Unique name of the policy domain.",
+          "example": "{{pdName}}",
+          "in": "path",
+          "name": "pdName",
+          "required": true,
+          "schema": {
+            "example": "documentation_na",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/pd-name-path.yaml"
+          }
+        }
+      ],
+      "x-akamai": {
+        "file-path": "paths/configs.yaml",
+        "path-info": "/policy-domains/{pdName}/configs"
+      }
+    },
+    "/policy-domains/{pdName}/pd-subnets/allocate": {
+      "put": {
+        "description": "Adds virtual IP addresses to the specified policy domain. In the request body, use `addVips` to specify the number of virtual IP addresses you're adding, and use `allocateIpv6` to configure the IP addressing type for these addresses. Set `allocateIpv6` to `true` to use IPv6 addressing, and either omit `allocateIpv6` or set the value to `false` to use IPv4 addressing.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Prolexic IP Protect Configuration API",
+          "url": "https://techdocs.akamai.com/ip-protect/reference/put-policy-domains-pdname-pd-subnets-allocate"
+        },
+        "operationId": "put-policy-domains-pdname-pd-subnets-allocate",
+        "parameters": [
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "example": {
+                "addVips": 5,
+                "allocateIpv6": true
+              },
+              "schema": {
+                "additionalProperties": false,
+                "description": "Specifies the number and type of the IP addresses you want to allocate.",
+                "properties": {
+                  "addVips": {
+                    "description": "Number of virtual IP addresses to allocate.",
+                    "example": "{{addVips}}",
+                    "type": "integer"
+                  },
+                  "allocateIpv6": {
+                    "description": "Indicates that the new virtual IP addresses use IPv6 addressing. If you omit this parameter or set it to `false`, the new addresses use IPv4 addressing.",
+                    "example": "{{allocateIpv6}}",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "addVips",
+                  "allocateIpv6"
+                ],
+                "type": "object",
+                "x-akamai": {
+                  "file-path": "schemas/add-vips-schema.yaml"
+                }
+              }
+            }
+          },
+          "required": false
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "configVersionId": 1,
+                  "createdBy": "hgildong",
+                  "createdTimestamp": "2020-04-29T21:02:02.942+0000",
+                  "deployState": "deployed",
+                  "ipsAllocated": 32,
+                  "ipsConfigured": 20,
+                  "pdName": "documentation_na",
+                  "pdSubnets": [
+                    {
+                      "legacyPdSubnet": false,
+                      "pdSubnet": "1.1.1.4/26",
+                      "pdSubnetId": 1,
+                      "vips": [
+                        {
+                          "akamaiFrontend": "1.1.1.4/28",
+                          "customerBackend": "2.2.2.2/28",
+                          "ports": "80, 443",
+                          "sourceIpProtocol": "PROXY_PROTOCOL_V2",
+                          "type": "PASSTHROUGH",
+                          "vipId": 1
+                        }
+                      ]
+                    }
+                  ],
+                  "updatedBy": null,
+                  "updatedTimestamp": "2020-05-13T22:08:58.272+0000"
+                },
+                "schema": {
+                  "additionalProperties": false,
+                  "description": "Policy domain configurations.",
+                  "properties": {
+                    "configVersionId": {
+                      "description": "Unique identifier for the configuration version.",
+                      "type": "integer"
+                    },
+                    "createdBy": {
+                      "description": "User who created the configuration version.",
+                      "type": "string"
+                    },
+                    "createdTimestamp": {
+                      "description": "ISO 8601 timestamp indicating the creation time of the configuration.",
+                      "format": "date-time",
+                      "type": "string"
+                    },
+                    "deployState": {
+                      "description": "Current deployment state of the configuration version. The value `edited` indicates that changes have been made to policy domain, but haven't been deployed. `deploying` indicates that the configuration is in the midst of the deployment process, while `deployed` indicates that there are no outstanding changes that need deploying.",
+                      "enum": [
+                        "deployed",
+                        "deploying",
+                        "edited"
+                      ],
+                      "type": "string"
+                    },
+                    "ipsAllocated": {
+                      "description": "Number of virtual IP addresses assigned to the policy domain.",
+                      "type": "integer"
+                    },
+                    "ipsConfigured": {
+                      "description": "Number of virtual IP addresses configured for the policy domain.",
+                      "type": "integer"
+                    },
+                    "pdName": {
+                      "description": "Unique name of the policy domain.",
+                      "type": "string"
+                    },
+                    "pdSubnets": {
+                      "description": "Subnets.",
+                      "items": {
+                        "additionalProperties": false,
+                        "properties": {
+                          "legacyPdSubnet": {
+                            "description": "Indicates whether Prolexic Proxy created the subnet.",
+                            "type": "boolean"
+                          },
+                          "pdSubnet": {
+                            "description": "IP address of the subnet.",
+                            "type": "string"
+                          },
+                          "pdSubnetId": {
+                            "description": "Unique identifier of the subnet.",
+                            "type": "integer"
+                          },
+                          "vips": {
+                            "description": "Virtual IP addresses.",
+                            "items": {
+                              "additionalProperties": false,
+                              "properties": {
+                                "akamaiFrontend": {
+                                  "description": "The Akamai virtual IP address that's been mapped to a back-end server or subnet.",
+                                  "type": "string"
+                                },
+                                "customerBackend": {
+                                  "description": "The customer's server IP address or subnet that's been mapped to a virtual IP address.",
+                                  "type": "string"
+                                },
+                                "legacyVip": {
+                                  "description": "Indicates whether Prolexic Proxy created the subnet.",
+                                  "type": "boolean"
+                                },
+                                "ports": {
+                                  "description": "Virtual IP address ports open to traffic directed to a customer's website.",
+                                  "type": "string"
+                                },
+                                "sourceIpProtocol": {
+                                  "description": "Specifies the source IP for network packets received at a customer's back-end server or subnet. By default, packets are set to `NA`, identifying Akamai as the source IP. Other source IP options are `NAT46`, `CIP`, `PROXY_PROTOCOL_V1`, `PROXY_PROTOCOL_V2`, and `OPTION_28`. `NAT46` is only available if the virtual IP address has an IPv4 address and the back-end IP has an IPv6 address. The remaining options require the virtual IP address to be running on a TCP network.",
+                                  "enum": [
+                                    "CIP",
+                                    "PROXY_PROTOCOL_V1",
+                                    "PROXY_PROTOCOL_V2",
+                                    "OPTION_28",
+                                    "NAT46",
+                                    "NA"
+                                  ],
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "description": "The type of IP address or subnet service configured.",
+                                  "type": "string"
+                                },
+                                "vipId": {
+                                  "description": "Unique identifier of the virtual IP address.",
+                                  "type": "integer"
+                                }
+                              },
+                              "type": "object"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "updatedBy": {
+                      "description": "User who most recent updated the configuration version.",
+                      "nullable": true,
+                      "type": "string"
+                    },
+                    "updatedTimestamp": {
+                      "description": "ISO 8061 timestamp indicating the time of the most recent update of the configuration version.",
+                      "format": "date-time",
+                      "type": "string"
+                    }
+                  },
+                  "type": "object",
+                  "x-akamai": {
+                    "file-path": "schemas/update-pd-subnet-open-response.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "Update domain to allocate subnets",
+        "tags": [
+          "Subnets"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Unique name of the policy domain.",
+          "example": "{{pdName}}",
+          "in": "path",
+          "name": "pdName",
+          "required": true,
+          "schema": {
+            "example": "documentation_na",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/pd-name-path.yaml"
+          }
+        }
+      ],
+      "x-akamai": {
+        "file-path": "paths/allocate.yaml",
+        "path-info": "/policy-domains/{pdName}/pd-subnets/allocate"
+      }
+    },
+    "/policy-domains/{pdName}/vips/health-stats": {
+      "get": {
+        "description": "Returns the health status for the specified policy domain. Health status measures the percentage of locations currently availavle for a back-end IP address. IP Protect calculates separate health status scores for each back-end address.",
+        "externalDocs": {
+          "description": "See documentation for this operation in Akamai's Prolexic IP Protect Configuration API",
+          "url": "https://techdocs.akamai.com/ip-protect/reference/get-policy-domains-pdname-vips-health-stats"
+        },
+        "operationId": "get-policy-domains-pdname-vips-health-stats",
+        "parameters": [
+          {
+            "description": "Timestamp in Unix epoch milliseconds of the earliest set of health statistics you want to return. Akamai retains health statistics for seven days.",
+            "example": "{{startTime}}",
+            "in": "query",
+            "name": "startTime",
+            "schema": {
+              "example": 1614274795000,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/start-time-query.yaml"
+            }
+          },
+          {
+            "description": "Timestamp in Unix epoch milliseconds of the latest set of health statistics you want to return. If omitted, the health status interval automatically extends to the current time.",
+            "example": "{{endTime}}",
+            "in": "query",
+            "name": "endTime",
+            "schema": {
+              "example": 1616693995000,
+              "type": "integer"
+            },
+            "x-akamai": {
+              "file-path": "parameters/end-time-query.yaml"
+            }
+          },
+          {
+            "description": "For customers who manage more than one account, this [runs the operation from another account](https://techdocs.akamai.com/developer/docs/manage-many-accounts-with-one-api-client). The Identity and Access Management API provides a [list of available account switch keys](https://techdocs.akamai.com/iam-api/reference/get-client-account-switch-keys).",
+            "example": "{{accountSwitchKey}}",
+            "in": "query",
+            "name": "accountSwitchKey",
+            "required": false,
+            "schema": {
+              "example": "1-5C0YLB:1-8BYUX",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "policyDomainName": "documentation_na",
+                    "vips": [
+                      {
+                        "akamaiFrontEnd": "192.0.2.185/24",
+                        "backendIps": [
+                          {
+                            "backendIp": "192.0.2.9",
+                            "status": "down"
+                          },
+                          {
+                            "backendIp": "192.0.2.120",
+                            "status": "healthy"
+                          }
+                        ],
+                        "customerBackend": "192.0.2.48/24",
+                        "vipId": 836
+                      },
+                      {
+                        "akamaiFrontEnd": "192.0.2.245/24",
+                        "backendIps": [
+                          {
+                            "backendIp": "192.0.2.61",
+                            "status": "unknown"
+                          },
+                          {
+                            "backendIp": "192.0.2.56",
+                            "status": "unknown"
+                          }
+                        ],
+                        "customerBackend": "192.0.2.255/24",
+                        "vipId": 835
+                      }
+                    ]
+                  }
+                ],
+                "schema": {
+                  "description": "Health status.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Reports the health status of the back-end IP addresses in your policy domains.",
+                    "properties": {
+                      "policyDomainName": {
+                        "description": "Unique name of the policy domain.",
+                        "type": "string"
+                      },
+                      "vips": {
+                        "description": "Virtual IP addresses.",
+                        "items": {
+                          "additionalProperties": false,
+                          "description": "Virtual IP addresses. IP Protect routes traffic to these virtual IP addresses.",
+                          "properties": {
+                            "akamaiFrontEnd": {
+                              "description": "The Akamai virtual IP address that's been mapped to a back-end server or subnet.",
+                              "type": "string"
+                            },
+                            "backendIps": {
+                              "description": "IP addresses of a customer's servers and subnets.",
+                              "items": {
+                                "additionalProperties": false,
+                                "description": "IP addresses of a customer's servers and subnets.",
+                                "properties": {
+                                  "backendIp": {
+                                    "description": "IP addresses of a customer's server or subnet.",
+                                    "type": "string"
+                                  },
+                                  "status": {
+                                    "description": "Current state of the back-end IP. Either `healthy`, `possible_connectivity_issues`, `connectivity_issues`, `down`, or `unknown`. IP Protect calculates health status by determining the percentage of active locations for a back-end IP address.",
+                                    "enum": [
+                                      "healthy",
+                                      "possible_connectivity_issues",
+                                      "connectivity_issues",
+                                      "down",
+                                      "unknown"
+                                    ],
+                                    "type": "string"
+                                  }
+                                },
+                                "type": "object"
+                              },
+                              "type": "array"
+                            },
+                            "customerBackend": {
+                              "description": "IP address of the customer's server or subnet.",
+                              "type": "string"
+                            },
+                            "vipId": {
+                              "description": "Unique identifier of the Akamai virtual IP address.",
+                              "type": "integer"
+                            }
+                          },
+                          "type": "object"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array",
+                  "x-akamai": {
+                    "file-path": "schemas/backend-status-output.yaml"
+                  }
+                }
+              }
+            },
+            "description": "Successful response."
+          }
+        },
+        "summary": "Get health status for a policy domain",
+        "tags": [
+          "Health status"
+        ]
+      },
+      "parameters": [
+        {
+          "description": "Unique name of the policy domain.",
+          "example": "{{pdName}}",
+          "in": "path",
+          "name": "pdName",
+          "required": true,
+          "schema": {
+            "example": "documentation_na",
+            "type": "string"
+          },
+          "x-akamai": {
+            "file-path": "parameters/pd-name-path.yaml"
+          }
+        }
+      ],
+      "x-akamai": {
+        "file-path": "paths/health-stats-policy-domain.yaml",
+        "path-info": "/policy-domains/{pdName}/vips/health-stats"
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://{hostname}/ip-protect/v1"
+    }
+  ],
+  "tags": [],
+  "x-readme": {
+    "samples-languages": [
+      "curl",
+      "python",
+      "node"
+    ]
+  }
+}

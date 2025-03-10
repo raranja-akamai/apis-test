@@ -1,0 +1,60 @@
+type: object
+description: |-
+  ACL version creation properties.
+  
+x-akamai:
+  file-path: schemas/create-acl-version-request.yaml
+additionalProperties: false
+required:
+- deploy
+- description
+- ruleSet
+properties:
+  description:
+    type: string
+    description: |
+      ACL version user description.
+    minLength: 1
+  deploy:
+    type: boolean
+    description: |
+      Indicates whether the ACL config version needs to be deployed. When deploy flag is set to `false`, a new version is created in `CONFIGURATION` state. When deploy flag is set to `true`, a new version is created in `DEPLOYED` state.
+  ruleSet:
+    type: array
+    description: |
+      Rules within the rule set.
+    minItems: 0
+    items:
+      type: object
+      additionalProperties: false
+      required:
+      - index
+      - aclText
+      properties:
+        aclText:
+          type: string
+          description: |
+            A description of the ACL.
+          minLength: 1
+        comment:
+          type: string
+          description: |
+            A user-provided comment.
+          minLength: 1
+        index:
+          type: integer
+          description: |
+            Indicates ordering of ACL rules.
+          minimum: 1
+        ipVersion:
+          type: string
+          description: |
+            The IP version, either `V4` or `V6`.
+          enum:
+          - V4
+          - V6
+        ruleUuid:
+          type: string
+          description: |
+            The ACL rule ID.
+          minLength: 1

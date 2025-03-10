@@ -1,0 +1,209 @@
+type: object
+description: |-
+  Contains deployment change details.
+  
+x-akamai:
+  file-path: schemas/deployment-diff-response.yaml
+additionalProperties: false
+required:
+- changes
+properties:
+  changes:
+    type: array
+    description: |
+      Deployment change details.
+    minItems: 0
+    items:
+      type: object
+      additionalProperties: false
+      required:
+      - deltaType
+      - changes
+      properties:
+        changes:
+          type: array
+          description: |
+            Lists deployment changes.
+          minItems: 0
+          items:
+            type: object
+            additionalProperties: false
+            required:
+            - changeType
+            - detail
+            - changes
+            properties:
+              changeType:
+                type: string
+                description: |
+                  The type of change, either `Created`, `Modified`, `Added`, or `Removed`.
+                enum:
+                - Created
+                - Modified
+                - Added
+                - Removed
+              changes:
+                type: array
+                description: |
+                  Nested deployment diff objects.
+                minItems: 0
+                items:
+                  type: object
+                  additionalProperties: false
+                  required:
+                  - changeType
+                  - detail
+                  - changes
+                  properties:
+                    changeType:
+                      type: string
+                      description: |
+                        The type of change, either `Created`, `Modified`, `Added`, or `Removed`.
+                      enum:
+                      - Created
+                      - Modified
+                      - Added
+                      - Removed
+                      minLength: 1
+                    changes:
+                      type: array
+                      description: |
+                        Nested deployment diff objects.
+                      minItems: 0
+                      items:
+                        type: object
+                        additionalProperties: false
+                        required:
+                        - changeType
+                        - detail
+                        properties:
+                          changeType:
+                            type: string
+                            description: |
+                              The type of change, either `Created`, `Modified`, `Added`, or `Removed`.
+                            enum:
+                            - Created
+                            - Modified
+                            - Added
+                            - Removed
+                            minLength: 1
+                          detail:
+                            type: object
+                            description: |
+                              Describes the change details.
+                            additionalProperties: false
+                            required:
+                            - name
+                            properties:
+                              id:
+                                type: integer
+                                description: |
+                                  Unique identifier for the change.
+                                minimum: 1
+                              name:
+                                type: string
+                                description: |
+                                  Name of the change.
+                                minLength: 1
+                              modifiedBy:
+                                type: string
+                                description: |
+                                  __Read-only__ User who made the change.
+                                readOnly: true
+                                minLength: 1
+                              modifiedDate:
+                                type: string
+                                description: |
+                                  __Read-only__ When the change occurred.
+                                readOnly: true
+                                format: date-time
+                              newValue:
+                                type: string
+                                description: |
+                                  The value after the change.
+                                minLength: 0
+                              oldValue:
+                                type: string
+                                description: |
+                                  The value before the change.
+                                minLength: 0
+                    detail:
+                      type: object
+                      description: |
+                        Describes the change details.
+                      additionalProperties: false
+                      required:
+                      - name
+                      properties:
+                        id:
+                          type: integer
+                          description: |
+                            Unique identifier for the change.
+                          minimum: 1
+                        name:
+                          type: string
+                          description: |
+                            Name of the change.
+                          minLength: 1
+                        modifiedBy:
+                          type: string
+                          description: |
+                            User who made the change.
+                          minLength: 1
+                        modifiedDate:
+                          type: string
+                          description: |
+                            __Read-only__ When the change occurred.
+                          readOnly: true
+                          format: date-time
+                        newValue:
+                          type: string
+                          description: |
+                            The value after the change.
+                          minLength: 0
+                        oldValue:
+                          type: string
+                          description: |
+                            The value before the change.
+                          minLength: 0
+              detail:
+                type: object
+                description: |
+                  Describes the change details.
+                additionalProperties: false
+                required:
+                - name
+                properties:
+                  id:
+                    type: integer
+                    description: |
+                      A unique identifier for the change.
+                    minimum: 1
+                  name:
+                    type: string
+                    description: |
+                      Name of the change.
+                    minLength: 1
+                  modifiedBy:
+                    type: string
+                    description: |
+                      __Read-only__ User who made the modification.
+                    readOnly: true
+                    minLength: 1
+                  modifiedDate:
+                    type: string
+                    description: |
+                      __Read-only__ Date of entity modification.
+                    readOnly: true
+                    format: date-time
+        deltaType:
+          type: string
+          description: |
+            Name of entity type changed. Either `sites`, `policies`, `lists`, `subLocations`, `customLists`, or `global_settings`.
+          enum:
+          - sites
+          - policies
+          - lists
+          - subLocations
+          - customLists
+          - global_settings
